@@ -16,11 +16,6 @@ import { PasswordHelper } from "../utils/passwordHelper";
  */
 export class EntityStorageAuthenticationAdminService implements IAuthenticationAdminComponent {
 	/**
-	 * The namespace supported by the authentication service.
-	 */
-	public static readonly NAMESPACE: string = "authentication-admin-entity-storage";
-
-	/**
 	 * The minimum password length.
 	 * @internal
 	 */

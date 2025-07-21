@@ -16,11 +16,6 @@ import type { IInformationServiceConstructorOptions } from "./models/IInformatio
  */
 export class InformationService implements IInformationComponent {
 	/**
-	 * The namespace supported by the information service.
-	 */
-	public static readonly NAMESPACE: string = "information";
-
-	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<InformationService>();

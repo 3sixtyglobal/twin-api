@@ -20,11 +20,6 @@ import type { IRestRouteProcessorConstructorOptions } from "../models/IRestRoute
  */
 export class RestRouteProcessor implements IRestRouteProcessor {
 	/**
-	 * The namespace supported by the processor.
-	 */
-	public static readonly NAMESPACE: string = "rest-route";
-
-	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<RestRouteProcessor>();

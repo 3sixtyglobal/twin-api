@@ -10,11 +10,6 @@ import { MimeTypes } from "@twin.org/web";
  */
 export class JsonLdMimeTypeProcessor implements IMimeTypeProcessor {
 	/**
-	 * The namespace supported by the processor.
-	 */
-	public static readonly NAMESPACE: string = "json-ld";
-
-	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<JsonLdMimeTypeProcessor>();

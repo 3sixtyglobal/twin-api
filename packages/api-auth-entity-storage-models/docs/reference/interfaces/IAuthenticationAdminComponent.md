@@ -1,42 +1,10 @@
-# Class: EntityStorageAuthenticationAdminService
+# Interface: IAuthenticationAdminComponent
 
-Implementation of the authentication component using entity storage.
+Contract definition for authentication admin component.
 
-## Implements
+## Extends
 
-- `IAuthenticationAdminComponent`
-
-## Constructors
-
-### Constructor
-
-> **new EntityStorageAuthenticationAdminService**(`options?`): `EntityStorageAuthenticationAdminService`
-
-Create a new instance of EntityStorageAuthentication.
-
-#### Parameters
-
-##### options?
-
-[`IEntityStorageAuthenticationAdminServiceConstructorOptions`](../interfaces/IEntityStorageAuthenticationAdminServiceConstructorOptions.md)
-
-The dependencies for the identity connector.
-
-#### Returns
-
-`EntityStorageAuthenticationAdminService`
-
-## Properties
-
-### CLASS\_NAME
-
-> `readonly` **CLASS\_NAME**: `string`
-
-Runtime name for the class.
-
-#### Implementation of
-
-`IAuthenticationAdminComponent.CLASS_NAME`
+- `IComponent`
 
 ## Methods
 
@@ -72,10 +40,6 @@ The DID to associate with the account.
 
 Nothing.
 
-#### Implementation of
-
-`IAuthenticationAdminComponent.create`
-
 ***
 
 ### remove()
@@ -97,10 +61,6 @@ The email address of the user to remove.
 `Promise`\<`void`\>
 
 Nothing.
-
-#### Implementation of
-
-`IAuthenticationAdminComponent.remove`
 
 ***
 
@@ -135,7 +95,3 @@ The current password, optional, if supplied will check against existing.
 `Promise`\<`void`\>
 
 Nothing.
-
-#### Implementation of
-
-`IAuthenticationAdminComponent.updatePassword`
