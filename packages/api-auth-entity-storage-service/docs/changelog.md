@@ -1,5 +1,21 @@
 # @twin.org/api-auth-entity-storage-service - Changelog
 
+## [0.0.2-next.3](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.2...api-auth-entity-storage-service-v0.0.2-next.3) (2025-07-24)
+
+
+### Features
+
+* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.2-next.2 to 0.0.2-next.3
+    * @twin.org/api-core bumped from 0.0.2-next.2 to 0.0.2-next.3
+    * @twin.org/api-models bumped from 0.0.2-next.2 to 0.0.2-next.3
+
 ## [0.0.2-next.2](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.1...api-auth-entity-storage-service-v0.0.2-next.2) (2025-07-17)
 
 

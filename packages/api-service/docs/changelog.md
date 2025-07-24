@@ -1,5 +1,19 @@
 # @twin.org/api-service - Changelog
 
+## [0.0.2-next.3](https://github.com/twinfoundation/api/compare/api-service-v0.0.2-next.2...api-service-v0.0.2-next.3) (2025-07-24)
+
+
+### Features
+
+* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.2-next.2 to 0.0.2-next.3
+
 ## [0.0.2-next.2](https://github.com/twinfoundation/api/compare/api-service-v0.0.2-next.1...api-service-v0.0.2-next.2) (2025-07-17)
 
 

@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.2-next.3](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.2...api-models-v0.0.2-next.3) (2025-07-24)
+
+
+### Features
+
+* add socket id, connect and disconnect ([20b0d0e](https://github.com/twinfoundation/api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
+
 ## [0.0.2-next.2](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.1...api-models-v0.0.2-next.2) (2025-07-17)
 
 

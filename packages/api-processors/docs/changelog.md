@@ -1,5 +1,20 @@
 # @twin.org/api-processors - Changelog
 
+## [0.0.2-next.3](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.2...api-processors-v0.0.2-next.3) (2025-07-24)
+
+
+### Features
+
+* add socket id, connect and disconnect ([20b0d0e](https://github.com/twinfoundation/api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
+* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.2-next.2 to 0.0.2-next.3
+
 ## [0.0.2-next.2](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.1...api-processors-v0.0.2-next.2) (2025-07-17)
 
 
