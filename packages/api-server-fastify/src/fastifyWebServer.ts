@@ -4,6 +4,7 @@ import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
 	HttpErrorHelper,
+	type ISocketServerRequest,
 	type IHttpRequest,
 	type IHttpRequestIdentity,
 	type IHttpRequestPathParams,
@@ -381,25 +382,19 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const socketNamespace = io.of(namespace);
 
 				socketNamespace.on("connection", async socket => {
-					const httpServerRequest: IHttpServerRequest = {
+					const socketServerRequest: ISocketServerRequest = {
 						method: HttpMethod.GET,
 						url: socket.handshake.url,
 						query: socket.handshake.query as IHttpRequestQuery,
-						headers: socket.handshake.headers as IHttpHeaders
+						headers: socket.handshake.headers as IHttpHeaders,
+						socketId: socket.id
 					};
 
 					// Pass the connected information on to any processors
 					try {
-						const processorState = {
-							socketId: socket.id
-						};
 						for (const socketRouteProcessor of socketRouteProcessors) {
-							if (Is.function(socketRouteProcessor.connected)) {
-								await socketRouteProcessor.connected(
-									httpServerRequest,
-									socketRoute,
-									processorState
-								);
+							if (socketRouteProcessor.connected) {
+								await socketRouteProcessor.connected(socketServerRequest, socketRoute);
 							}
 						}
 					} catch (err) {
@@ -414,17 +409,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 					socket.on("disconnect", async () => {
 						try {
-							const processorState = {
-								socketId: socket.id
-							};
 							// The socket disconnected so notify any processors
 							for (const socketRouteProcessor of socketRouteProcessors) {
-								if (Is.function(socketRouteProcessor.disconnected)) {
-									await socketRouteProcessor.disconnected(
-										httpServerRequest,
-										socketRoute,
-										processorState
-									);
+								if (socketRouteProcessor.disconnected) {
+									await socketRouteProcessor.disconnected(socketServerRequest, socketRoute);
 								}
 							}
 						} catch {
@@ -514,7 +502,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	): Promise<void> {
 		try {
 			for (const routeProcessor of restRouteProcessors) {
-				if (Is.function(routeProcessor.pre)) {
+				if (routeProcessor.pre) {
 					await routeProcessor.pre(
 						httpServerRequest,
 						httpResponse,
@@ -526,7 +514,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			}
 
 			for (const routeProcessor of restRouteProcessors) {
-				if (Is.function(routeProcessor.process)) {
+				if (routeProcessor.process) {
 					await routeProcessor.process(
 						httpServerRequest,
 						httpResponse,
@@ -538,7 +526,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			}
 
 			for (const routeProcessor of restRouteProcessors) {
-				if (Is.function(routeProcessor.post)) {
+				if (routeProcessor.post) {
 					await routeProcessor.post(
 						httpServerRequest,
 						httpResponse,
@@ -572,26 +560,25 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		emitTopic: string,
 		request: IHttpRequest
 	): Promise<void> {
-		const httpServerRequest: IHttpServerRequest = {
+		const socketServerRequest: ISocketServerRequest = {
 			method: HttpMethod.GET,
 			url: fullPath,
 			query: socket.handshake.query as IHttpRequestQuery,
 			headers: socket.handshake.headers as IHttpHeaders,
-			body: request.body
+			body: request.body,
+			socketId: socket.id
 		};
 		const httpResponse: IHttpResponse = {};
 		const httpRequestIdentity: IHttpRequestIdentity = {};
-		const processorState = {
-			socketId: socket.id
-		};
+		const processorState = {};
 
-		delete httpServerRequest.query?.EIO;
-		delete httpServerRequest.query?.transport;
+		delete socketServerRequest.query?.EIO;
+		delete socketServerRequest.query?.transport;
 
 		await this.runProcessorsSocket(
 			socketRouteProcessors,
 			socketRoute,
-			httpServerRequest,
+			socketServerRequest,
 			httpResponse,
 			httpRequestIdentity,
 			processorState,
@@ -604,9 +591,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 	/**
 	 * Run the socket processors for the route.
+	 * @param socketId The id of the socket.
 	 * @param socketRouteProcessors The processors to run.
 	 * @param socketRoute The route to process.
-	 * @param httpServerRequest The incoming request.
+	 * @param socketServerRequest The incoming request.
 	 * @param httpResponse The outgoing response.
 	 * @param httpRequestIdentity The identity context for the request.
 	 * @param processorState The state handed through the processors.
@@ -616,7 +604,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	private async runProcessorsSocket(
 		socketRouteProcessors: ISocketRouteProcessor[],
 		socketRoute: ISocketRoute,
-		httpServerRequest: IHttpServerRequest,
+		socketServerRequest: ISocketServerRequest,
 		httpResponse: IHttpResponse,
 		httpRequestIdentity: IHttpRequestIdentity,
 		processorState: {
@@ -638,9 +626,9 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			try {
 				// The post processors are called after the response has been emitted
 				for (const postSocketRouteProcessor of socketRouteProcessors) {
-					if (Is.function(postSocketRouteProcessor.post)) {
+					if (postSocketRouteProcessor.post) {
 						await postSocketRouteProcessor.post(
-							httpServerRequest,
+							socketServerRequest,
 							response,
 							socketRoute,
 							httpRequestIdentity,
@@ -664,9 +652,9 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 		try {
 			for (const socketRouteProcessor of socketRouteProcessors) {
-				if (Is.function(socketRouteProcessor.pre)) {
+				if (socketRouteProcessor.pre) {
 					await socketRouteProcessor.pre(
-						httpServerRequest,
+						socketServerRequest,
 						httpResponse,
 						socketRoute,
 						httpRequestIdentity,
@@ -683,9 +671,9 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			}
 
 			for (const socketRouteProcessor of socketRouteProcessors) {
-				if (Is.function(socketRouteProcessor.process)) {
+				if (socketRouteProcessor.process) {
 					await socketRouteProcessor.process(
-						httpServerRequest,
+						socketServerRequest,
 						httpResponse,
 						socketRoute,
 						httpRequestIdentity,

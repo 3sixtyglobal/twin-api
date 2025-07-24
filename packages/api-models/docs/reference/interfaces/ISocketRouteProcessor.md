@@ -4,7 +4,7 @@ The definition for a processor for handling socket routes.
 
 ## Extends
 
-- [`IBaseRouteProcessor`](IBaseRouteProcessor.md)\<[`ISocketRoute`](ISocketRoute.md)\>
+- [`IBaseRouteProcessor`](IBaseRouteProcessor.md)\<[`ISocketRoute`](ISocketRoute.md), [`ISocketServerRequest`](ISocketServerRequest.md)\>
 
 ## Methods
 
@@ -18,7 +18,7 @@ Pre process the REST request for the specified route.
 
 ##### request
 
-[`IHttpServerRequest`](IHttpServerRequest.md)
+[`ISocketServerRequest`](ISocketServerRequest.md)
 
 The request to handle.
 
@@ -66,7 +66,7 @@ Post process the REST request for the specified route.
 
 ##### request
 
-[`IHttpServerRequest`](IHttpServerRequest.md)
+[`ISocketServerRequest`](ISocketServerRequest.md)
 
 The request to handle.
 
@@ -106,7 +106,7 @@ Promise that resolves when the request is processed.
 
 ### connected()?
 
-> `optional` **connected**(`request`, `route`, `processorState`): `Promise`\<`void`\>
+> `optional` **connected**(`request`, `route`): `Promise`\<`void`\>
 
 Process the connected event.
 
@@ -114,19 +114,15 @@ Process the connected event.
 
 ##### request
 
-[`IHttpServerRequest`](IHttpServerRequest.md)
+[`ISocketServerRequest`](ISocketServerRequest.md)
 
-The request to handle.
+The server request object containing the socket id and other parameters.
 
 ##### route
 
 The route being requested, if a matching one was found.
 
 `undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
-
-##### processorState
-
-The state handed through the processors.
 
 #### Returns
 
@@ -138,7 +134,7 @@ Promise that resolves when the request is processed.
 
 ### disconnected()?
 
-> `optional` **disconnected**(`request`, `route`, `processorState`): `Promise`\<`void`\>
+> `optional` **disconnected**(`request`, `route`): `Promise`\<`void`\>
 
 Process the disconnected event.
 
@@ -146,19 +142,15 @@ Process the disconnected event.
 
 ##### request
 
-[`IHttpServerRequest`](IHttpServerRequest.md)
+[`ISocketServerRequest`](ISocketServerRequest.md)
 
-The request to handle.
+The server request object containing the socket id and other parameters.
 
 ##### route
 
 The route being requested, if a matching one was found.
 
 `undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
-
-##### processorState
-
-The state handed through the processors.
 
 #### Returns
 
@@ -178,9 +170,9 @@ Process the REST request for the specified route.
 
 ##### request
 
-[`IHttpServerRequest`](IHttpServerRequest.md)
+[`ISocketServerRequest`](ISocketServerRequest.md)
 
-The request to handle.
+The server request object containing the socket id and other parameters.
 
 ##### response
 

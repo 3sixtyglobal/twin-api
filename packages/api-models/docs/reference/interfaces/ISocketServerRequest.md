@@ -1,14 +1,10 @@
-# Interface: IHttpServerRequest\<T\>
+# Interface: ISocketServerRequest\<T\>
 
 Model for the standard parameters for an http request.
 
 ## Extends
 
-- [`IHttpRequest`](IHttpRequest.md)\<`T`\>
-
-## Extended by
-
-- [`ISocketServerRequest`](ISocketServerRequest.md)
+- [`IHttpServerRequest`](IHttpServerRequest.md)\<`T`\>
 
 ## Type Parameters
 
@@ -26,7 +22,7 @@ Incoming Http Headers.
 
 #### Inherited from
 
-[`IHttpRequest`](IHttpRequest.md).[`headers`](IHttpRequest.md#headers)
+[`IHttpServerRequest`](IHttpServerRequest.md).[`headers`](IHttpServerRequest.md#headers)
 
 ***
 
@@ -38,7 +34,7 @@ The path parameters.
 
 #### Inherited from
 
-[`IHttpRequest`](IHttpRequest.md).[`pathParams`](IHttpRequest.md#pathparams)
+[`IHttpServerRequest`](IHttpServerRequest.md).[`pathParams`](IHttpServerRequest.md#pathparams)
 
 ***
 
@@ -50,7 +46,7 @@ The query parameters.
 
 #### Inherited from
 
-[`IHttpRequest`](IHttpRequest.md).[`query`](IHttpRequest.md#query)
+[`IHttpServerRequest`](IHttpServerRequest.md).[`query`](IHttpServerRequest.md#query)
 
 ***
 
@@ -62,7 +58,7 @@ Data to return send as the body.
 
 #### Inherited from
 
-[`IHttpRequest`](IHttpRequest.md).[`body`](IHttpRequest.md#body)
+[`IHttpServerRequest`](IHttpServerRequest.md).[`body`](IHttpServerRequest.md#body)
 
 ***
 
@@ -72,6 +68,10 @@ Data to return send as the body.
 
 The request method.
 
+#### Inherited from
+
+[`IHttpServerRequest`](IHttpServerRequest.md).[`method`](IHttpServerRequest.md#method)
+
 ***
 
 ### url?
@@ -79,3 +79,15 @@ The request method.
 > `optional` **url**: `string`
 
 The request url.
+
+#### Inherited from
+
+[`IHttpServerRequest`](IHttpServerRequest.md).[`url`](IHttpServerRequest.md#url)
+
+***
+
+### socketId
+
+> **socketId**: `string`
+
+The socket id.

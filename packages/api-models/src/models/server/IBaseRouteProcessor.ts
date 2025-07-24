@@ -9,7 +9,7 @@ import type { IBaseRoute } from "../routes/IBaseRoute";
 /**
  * The definition for a base processor for handling REST routes.
  */
-export interface IBaseRouteProcessor<T = IBaseRoute> extends IComponent {
+export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> extends IComponent {
 	/**
 	 * Pre process the REST request for the specified route.
 	 * @param request The request to handle.
@@ -20,7 +20,7 @@ export interface IBaseRouteProcessor<T = IBaseRoute> extends IComponent {
 	 * @returns Promise that resolves when the request is processed.
 	 */
 	pre?(
-		request: IHttpServerRequest,
+		request: R,
 		response: IHttpResponse,
 		route: T | undefined,
 		requestIdentity: IHttpRequestIdentity,
@@ -37,7 +37,7 @@ export interface IBaseRouteProcessor<T = IBaseRoute> extends IComponent {
 	 * @returns Promise that resolves when the request is processed.
 	 */
 	post?(
-		request: IHttpServerRequest,
+		request: R,
 		response: IHttpResponse,
 		route: T | undefined,
 		requestIdentity: IHttpRequestIdentity,

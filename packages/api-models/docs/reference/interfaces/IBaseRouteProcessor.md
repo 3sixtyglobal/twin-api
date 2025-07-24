@@ -1,4 +1,4 @@
-# Interface: IBaseRouteProcessor\<T\>
+# Interface: IBaseRouteProcessor\<T, R\>
 
 The definition for a base processor for handling REST routes.
 
@@ -17,6 +17,10 @@ The definition for a base processor for handling REST routes.
 
 `T` = [`IBaseRoute`](IBaseRoute.md)
 
+### R
+
+`R` = [`IHttpServerRequest`](IHttpServerRequest.md)
+
 ## Methods
 
 ### pre()?
@@ -29,7 +33,7 @@ Pre process the REST request for the specified route.
 
 ##### request
 
-[`IHttpServerRequest`](IHttpServerRequest.md)
+`R`
 
 The request to handle.
 
@@ -73,7 +77,7 @@ Post process the REST request for the specified route.
 
 ##### request
 
-[`IHttpServerRequest`](IHttpServerRequest.md)
+`R`
 
 The request to handle.
 

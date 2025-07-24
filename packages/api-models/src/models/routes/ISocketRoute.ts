@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IBaseRoute } from "./IBaseRoute";
 import type { IHttpRequest } from "../protocol/IHttpRequest";
-import type { IHttpRequestContext } from "../protocol/IHttpRequestContext";
 import type { IHttpResponse } from "../protocol/IHttpResponse";
+import type { ISocketRequestContext } from "../protocol/ISocketRequestContext";
 
 /**
  * Interface which defines a socket route.
@@ -21,7 +21,7 @@ export interface ISocketRoute<
 		/**
 		 * The request context.
 		 */
-		httpRequestContext: IHttpRequestContext,
+		socketRequestContext: ISocketRequestContext,
 
 		/**
 		 * The request object.
@@ -32,5 +32,25 @@ export interface ISocketRoute<
 		 * The function to emit an event.
 		 */
 		emit: (event: string, response: U) => Promise<void>
+	) => void;
+
+	/**
+	 * The connected handler.
+	 */
+	connected?: (
+		/**
+		 * The request context.
+		 */
+		socketRequestContext: ISocketRequestContext
+	) => void;
+
+	/**
+	 * The disconnected handler.
+	 */
+	disconnected?: (
+		/**
+		 * The request context.
+		 */
+		socketRequestContext: ISocketRequestContext
 	) => void;
 }

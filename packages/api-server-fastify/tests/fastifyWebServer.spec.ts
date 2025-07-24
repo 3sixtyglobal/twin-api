@@ -206,16 +206,16 @@ describe("api-server-fastify", () => {
 			[
 				{
 					CLASS_NAME: "RouteProcessor",
-					connected: async (request, route, processorState) => {
-						connectedSocketId = processorState.socketId as string;
+					connected: async (request, route) => {
+						connectedSocketId = request.socketId as string;
 						connectedCookie = request.headers?.[HeaderTypes.Cookie] as string;
 					},
-					disconnected: async (request, route, processorState) => {
-						disconnectedSocketId = processorState.socketId as string;
+					disconnected: async (request, route) => {
+						disconnectedSocketId = request.socketId as string;
 						disconnectedCookie = request.headers?.[HeaderTypes.Cookie] as string;
 					},
 					pre: async (request, response, route, requestIdentity, processorState) => {
-						preSocketId = processorState.socketId as string;
+						preSocketId = request.socketId as string;
 						preCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						preData = request.body?.data as number;
 					},
@@ -227,14 +227,15 @@ describe("api-server-fastify", () => {
 						processorState,
 						responseEmitter
 					) => {
-						processSocketId = processorState.socketId as string;
+						processSocketId = request.socketId;
 						processCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						processData = request.body?.data as number;
 						await route?.handler(
 							{
 								...requestIdentity,
 								serverRequest: request,
-								processorState
+								processorState,
+								socketId: request.socketId
 							},
 							{
 								pathParams: request.pathParams,
@@ -250,7 +251,7 @@ describe("api-server-fastify", () => {
 						);
 					},
 					post: async (request, response, route, requestIdentity, processorState) => {
-						postSocketId = processorState.socketId as string;
+						postSocketId = request.socketId;
 						postCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						postData = request.body?.data as number;
 					}
@@ -423,7 +424,8 @@ describe("api-server-fastify", () => {
 							{
 								...requestIdentity,
 								serverRequest: request,
-								processorState
+								processorState,
+								socketId: request.socketId
 							},
 							{
 								pathParams: request.pathParams,

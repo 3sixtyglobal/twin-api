@@ -17,6 +17,8 @@ export * from "./models/protocol/IHttpRequestPathParams";
 export * from "./models/protocol/IHttpRequestQuery";
 export * from "./models/protocol/IHttpResponse";
 export * from "./models/protocol/IHttpServerRequest";
+export * from "./models/protocol/ISocketRequestContext";
+export * from "./models/protocol/ISocketServerRequest";
 export * from "./models/requests/INoContentRequest";
 export * from "./models/responses/errors/IBadRequestResponse";
 export * from "./models/responses/errors/IConflictResponse";

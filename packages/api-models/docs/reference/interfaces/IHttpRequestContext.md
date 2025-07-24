@@ -6,6 +6,10 @@ Context data from the HTTP request.
 
 - [`IHttpRequestIdentity`](IHttpRequestIdentity.md)
 
+## Extended by
+
+- [`ISocketRequestContext`](ISocketRequestContext.md)
+
 ## Properties
 
 ### serverRequest
