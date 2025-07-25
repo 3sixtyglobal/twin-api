@@ -1,5 +1,21 @@
 # @twin.org/api-server-fastify - Changelog
 
+## [0.0.2-next.4](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.2-next.3...api-server-fastify-v0.0.2-next.4) (2025-07-25)
+
+
+### Features
+
+* add logging component type to request contexts ([210de1b](https://github.com/twinfoundation/api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.2-next.3 to 0.0.2-next.4
+    * @twin.org/api-models bumped from 0.0.2-next.3 to 0.0.2-next.4
+    * @twin.org/api-processors bumped from 0.0.2-next.3 to 0.0.2-next.4
+
 ## [0.0.2-next.3](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.2-next.2...api-server-fastify-v0.0.2-next.3) (2025-07-24)
 
 

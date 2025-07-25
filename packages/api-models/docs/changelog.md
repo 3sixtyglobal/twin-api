@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.2-next.4](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.3...api-models-v0.0.2-next.4) (2025-07-25)
+
+
+### Features
+
+* add logging component type to request contexts ([210de1b](https://github.com/twinfoundation/api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
+
 ## [0.0.2-next.3](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.2...api-models-v0.0.2-next.3) (2025-07-24)
 
 
