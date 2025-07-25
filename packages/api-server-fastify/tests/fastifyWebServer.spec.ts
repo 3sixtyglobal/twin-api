@@ -2,12 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { JwtMimeTypeProcessor, LoggingProcessor } from "@twin.org/api-processors";
-import { NotImplementedError } from "@twin.org/core";
-import {
-	type ILoggingConnector,
-	type ILogEntry,
-	LoggingConnectorFactory
-} from "@twin.org/logging-models";
+import { ComponentFactory, NotImplementedError } from "@twin.org/core";
+import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode } from "@twin.org/web";
 import { io } from "socket.io-client";
 import { FastifyWebServer } from "../src/fastifyWebServer";
@@ -493,7 +489,7 @@ describe("api-server-fastify", () => {
 		const logEntries: ILogEntry[] = [];
 		let body = "";
 
-		const logger: ILoggingConnector = {
+		const logger: ILoggingComponent = {
 			CLASS_NAME: "logger",
 			log: async (logEntry: ILogEntry) => {
 				logEntries.push(logEntry);
@@ -503,7 +499,7 @@ describe("api-server-fastify", () => {
 			}
 		};
 
-		LoggingConnectorFactory.register("logging", () => logger);
+		ComponentFactory.register("logging", () => logger);
 
 		await server.build(
 			[

@@ -42,24 +42,21 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 	 * Process the connected event.
 	 * @param request The server request object containing the socket id and other parameters.
 	 * @param route The route being requested, if a matching one was found.
+	 * @param loggingComponentType The logging component type for the request.
 	 * @returns Promise that resolves when the request is processed.
 	 */
 	public async connected(
 		request: ISocketServerRequest,
-		route: ISocketRoute | undefined
+		route: ISocketRoute | undefined,
+		loggingComponentType?: string
 	): Promise<void> {
 		if (route?.connected) {
 			try {
-				const req: IHttpRequest = {
-					pathParams: request.pathParams,
-					query: request.query,
-					body: request.body
-				};
-
 				const socketRequestContext: ISocketRequestContext = {
 					socketId: request.socketId,
-					serverRequest: req,
-					processorState: {}
+					serverRequest: request,
+					processorState: {},
+					loggingComponentType
 				};
 
 				await route.connected(socketRequestContext);
@@ -71,24 +68,21 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 	 * Process the disconnected event.
 	 * @param request The server request object containing the socket id and other parameters.
 	 * @param route The route being requested, if a matching one was found.
+	 * @param loggingComponentType The logging component type for the request.
 	 * @returns Promise that resolves when the request is processed.
 	 */
 	public async disconnected(
 		request: ISocketServerRequest,
-		route: ISocketRoute | undefined
+		route: ISocketRoute | undefined,
+		loggingComponentType?: string
 	): Promise<void> {
 		if (route?.disconnected) {
 			try {
-				const req: IHttpRequest = {
-					pathParams: request.pathParams,
-					query: request.query,
-					body: request.body
-				};
-
 				const socketRequestContext: ISocketRequestContext = {
 					socketId: request.socketId,
-					serverRequest: req,
-					processorState: {}
+					serverRequest: request,
+					processorState: {},
+					loggingComponentType
 				};
 
 				await route.disconnected(socketRequestContext);
@@ -104,6 +98,7 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 	 * @param requestIdentity The identity context for the request.
 	 * @param processorState The state handed through the processors.
 	 * @param responseEmitter The function to emit a response.
+	 * @param loggingComponentType The logging component type for the request.
 	 */
 	public async process(
 		request: ISocketServerRequest,
@@ -111,7 +106,8 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 		route: ISocketRoute | undefined,
 		requestIdentity: IHttpRequestIdentity,
 		processorState: { [id: string]: unknown },
-		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>
+		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>,
+		loggingComponentType?: string
 	): Promise<void> {
 		// Don't handle the route if another processor has already set the response
 		// status code e.g. from an auth processor
@@ -140,7 +136,8 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 						...requestIdentity,
 						socketId: request.socketId,
 						serverRequest: request,
-						processorState
+						processorState,
+						loggingComponentType
 					};
 
 					await route.handler(socketRequestContext, req, async (topic, restRouteResponse) => {

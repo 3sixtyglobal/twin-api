@@ -8,9 +8,9 @@ import type { IFastifyWebServerConfig } from "./IFastifyWebServerConfig";
  */
 export interface IFastifyWebServerConstructorOptions {
 	/**
-	 * The type of the logging connector to use, if undefined, no logging will happen.
+	 * The type of the logging component to use, if undefined, no logging will happen.
 	 */
-	loggingConnectorType?: string;
+	loggingComponentType?: string;
 
 	/**
 	 * Additional configuration for the server.

@@ -36,6 +36,18 @@ The state handed through the processors.
 
 ***
 
+### loggingComponentType?
+
+> `optional` **loggingComponentType**: `string`
+
+Logging component type for the request.
+
+#### Inherited from
+
+[`IHttpRequestContext`](IHttpRequestContext.md).[`loggingComponentType`](IHttpRequestContext.md#loggingcomponenttype)
+
+***
+
 ### nodeIdentity?
 
 > `optional` **nodeIdentity**: `string`

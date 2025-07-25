@@ -32,6 +32,14 @@ The state handed through the processors.
 
 ***
 
+### loggingComponentType?
+
+> `optional` **loggingComponentType**: `string`
+
+Logging component type for the request.
+
+***
+
 ### nodeIdentity?
 
 > `optional` **nodeIdentity**: `string`

@@ -7,8 +7,8 @@ import type {
 	IHttpResponse,
 	IHttpServerRequest
 } from "@twin.org/api-models";
-import { Coerce, Is, ObjectHelper } from "@twin.org/core";
-import { LoggingConnectorFactory, type ILoggingConnector } from "@twin.org/logging-models";
+import { Coerce, ComponentFactory, Is, ObjectHelper } from "@twin.org/core";
+import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
 import type { ILoggingProcessorConstructorOptions } from "../models/ILoggingProcessorConstructorOptions";
@@ -23,10 +23,10 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	public readonly CLASS_NAME: string = nameof<LoggingProcessor>();
 
 	/**
-	 * The connector for logging the information.
+	 * The component for logging the information.
 	 * @internal
 	 */
-	private readonly _loggingConnector: ILoggingConnector;
+	private readonly _loggingComponent: ILoggingComponent;
 
 	/**
 	 * Include the body objects when logging the information.
@@ -51,9 +51,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * @param options Options for the processor.
 	 */
 	constructor(options?: ILoggingProcessorConstructorOptions) {
-		this._loggingConnector = LoggingConnectorFactory.get(
-			options?.loggingConnectorType ?? "logging"
-		);
+		this._loggingComponent = ComponentFactory.get(options?.loggingComponentType ?? "logging");
 		this._includeBody = options?.config?.includeBody ?? false;
 		this._fullBase64 = options?.config?.fullBase64 ?? false;
 		this._obfuscateProperties = options?.config?.obfuscateProperties ?? ["password"];
@@ -92,7 +90,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 			}
 		}
 
-		await this._loggingConnector.log({
+		await this._loggingComponent.log({
 			level: "info",
 			source: this.CLASS_NAME,
 			ts: Date.now(),
@@ -162,7 +160,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 			}
 		}
 
-		await this._loggingConnector.log({
+		await this._loggingComponent.log({
 			level:
 				Is.number(response.statusCode) && response.statusCode >= HttpStatusCode.badRequest
 					? "error"

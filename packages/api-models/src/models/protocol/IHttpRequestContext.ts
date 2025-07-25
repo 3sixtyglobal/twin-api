@@ -16,4 +16,9 @@ export interface IHttpRequestContext extends IHttpRequestIdentity {
 	 * The state handed through the processors.
 	 */
 	processorState: { [id: string]: unknown };
+
+	/**
+	 * Logging component type for the request.
+	 */
+	loggingComponentType?: string;
 }

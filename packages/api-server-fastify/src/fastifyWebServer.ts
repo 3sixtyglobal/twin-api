@@ -4,7 +4,6 @@ import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
 	HttpErrorHelper,
-	type ISocketServerRequest,
 	type IHttpRequest,
 	type IHttpRequestIdentity,
 	type IHttpRequestPathParams,
@@ -16,12 +15,20 @@ import {
 	type IRestRouteProcessor,
 	type ISocketRoute,
 	type ISocketRouteProcessor,
+	type ISocketServerRequest,
 	type IWebServer,
 	type IWebServerOptions
 } from "@twin.org/api-models";
 import { JsonLdMimeTypeProcessor } from "@twin.org/api-processors";
-import { BaseError, GeneralError, type IError, Is, StringHelper } from "@twin.org/core";
-import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
+import {
+	BaseError,
+	ComponentFactory,
+	GeneralError,
+	type IError,
+	Is,
+	StringHelper
+} from "@twin.org/core";
+import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpMethod, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
@@ -58,10 +65,16 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	public readonly CLASS_NAME: string = nameof<FastifyWebServer>();
 
 	/**
-	 * The logging connector.
+	 * The logging component type.
 	 * @internal
 	 */
-	private readonly _loggingConnector?: ILoggingConnector;
+	private readonly _loggingComponentType?: string;
+
+	/**
+	 * The logging component.
+	 * @internal
+	 */
+	private readonly _loggingComponent?: ILoggingComponent;
 
 	/**
 	 * The options for the server.
@@ -104,8 +117,9 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param options The options for the server.
 	 */
 	constructor(options?: IFastifyWebServerConstructorOptions) {
-		this._loggingConnector = Is.stringValue(options?.loggingConnectorType)
-			? LoggingConnectorFactory.get(options.loggingConnectorType)
+		this._loggingComponentType = options?.loggingComponentType;
+		this._loggingComponent = Is.stringValue(options?.loggingComponentType)
+			? ComponentFactory.get(options.loggingComponentType)
 			: undefined;
 		this._fastify = Fastify({
 			maxParamLength: 2000,
@@ -159,7 +173,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		if (Is.arrayValue(socketRoutes) && !Is.arrayValue(socketRouteProcessors)) {
 			throw new GeneralError(this.CLASS_NAME, "noSocketProcessors");
 		}
-		await this._loggingConnector?.log({
+		await this._loggingComponent?.log({
 			level: "info",
 			ts: Date.now(),
 			source: this.CLASS_NAME,
@@ -217,7 +231,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				httpStatusCode = errorAndCode.httpStatusCode;
 			}
 
-			await this._loggingConnector?.log({
+			await this._loggingComponent?.log({
 				level: "error",
 				ts: Date.now(),
 				source: this.CLASS_NAME,
@@ -242,7 +256,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		const host = this._options?.host ?? FastifyWebServer._DEFAULT_HOST;
 		const port = this._options?.port ?? FastifyWebServer._DEFAULT_PORT;
 
-		await this._loggingConnector?.log({
+		await this._loggingComponent?.log({
 			level: "info",
 			ts: Date.now(),
 			source: this.CLASS_NAME,
@@ -259,7 +273,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const addresses = this._fastify.addresses();
 
 				const protocol = Is.object(this._fastify.initialConfig.https) ? "https://" : "http://";
-				await this._loggingConnector?.log({
+				await this._loggingComponent?.log({
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -275,7 +289,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				});
 				this._started = true;
 			} catch (err) {
-				await this._loggingConnector?.log({
+				await this._loggingComponent?.log({
 					level: "error",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -296,7 +310,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 			await this._fastify.close();
 
-			await this._loggingConnector?.log({
+			await this._loggingComponent?.log({
 				level: "info",
 				ts: Date.now(),
 				source: this.CLASS_NAME,
@@ -321,7 +335,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				if (!path.startsWith("/")) {
 					path = `/${path}`;
 				}
-				await this._loggingConnector?.log({
+				await this._loggingComponent?.log({
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -367,7 +381,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const namespace = `/${pathParts[0]}`;
 				const topic = pathParts.slice(1).join("/");
 
-				await this._loggingConnector?.log({
+				await this._loggingComponent?.log({
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -394,7 +408,11 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					try {
 						for (const socketRouteProcessor of socketRouteProcessors) {
 							if (socketRouteProcessor.connected) {
-								await socketRouteProcessor.connected(socketServerRequest, socketRoute);
+								await socketRouteProcessor.connected(
+									socketServerRequest,
+									socketRoute,
+									this._loggingComponentType
+								);
 							}
 						}
 					} catch (err) {
@@ -412,7 +430,11 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 							// The socket disconnected so notify any processors
 							for (const socketRouteProcessor of socketRouteProcessors) {
 								if (socketRouteProcessor.disconnected) {
-									await socketRouteProcessor.disconnected(socketServerRequest, socketRoute);
+									await socketRouteProcessor.disconnected(
+										socketServerRequest,
+										socketRoute,
+										this._loggingComponentType
+									);
 								}
 							}
 						} catch {
@@ -508,7 +530,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 						httpResponse,
 						restRoute,
 						httpRequestIdentity,
-						processorState
+						processorState,
+						this._loggingComponentType
 					);
 				}
 			}
@@ -520,7 +543,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 						httpResponse,
 						restRoute,
 						httpRequestIdentity,
-						processorState
+						processorState,
+						this._loggingComponentType
 					);
 				}
 			}
@@ -532,7 +556,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 						httpResponse,
 						restRoute,
 						httpRequestIdentity,
-						processorState
+						processorState,
+						this._loggingComponentType
 					);
 				}
 			}
@@ -632,12 +657,13 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 							response,
 							socketRoute,
 							httpRequestIdentity,
-							responseProcessorState
+							responseProcessorState,
+							this._loggingComponentType
 						);
 					}
 				}
 			} catch (err) {
-				this._loggingConnector?.log({
+				this._loggingComponent?.log({
 					level: "error",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -658,7 +684,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 						httpResponse,
 						socketRoute,
 						httpRequestIdentity,
-						processorState
+						processorState,
+						this._loggingComponentType
 					);
 				}
 			}
@@ -680,7 +707,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 						processorState,
 						async (topic: string, processResponse: IHttpResponse) => {
 							await postProcessEmit(topic, processResponse, processorState);
-						}
+						},
+						this._loggingComponentType
 					);
 				}
 			}

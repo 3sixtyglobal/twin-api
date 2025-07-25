@@ -10,7 +10,7 @@ The definition for a processor for handling socket routes.
 
 ### pre()?
 
-> `optional` **pre**(`request`, `response`, `route`, `requestIdentity`, `processorState`): `Promise`\<`void`\>
+> `optional` **pre**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Pre process the REST request for the specified route.
 
@@ -44,6 +44,12 @@ The identity context for the request.
 
 The state handed through the processors.
 
+##### loggingComponentType?
+
+`string`
+
+The logging component type for the request.
+
 #### Returns
 
 `Promise`\<`void`\>
@@ -58,7 +64,7 @@ Promise that resolves when the request is processed.
 
 ### post()?
 
-> `optional` **post**(`request`, `response`, `route`, `requestIdentity`, `processorState`): `Promise`\<`void`\>
+> `optional` **post**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Post process the REST request for the specified route.
 
@@ -92,6 +98,12 @@ The identity context for the request.
 
 The state handed through the processors.
 
+##### loggingComponentType?
+
+`string`
+
+The logging component type for the request.
+
 #### Returns
 
 `Promise`\<`void`\>
@@ -106,7 +118,7 @@ Promise that resolves when the request is processed.
 
 ### connected()?
 
-> `optional` **connected**(`request`, `route`): `Promise`\<`void`\>
+> `optional` **connected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Process the connected event.
 
@@ -124,6 +136,12 @@ The route being requested, if a matching one was found.
 
 `undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
 
+##### loggingComponentType?
+
+`string`
+
+The logging component type for the request.
+
 #### Returns
 
 `Promise`\<`void`\>
@@ -134,7 +152,7 @@ Promise that resolves when the request is processed.
 
 ### disconnected()?
 
-> `optional` **disconnected**(`request`, `route`): `Promise`\<`void`\>
+> `optional` **disconnected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Process the disconnected event.
 
@@ -152,6 +170,12 @@ The route being requested, if a matching one was found.
 
 `undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
 
+##### loggingComponentType?
+
+`string`
+
+The logging component type for the request.
+
 #### Returns
 
 `Promise`\<`void`\>
@@ -162,7 +186,7 @@ Promise that resolves when the request is processed.
 
 ### process()?
 
-> `optional` **process**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `responseEmitter`): `Promise`\<`void`\>
+> `optional` **process**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `responseEmitter`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Process the REST request for the specified route.
 
@@ -201,6 +225,12 @@ The state handed through the processors.
 (`topic`, `response`) => `Promise`\<`void`\>
 
 The function to emit a response.
+
+##### loggingComponentType?
+
+`string`
+
+The logging component type for the request.
 
 #### Returns
 

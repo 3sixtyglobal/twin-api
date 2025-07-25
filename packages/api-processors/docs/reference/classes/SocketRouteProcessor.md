@@ -42,7 +42,7 @@ Runtime name for the class.
 
 ### connected()
 
-> **connected**(`request`, `route`): `Promise`\<`void`\>
+> **connected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Process the connected event.
 
@@ -60,6 +60,12 @@ The route being requested, if a matching one was found.
 
 `undefined` | `ISocketRoute`\<`any`, `any`\>
 
+##### loggingComponentType?
+
+`string`
+
+The logging component type for the request.
+
 #### Returns
 
 `Promise`\<`void`\>
@@ -74,7 +80,7 @@ Promise that resolves when the request is processed.
 
 ### disconnected()
 
-> **disconnected**(`request`, `route`): `Promise`\<`void`\>
+> **disconnected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Process the disconnected event.
 
@@ -92,6 +98,12 @@ The route being requested, if a matching one was found.
 
 `undefined` | `ISocketRoute`\<`any`, `any`\>
 
+##### loggingComponentType?
+
+`string`
+
+The logging component type for the request.
+
 #### Returns
 
 `Promise`\<`void`\>
@@ -106,7 +118,7 @@ Promise that resolves when the request is processed.
 
 ### process()
 
-> **process**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `responseEmitter`): `Promise`\<`void`\>
+> **process**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `responseEmitter`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Process the REST request for the specified route.
 
@@ -145,6 +157,12 @@ The state handed through the processors.
 (`topic`, `response`) => `Promise`\<`void`\>
 
 The function to emit a response.
+
+##### loggingComponentType?
+
+`string`
+
+The logging component type for the request.
 
 #### Returns
 

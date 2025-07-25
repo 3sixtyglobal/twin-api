@@ -8,13 +8,12 @@ import type { ILoggingProcessorConfig } from "./ILoggingProcessorConfig";
  */
 export interface ILoggingProcessorConstructorOptions {
 	/**
-	 * The type for the logging connector.
-	 * @default logging
+	 * The type for the logging component.
 	 */
-	loggingConnectorType?: string;
+	loggingComponentType?: string;
 
 	/**
-	 *
+	 * The configuration for the logging processor.
 	 */
 	config?: ILoggingProcessorConfig;
 }
