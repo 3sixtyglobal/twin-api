@@ -67,10 +67,10 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	/**
 	 * The service needs to be started when the application is initialized.
 	 * @param nodeIdentity The identity of the node.
-	 * @param nodeLoggingConnectorType The node logging connector type, defaults to "node-logging".
+	 * @param nodeLoggingComponentType The node logging component type.
 	 * @returns Nothing.
 	 */
-	public async start(nodeIdentity: string, nodeLoggingConnectorType?: string): Promise<void> {
+	public async start(nodeIdentity: string, nodeLoggingComponentType?: string): Promise<void> {
 		Guards.string(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
 		this._nodeIdentity = nodeIdentity;
 	}
