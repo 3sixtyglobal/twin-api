@@ -74,7 +74,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * The logging component.
 	 * @internal
 	 */
-	private readonly _loggingComponent?: ILoggingComponent;
+	private readonly _logging?: ILoggingComponent;
 
 	/**
 	 * The options for the server.
@@ -118,9 +118,9 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 */
 	constructor(options?: IFastifyWebServerConstructorOptions) {
 		this._loggingComponentType = options?.loggingComponentType;
-		this._loggingComponent = Is.stringValue(options?.loggingComponentType)
-			? ComponentFactory.get(options.loggingComponentType)
-			: undefined;
+		this._logging = ComponentFactory.getIfExists<ILoggingComponent>(
+			options?.loggingComponentType ?? "logging"
+		);
 		this._fastify = Fastify({
 			maxParamLength: 2000,
 			...options?.config?.web
@@ -173,7 +173,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		if (Is.arrayValue(socketRoutes) && !Is.arrayValue(socketRouteProcessors)) {
 			throw new GeneralError(this.CLASS_NAME, "noSocketProcessors");
 		}
-		await this._loggingComponent?.log({
+		await this._logging?.log({
 			level: "info",
 			ts: Date.now(),
 			source: this.CLASS_NAME,
@@ -231,7 +231,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				httpStatusCode = errorAndCode.httpStatusCode;
 			}
 
-			await this._loggingComponent?.log({
+			await this._logging?.log({
 				level: "error",
 				ts: Date.now(),
 				source: this.CLASS_NAME,
@@ -256,7 +256,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		const host = this._options?.host ?? FastifyWebServer._DEFAULT_HOST;
 		const port = this._options?.port ?? FastifyWebServer._DEFAULT_PORT;
 
-		await this._loggingComponent?.log({
+		await this._logging?.log({
 			level: "info",
 			ts: Date.now(),
 			source: this.CLASS_NAME,
@@ -273,7 +273,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const addresses = this._fastify.addresses();
 
 				const protocol = Is.object(this._fastify.initialConfig.https) ? "https://" : "http://";
-				await this._loggingComponent?.log({
+				await this._logging?.log({
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -289,7 +289,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				});
 				this._started = true;
 			} catch (err) {
-				await this._loggingComponent?.log({
+				await this._logging?.log({
 					level: "error",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -310,7 +310,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 			await this._fastify.close();
 
-			await this._loggingComponent?.log({
+			await this._logging?.log({
 				level: "info",
 				ts: Date.now(),
 				source: this.CLASS_NAME,
@@ -335,7 +335,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				if (!path.startsWith("/")) {
 					path = `/${path}`;
 				}
-				await this._loggingComponent?.log({
+				await this._logging?.log({
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -381,7 +381,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const namespace = `/${pathParts[0]}`;
 				const topic = pathParts.slice(1).join("/");
 
-				await this._loggingComponent?.log({
+				await this._logging?.log({
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
@@ -663,7 +663,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					}
 				}
 			} catch (err) {
-				this._loggingComponent?.log({
+				this._logging?.log({
 					level: "error",
 					ts: Date.now(),
 					source: this.CLASS_NAME,

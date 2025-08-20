@@ -26,7 +26,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * The component for logging the information.
 	 * @internal
 	 */
-	private readonly _loggingComponent: ILoggingComponent;
+	private readonly _logging?: ILoggingComponent;
 
 	/**
 	 * Include the body objects when logging the information.
@@ -51,7 +51,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * @param options Options for the processor.
 	 */
 	constructor(options?: ILoggingProcessorConstructorOptions) {
-		this._loggingComponent = ComponentFactory.get(options?.loggingComponentType ?? "logging");
+		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType ?? "logging");
 		this._includeBody = options?.config?.includeBody ?? false;
 		this._fullBase64 = options?.config?.fullBase64 ?? false;
 		this._obfuscateProperties = options?.config?.obfuscateProperties ?? ["password"];
@@ -90,7 +90,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 			}
 		}
 
-		await this._loggingComponent.log({
+		await this._logging?.log({
 			level: "info",
 			source: this.CLASS_NAME,
 			ts: Date.now(),
@@ -160,7 +160,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 			}
 		}
 
-		await this._loggingComponent.log({
+		await this._logging?.log({
 			level:
 				Is.number(response.statusCode) && response.statusCode >= HttpStatusCode.badRequest
 					? "error"
