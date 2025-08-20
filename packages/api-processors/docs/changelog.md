@@ -1,5 +1,19 @@
 # @twin.org/api-processors - Changelog
 
+## [0.0.2-next.7](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.6...api-processors-v0.0.2-next.7) (2025-08-20)
+
+
+### Features
+
+* logging naming consistency ([a4a6ef2](https://github.com/twinfoundation/api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.2-next.6 to 0.0.2-next.7
+
 ## [0.0.2-next.6](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.5...api-processors-v0.0.2-next.6) (2025-08-19)
 
 
