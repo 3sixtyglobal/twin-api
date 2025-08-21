@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.2-next.8](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.7...api-models-v0.0.2-next.8) (2025-08-21)
+
+
+### Features
+
+* add root, favicon routes ([71da1c3](https://github.com/twinfoundation/api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+
 ## [0.0.2-next.7](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.6...api-models-v0.0.2-next.7) (2025-08-20)
 
 

@@ -1,5 +1,21 @@
 # @twin.org/api-auth-entity-storage-service - Changelog
 
+## [0.0.2-next.8](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.7...api-auth-entity-storage-service-v0.0.2-next.8) (2025-08-21)
+
+
+### Miscellaneous Chores
+
+* **api-auth-entity-storage-service:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.2-next.7 to 0.0.2-next.8
+    * @twin.org/api-core bumped from 0.0.2-next.7 to 0.0.2-next.8
+    * @twin.org/api-models bumped from 0.0.2-next.7 to 0.0.2-next.8
+
 ## [0.0.2-next.7](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.6...api-auth-entity-storage-service-v0.0.2-next.7) (2025-08-20)
 
 
