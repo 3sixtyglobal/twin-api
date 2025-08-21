@@ -10,10 +10,22 @@ import type { IServerInfo } from "./IServerInfo";
  */
 export interface IInformationComponent extends IComponent {
 	/**
+	 * Get the root information.
+	 * @returns The root information.
+	 */
+	root(): Promise<string>;
+
+	/**
 	 * Get the server information.
 	 * @returns The service information.
 	 */
 	info(): Promise<IServerInfo>;
+
+	/**
+	 * Get the favicon.
+	 * @returns The favicon.
+	 */
+	favicon(): Promise<Uint8Array | undefined>;
 
 	/**
 	 * Get the OpenAPI spec.

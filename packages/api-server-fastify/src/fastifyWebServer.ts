@@ -31,7 +31,12 @@ import {
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpMethod, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
-import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
+import Fastify, {
+	type FastifyServerOptions,
+	type FastifyInstance,
+	type FastifyReply,
+	type FastifyRequest
+} from "fastify";
 import type { Server, ServerOptions, Socket } from "socket.io";
 import FastifySocketIO from "./fastifySocketIo";
 import type { IFastifyWebServerConstructorOptions } from "./models/IFastifyWebServerConstructorOptions";
@@ -122,9 +127,13 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			options?.loggingComponentType ?? "logging"
 		);
 		this._fastify = Fastify({
-			maxParamLength: 2000,
+			routerOptions: {
+				maxParamLength: 2000
+			},
 			...options?.config?.web
-		});
+			// Need this cast for now as maxParamLength has moved in to routerOptions
+			// but the TS defs has not been updated yet
+		} as unknown as FastifyServerOptions);
 		this._socketConfig = {
 			path: "/socket",
 			...options?.config?.socket

@@ -33,6 +33,18 @@ export class InformationService implements IInformationComponent {
 	private readonly _healthInfo: IHealthInfo;
 
 	/**
+	 * The path to the favicon Spec.
+	 * @internal
+	 */
+	private readonly _faviconPath?: string;
+
+	/**
+	 * The favicon.
+	 * @internal
+	 */
+	private _favicon?: Uint8Array;
+
+	/**
 	 * The path to the OpenAPI Spec.
 	 * @internal
 	 */
@@ -42,7 +54,7 @@ export class InformationService implements IInformationComponent {
 	 * The OpenAPI spec.
 	 * @internal
 	 */
-	private _openApiSpec?: unknown;
+	private _openApiSpec?: string;
 
 	/**
 	 * Create a new instance of InformationService.
@@ -57,6 +69,7 @@ export class InformationService implements IInformationComponent {
 		this._healthInfo = {
 			status: "ok"
 		};
+		this._faviconPath = options.config.favIconPath;
 		this._openApiSpecPath = options.config.openApiSpecPath;
 	}
 
@@ -65,12 +78,24 @@ export class InformationService implements IInformationComponent {
 	 * @returns Nothing.
 	 */
 	public async start(): Promise<void> {
-		const filename = this._openApiSpecPath;
-
-		if (Is.stringValue(filename)) {
-			const contentBuffer = await readFile(filename, "utf8");
+		const openApiPath = this._openApiSpecPath;
+		if (Is.stringValue(openApiPath)) {
+			const contentBuffer = await readFile(openApiPath, "utf8");
 			this._openApiSpec = JSON.parse(contentBuffer);
 		}
+
+		const favIconPath = this._faviconPath;
+		if (Is.stringValue(favIconPath)) {
+			this._favicon = await readFile(favIconPath);
+		}
+	}
+
+	/**
+	 * Get the root information.
+	 * @returns The root information.
+	 */
+	public async root(): Promise<string> {
+		return `${this._serverInfo.name} - ${this._serverInfo.version}`;
 	}
 
 	/**
@@ -79,6 +104,14 @@ export class InformationService implements IInformationComponent {
 	 */
 	public async info(): Promise<IServerInfo> {
 		return this._serverInfo;
+	}
+
+	/**
+	 * Get the favicon.
+	 * @returns The favicon.
+	 */
+	public async favicon(): Promise<Uint8Array | undefined> {
+		return this._favicon;
 	}
 
 	/**

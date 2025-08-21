@@ -4,16 +4,17 @@ import type {
 	IHttpRequestContext,
 	IInformationComponent,
 	INoContentRequest,
-	INoContentResponse,
 	IRestRoute,
+	IServerFavIconResponse,
 	IServerHealthResponse,
 	IServerInfoResponse,
+	IServerRootResponse,
 	IServerSpecResponse,
 	ITag
 } from "@twin.org/api-models";
 import { ComponentFactory, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { HttpStatusCode } from "@twin.org/web";
+import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
 
 /**
  * The tag to associate with the routes.
@@ -37,17 +38,27 @@ export function generateRestRoutesInformation(
 ): IRestRoute[] {
 	const rootRoute: IRestRoute = {
 		operationId: "serverRoot",
-		summary: "Get the root blank page",
+		summary: "Get the root text page",
 		tag: tagsInformation[0].name,
 		method: "GET",
 		path: `${baseRouteName}/`,
-		handler: async () => ({}),
+		handler: async (httpRequestContext, request) =>
+			serverRoot(httpRequestContext, componentName, request),
 		responseType: [
 			{
-				type: nameof<INoContentResponse>()
+				type: nameof<IServerRootResponse>(),
+				mimeType: MimeTypes.PlainText,
+				examples: [
+					{
+						id: "serverRootResponse",
+						description: "The response for the root request.",
+						response: {
+							body: "API Server - 1.0.0"
+						}
+					}
+				]
 			}
 		],
-		excludeFromSpec: true,
 		skipAuth: true
 	};
 
@@ -74,6 +85,23 @@ export function generateRestRoutesInformation(
 						}
 					}
 				]
+			}
+		],
+		skipAuth: true
+	};
+
+	const favIconRoute: IRestRoute<INoContentRequest, IServerFavIconResponse> = {
+		operationId: "serverFavIcon",
+		summary: "Get the favicon for the server",
+		tag: tagsInformation[0].name,
+		method: "GET",
+		path: `${baseRouteName}/favicon.ico`,
+		handler: async (httpRequestContext, request) =>
+			serverFavIcon(httpRequestContext, componentName, request),
+		responseType: [
+			{
+				type: nameof<IServerFavIconResponse>(),
+				mimeType: "image/x-icon"
 			}
 		],
 		skipAuth: true
@@ -185,7 +213,25 @@ export function generateRestRoutesInformation(
 		skipAuth: true
 	};
 
-	return [rootRoute, informationRoute, healthRoute, specRoute];
+	return [rootRoute, favIconRoute, informationRoute, healthRoute, specRoute];
+}
+
+/**
+ * Get the root for the server.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function serverRoot(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: INoContentRequest
+): Promise<IServerRootResponse> {
+	const component = ComponentFactory.get<IInformationComponent>(componentName);
+	return {
+		body: await component.root()
+	};
 }
 
 /**
@@ -221,6 +267,34 @@ export async function serverHealth(
 	const component = ComponentFactory.get<IInformationComponent>(componentName);
 	return {
 		body: await component.health()
+	};
+}
+
+/**
+ * Get the favicon for the server.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function serverFavIcon(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: INoContentRequest
+): Promise<IServerFavIconResponse> {
+	const component = ComponentFactory.get<IInformationComponent>(componentName);
+	const favIcon = await component.favicon();
+
+	if (Is.uint8Array(favIcon)) {
+		return {
+			headers: {
+				[HeaderTypes.ContentType]: "image/x-icon"
+			},
+			body: favIcon
+		};
+	}
+	return {
+		statusCode: HttpStatusCode.notFound
 	};
 }
 

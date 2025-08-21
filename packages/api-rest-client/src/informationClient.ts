@@ -7,9 +7,11 @@ import type {
 	IHealthInfo,
 	IInformationComponent,
 	INoContentRequest,
+	IServerFavIconResponse,
 	IServerHealthResponse,
 	IServerInfo,
 	IServerInfoResponse,
+	IServerRootResponse,
 	IServerSpecResponse
 } from "@twin.org/api-models";
 import { NotSupportedError } from "@twin.org/core";
@@ -33,11 +35,32 @@ export class InformationClient extends BaseRestClient implements IInformationCom
 	}
 
 	/**
+	 * Get the server root.
+	 * @returns The root root.
+	 */
+	public async root(): Promise<string> {
+		const response = await this.fetch<INoContentRequest, IServerRootResponse>("/", "GET");
+		return response.body;
+	}
+
+	/**
 	 * Get the server information.
 	 * @returns The service information.
 	 */
 	public async info(): Promise<IServerInfo> {
 		const response = await this.fetch<INoContentRequest, IServerInfoResponse>("/info", "GET");
+		return response.body;
+	}
+
+	/**
+	 * Get the favicon.
+	 * @returns The favicon.
+	 */
+	public async favicon(): Promise<Uint8Array | undefined> {
+		const response = await this.fetch<INoContentRequest, IServerFavIconResponse>(
+			"/favicon.ico",
+			"GET"
+		);
 		return response.body;
 	}
 

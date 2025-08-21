@@ -109,7 +109,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 						// instead of the default application/json
 						headers[HeaderTypes.ContentType] =
 							restRouteResponse?.attachment?.mimeType ??
-							response.headers?.[HeaderTypes.ContentType] ??
+							restRouteResponse.headers?.[HeaderTypes.ContentType] ??
 							`${MimeTypes.Json}; charset=utf-8`;
 
 						// If there are filename or inline options set then add the content disposition

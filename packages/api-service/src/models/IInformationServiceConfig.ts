@@ -15,4 +15,9 @@ export interface IInformationServiceConfig {
 	 * The path to the OpenAPI Spec.
 	 */
 	openApiSpecPath?: string;
+
+	/**
+	 * The path to the favicon.
+	 */
+	favIconPath?: string;
 }
