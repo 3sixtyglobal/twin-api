@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.2-next.9](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.8...api-models-v0.0.2-next.9) (2025-08-29)
+
+
+### Features
+
+* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+
 ## [0.0.2-next.8](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.7...api-models-v0.0.2-next.8) (2025-08-21)
 
 

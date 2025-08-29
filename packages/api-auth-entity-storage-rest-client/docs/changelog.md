@@ -1,5 +1,21 @@
 # @twin.org/api-auth-entity-storage-rest-client - Changelog
 
+## [0.0.2-next.9](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-rest-client-v0.0.2-next.8...api-auth-entity-storage-rest-client-v0.0.2-next.9) (2025-08-29)
+
+
+### Features
+
+* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.2-next.8 to 0.0.2-next.9
+    * @twin.org/api-core bumped from 0.0.2-next.8 to 0.0.2-next.9
+    * @twin.org/api-models bumped from 0.0.2-next.8 to 0.0.2-next.9
+
 ## [0.0.2-next.8](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-rest-client-v0.0.2-next.7...api-auth-entity-storage-rest-client-v0.0.2-next.8) (2025-08-21)
 
 
