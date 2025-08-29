@@ -237,18 +237,16 @@ export abstract class BaseRestClient {
 			err = BaseError.fromError(errResponse);
 		}
 
-		if (!err) {
-			err = new FetchError(
-				this._implementationName,
-				`${BaseRestClient._CLASS_NAME_CAMEL_CASE}.failureStatusText`,
-				response.status as HttpStatusCode,
-				{
-					statusText: response.statusText ?? response.status,
-					route: finalRoute,
-					response: errResponse
-				}
-			);
-		}
+		err ??= new FetchError(
+			this._implementationName,
+			`${BaseRestClient._CLASS_NAME_CAMEL_CASE}.failureStatusText`,
+			response.status as HttpStatusCode,
+			{
+				statusText: response.statusText ?? response.status,
+				route: finalRoute,
+				response: errResponse
+			}
+		);
 
 		throw err;
 	}

@@ -76,9 +76,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		processorState.requestStart = now;
 
 		const contentType = request.headers?.[HeaderTypes.ContentType];
-		const isJson = Is.stringValue(contentType)
-			? contentType.includes(MimeTypes.Json) || contentType.includes(MimeTypes.JsonLd)
-			: false;
+		const isJson = this.isMimeJson(contentType);
 
 		let requestUrl = "";
 		if (Is.stringValue(request.url)) {
@@ -122,9 +120,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		let data: { [id: string]: unknown } | undefined;
 		if (this._includeBody) {
 			const contentType = response.headers?.[HeaderTypes.ContentType];
-			const isJson = Is.stringValue(contentType)
-				? contentType.includes(MimeTypes.Json) || contentType.includes(MimeTypes.JsonLd)
-				: false;
+			const isJson = this.isMimeJson(contentType);
 			const contentLength = response.headers?.[HeaderTypes.ContentLength];
 			if (isJson) {
 				data = {
@@ -197,5 +193,17 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		}
 
 		return propValue;
+	}
+
+	/**
+	 * Check if the content type is JSON.
+	 * @param contentType The content type to check.
+	 * @returns True if the content type is JSON, false otherwise.
+	 * @internal
+	 */
+	private isMimeJson(contentType: string | string[] | undefined): boolean {
+		return Is.stringValue(contentType)
+			? contentType.includes(MimeTypes.Json) || contentType.includes(MimeTypes.JsonLd)
+			: false;
 	}
 }
