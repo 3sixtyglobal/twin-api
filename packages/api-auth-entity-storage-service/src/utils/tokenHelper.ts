@@ -4,6 +4,7 @@ import { Is, UnauthorizedError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { type IVaultConnector, VaultConnectorHelper } from "@twin.org/vault-models";
 import {
+	HeaderHelper,
 	HeaderTypes,
 	type IHttpHeaders,
 	type IJwtHeader,
@@ -115,9 +116,10 @@ export class TokenHelper {
 		const authHeader = headers?.[HeaderTypes.Authorization];
 		const cookiesHeader = headers?.[HeaderTypes.Cookie];
 
-		if (Is.string(authHeader) && authHeader.startsWith("Bearer ")) {
+		const bearerToken = HeaderHelper.extractBearerToken(authHeader);
+		if (Is.stringValue(bearerToken)) {
 			return {
-				token: authHeader.slice(7).trim(),
+				token: bearerToken,
 				location: "authorization"
 			};
 		} else if (Is.notEmpty(cookiesHeader) && Is.stringValue(cookieName)) {

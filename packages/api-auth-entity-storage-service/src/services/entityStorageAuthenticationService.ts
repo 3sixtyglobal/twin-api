@@ -144,7 +144,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 			return tokenAndExpiry;
 		} catch (error) {
-			throw new UnauthorizedError(this.CLASS_NAME, "loginFailed", error);
+			throw new UnauthorizedError(this.CLASS_NAME, "loginFailed", undefined, error);
 		}
 	}
 
