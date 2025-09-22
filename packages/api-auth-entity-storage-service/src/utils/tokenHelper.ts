@@ -116,7 +116,7 @@ export class TokenHelper {
 		const authHeader = headers?.[HeaderTypes.Authorization];
 		const cookiesHeader = headers?.[HeaderTypes.Cookie];
 
-		const bearerToken = HeaderHelper.extractBearerToken(authHeader);
+		const bearerToken = HeaderHelper.extractBearer(authHeader);
 		if (Is.stringValue(bearerToken)) {
 			return {
 				token: bearerToken,
