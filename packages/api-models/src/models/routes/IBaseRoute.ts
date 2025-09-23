@@ -19,4 +19,9 @@ export interface IBaseRoute {
 	 * Skips the authentication for this route.
 	 */
 	skipAuth?: boolean;
+
+	/**
+	 * The features supported by additional processors to run for this route.
+	 */
+	processorFeatures?: string[];
 }

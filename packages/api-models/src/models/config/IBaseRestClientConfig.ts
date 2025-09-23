@@ -30,4 +30,9 @@ export interface IBaseRestClientConfig {
 	 * Include credentials in the request, defaults to true.
 	 */
 	includeCredentials?: boolean;
+
+	/**
+	 * The type of authentication generator to use.
+	 */
+	authenticationGeneratorType?: string;
 }

@@ -11,6 +11,14 @@ import type { IBaseRoute } from "../routes/IBaseRoute";
  */
 export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> extends IComponent {
 	/**
+	 * Features supported by this processor.
+	 * If a route has any of these features listed, this processor will be run for that route.
+	 * If this is not implemented, the processor will run for all routes.
+	 * @returns The features supported by this processor.
+	 */
+	features?(): string[];
+
+	/**
 	 * Pre process the REST request for the specified route.
 	 * @param request The request to handle.
 	 * @param response The response data to send if any.

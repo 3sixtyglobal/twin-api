@@ -1,6 +1,12 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IBaseRestClientConfig, IHttpRequest, IHttpResponse } from "@twin.org/api-models";
+import {
+	AuthenticationGeneratorFactory,
+	type IAuthenticationGenerator,
+	type IBaseRestClientConfig,
+	type IHttpRequest,
+	type IHttpResponse
+} from "@twin.org/api-models";
 import { BaseError, Coerce, Guards, Is, StringHelper, type IKeyValue } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import {
@@ -55,6 +61,11 @@ export abstract class BaseRestClient {
 	private readonly _includeCredentials: boolean;
 
 	/**
+	 * The type of authentication generator to use.
+	 */
+	private readonly _authenticationGenerator?: IAuthenticationGenerator;
+
+	/**
 	 * Create a new instance of BaseRestClient.
 	 * @param implementationName The name of the class implementation REST calls.
 	 * @param config The configuration for the client.
@@ -71,6 +82,11 @@ export abstract class BaseRestClient {
 
 		this._implementationName = implementationName;
 		this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
+		if (Is.stringValue(config.authenticationGeneratorType)) {
+			this._authenticationGenerator = AuthenticationGeneratorFactory.get(
+				config.authenticationGeneratorType
+			);
+		}
 
 		const finalPathPrefix = config.pathPrefix ?? pathPrefix;
 		if (Is.stringValue(finalPathPrefix)) {
@@ -161,6 +177,13 @@ export abstract class BaseRestClient {
 
 		if (Is.object(this._headers)) {
 			requestHeaders = { ...requestHeaders, ...this._headers };
+		}
+
+		if (!Is.empty(this._authenticationGenerator)) {
+			await this._authenticationGenerator.addAuthentication(
+				requestHeaders,
+				request?.authentication
+			);
 		}
 
 		const response = await FetchHelper.fetch(

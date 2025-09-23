@@ -28,4 +28,9 @@ export interface IHttpRequest<T = any> {
 	 * Data to return send as the body.
 	 */
 	body?: T;
+
+	/**
+	 * Used to authenticate and will be passed to the configured authentication provider for the request.
+	 */
+	authentication?: unknown;
 }

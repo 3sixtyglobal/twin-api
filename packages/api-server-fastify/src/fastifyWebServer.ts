@@ -4,6 +4,8 @@ import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
 	HttpErrorHelper,
+	type IBaseRouteProcessor,
+	type IBaseRoute,
 	type IHttpRequest,
 	type IHttpRequestIdentity,
 	type IHttpRequestPathParams,
@@ -532,7 +534,9 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		}
 	): Promise<void> {
 		try {
-			for (const routeProcessor of restRouteProcessors) {
+			const filteredProcessors = this.filterRouteProcessors(restRoute, restRouteProcessors);
+
+			for (const routeProcessor of filteredProcessors) {
 				if (routeProcessor.pre) {
 					await routeProcessor.pre(
 						httpServerRequest,
@@ -545,7 +549,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				}
 			}
 
-			for (const routeProcessor of restRouteProcessors) {
+			for (const routeProcessor of filteredProcessors) {
 				if (routeProcessor.process) {
 					await routeProcessor.process(
 						httpServerRequest,
@@ -558,7 +562,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				}
 			}
 
-			for (const routeProcessor of restRouteProcessors) {
+			for (const routeProcessor of filteredProcessors) {
 				if (routeProcessor.post) {
 					await routeProcessor.post(
 						httpServerRequest,
@@ -574,6 +578,42 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
 			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
 		}
+	}
+
+	/**
+	 * Filter the route processors based on the requested features.
+	 * @param route The route to process.
+	 * @param routeProcessors The processors to filter.
+	 * @returns The filtered list of route processor.
+	 * @internal
+	 */
+	private filterRouteProcessors<T extends IBaseRouteProcessor>(
+		route: IBaseRoute | undefined,
+		routeProcessors: T[]
+	): T[] {
+		const requestedFeatures = route?.processorFeatures ?? [];
+
+		if (!Is.arrayValue(requestedFeatures)) {
+			// If there are no requested features, we just return all the processors
+			return routeProcessors;
+		}
+
+		// Reduce the list of route processors to just those in the requested features list
+		const reducedProcessors = routeProcessors.filter(routeProcessor => {
+			// Processors that do not define any features always get run
+			// If the route processor has features defined, then we only run it
+			// if the route has at least one of those features required
+			let runRouteProcessor = true;
+			if (routeProcessor.features) {
+				const routeProcessorFeatures = routeProcessor.features();
+				runRouteProcessor = routeProcessorFeatures.some(feature =>
+					requestedFeatures.includes(feature)
+				);
+			}
+			return runRouteProcessor;
+		});
+
+		return reducedProcessors;
 	}
 
 	/**
@@ -647,6 +687,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		requestTopic: string,
 		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>
 	): Promise<void> {
+		const filteredProcessors = this.filterRouteProcessors(socketRoute, socketRouteProcessors);
+
 		// Custom emit method which will also call the post processors
 		const postProcessEmit = async (
 			topic: string,
@@ -659,7 +701,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 			try {
 				// The post processors are called after the response has been emitted
-				for (const postSocketRouteProcessor of socketRouteProcessors) {
+				for (const postSocketRouteProcessor of filteredProcessors) {
 					if (postSocketRouteProcessor.post) {
 						await postSocketRouteProcessor.post(
 							socketServerRequest,
@@ -686,7 +728,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		};
 
 		try {
-			for (const socketRouteProcessor of socketRouteProcessors) {
+			for (const socketRouteProcessor of filteredProcessors) {
 				if (socketRouteProcessor.pre) {
 					await socketRouteProcessor.pre(
 						socketServerRequest,
@@ -706,7 +748,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				await postProcessEmit(requestTopic, httpResponse, processorState);
 			}
 
-			for (const socketRouteProcessor of socketRouteProcessors) {
+			for (const socketRouteProcessor of filteredProcessors) {
 				if (socketRouteProcessor.process) {
 					await socketRouteProcessor.process(
 						socketServerRequest,
