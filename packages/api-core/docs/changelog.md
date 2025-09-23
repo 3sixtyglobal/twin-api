@@ -1,5 +1,19 @@
 # @twin.org/api-core - Changelog
 
+## [0.0.2-next.10](https://github.com/twinfoundation/api/compare/api-core-v0.0.2-next.9...api-core-v0.0.2-next.10) (2025-09-23)
+
+
+### Features
+
+* add authentication generators and process features option ([a67edf1](https://github.com/twinfoundation/api/commit/a67edf1df212bd8ab94a40cddf5338551155696f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.2-next.9 to 0.0.2-next.10
+
 ## [0.0.2-next.9](https://github.com/twinfoundation/api/compare/api-core-v0.0.2-next.8...api-core-v0.0.2-next.9) (2025-08-29)
 
 

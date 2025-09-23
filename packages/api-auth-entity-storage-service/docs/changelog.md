@@ -1,5 +1,22 @@
 # @twin.org/api-auth-entity-storage-service - Changelog
 
+## [0.0.2-next.10](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.9...api-auth-entity-storage-service-v0.0.2-next.10) (2025-09-23)
+
+
+### Features
+
+* use new extractBearer method ([3e0cc54](https://github.com/twinfoundation/api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
+* use new extractBearerToken method ([df654e9](https://github.com/twinfoundation/api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.2-next.9 to 0.0.2-next.10
+    * @twin.org/api-core bumped from 0.0.2-next.9 to 0.0.2-next.10
+    * @twin.org/api-models bumped from 0.0.2-next.9 to 0.0.2-next.10
+
 ## [0.0.2-next.9](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.8...api-auth-entity-storage-service-v0.0.2-next.9) (2025-08-29)
 
 
