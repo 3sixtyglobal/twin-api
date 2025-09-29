@@ -4,8 +4,8 @@ import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
 	HttpErrorHelper,
-	type IBaseRouteProcessor,
 	type IBaseRoute,
+	type IBaseRouteProcessor,
 	type IHttpRequest,
 	type IHttpRequestIdentity,
 	type IHttpRequestPathParams,
@@ -31,13 +31,13 @@ import {
 	StringHelper
 } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
-import { nameof } from "@twin.org/nameof";
+import { nameof, nameofCamelCase } from "@twin.org/nameof";
 import { HeaderTypes, HttpMethod, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
 import Fastify, {
-	type FastifyServerOptions,
 	type FastifyInstance,
 	type FastifyReply,
-	type FastifyRequest
+	type FastifyRequest,
+	type FastifyServerOptions
 } from "fastify";
 import type { Server, ServerOptions, Socket } from "socket.io";
 import FastifySocketIO from "./fastifySocketIo";
@@ -47,13 +47,6 @@ import type { IFastifyWebServerConstructorOptions } from "./models/IFastifyWebSe
  * Implementation of the web server using Fastify.
  */
 export class FastifyWebServer implements IWebServer<FastifyInstance> {
-	/**
-	 * Runtime name for the class in camel case.
-	 * @internal
-	 */
-	private static readonly _CLASS_NAME_CAMEL_CASE: string =
-		StringHelper.camelCase(nameof<FastifyWebServer>());
-
 	/**
 	 * Default port for running the server.
 	 * @internal
@@ -188,7 +181,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			level: "info",
 			ts: Date.now(),
 			source: this.CLASS_NAME,
-			message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.building`
+			message: `${nameofCamelCase<FastifyWebServer>()}.building`
 		});
 
 		this._options = options;
@@ -246,7 +239,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				level: "error",
 				ts: Date.now(),
 				source: this.CLASS_NAME,
-				message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.badRequest`,
+				message: `${nameofCamelCase<FastifyWebServer>()}.badRequest`,
 				error: err
 			});
 
@@ -271,7 +264,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			level: "info",
 			ts: Date.now(),
 			source: this.CLASS_NAME,
-			message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.starting`,
+			message: `${nameofCamelCase<FastifyWebServer>()}.starting`,
 			data: {
 				host,
 				port
@@ -288,7 +281,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.started`,
+					message: `${nameofCamelCase<FastifyWebServer>()}.started`,
 					data: {
 						addresses: addresses
 							.map(
@@ -304,7 +297,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "error",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.startFailed`,
+					message: `${nameofCamelCase<FastifyWebServer>()}.startFailed`,
 					error: BaseError.fromError(err)
 				});
 			}
@@ -325,7 +318,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				level: "info",
 				ts: Date.now(),
 				source: this.CLASS_NAME,
-				message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.stopped`
+				message: `${nameofCamelCase<FastifyWebServer>()}.stopped`
 			});
 		}
 	}
@@ -350,7 +343,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.restRouteAdded`,
+					message: `${nameofCamelCase<FastifyWebServer>()}.restRouteAdded`,
 					data: { route: path, method: restRoute.method }
 				});
 				const method = restRoute.method.toLowerCase() as
@@ -396,7 +389,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "info",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.socketRouteAdded`,
+					message: `${nameofCamelCase<FastifyWebServer>()}.socketRouteAdded`,
 					data: {
 						handshakePath: this._socketConfig.path,
 						namespace,
@@ -718,7 +711,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "error",
 					ts: Date.now(),
 					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.postProcessorError`,
+					message: `${nameofCamelCase<FastifyWebServer>()}.postProcessorError`,
 					error: BaseError.fromError(err),
 					data: {
 						route: socketRoute.path

@@ -8,7 +8,7 @@ import {
 	type IHttpResponse
 } from "@twin.org/api-models";
 import { BaseError, Coerce, Guards, Is, StringHelper, type IKeyValue } from "@twin.org/core";
-import { nameof } from "@twin.org/nameof";
+import { nameof, nameofCamelCase } from "@twin.org/nameof";
 import {
 	FetchError,
 	FetchHelper,
@@ -23,13 +23,6 @@ import {
  * Abstract client class for common REST processing.
  */
 export abstract class BaseRestClient {
-	/**
-	 * Runtime name for the class.
-	 * @internal
-	 */
-	private static readonly _CLASS_NAME_CAMEL_CASE: string =
-		StringHelper.camelCase(nameof<BaseRestClient>());
-
 	/**
 	 * The name of the class implementation REST calls.
 	 * @internal
@@ -129,7 +122,7 @@ export abstract class BaseRestClient {
 				} else {
 					throw new FetchError(
 						this._implementationName,
-						`${BaseRestClient._CLASS_NAME_CAMEL_CASE}.missingRouteProp`,
+						`${nameofCamelCase<BaseRestClient>()}.missingRouteProp`,
 						HttpStatusCode.badRequest,
 						{ route, routeProp }
 					);
@@ -240,7 +233,7 @@ export abstract class BaseRestClient {
 			} catch (err) {
 				throw new FetchError(
 					this._implementationName,
-					`${BaseRestClient._CLASS_NAME_CAMEL_CASE}.decodingFailed`,
+					`${nameofCamelCase<BaseRestClient>()}.decodingFailed`,
 					response.status as HttpStatusCode,
 					{
 						route
@@ -262,7 +255,7 @@ export abstract class BaseRestClient {
 
 		err ??= new FetchError(
 			this._implementationName,
-			`${BaseRestClient._CLASS_NAME_CAMEL_CASE}.failureStatusText`,
+			`${nameofCamelCase<BaseRestClient>()}.failureStatusText`,
 			response.status as HttpStatusCode,
 			{
 				statusText: response.statusText ?? response.status,

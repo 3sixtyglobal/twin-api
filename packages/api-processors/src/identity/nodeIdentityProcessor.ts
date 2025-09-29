@@ -31,7 +31,7 @@ export class NodeIdentityProcessor implements IBaseRouteProcessor {
 	 * @param nodeLoggingComponentType The node logging component type.
 	 * @returns Nothing.
 	 */
-	public async start(nodeIdentity: string, nodeLoggingComponentType?: string): Promise<void> {
+	public async start(nodeIdentity?: string, nodeLoggingComponentType?: string): Promise<void> {
 		Guards.string(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
 		this._nodeIdentity = nodeIdentity;
 	}
