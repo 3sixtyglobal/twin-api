@@ -1,5 +1,19 @@
 # @twin.org/auditable-item-stream-rest-client - Changelog
 
+## [0.0.2-next.4](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.2-next.3...auditable-item-stream-rest-client-v0.0.2-next.4) (2025-09-29)
+
+
+### Features
+
+* use new nameof operators ([d1a3bf8](https://github.com/twinfoundation/auditable-item-stream/commit/d1a3bf8369f899fff8fd9d7b3b068f270fd8603d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.2-next.3 to 0.0.2-next.4
+
 ## [0.0.2-next.3](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.2-next.2...auditable-item-stream-rest-client-v0.0.2-next.3) (2025-08-29)
 
 
