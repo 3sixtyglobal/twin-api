@@ -27,7 +27,6 @@ import {
 	NotFoundError,
 	ObjectHelper,
 	RandomHelper,
-	StringHelper,
 	Urn,
 	Validation,
 	type IValidationFailure
@@ -50,7 +49,7 @@ import {
 	type IImmutableProofComponent,
 	type IImmutableProofVerification
 } from "@twin.org/immutable-proof-models";
-import { nameof } from "@twin.org/nameof";
+import { nameof, nameofKebabCase } from "@twin.org/nameof";
 import {
 	SchemaOrgContexts,
 	SchemaOrgDataTypes,
@@ -147,12 +146,11 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 		);
 
 		this._streamStorage = EntityStorageConnectorFactory.get(
-			options?.streamEntityStorageType ?? StringHelper.kebabCase(nameof<AuditableItemStream>())
+			options?.streamEntityStorageType ?? nameofKebabCase<AuditableItemStream>()
 		);
 
 		this._streamEntryStorage = EntityStorageConnectorFactory.get(
-			options?.streamEntryEntityStorageType ??
-				StringHelper.kebabCase(nameof<AuditableItemStreamEntry>())
+			options?.streamEntryEntityStorageType ?? nameofKebabCase<AuditableItemStreamEntry>()
 		);
 
 		if (Is.stringValue(options?.eventBusComponentType)) {
