@@ -1,5 +1,12 @@
 # @twin.org/api-auth-entity-storage-models - Changelog
 
+## [0.0.2-next.11](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-models-v0.0.2-next.10...api-auth-entity-storage-models-v0.0.2-next.11) (2025-09-29)
+
+
+### Features
+
+* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+
 ## [0.0.2-next.10](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-models-v0.0.2-next.9...api-auth-entity-storage-models-v0.0.2-next.10) (2025-09-23)
 
 

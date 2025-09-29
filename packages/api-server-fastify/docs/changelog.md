@@ -1,5 +1,21 @@
 # @twin.org/api-server-fastify - Changelog
 
+## [0.0.2-next.11](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.2-next.10...api-server-fastify-v0.0.2-next.11) (2025-09-29)
+
+
+### Features
+
+* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.2-next.10 to 0.0.2-next.11
+    * @twin.org/api-models bumped from 0.0.2-next.10 to 0.0.2-next.11
+    * @twin.org/api-processors bumped from 0.0.2-next.10 to 0.0.2-next.11
+
 ## [0.0.2-next.10](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.2-next.9...api-server-fastify-v0.0.2-next.10) (2025-09-23)
 
 
