@@ -67,5 +67,16 @@
 		"dist/types",
 		"locales",
 		"docs"
+	],
+	"keywords": [
+		"twin",
+		"trade",
+		"iota",
+		"framework",
+		"blockchain",
+		"api",
+		"service",
+		"microservice",
+		"business-logic"
 	]
 }
