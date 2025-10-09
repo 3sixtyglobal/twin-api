@@ -1,15 +1,21 @@
 {
-	"fastifyWebServer": {
-		"building": "Building Web Server",
-		"starting": "Starting Web Server at address \"{host}\" on port \"{port}\"",
-		"startFailed": "The Web Server failed to start",
-		"started": "The Web Server started on {addresses}",
-		"stopped": "The Web Server was stopped",
-		"badRequest": "The web server could not handle the request",
-		"restRouteAdded": "Added REST route \"{route}\" \"{method}\"",
-		"socketRouteAdded": "Added socket route: handshake path \"{handshakePath}\", namespace \"{namespace}\", event name \"{eventName}\"",
-		"noRestProcessors": "You must configure at least one REST processor",
-		"noSocketProcessors": "You must configure at least one socket processor",
-		"postProcessorError": "There was a failure after in a post processor for route \"{route}\""
+	"error": {
+		"fastifyWebServer": {
+			"startFailed": "The Web Server failed to start",
+			"badRequest": "The web server could not handle the request",
+			"noRestProcessors": "You must configure at least one REST processor",
+			"noSocketProcessors": "You must configure at least one socket processor",
+			"postProcessorError": "There was a failure after in a post processor for route \"{route}\""
+		}
+	},
+	"info": {
+		"fastifyWebServer": {
+			"building": "Building Web Server",
+			"starting": "Starting Web Server at address \"{host}\" on port \"{port}\"",
+			"started": "The Web Server started on {addresses}",
+			"stopped": "The Web Server was stopped",
+			"restRouteAdded": "Added REST route \"{route}\" \"{method}\"",
+			"socketRouteAdded": "Added socket route: handshake path \"{handshakePath}\", namespace \"{namespace}\", event name \"{eventName}\""
+		}
 	}
 }

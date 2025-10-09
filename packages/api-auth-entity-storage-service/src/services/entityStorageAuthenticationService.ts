@@ -27,15 +27,15 @@ import { TokenHelper } from "../utils/tokenHelper";
  */
 export class EntityStorageAuthenticationService implements IAuthenticationComponent {
 	/**
+	 * Runtime name for the class.
+	 */
+	public static readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationService>();
+
+	/**
 	 * Default TTL in minutes.
 	 * @internal
 	 */
 	private static readonly _DEFAULT_TTL_MINUTES: number = 60;
-
-	/**
-	 * Runtime name for the class.
-	 */
-	public readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationService>();
 
 	/**
 	 * The user admin service.
@@ -100,7 +100,11 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	 * @returns Nothing.
 	 */
 	public async start(nodeIdentity?: string, nodeLoggingComponentType?: string): Promise<void> {
-		Guards.string(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+		Guards.string(
+			EntityStorageAuthenticationService.CLASS_NAME,
+			nameof(nodeIdentity),
+			nodeIdentity
+		);
 		this._nodeIdentity = nodeIdentity;
 	}
 
@@ -117,13 +121,13 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		token?: string;
 		expiry: number;
 	}> {
-		Guards.stringValue(this.CLASS_NAME, nameof(email), email);
-		Guards.stringValue(this.CLASS_NAME, nameof(password), password);
+		Guards.stringValue(EntityStorageAuthenticationService.CLASS_NAME, nameof(email), email);
+		Guards.stringValue(EntityStorageAuthenticationService.CLASS_NAME, nameof(password), password);
 
 		try {
 			const user = await this._userEntityStorage.get(email);
 			if (!user) {
-				throw new GeneralError(this.CLASS_NAME, "userNotFound");
+				throw new GeneralError(EntityStorageAuthenticationService.CLASS_NAME, "userNotFound");
 			}
 
 			const saltBytes = Converter.base64ToBytes(user.salt);
@@ -132,7 +136,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
 
 			if (hashedPassword !== user.password) {
-				throw new GeneralError(this.CLASS_NAME, "passwordMismatch");
+				throw new GeneralError(EntityStorageAuthenticationService.CLASS_NAME, "passwordMismatch");
 			}
 
 			const tokenAndExpiry = await TokenHelper.createToken(
@@ -144,7 +148,12 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 			return tokenAndExpiry;
 		} catch (error) {
-			throw new UnauthorizedError(this.CLASS_NAME, "loginFailed", undefined, error);
+			throw new UnauthorizedError(
+				EntityStorageAuthenticationService.CLASS_NAME,
+				"loginFailed",
+				undefined,
+				error
+			);
 		}
 	}
 

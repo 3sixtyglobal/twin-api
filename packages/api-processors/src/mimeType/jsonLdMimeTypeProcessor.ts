@@ -12,7 +12,7 @@ export class JsonLdMimeTypeProcessor implements IMimeTypeProcessor {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<JsonLdMimeTypeProcessor>();
+	public static readonly CLASS_NAME: string = nameof<JsonLdMimeTypeProcessor>();
 
 	/**
 	 * Get the MIME types that this handler can handle.
@@ -31,7 +31,7 @@ export class JsonLdMimeTypeProcessor implements IMimeTypeProcessor {
 		const json = ObjectHelper.fromBytes<{ "@context"?: string }>(body);
 
 		if (Is.empty(json) || Is.empty(json["@context"])) {
-			throw new GeneralError(this.CLASS_NAME, "invalidJsonLd");
+			throw new GeneralError(JsonLdMimeTypeProcessor.CLASS_NAME, "invalidJsonLd");
 		}
 
 		return json;

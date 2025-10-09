@@ -10,9 +10,8 @@ import { nameof } from "@twin.org/nameof";
 export class PasswordHelper {
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<PasswordHelper>();
+	public static readonly CLASS_NAME: string = nameof<PasswordHelper>();
 
 	/**
 	 * Hash the password for the user.
@@ -24,8 +23,8 @@ export class PasswordHelper {
 		passwordBytes: Uint8Array,
 		saltBytes: Uint8Array
 	): Promise<string> {
-		Guards.uint8Array(PasswordHelper._CLASS_NAME, nameof(passwordBytes), passwordBytes);
-		Guards.uint8Array(PasswordHelper._CLASS_NAME, nameof(saltBytes), saltBytes);
+		Guards.uint8Array(PasswordHelper.CLASS_NAME, nameof(passwordBytes), passwordBytes);
+		Guards.uint8Array(PasswordHelper.CLASS_NAME, nameof(saltBytes), saltBytes);
 
 		const combined = new Uint8Array(saltBytes.length + passwordBytes.length);
 		combined.set(saltBytes);

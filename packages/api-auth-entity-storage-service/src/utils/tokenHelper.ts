@@ -18,9 +18,8 @@ import {
 export class TokenHelper {
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<TokenHelper>();
+	public static readonly CLASS_NAME: string = nameof<TokenHelper>();
 
 	/**
 	 * Create a new token.
@@ -75,7 +74,7 @@ export class TokenHelper {
 		payload: IJwtPayload;
 	}> {
 		if (!Is.stringValue(token)) {
-			throw new UnauthorizedError(this._CLASS_NAME, "missing");
+			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "missing");
 		}
 
 		const decoded = await Jwt.verifyWithVerifier(token, async t =>
@@ -84,12 +83,12 @@ export class TokenHelper {
 
 		// If some of the header/payload data is not properly populated then it is unauthorized.
 		if (!Is.stringValue(decoded.payload.sub)) {
-			throw new UnauthorizedError(this._CLASS_NAME, "payloadMissingSubject");
+			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "payloadMissingSubject");
 		} else if (
 			!Is.empty(decoded.payload?.exp) &&
 			decoded.payload.exp < Math.trunc(Date.now() / 1000)
 		) {
-			throw new UnauthorizedError(this._CLASS_NAME, "expired");
+			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "expired");
 		}
 
 		return {

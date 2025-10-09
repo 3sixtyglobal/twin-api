@@ -18,7 +18,7 @@ export class InformationService implements IInformationComponent {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<InformationService>();
+	public static readonly CLASS_NAME: string = nameof<InformationService>();
 
 	/**
 	 * The server information.
@@ -61,9 +61,13 @@ export class InformationService implements IInformationComponent {
 	 * @param options The options to create the service.
 	 */
 	constructor(options: IInformationServiceConstructorOptions) {
-		Guards.object(this.CLASS_NAME, nameof(options), options);
-		Guards.object(this.CLASS_NAME, nameof(options.config), options.config);
-		Guards.object(this.CLASS_NAME, nameof(options.config.serverInfo), options.config.serverInfo);
+		Guards.object(InformationService.CLASS_NAME, nameof(options), options);
+		Guards.object(InformationService.CLASS_NAME, nameof(options.config), options.config);
+		Guards.object(
+			InformationService.CLASS_NAME,
+			nameof(options.config.serverInfo),
+			options.config.serverInfo
+		);
 
 		this._serverInfo = options.config.serverInfo;
 		this._healthInfo = {

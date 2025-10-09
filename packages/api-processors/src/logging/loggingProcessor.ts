@@ -20,7 +20,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<LoggingProcessor>();
+	public static readonly CLASS_NAME: string = nameof<LoggingProcessor>();
 
 	/**
 	 * The component for logging the information.
@@ -90,7 +90,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 
 		await this._logging?.log({
 			level: "info",
-			source: this.CLASS_NAME,
+			source: LoggingProcessor.CLASS_NAME,
 			ts: Date.now(),
 			message: `===> ${request.method} ${requestUrl}`,
 			data:
@@ -161,7 +161,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 				Is.number(response.statusCode) && response.statusCode >= HttpStatusCode.badRequest
 					? "error"
 					: "info",
-			source: this.CLASS_NAME,
+			source: LoggingProcessor.CLASS_NAME,
 			ts: Date.now(),
 			message: `<=== ${response.statusCode ?? ""} ${request.method} ${requestUrl} duration: ${elapsedMicroSeconds}µs`,
 			data

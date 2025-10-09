@@ -20,18 +20,18 @@ import { nameof } from "@twin.org/nameof";
 /**
  * The client to connect to the information service.
  */
-export class InformationClient extends BaseRestClient implements IInformationComponent {
+export class InformationRestClient extends BaseRestClient implements IInformationComponent {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<InformationClient>();
+	public static readonly CLASS_NAME: string = nameof<InformationRestClient>();
 
 	/**
 	 * Create a new instance of InformationClient.
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(nameof<InformationClient>(), config, "");
+		super(nameof<InformationRestClient>(), config, "");
 	}
 
 	/**
@@ -94,7 +94,7 @@ export class InformationClient extends BaseRestClient implements IInformationCom
 		status: HealthStatus,
 		details?: string
 	): Promise<void> {
-		throw new NotSupportedError(this.CLASS_NAME, nameof("setComponentHealth"));
+		throw new NotSupportedError(InformationRestClient.CLASS_NAME, nameof("setComponentHealth"));
 	}
 
 	/**
@@ -103,6 +103,6 @@ export class InformationClient extends BaseRestClient implements IInformationCom
 	 * @returns Nothing.
 	 */
 	public async removeComponentHealth(name: string): Promise<void> {
-		throw new NotSupportedError(this.CLASS_NAME, nameof("removeComponentHealth"));
+		throw new NotSupportedError(InformationRestClient.CLASS_NAME, nameof("removeComponentHealth"));
 	}
 }

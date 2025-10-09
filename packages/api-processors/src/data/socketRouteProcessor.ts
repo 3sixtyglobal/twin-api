@@ -22,7 +22,7 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<SocketRouteProcessor>();
+	public static readonly CLASS_NAME: string = nameof<SocketRouteProcessor>();
 
 	/**
 	 * Include the stack with errors.
@@ -117,7 +117,7 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 					response,
 					{
 						name: NotFoundError.CLASS_NAME,
-						message: `${this.CLASS_NAME}.routeNotFound`,
+						message: `${SocketRouteProcessor.CLASS_NAME}.routeNotFound`,
 						properties: {
 							notFoundId: request.url
 						}

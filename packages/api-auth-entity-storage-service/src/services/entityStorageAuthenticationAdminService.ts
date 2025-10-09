@@ -16,15 +16,15 @@ import { PasswordHelper } from "../utils/passwordHelper";
  */
 export class EntityStorageAuthenticationAdminService implements IAuthenticationAdminComponent {
 	/**
+	 * Runtime name for the class.
+	 */
+	public static readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationAdminService>();
+
+	/**
 	 * The minimum password length.
 	 * @internal
 	 */
 	private static readonly _DEFAULT_MIN_PASSWORD_LENGTH: number = 8;
-
-	/**
-	 * Runtime name for the class.
-	 */
-	public readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationAdminService>();
 
 	/**
 	 * The entity storage for users.
@@ -60,19 +60,27 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	 * @returns Nothing.
 	 */
 	public async create(email: string, password: string, identity: string): Promise<void> {
-		Guards.stringValue(this.CLASS_NAME, nameof(email), email);
-		Guards.stringValue(this.CLASS_NAME, nameof(password), password);
+		Guards.stringValue(EntityStorageAuthenticationAdminService.CLASS_NAME, nameof(email), email);
+		Guards.stringValue(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(password),
+			password
+		);
 
 		try {
 			if (password.length < this._minPasswordLength) {
-				throw new GeneralError(this.CLASS_NAME, "passwordTooShort", {
-					minLength: this._minPasswordLength
-				});
+				throw new GeneralError(
+					EntityStorageAuthenticationAdminService.CLASS_NAME,
+					"passwordTooShort",
+					{
+						minLength: this._minPasswordLength
+					}
+				);
 			}
 
 			const user = await this._userEntityStorage.get(email);
 			if (user) {
-				throw new GeneralError(this.CLASS_NAME, "userExists");
+				throw new GeneralError(EntityStorageAuthenticationAdminService.CLASS_NAME, "userExists");
 			}
 
 			const saltBytes = RandomHelper.generate(16);
@@ -89,7 +97,12 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 
 			await this._userEntityStorage.set(newUser);
 		} catch (error) {
-			throw new GeneralError(this.CLASS_NAME, "createUserFailed", undefined, error);
+			throw new GeneralError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"createUserFailed",
+				undefined,
+				error
+			);
 		}
 	}
 
@@ -99,17 +112,26 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	 * @returns Nothing.
 	 */
 	public async remove(email: string): Promise<void> {
-		Guards.stringValue(this.CLASS_NAME, nameof(email), email);
+		Guards.stringValue(EntityStorageAuthenticationAdminService.CLASS_NAME, nameof(email), email);
 
 		try {
 			const user = await this._userEntityStorage.get(email);
 			if (!user) {
-				throw new NotFoundError(this.CLASS_NAME, "userNotFound", email);
+				throw new NotFoundError(
+					EntityStorageAuthenticationAdminService.CLASS_NAME,
+					"userNotFound",
+					email
+				);
 			}
 
 			await this._userEntityStorage.remove(email);
 		} catch (error) {
-			throw new GeneralError(this.CLASS_NAME, "removeUserFailed", undefined, error);
+			throw new GeneralError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"removeUserFailed",
+				undefined,
+				error
+			);
 		}
 	}
 
@@ -125,19 +147,31 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 		newPassword: string,
 		currentPassword?: string
 	): Promise<void> {
-		Guards.stringValue(this.CLASS_NAME, nameof(email), email);
-		Guards.stringValue(this.CLASS_NAME, nameof(newPassword), newPassword);
+		Guards.stringValue(EntityStorageAuthenticationAdminService.CLASS_NAME, nameof(email), email);
+		Guards.stringValue(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(newPassword),
+			newPassword
+		);
 
 		try {
 			if (newPassword.length < this._minPasswordLength) {
-				throw new GeneralError(this.CLASS_NAME, "passwordTooShort", {
-					minLength: this._minPasswordLength
-				});
+				throw new GeneralError(
+					EntityStorageAuthenticationAdminService.CLASS_NAME,
+					"passwordTooShort",
+					{
+						minLength: this._minPasswordLength
+					}
+				);
 			}
 
 			const user = await this._userEntityStorage.get(email);
 			if (!user) {
-				throw new NotFoundError(this.CLASS_NAME, "userNotFound", email);
+				throw new NotFoundError(
+					EntityStorageAuthenticationAdminService.CLASS_NAME,
+					"userNotFound",
+					email
+				);
 			}
 
 			if (Is.stringValue(currentPassword)) {
@@ -147,7 +181,10 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
 
 				if (hashedPassword !== user.password) {
-					throw new GeneralError(this.CLASS_NAME, "currentPasswordMismatch");
+					throw new GeneralError(
+						EntityStorageAuthenticationAdminService.CLASS_NAME,
+						"currentPasswordMismatch"
+					);
 				}
 			}
 
@@ -165,7 +202,12 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 
 			await this._userEntityStorage.set(updatedUser);
 		} catch (error) {
-			throw new GeneralError(this.CLASS_NAME, "updatePasswordFailed", undefined, error);
+			throw new GeneralError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"updatePasswordFailed",
+				undefined,
+				error
+			);
 		}
 	}
 }

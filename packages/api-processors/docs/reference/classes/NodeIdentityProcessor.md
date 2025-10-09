@@ -20,13 +20,9 @@ Adds a node identity to the request identity.
 
 ### CLASS\_NAME
 
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
-
-#### Implementation of
-
-`IBaseRouteProcessor.CLASS_NAME`
 
 ## Methods
 

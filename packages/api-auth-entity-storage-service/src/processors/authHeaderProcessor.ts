@@ -28,7 +28,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<AuthHeaderProcessor>();
+	public static readonly CLASS_NAME: string = nameof<AuthHeaderProcessor>();
 
 	/**
 	 * The vault for the keys.
@@ -71,7 +71,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	 * @returns Nothing.
 	 */
 	public async start(nodeIdentity?: string, nodeLoggingComponentType?: string): Promise<void> {
-		Guards.string(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+		Guards.string(AuthHeaderProcessor.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
 		this._nodeIdentity = nodeIdentity;
 	}
 

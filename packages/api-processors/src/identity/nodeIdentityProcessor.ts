@@ -17,7 +17,7 @@ export class NodeIdentityProcessor implements IBaseRouteProcessor {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<NodeIdentityProcessor>();
+	public static readonly CLASS_NAME: string = nameof<NodeIdentityProcessor>();
 
 	/**
 	 * The node identity for request context.
@@ -32,7 +32,7 @@ export class NodeIdentityProcessor implements IBaseRouteProcessor {
 	 * @returns Nothing.
 	 */
 	public async start(nodeIdentity?: string, nodeLoggingComponentType?: string): Promise<void> {
-		Guards.string(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
+		Guards.string(NodeIdentityProcessor.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
 		this._nodeIdentity = nodeIdentity;
 	}
 

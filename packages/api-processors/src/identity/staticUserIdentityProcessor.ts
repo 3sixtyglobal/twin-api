@@ -18,7 +18,7 @@ export class StaticUserIdentityProcessor implements IBaseRouteProcessor {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<StaticUserIdentityProcessor>();
+	public static readonly CLASS_NAME: string = nameof<StaticUserIdentityProcessor>();
 
 	/**
 	 * The fixed identity for request context.
@@ -31,10 +31,10 @@ export class StaticUserIdentityProcessor implements IBaseRouteProcessor {
 	 * @param options Options for the processor.
 	 */
 	constructor(options: IStaticUserIdentityProcessorConstructorOptions) {
-		Guards.object(this.CLASS_NAME, nameof(options), options);
-		Guards.object(this.CLASS_NAME, nameof(options.config), options.config);
+		Guards.object(StaticUserIdentityProcessor.CLASS_NAME, nameof(options), options);
+		Guards.object(StaticUserIdentityProcessor.CLASS_NAME, nameof(options.config), options.config);
 		Guards.stringValue(
-			this.CLASS_NAME,
+			StaticUserIdentityProcessor.CLASS_NAME,
 			nameof(options.config.userIdentity),
 			options.config.userIdentity
 		);

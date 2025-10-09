@@ -21,6 +21,14 @@ The definition for a base processor for handling REST routes.
 
 `R` = [`IHttpServerRequest`](IHttpServerRequest.md)
 
+## Indexable
+
+\[`key`: `string`\]: `any`
+
+All methods are optional, so we introduce an index signature to allow
+any additional properties or methods, which removes the TypeScript error where
+the class has no properties in common with the type.
+
 ## Methods
 
 ### features()?

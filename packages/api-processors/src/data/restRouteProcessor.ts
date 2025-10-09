@@ -22,7 +22,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<RestRouteProcessor>();
+	public static readonly CLASS_NAME: string = nameof<RestRouteProcessor>();
 
 	/**
 	 * Include the stack with errors.
@@ -63,7 +63,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 					response,
 					{
 						name: NotFoundError.CLASS_NAME,
-						message: `${this.CLASS_NAME}.routeNotFound`,
+						message: `${RestRouteProcessor.CLASS_NAME}.routeNotFound`,
 						properties: {
 							notFoundId: request.url
 						}

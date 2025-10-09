@@ -12,7 +12,7 @@ export class JwtMimeTypeProcessor implements IMimeTypeProcessor {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<JwtMimeTypeProcessor>();
+	public static readonly CLASS_NAME: string = nameof<JwtMimeTypeProcessor>();
 
 	/**
 	 * Get the MIME types that this handler can handle.

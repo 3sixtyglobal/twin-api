@@ -17,21 +17,21 @@ import { nameof } from "@twin.org/nameof";
 /**
  * The client to connect to the authentication service.
  */
-export class EntityStorageAuthenticationClient
+export class EntityStorageAuthenticationRestClient
 	extends BaseRestClient
 	implements IAuthenticationComponent
 {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationClient>();
+	public static readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationRestClient>();
 
 	/**
 	 * Create a new instance of EntityStorageAuthenticationClient.
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(nameof<EntityStorageAuthenticationClient>(), config, "authentication");
+		super(nameof<EntityStorageAuthenticationRestClient>(), config, "authentication");
 	}
 
 	/**
@@ -47,8 +47,12 @@ export class EntityStorageAuthenticationClient
 		token?: string;
 		expiry: number;
 	}> {
-		Guards.stringValue(this.CLASS_NAME, nameof(email), email);
-		Guards.stringValue(this.CLASS_NAME, nameof(password), password);
+		Guards.stringValue(EntityStorageAuthenticationRestClient.CLASS_NAME, nameof(email), email);
+		Guards.stringValue(
+			EntityStorageAuthenticationRestClient.CLASS_NAME,
+			nameof(password),
+			password
+		);
 
 		const response = await this.fetch<ILoginRequest, ILoginResponse>("/login", "POST", {
 			body: {
@@ -107,9 +111,17 @@ export class EntityStorageAuthenticationClient
 		currentPassword: string,
 		newPassword: string
 	): Promise<void> {
-		Guards.stringValue(this.CLASS_NAME, nameof(email), email);
-		Guards.stringValue(this.CLASS_NAME, nameof(currentPassword), currentPassword);
-		Guards.stringValue(this.CLASS_NAME, nameof(newPassword), newPassword);
+		Guards.stringValue(EntityStorageAuthenticationRestClient.CLASS_NAME, nameof(email), email);
+		Guards.stringValue(
+			EntityStorageAuthenticationRestClient.CLASS_NAME,
+			nameof(currentPassword),
+			currentPassword
+		);
+		Guards.stringValue(
+			EntityStorageAuthenticationRestClient.CLASS_NAME,
+			nameof(newPassword),
+			newPassword
+		);
 
 		await this.fetch<IUpdatePasswordRequest, INoContentResponse>("/:email/password", "PUT", {
 			pathParams: {

@@ -1,4 +1,4 @@
-# Class: EntityStorageAuthenticationClient
+# Class: EntityStorageAuthenticationRestClient
 
 The client to connect to the authentication service.
 
@@ -14,7 +14,7 @@ The client to connect to the authentication service.
 
 ### Constructor
 
-> **new EntityStorageAuthenticationClient**(`config`): `EntityStorageAuthenticationClient`
+> **new EntityStorageAuthenticationRestClient**(`config`): `EntityStorageAuthenticationRestClient`
 
 Create a new instance of EntityStorageAuthenticationClient.
 
@@ -28,7 +28,7 @@ The configuration for the client.
 
 #### Returns
 
-`EntityStorageAuthenticationClient`
+`EntityStorageAuthenticationRestClient`
 
 #### Overrides
 
@@ -38,13 +38,9 @@ The configuration for the client.
 
 ### CLASS\_NAME
 
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
-
-#### Implementation of
-
-`IAuthenticationComponent.CLASS_NAME`
 
 ## Methods
 

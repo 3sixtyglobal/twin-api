@@ -1,4 +1,4 @@
-# Class: InformationClient
+# Class: InformationRestClient
 
 The client to connect to the information service.
 
@@ -14,7 +14,7 @@ The client to connect to the information service.
 
 ### Constructor
 
-> **new InformationClient**(`config`): `InformationClient`
+> **new InformationRestClient**(`config`): `InformationRestClient`
 
 Create a new instance of InformationClient.
 
@@ -28,7 +28,7 @@ The configuration for the client.
 
 #### Returns
 
-`InformationClient`
+`InformationRestClient`
 
 #### Overrides
 
@@ -38,13 +38,9 @@ The configuration for the client.
 
 ### CLASS\_NAME
 
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
-
-#### Implementation of
-
-`IInformationComponent.CLASS_NAME`
 
 ## Methods
 
