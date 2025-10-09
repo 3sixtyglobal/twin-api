@@ -31,7 +31,7 @@ import {
 	StringHelper
 } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
-import { nameof, nameofCamelCase } from "@twin.org/nameof";
+import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpMethod, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
 import Fastify, {
 	type FastifyInstance,
@@ -181,7 +181,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			level: "info",
 			ts: Date.now(),
 			source: FastifyWebServer.CLASS_NAME,
-			message: `${nameofCamelCase<FastifyWebServer>()}.building`
+			message: "building"
 		});
 
 		this._options = options;
@@ -239,7 +239,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				level: "error",
 				ts: Date.now(),
 				source: FastifyWebServer.CLASS_NAME,
-				message: `${nameofCamelCase<FastifyWebServer>()}.badRequest`,
+				message: "badRequest",
 				error: err
 			});
 
@@ -264,7 +264,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			level: "info",
 			ts: Date.now(),
 			source: FastifyWebServer.CLASS_NAME,
-			message: `${nameofCamelCase<FastifyWebServer>()}.starting`,
+			message: "starting",
 			data: {
 				host,
 				port
@@ -281,7 +281,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "info",
 					ts: Date.now(),
 					source: FastifyWebServer.CLASS_NAME,
-					message: `${nameofCamelCase<FastifyWebServer>()}.started`,
+					message: "started",
 					data: {
 						addresses: addresses
 							.map(
@@ -297,7 +297,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "error",
 					ts: Date.now(),
 					source: FastifyWebServer.CLASS_NAME,
-					message: `${nameofCamelCase<FastifyWebServer>()}.startFailed`,
+					message: "startFailed",
 					error: BaseError.fromError(err)
 				});
 			}
@@ -318,7 +318,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				level: "info",
 				ts: Date.now(),
 				source: FastifyWebServer.CLASS_NAME,
-				message: `${nameofCamelCase<FastifyWebServer>()}.stopped`
+				message: "stopped"
 			});
 		}
 	}
@@ -343,7 +343,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "info",
 					ts: Date.now(),
 					source: FastifyWebServer.CLASS_NAME,
-					message: `${nameofCamelCase<FastifyWebServer>()}.restRouteAdded`,
+					message: "restRouteAdded",
 					data: { route: path, method: restRoute.method }
 				});
 				const method = restRoute.method.toLowerCase() as
@@ -389,7 +389,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "info",
 					ts: Date.now(),
 					source: FastifyWebServer.CLASS_NAME,
-					message: `${nameofCamelCase<FastifyWebServer>()}.socketRouteAdded`,
+					message: "socketRouteAdded",
 					data: {
 						handshakePath: this._socketConfig.path,
 						namespace,
@@ -711,7 +711,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					level: "error",
 					ts: Date.now(),
 					source: FastifyWebServer.CLASS_NAME,
-					message: `${nameofCamelCase<FastifyWebServer>()}.postProcessorError`,
+					message: "postProcessorError",
 					error: BaseError.fromError(err),
 					data: {
 						route: socketRoute.path
