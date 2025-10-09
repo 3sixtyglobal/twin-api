@@ -27,7 +27,7 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 	public static readonly CLASS_NAME: string = nameof<InformationRestClient>();
 
 	/**
-	 * Create a new instance of InformationClient.
+	 * Create a new instance of InformationRestClient
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
