@@ -42,21 +42,21 @@ import { HeaderTypes, MimeTypes } from "@twin.org/web";
 /**
  * Client for performing auditable item stream through to REST endpoints.
  */
-export class AuditableItemStreamClient
+export class AuditableItemStreamRestClient
 	extends BaseRestClient
 	implements IAuditableItemStreamComponent
 {
 	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<AuditableItemStreamClient>();
+	public static readonly CLASS_NAME: string = nameof<AuditableItemStreamRestClient>();
 
 	/**
-	 * Create a new instance of AuditableItemStreamClient.
+	 * Create a new instance of AuditableItemStreamRestClient.
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(nameof<AuditableItemStreamClient>(), config, "auditable-item-stream");
+		super(nameof<AuditableItemStreamRestClient>(), config, "auditable-item-stream");
 	}
 
 	/**
@@ -80,7 +80,7 @@ export class AuditableItemStreamClient
 			immutableInterval?: number;
 		}
 	): Promise<string> {
-		Guards.object(this.CLASS_NAME, nameof(stream), stream);
+		Guards.object(AuditableItemStreamRestClient.CLASS_NAME, nameof(stream), stream);
 		const response = await this.fetch<IAuditableItemStreamCreateRequest, ICreatedResponse>(
 			"/",
 			"POST",
@@ -115,7 +115,7 @@ export class AuditableItemStreamClient
 			verifyEntries?: boolean;
 		}
 	): Promise<IAuditableItemStream> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<
 			IAuditableItemStreamGetRequest,
@@ -146,8 +146,8 @@ export class AuditableItemStreamClient
 	 * @returns Nothing.
 	 */
 	public async update(stream: { id: string; annotationObject?: IJsonLdNodeObject }): Promise<void> {
-		Guards.object(this.CLASS_NAME, nameof(stream), stream);
-		Guards.stringValue(this.CLASS_NAME, nameof(stream.id), stream.id);
+		Guards.object(AuditableItemStreamRestClient.CLASS_NAME, nameof(stream), stream);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(stream.id), stream.id);
 
 		const { id, annotationObject } = stream;
 		await this.fetch<IAuditableItemStreamUpdateRequest, INoContentResponse>("/:id", "PUT", {
@@ -166,7 +166,7 @@ export class AuditableItemStreamClient
 	 * @returns Nothing.
 	 */
 	public async remove(id: string): Promise<void> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
 
 		await this.fetch<IAuditableItemStreamDeleteRequest, INoContentResponse>("/:id", "DELETE", {
 			pathParams: {
@@ -181,8 +181,8 @@ export class AuditableItemStreamClient
 	 * @param orderBy The order for the results, defaults to created.
 	 * @param orderByDirection The direction for the order, defaults to descending.
 	 * @param properties The properties to return, if not provided defaults to id, created and object.
-	 * @param cursor The cursor to request the next page of entities.
-	 * @param pageSize The maximum number of entities in a page.
+	 * @param cursor The cursor to request the next chunk of entities.
+	 * @param limit Limit the number of entities to return.
 	 * @returns The entities, which can be partial if a limited keys list was provided.
 	 */
 	public async query(
@@ -191,7 +191,7 @@ export class AuditableItemStreamClient
 		orderByDirection?: SortDirection,
 		properties?: (keyof IAuditableItemStream)[],
 		cursor?: string,
-		pageSize?: number
+		limit?: number
 	): Promise<IAuditableItemStreamList> {
 		const response = await this.fetch<
 			IAuditableItemStreamListRequest,
@@ -206,7 +206,7 @@ export class AuditableItemStreamClient
 				orderByDirection,
 				properties: HttpParameterHelper.arrayToString(properties),
 				cursor,
-				pageSize: Coerce.string(pageSize)
+				limit: Coerce.string(limit)
 			}
 		});
 
@@ -220,7 +220,7 @@ export class AuditableItemStreamClient
 	 * @returns The id of the created entry, if not provided.
 	 */
 	public async createEntry(id: string, entryObject: IJsonLdNodeObject): Promise<string> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<IAuditableItemStreamCreateEntryRequest, ICreatedResponse>(
 			"/:id",
@@ -254,8 +254,8 @@ export class AuditableItemStreamClient
 			verifyEntry?: boolean;
 		}
 	): Promise<IAuditableItemStreamEntry> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
-		Guards.stringValue(this.CLASS_NAME, nameof(entryId), entryId);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(entryId), entryId);
 
 		const response = await this.fetch<
 			IAuditableItemStreamGetEntryRequest,
@@ -284,8 +284,8 @@ export class AuditableItemStreamClient
 	 * @throws NotFoundError if the stream is not found.
 	 */
 	public async getEntryObject(id: string, entryId: string): Promise<IJsonLdNodeObject> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
-		Guards.stringValue(this.CLASS_NAME, nameof(entryId), entryId);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(entryId), entryId);
 
 		const response = await this.fetch<
 			IAuditableItemStreamGetEntryObjectRequest,
@@ -315,8 +315,8 @@ export class AuditableItemStreamClient
 		entryId: string,
 		entryObject: IJsonLdNodeObject
 	): Promise<void> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
-		Guards.stringValue(this.CLASS_NAME, nameof(entryId), entryId);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(entryId), entryId);
 
 		await this.fetch<IAuditableItemStreamUpdateEntryRequest, INoContentResponse>(
 			"/:id/:entryId",
@@ -340,8 +340,8 @@ export class AuditableItemStreamClient
 	 * @returns Nothing.
 	 */
 	public async removeEntry(id: string, entryId: string): Promise<void> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
-		Guards.stringValue(this.CLASS_NAME, nameof(entryId), entryId);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(entryId), entryId);
 
 		await this.fetch<IAuditableItemStreamDeleteEntryRequest, INoContentResponse>(
 			"/:id/:entryId",
@@ -362,7 +362,7 @@ export class AuditableItemStreamClient
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
 	 * @param options.verifyEntries Should the entries be verified, defaults to false.
-	 * @param options.pageSize How many entries to return.
+	 * @param options.limit How many entries to return.
 	 * @param options.cursor Cursor to use for next chunk of data.
 	 * @param options.order Retrieve the entries in ascending/descending time order, defaults to Ascending.
 	 * @returns The stream and entries if found.
@@ -374,12 +374,12 @@ export class AuditableItemStreamClient
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
 			verifyEntries?: boolean;
-			pageSize?: number;
+			limit?: number;
 			cursor?: string;
 			order?: SortDirection;
 		}
 	): Promise<IAuditableItemStreamEntryList> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<
 			IAuditableItemStreamListEntriesRequest,
@@ -395,7 +395,7 @@ export class AuditableItemStreamClient
 				conditions: HttpParameterHelper.objectToString(options?.conditions),
 				includeDeleted: Coerce.string(options?.includeDeleted),
 				verifyEntries: Coerce.string(options?.verifyEntries),
-				pageSize: Coerce.string(options?.pageSize),
+				limit: Coerce.string(options?.limit),
 				cursor: options?.cursor,
 				order: options?.order
 			}
@@ -410,7 +410,7 @@ export class AuditableItemStreamClient
 	 * @param options Additional options for the get operation.
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
-	 * @param options.pageSize How many entries to return.
+	 * @param options.limit How many entries to return.
 	 * @param options.cursor Cursor to use for next chunk of data.
 	 * @param options.order Retrieve the entries in ascending/descending time order, defaults to Ascending.
 	 * @returns The stream and entries if found.
@@ -421,12 +421,12 @@ export class AuditableItemStreamClient
 		options?: {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
-			pageSize?: number;
+			limit?: number;
 			cursor?: string;
 			order?: SortDirection;
 		}
 	): Promise<IAuditableItemStreamEntryObjectList> {
-		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<
 			IAuditableItemStreamListEntryObjectsRequest,
@@ -441,7 +441,7 @@ export class AuditableItemStreamClient
 			query: {
 				conditions: HttpParameterHelper.objectToString(options?.conditions),
 				includeDeleted: Coerce.string(options?.includeDeleted),
-				pageSize: Coerce.string(options?.pageSize),
+				limit: Coerce.string(options?.limit),
 				cursor: Coerce.string(options?.cursor),
 				order: options?.order
 			}
@@ -457,6 +457,8 @@ export class AuditableItemStreamClient
 	 * @throws NotFoundError if the vertex is not found.
 	 */
 	public async removeVerifiable(id: string): Promise<void> {
-		throw new NotSupportedError(this.CLASS_NAME, "removeVerifiable");
+		throw new NotSupportedError(AuditableItemStreamRestClient.CLASS_NAME, "notSupportedOnClient", {
+			methodName: "removeVerifiable"
+		});
 	}
 }

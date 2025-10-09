@@ -6,6 +6,14 @@ Interface describing an auditable item stream component.
 
 - `IComponent`
 
+## Indexable
+
+\[`key`: `string`\]: `any`
+
+All methods are optional, so we introduce an index signature to allow
+any additional properties or methods, which removes the TypeScript error where
+the class has no properties in common with the type.
+
 ## Methods
 
 ### create()
@@ -197,7 +205,7 @@ Nothing.
 
 ### query()
 
-> **query**(`conditions?`, `orderBy?`, `orderByDirection?`, `properties?`, `cursor?`, `pageSize?`): `Promise`\<[`IAuditableItemStreamList`](IAuditableItemStreamList.md)\>
+> **query**(`conditions?`, `orderBy?`, `orderByDirection?`, `properties?`, `cursor?`, `limit?`): `Promise`\<[`IAuditableItemStreamList`](IAuditableItemStreamList.md)\>
 
 Query all the streams, will not return entries.
 
@@ -231,13 +239,13 @@ The properties to return, if not provided defaults to id, dateCreated, dateModif
 
 `string`
 
-The cursor to request the next page of entities.
+The cursor to request the next chunk of entities.
 
-##### pageSize?
+##### limit?
 
 `number`
 
-The maximum number of entities in a page.
+Limit the number of entities to return.
 
 #### Returns
 
@@ -483,7 +491,7 @@ Whether to include deleted entries, defaults to false.
 
 Should the entries be verified, defaults to false.
 
-###### pageSize?
+###### limit?
 
 `number`
 
@@ -543,7 +551,7 @@ The conditions to filter the stream.
 
 Whether to include deleted entries, defaults to false.
 
-###### pageSize?
+###### limit?
 
 `number`
 

@@ -93,8 +93,8 @@ export interface IAuditableItemStreamComponent extends IComponent {
 	 * @param orderBy The order for the results, defaults to created.
 	 * @param orderByDirection The direction for the order, defaults to descending.
 	 * @param properties The properties to return, if not provided defaults to id, dateCreated, dateModified and annotationObject.
-	 * @param cursor The cursor to request the next page of entities.
-	 * @param pageSize The maximum number of entities in a page.
+	 * @param cursor The cursor to request the next chunk of entities.
+	 * @param limit Limit the number of entities to return.
 	 * @returns The entities, which can be partial if a limited keys list was provided.
 	 */
 	query(
@@ -103,7 +103,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 		orderByDirection?: SortDirection,
 		properties?: (keyof IAuditableItemStream)[],
 		cursor?: string,
-		pageSize?: number
+		limit?: number
 	): Promise<IAuditableItemStreamList>;
 
 	/**
@@ -186,7 +186,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
 	 * @param options.verifyEntries Should the entries be verified, defaults to false.
-	 * @param options.pageSize How many entries to return.
+	 * @param options.limit How many entries to return.
 	 * @param options.cursor Cursor to use for next chunk of data.
 	 * @param options.order Retrieve the entries in ascending/descending time order, defaults to Ascending.
 	 * @returns The stream and entries if found.
@@ -198,7 +198,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
 			verifyEntries?: boolean;
-			pageSize?: number;
+			limit?: number;
 			cursor?: string;
 			order?: SortDirection;
 		}
@@ -210,7 +210,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 	 * @param options Additional options for the get operation.
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
-	 * @param options.pageSize How many entries to return.
+	 * @param options.limit How many entries to return.
 	 * @param options.cursor Cursor to use for next chunk of data.
 	 * @param options.order Retrieve the entries in ascending/descending time order, defaults to Ascending.
 	 * @returns The stream and entries if found.
@@ -221,7 +221,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 		options?: {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
-			pageSize?: number;
+			limit?: number;
 			cursor?: string;
 			order?: SortDirection;
 		}

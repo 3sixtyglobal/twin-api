@@ -1,4 +1,4 @@
-# Class: AuditableItemStreamClient
+# Class: AuditableItemStreamRestClient
 
 Client for performing auditable item stream through to REST endpoints.
 
@@ -14,9 +14,9 @@ Client for performing auditable item stream through to REST endpoints.
 
 ### Constructor
 
-> **new AuditableItemStreamClient**(`config`): `AuditableItemStreamClient`
+> **new AuditableItemStreamRestClient**(`config`): `AuditableItemStreamRestClient`
 
-Create a new instance of AuditableItemStreamClient.
+Create a new instance of AuditableItemStreamRestClient.
 
 #### Parameters
 
@@ -28,7 +28,7 @@ The configuration for the client.
 
 #### Returns
 
-`AuditableItemStreamClient`
+`AuditableItemStreamRestClient`
 
 #### Overrides
 
@@ -38,13 +38,9 @@ The configuration for the client.
 
 ### CLASS\_NAME
 
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
-
-#### Implementation of
-
-`IAuditableItemStreamComponent.CLASS_NAME`
 
 ## Methods
 
@@ -217,7 +213,7 @@ Nothing.
 
 ### query()
 
-> **query**(`conditions?`, `orderBy?`, `orderByDirection?`, `properties?`, `cursor?`, `pageSize?`): `Promise`\<`IAuditableItemStreamList`\>
+> **query**(`conditions?`, `orderBy?`, `orderByDirection?`, `properties?`, `cursor?`, `limit?`): `Promise`\<`IAuditableItemStreamList`\>
 
 Query all the streams, will not return entries.
 
@@ -251,13 +247,13 @@ The properties to return, if not provided defaults to id, created and object.
 
 `string`
 
-The cursor to request the next page of entities.
+The cursor to request the next chunk of entities.
 
-##### pageSize?
+##### limit?
 
 `number`
 
-The maximum number of entities in a page.
+Limit the number of entities to return.
 
 #### Returns
 
@@ -491,7 +487,7 @@ Whether to include deleted entries, defaults to false.
 
 Should the entries be verified, defaults to false.
 
-###### pageSize?
+###### limit?
 
 `number`
 
@@ -555,7 +551,7 @@ The conditions to filter the stream.
 
 Whether to include deleted entries, defaults to false.
 
-###### pageSize?
+###### limit?
 
 `number`
 

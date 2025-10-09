@@ -46,7 +46,7 @@ export interface IAuditableItemStreamListEntryObjectsRequest {
 		/**
 		 * How many entries to return.
 		 */
-		pageSize?: number | string;
+		limit?: string;
 
 		/**
 		 * Cursor to use for next chunk of data.

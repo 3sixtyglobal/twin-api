@@ -1042,7 +1042,7 @@ export async function auditableItemStreamList(
 		request.query?.orderByDirection,
 		HttpParameterHelper.arrayFromString(request.query?.properties),
 		request.query?.cursor,
-		Coerce.integer(request.query?.pageSize)
+		Coerce.integer(request.query?.limit)
 	);
 
 	return {
@@ -1267,7 +1267,7 @@ export async function auditableItemStreamListEntries(
 		includeDeleted: Coerce.boolean(request.query?.includeDeleted),
 		verifyEntries: Coerce.boolean(request.query?.verifyEntries),
 		order: request.query?.order,
-		pageSize: Coerce.integer(request.query?.pageSize),
+		limit: Coerce.integer(request.query?.limit),
 		cursor: request.query?.cursor
 	});
 
@@ -1311,7 +1311,7 @@ export async function auditableItemStreamListEntryObjects(
 		conditions: HttpParameterHelper.objectFromString(request.query?.conditions),
 		includeDeleted: Coerce.boolean(request.query?.includeDeleted),
 		order: request.query?.order,
-		pageSize: Coerce.integer(request.query?.pageSize),
+		limit: Coerce.integer(request.query?.limit),
 		cursor: request.query?.cursor
 	});
 
