@@ -1,5 +1,19 @@
 # @twin.org/auditable-item-stream-service - Changelog
 
+## [0.0.2-next.5](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.2-next.4...auditable-item-stream-service-v0.0.2-next.5) (2025-10-09)
+
+
+### Features
+
+* add validate-locales ([4babc73](https://github.com/twinfoundation/auditable-item-stream/commit/4babc7331f7fed61450fe2e2d8eccee52367f2be))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.2-next.4 to 0.0.2-next.5
+
 ## [0.0.2-next.4](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.2-next.3...auditable-item-stream-service-v0.0.2-next.4) (2025-09-29)
 
 
