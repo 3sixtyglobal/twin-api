@@ -1,5 +1,19 @@
 # @twin.org/api-core - Changelog
 
+## [0.0.2-next.12](https://github.com/twinfoundation/api/compare/api-core-v0.0.2-next.11...api-core-v0.0.2-next.12) (2025-10-09)
+
+
+### Features
+
+* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.2-next.11 to 0.0.2-next.12
+
 ## [0.0.2-next.11](https://github.com/twinfoundation/api/compare/api-core-v0.0.2-next.10...api-core-v0.0.2-next.11) (2025-09-29)
 
 

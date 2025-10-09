@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.2-next.12](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.11...api-models-v0.0.2-next.12) (2025-10-09)
+
+
+### Features
+
+* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+
 ## [0.0.2-next.11](https://github.com/twinfoundation/api/compare/api-models-v0.0.2-next.10...api-models-v0.0.2-next.11) (2025-09-29)
 
 
