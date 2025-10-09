@@ -16,7 +16,7 @@ The client to connect to the information service.
 
 > **new InformationRestClient**(`config`): `InformationRestClient`
 
-Create a new instance of InformationClient.
+Create a new instance of InformationRestClient.
 
 #### Parameters
 
