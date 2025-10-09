@@ -1,5 +1,21 @@
 # @twin.org/api-server-fastify - Changelog
 
+## [0.0.2-next.13](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.2-next.12...api-server-fastify-v0.0.2-next.13) (2025-10-09)
+
+
+### Bug Fixes
+
+* use correct format for log messaging ([6b62a18](https://github.com/twinfoundation/api/commit/6b62a185e1da1150bb1e4331337e2799294b83c4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.2-next.12 to 0.0.2-next.13
+    * @twin.org/api-models bumped from 0.0.2-next.12 to 0.0.2-next.13
+    * @twin.org/api-processors bumped from 0.0.2-next.12 to 0.0.2-next.13
+
 ## [0.0.2-next.12](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.2-next.11...api-server-fastify-v0.0.2-next.12) (2025-10-09)
 
 
