@@ -16,7 +16,7 @@ The client to connect to the authentication service.
 
 > **new EntityStorageAuthenticationRestClient**(`config`): `EntityStorageAuthenticationRestClient`
 
-Create a new instance of EntityStorageAuthenticationClient.
+Create a new instance of EntityStorageAuthenticationRestClient.
 
 #### Parameters
 
