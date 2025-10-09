@@ -27,7 +27,7 @@ export class EntityStorageAuthenticationRestClient
 	public static readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationRestClient>();
 
 	/**
-	 * Create a new instance of EntityStorageAuthenticationRestClient
+	 * Create a new instance of EntityStorageAuthenticationRestClient.
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
