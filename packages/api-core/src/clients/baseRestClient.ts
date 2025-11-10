@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	AuthenticationGeneratorFactory,
-	type IAuthenticationGenerator,
 	type IBaseRestClientConfig,
 	type IHttpRequest,
 	type IHttpResponse
@@ -54,11 +53,6 @@ export abstract class BaseRestClient {
 	private readonly _includeCredentials: boolean;
 
 	/**
-	 * The type of authentication generator to use.
-	 */
-	private readonly _authenticationGenerator?: IAuthenticationGenerator;
-
-	/**
 	 * Create a new instance of BaseRestClient.
 	 * @param implementationName The name of the class implementation REST calls.
 	 * @param config The configuration for the client.
@@ -75,11 +69,6 @@ export abstract class BaseRestClient {
 
 		this._implementationName = implementationName;
 		this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
-		if (Is.stringValue(config.authenticationGeneratorType)) {
-			this._authenticationGenerator = AuthenticationGeneratorFactory.get(
-				config.authenticationGeneratorType
-			);
-		}
 
 		const finalPathPrefix = config.pathPrefix ?? pathPrefix;
 		if (Is.stringValue(finalPathPrefix)) {
@@ -100,12 +89,19 @@ export abstract class BaseRestClient {
 	 * @param route The route of the request.
 	 * @param method The http method.
 	 * @param request Request to send to the endpoint.
+	 * @param options Additional options for the request.
+	 * @param options.authenticationGeneratorType Use a custom authentication type for the request.
+	 * @param options.authenticationData Used to authenticate and will be passed to the configured authentication provider for the request.
 	 * @returns The response.
 	 */
 	public async fetch<T extends IHttpRequest, U extends IHttpResponse>(
 		route: string,
 		method: HttpMethod,
-		request?: T
+		request?: T,
+		options?: {
+			authenticationGeneratorType?: string;
+			authenticationData?: unknown;
+		}
 	): Promise<U> {
 		Guards.stringValue(this._implementationName, nameof(route), route);
 		Guards.arrayOneOf(this._implementationName, nameof(method), method, Object.values(HttpMethod));
@@ -150,7 +146,7 @@ export abstract class BaseRestClient {
 			}
 		}
 
-		let finalRoute = routeParts.join("/");
+		let finalRoute = routeParts.map(rp => encodeURIComponent(rp)).join("/");
 		if (finalRoute === "/") {
 			finalRoute = "";
 		}
@@ -172,11 +168,15 @@ export abstract class BaseRestClient {
 			requestHeaders = { ...requestHeaders, ...this._headers };
 		}
 
-		if (!Is.empty(this._authenticationGenerator)) {
-			await this._authenticationGenerator.addAuthentication(
-				requestHeaders,
-				request?.authentication
+		let includeCredentials = this._includeCredentials;
+		if (Is.stringValue(options?.authenticationGeneratorType)) {
+			const authenticationGenerator = AuthenticationGeneratorFactory.get(
+				options?.authenticationGeneratorType
 			);
+
+			await authenticationGenerator.addAuthentication(requestHeaders, options?.authenticationData);
+
+			includeCredentials = false;
 		}
 
 		const response = await FetchHelper.fetch(
@@ -187,7 +187,7 @@ export abstract class BaseRestClient {
 			{
 				headers: requestHeaders,
 				timeoutMs: this._timeout,
-				includeCredentials: this._includeCredentials
+				includeCredentials
 			}
 		);
 

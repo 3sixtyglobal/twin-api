@@ -3,17 +3,16 @@
 import {
 	HttpErrorHelper,
 	type IHttpRequest,
-	type IHttpRequestIdentity,
 	type IHttpResponse,
-	type IRestRouteProcessor,
 	type IHttpServerRequest,
 	type IRestRoute,
+	type IRestRouteProcessor,
 	type IRestRouteResponseOptions
 } from "@twin.org/api-models";
 import { Is, NotFoundError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
-import type { IRestRouteProcessorConstructorOptions } from "../models/IRestRouteProcessorConstructorOptions";
+import type { IRestRouteProcessorConstructorOptions } from "../models/IRestRouteProcessorConstructorOptions.js";
 
 /**
  * Process the REST request and hands it on to the route handler.
@@ -39,11 +38,18 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return RestRouteProcessor.CLASS_NAME;
+	}
+
+	/**
 	 * Process the REST request for the specified route.
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
 	 * @param processorState The state handed through the processors.
 	 * @param loggingComponentType The logging component type for the request.
 	 */
@@ -51,7 +57,6 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IRestRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
 		processorState: { [id: string]: unknown },
 		loggingComponentType?: string
 	): Promise<void> {
@@ -80,7 +85,6 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 
 					const restRouteResponse: IHttpResponse & IRestRouteResponseOptions = await route.handler(
 						{
-							...requestIdentity,
 							serverRequest: request,
 							processorState,
 							loggingComponentType

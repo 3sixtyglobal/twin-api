@@ -9,7 +9,7 @@ import type {
 } from "@twin.org/api-models";
 import { Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import type { IInformationServiceConstructorOptions } from "./models/IInformationServiceConstructorOptions";
+import type { IInformationServiceConstructorOptions } from "./models/IInformationServiceConstructorOptions.js";
 
 /**
  * The information service for the server.
@@ -75,6 +75,14 @@ export class InformationService implements IInformationComponent {
 		};
 		this._faviconPath = options.config.favIconPath;
 		this._openApiSpecPath = options.config.openApiSpecPath;
+	}
+
+	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return InformationService.CLASS_NAME;
 	}
 
 	/**

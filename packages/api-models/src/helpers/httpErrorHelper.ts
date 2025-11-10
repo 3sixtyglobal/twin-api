@@ -13,7 +13,7 @@ import {
 	ValidationError
 } from "@twin.org/core";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
-import type { IHttpResponse } from "../models/protocol/IHttpResponse";
+import type { IHttpResponse } from "../models/protocol/IHttpResponse.js";
 
 /**
  * Class to help with processing http errors.

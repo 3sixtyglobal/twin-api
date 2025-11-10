@@ -13,6 +13,7 @@ This mono-repository contains packages which are used when providing or connecti
 - [api-auth-entity-storage-models](packages/api-auth-entity-storage/README.md) - Models which define the structure of the Auth Entity Storage contracts.
 - [api-auth-entity-storage-service](packages/api-auth-entity-storage/README.md) - Auth Entity Storage contract implementation and REST endpoint definitions.
 - [api-auth-entity-storage-rest-client](packages/api-auth-entity-storage/README.md) - Auth Entity Storage contract implementation which can connect to REST endpoints.
+- [api-tenant-processor](packages/api-tenant-processor/README.md) - An API processor which converts `x-api-key` in headers or query params in to a context id for the tenant.
 
 ## Contributing
 

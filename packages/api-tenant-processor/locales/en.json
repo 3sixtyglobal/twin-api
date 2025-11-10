@@ -1,0 +1,8 @@
+{
+	"error": {
+		"tenantProcessor": {
+			"missingApiKey": "API key header or query param \"{keyName}\" is missing or invalid.",
+			"apiKeyNotFound": "No node tenant found for API key \"{key}\"."
+		}
+	}
+}

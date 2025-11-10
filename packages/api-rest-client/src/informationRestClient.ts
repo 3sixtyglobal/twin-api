@@ -35,6 +35,14 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return InformationRestClient.CLASS_NAME;
+	}
+
+	/**
 	 * Get the server root.
 	 * @returns The root root.
 	 */

@@ -36,9 +36,27 @@ Runtime name for the class.
 
 ## Methods
 
+### className()
+
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`IRestRouteProcessor.className`
+
+***
+
 ### process()
 
-> **process**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
+> **process**(`request`, `response`, `route`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Process the REST request for the specified route.
 
@@ -60,13 +78,7 @@ The outgoing response.
 
 The route to process.
 
-`undefined` | `IRestRoute`\<`any`, `any`\>
-
-##### requestIdentity
-
-`IHttpRequestIdentity`
-
-The identity context for the request.
+`IRestRoute`\<`any`, `any`\> | `undefined`
 
 ##### processorState
 

@@ -6,14 +6,6 @@ The information component for the server.
 
 - `IComponent`
 
-## Indexable
-
-\[`key`: `string`\]: `any`
-
-All methods are optional, so we introduce an index signature to allow
-any additional properties or methods, which removes the TypeScript error where
-the class has no properties in common with the type.
-
 ## Methods
 
 ### root()
@@ -46,13 +38,13 @@ The service information.
 
 ### favicon()
 
-> **favicon**(): `Promise`\<`undefined` \| `Uint8Array`\<`ArrayBufferLike`\>\>
+> **favicon**(): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
 
 Get the favicon.
 
 #### Returns
 
-`Promise`\<`undefined` \| `Uint8Array`\<`ArrayBufferLike`\>\>
+`Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
 
 The favicon.
 

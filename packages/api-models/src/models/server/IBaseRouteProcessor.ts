@@ -1,10 +1,10 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IContextIds } from "@twin.org/context";
 import type { IComponent } from "@twin.org/core";
-import type { IHttpRequestIdentity } from "../protocol/IHttpRequestIdentity";
-import type { IHttpResponse } from "../protocol/IHttpResponse";
-import type { IHttpServerRequest } from "../protocol/IHttpServerRequest";
-import type { IBaseRoute } from "../routes/IBaseRoute";
+import type { IHttpResponse } from "../protocol/IHttpResponse.js";
+import type { IHttpServerRequest } from "../protocol/IHttpServerRequest.js";
+import type { IBaseRoute } from "../routes/IBaseRoute.js";
 
 /**
  * The definition for a base processor for handling REST routes.
@@ -23,7 +23,7 @@ export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> ext
 	 * @param request The request to handle.
 	 * @param response The response data to send if any.
 	 * @param route The route being requested, if a matching one was found.
-	 * @param requestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
 	 * @param loggingComponentType The logging component type for the request.
 	 * @returns Promise that resolves when the request is processed.
@@ -32,7 +32,7 @@ export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> ext
 		request: R,
 		response: IHttpResponse,
 		route: T | undefined,
-		requestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: { [id: string]: unknown },
 		loggingComponentType?: string
 	): Promise<void>;
@@ -42,7 +42,7 @@ export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> ext
 	 * @param request The request to handle.
 	 * @param response The response data to send if any.
 	 * @param route The route being requested, if a matching one was found.
-	 * @param requestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
 	 * @param loggingComponentType The logging component type for the request.
 	 * @returns Promise that resolves when the request is processed.
@@ -51,7 +51,7 @@ export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> ext
 		request: R,
 		response: IHttpResponse,
 		route: T | undefined,
-		requestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: { [id: string]: unknown },
 		loggingComponentType?: string
 	): Promise<void>;

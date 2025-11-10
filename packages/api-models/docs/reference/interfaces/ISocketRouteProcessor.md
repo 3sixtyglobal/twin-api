@@ -6,14 +6,6 @@ The definition for a processor for handling socket routes.
 
 - [`IBaseRouteProcessor`](IBaseRouteProcessor.md)\<[`ISocketRoute`](ISocketRoute.md), [`ISocketServerRequest`](ISocketServerRequest.md)\>
 
-## Indexable
-
-\[`key`: `string`\]: `any`
-
-All methods are optional, so we introduce an index signature to allow
-any additional properties or methods, which removes the TypeScript error where
-the class has no properties in common with the type.
-
 ## Methods
 
 ### features()?
@@ -38,7 +30,7 @@ The features supported by this processor.
 
 ### pre()?
 
-> `optional` **pre**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
+> `optional` **pre**(`request`, `response`, `route`, `contextIds`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Pre process the REST request for the specified route.
 
@@ -60,13 +52,13 @@ The response data to send if any.
 
 The route being requested, if a matching one was found.
 
-`undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
 
-##### requestIdentity
+##### contextIds
 
-[`IHttpRequestIdentity`](IHttpRequestIdentity.md)
+`IContextIds`
 
-The identity context for the request.
+The context IDs of the request.
 
 ##### processorState
 
@@ -92,7 +84,7 @@ Promise that resolves when the request is processed.
 
 ### post()?
 
-> `optional` **post**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
+> `optional` **post**(`request`, `response`, `route`, `contextIds`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Post process the REST request for the specified route.
 
@@ -114,13 +106,13 @@ The response data to send if any.
 
 The route being requested, if a matching one was found.
 
-`undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
 
-##### requestIdentity
+##### contextIds
 
-[`IHttpRequestIdentity`](IHttpRequestIdentity.md)
+`IContextIds`
 
-The identity context for the request.
+The context IDs of the request.
 
 ##### processorState
 
@@ -162,7 +154,7 @@ The server request object containing the socket id and other parameters.
 
 The route being requested, if a matching one was found.
 
-`undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
 
 ##### loggingComponentType?
 
@@ -196,7 +188,7 @@ The server request object containing the socket id and other parameters.
 
 The route being requested, if a matching one was found.
 
-`undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
 
 ##### loggingComponentType?
 
@@ -214,7 +206,7 @@ Promise that resolves when the request is processed.
 
 ### process()?
 
-> `optional` **process**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `responseEmitter`, `loggingComponentType?`): `Promise`\<`void`\>
+> `optional` **process**(`request`, `response`, `route`, `processorState`, `responseEmitter`, `loggingComponentType?`): `Promise`\<`void`\>
 
 Process the REST request for the specified route.
 
@@ -236,13 +228,7 @@ The response data to send if any.
 
 The route being requested, if a matching one was found.
 
-`undefined` | [`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\>
-
-##### requestIdentity
-
-[`IHttpRequestIdentity`](IHttpRequestIdentity.md)
-
-The identity context for the request.
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
 
 ##### processorState
 

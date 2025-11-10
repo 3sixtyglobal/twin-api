@@ -17,6 +17,7 @@
 		"tokenHelper": {
 			"missing": "The JSON Web token could not be found in the authorization header",
 			"payloadMissingSubject": "The JSON Web token payload does not contain a subject",
+			"payloadMissingOrganization": "The JSON Web token payload does not contain an organization",
 			"expired": "The JSON Web token has expired"
 		}
 	}

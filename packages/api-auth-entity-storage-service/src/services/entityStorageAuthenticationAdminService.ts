@@ -7,9 +7,9 @@ import {
 	type IEntityStorageConnector
 } from "@twin.org/entity-storage-models";
 import { nameof } from "@twin.org/nameof";
-import type { AuthenticationUser } from "../entities/authenticationUser";
-import type { IEntityStorageAuthenticationAdminServiceConstructorOptions } from "../models/IEntityStorageAuthenticationAdminServiceConstructorOptions";
-import { PasswordHelper } from "../utils/passwordHelper";
+import type { AuthenticationUser } from "../entities/authenticationUser.js";
+import type { IEntityStorageAuthenticationAdminServiceConstructorOptions } from "../models/IEntityStorageAuthenticationAdminServiceConstructorOptions.js";
+import { PasswordHelper } from "../utils/passwordHelper.js";
 
 /**
  * Implementation of the authentication component using entity storage.
@@ -53,18 +53,42 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return EntityStorageAuthenticationAdminService.CLASS_NAME;
+	}
+
+	/**
 	 * Create a login for the user.
 	 * @param email The email address for the user.
 	 * @param password The password for the user.
-	 * @param identity The DID to associate with the account.
+	 * @param userIdentity The DID to associate with the account.
+	 * @param organizationIdentity The organization of the user.
 	 * @returns Nothing.
 	 */
-	public async create(email: string, password: string, identity: string): Promise<void> {
+	public async create(
+		email: string,
+		password: string,
+		userIdentity: string,
+		organizationIdentity: string
+	): Promise<void> {
 		Guards.stringValue(EntityStorageAuthenticationAdminService.CLASS_NAME, nameof(email), email);
 		Guards.stringValue(
 			EntityStorageAuthenticationAdminService.CLASS_NAME,
 			nameof(password),
 			password
+		);
+		Guards.stringValue(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(userIdentity),
+			userIdentity
+		);
+		Guards.stringValue(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(organizationIdentity),
+			organizationIdentity
 		);
 
 		try {
@@ -92,7 +116,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				email,
 				salt: Converter.bytesToBase64(saltBytes),
 				password: hashedPassword,
-				identity
+				identity: userIdentity,
+				organization: organizationIdentity
 			};
 
 			await this._userEntityStorage.set(newUser);
@@ -197,7 +222,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				email,
 				salt: Converter.bytesToBase64(saltBytes),
 				password: hashedPassword,
-				identity: user.identity
+				identity: user.identity,
+				organization: user.organization
 			};
 
 			await this._userEntityStorage.set(updatedUser);

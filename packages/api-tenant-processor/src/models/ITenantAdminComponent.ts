@@ -1,0 +1,45 @@
+// Copyright 2025 IOTA Stiftung.
+// SPDX-License-Identifier: Apache-2.0.
+import type { IComponent } from "@twin.org/core";
+import type { ITenant } from "./ITenant.js";
+
+/**
+ * Configuration for the tenant admin component
+ */
+export interface ITenantAdminComponent extends IComponent {
+	/**
+	 * Get a tenant by its id.
+	 * @param tenantId The id of the tenant.
+	 * @returns The tenant or undefined if not found.
+	 */
+	get(tenantId: string): Promise<ITenant | undefined>;
+
+	/**
+	 * Get a tenant by its api key.
+	 * @param apiKey The api key of the tenant.
+	 * @returns The tenant or undefined if not found.
+	 */
+	getByApiKey(apiKey: string): Promise<ITenant | undefined>;
+
+	/**
+	 * Set a tenant.
+	 * @param tenant The tenant to store.
+	 * @returns Nothing.
+	 */
+	set(tenant: ITenant): Promise<void>;
+
+	/**
+	 * Remove a tenant by its id.
+	 * @param tenantId The id of the tenant.
+	 * @returns Nothing.
+	 */
+	remove(tenantId: string): Promise<void>;
+
+	/**
+	 * Query tenants with pagination.
+	 * @param cursor The cursor to start from.
+	 * @param limit The maximum number of tenants to return.
+	 * @returns The tenants and the next cursor if more tenants are available.
+	 */
+	query(cursor?: string, limit?: number): Promise<{ tenants: ITenant[]; cursor?: string }>;
+}

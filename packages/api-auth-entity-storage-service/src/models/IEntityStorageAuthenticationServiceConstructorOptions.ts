@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IEntityStorageAuthenticationServiceConfig } from "./IEntityStorageAuthenticationServiceConfig";
+import type { IEntityStorageAuthenticationServiceConfig } from "./IEntityStorageAuthenticationServiceConfig.js";
 
 /**
  * Options for the EntityStorageAuthenticationService constructor.

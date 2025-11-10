@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IMimeTypeProcessor } from "@twin.org/api-models";
-import type { IFastifyWebServerConfig } from "./IFastifyWebServerConfig";
+import type { IFastifyWebServerConfig } from "./IFastifyWebServerConfig.js";
 
 /**
  * The options for the Fastify web server constructor.

@@ -25,14 +25,16 @@ export class TokenHelper {
 	 * Create a new token.
 	 * @param vaultConnector The vault connector.
 	 * @param signingKeyName The signing key name.
-	 * @param subject The subject for the token.
+	 * @param userIdentity The subject for the token.
+	 * @param organizationIdentity The organization for the token.
 	 * @param ttlMinutes The time to live for the token in minutes.
 	 * @returns The new token and its expiry date.
 	 */
 	public static async createToken(
 		vaultConnector: IVaultConnector,
 		signingKeyName: string,
-		subject: string,
+		userIdentity: string,
+		organizationIdentity: string | undefined,
 		ttlMinutes: number
 	): Promise<{
 		token: string;
@@ -44,7 +46,8 @@ export class TokenHelper {
 		const jwt = await Jwt.encodeWithSigner(
 			{ alg: "EdDSA" },
 			{
-				sub: subject,
+				sub: userIdentity,
+				org: organizationIdentity,
 				exp: nowSeconds + ttlSeconds
 			},
 			async (header, payload) =>
@@ -84,6 +87,8 @@ export class TokenHelper {
 		// If some of the header/payload data is not properly populated then it is unauthorized.
 		if (!Is.stringValue(decoded.payload.sub)) {
 			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "payloadMissingSubject");
+		} else if (!Is.stringValue(decoded.payload.org)) {
+			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "payloadMissingOrganization");
 		} else if (
 			!Is.empty(decoded.payload?.exp) &&
 			decoded.payload.exp < Math.trunc(Date.now() / 1000)

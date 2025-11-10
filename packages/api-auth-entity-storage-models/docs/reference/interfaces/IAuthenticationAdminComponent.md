@@ -6,19 +6,11 @@ Contract definition for authentication admin component.
 
 - `IComponent`
 
-## Indexable
-
-\[`key`: `string`\]: `any`
-
-All methods are optional, so we introduce an index signature to allow
-any additional properties or methods, which removes the TypeScript error where
-the class has no properties in common with the type.
-
 ## Methods
 
 ### create()
 
-> **create**(`email`, `password`, `identity`): `Promise`\<`void`\>
+> **create**(`email`, `password`, `userIdentity`, `organizationIdentity`): `Promise`\<`void`\>
 
 Create a login for the user.
 
@@ -36,11 +28,17 @@ The email address for the user.
 
 The password for the user.
 
-##### identity
+##### userIdentity
 
 `string`
 
 The DID to associate with the account.
+
+##### organizationIdentity
+
+`string`
+
+The organization of the user.
 
 #### Returns
 

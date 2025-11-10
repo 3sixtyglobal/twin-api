@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { Factory } from "@twin.org/core";
-import type { IAuthenticationGenerator } from "../models/client/IAuthenticationGenerator";
+import type { IAuthenticationGenerator } from "../models/client/IAuthenticationGenerator.js";
 
 /**
  * Factory for creating implementation of authentication generator types.

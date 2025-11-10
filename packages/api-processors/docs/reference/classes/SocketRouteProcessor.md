@@ -36,6 +36,24 @@ Runtime name for the class.
 
 ## Methods
 
+### className()
+
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`ISocketRouteProcessor.className`
+
+***
+
 ### connected()
 
 > **connected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
@@ -54,7 +72,7 @@ The server request object containing the socket id and other parameters.
 
 The route being requested, if a matching one was found.
 
-`undefined` | `ISocketRoute`\<`any`, `any`\>
+`ISocketRoute`\<`any`, `any`\> | `undefined`
 
 ##### loggingComponentType?
 
@@ -92,7 +110,7 @@ The server request object containing the socket id and other parameters.
 
 The route being requested, if a matching one was found.
 
-`undefined` | `ISocketRoute`\<`any`, `any`\>
+`ISocketRoute`\<`any`, `any`\> | `undefined`
 
 ##### loggingComponentType?
 
@@ -114,9 +132,9 @@ Promise that resolves when the request is processed.
 
 ### process()
 
-> **process**(`request`, `response`, `route`, `requestIdentity`, `processorState`, `responseEmitter`, `loggingComponentType?`): `Promise`\<`void`\>
+> **process**(`request`, `response`, `route`, `processorState`, `responseEmitter`, `loggingComponentType?`): `Promise`\<`void`\>
 
-Process the REST request for the specified route.
+Process the socket request for the specified route.
 
 #### Parameters
 
@@ -136,13 +154,7 @@ The outgoing response.
 
 The route to process.
 
-`undefined` | `ISocketRoute`\<`any`, `any`\>
-
-##### requestIdentity
-
-`IHttpRequestIdentity`
-
-The identity context for the request.
+`ISocketRoute`\<`any`, `any`\> | `undefined`
 
 ##### processorState
 

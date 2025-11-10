@@ -1,0 +1,33 @@
+// Copyright 2024 IOTA Stiftung.
+// SPDX-License-Identifier: Apache-2.0.
+import type { IContextIdHandler } from "@twin.org/context";
+import { Guards } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
+
+/**
+ * Context Id handler for testing as a tenant id.
+ */
+export class TenantIdContextIdHandler implements IContextIdHandler {
+	/**
+	 * Runtime name for the class.
+	 */
+	public static readonly CLASS_NAME: string = nameof<TenantIdContextIdHandler>();
+
+	/**
+	 * The short form of the tenant id is the same as the full version.
+	 * @param value The full context id value.
+	 * @returns Short form string.
+	 */
+	public short(value: string): string {
+		return value;
+	}
+
+	/**
+	 * Guard the value ensuring length.
+	 * @param value The value to guard.
+	 * @throws GeneralError if the value is too short.
+	 */
+	public guard(value: string): void {
+		Guards.stringHexLength(TenantIdContextIdHandler.CLASS_NAME, nameof(value), value, 32);
+	}
+}

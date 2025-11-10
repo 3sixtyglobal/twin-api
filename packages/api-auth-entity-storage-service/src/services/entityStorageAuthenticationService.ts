@@ -4,11 +4,13 @@ import type {
 	IAuthenticationAdminComponent,
 	IAuthenticationComponent
 } from "@twin.org/api-auth-entity-storage-models";
+import { ContextIdHelper, ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
 	ComponentFactory,
 	Converter,
 	GeneralError,
 	Guards,
+	Is,
 	UnauthorizedError
 } from "@twin.org/core";
 import {
@@ -17,10 +19,10 @@ import {
 } from "@twin.org/entity-storage-models";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
-import type { AuthenticationUser } from "../entities/authenticationUser";
-import type { IEntityStorageAuthenticationServiceConstructorOptions } from "../models/IEntityStorageAuthenticationServiceConstructorOptions";
-import { PasswordHelper } from "../utils/passwordHelper";
-import { TokenHelper } from "../utils/tokenHelper";
+import type { AuthenticationUser } from "../entities/authenticationUser.js";
+import type { IEntityStorageAuthenticationServiceConstructorOptions } from "../models/IEntityStorageAuthenticationServiceConstructorOptions.js";
+import { PasswordHelper } from "../utils/passwordHelper.js";
+import { TokenHelper } from "../utils/tokenHelper.js";
 
 /**
  * Implementation of the authentication component using entity storage.
@@ -71,7 +73,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	 * The node identity.
 	 * @internal
 	 */
-	private _nodeIdentity?: string;
+	private _nodeId?: string;
 
 	/**
 	 * Create a new instance of EntityStorageAuthentication.
@@ -94,18 +96,22 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return EntityStorageAuthenticationService.CLASS_NAME;
+	}
+
+	/**
 	 * The service needs to be started when the application is initialized.
-	 * @param nodeIdentity The identity of the node.
 	 * @param nodeLoggingComponentType The node logging component type.
 	 * @returns Nothing.
 	 */
-	public async start(nodeIdentity?: string, nodeLoggingComponentType?: string): Promise<void> {
-		Guards.string(
-			EntityStorageAuthenticationService.CLASS_NAME,
-			nameof(nodeIdentity),
-			nodeIdentity
-		);
-		this._nodeIdentity = nodeIdentity;
+	public async start(nodeLoggingComponentType?: string): Promise<void> {
+		const contextIds = await ContextIdStore.getContextIds();
+		ContextIdHelper.guard(contextIds, ContextIdKeys.Node);
+		this._nodeId = contextIds[ContextIdKeys.Node];
 	}
 
 	/**
@@ -141,8 +147,9 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 			const tokenAndExpiry = await TokenHelper.createToken(
 				this._vaultConnector,
-				`${this._nodeIdentity}/${this._signingKeyName}`,
+				`${this._nodeId}/${this._signingKeyName}`,
 				user.identity,
+				user.organization,
 				this._defaultTtlMinutes
 			);
 
@@ -178,14 +185,15 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		// If the verify fails on the current token then it will throw an exception.
 		const headerAndPayload = await TokenHelper.verify(
 			this._vaultConnector,
-			`${this._nodeIdentity}/${this._signingKeyName}`,
+			`${this._nodeId}/${this._signingKeyName}`,
 			token
 		);
 
 		const refreshTokenAndExpiry = await TokenHelper.createToken(
 			this._vaultConnector,
-			`${this._nodeIdentity}/${this._signingKeyName}`,
+			`${this._nodeId}/${this._signingKeyName}`,
 			headerAndPayload.payload.sub ?? "",
+			Is.stringValue(headerAndPayload.payload.org) ? headerAndPayload.payload.org : "",
 			this._defaultTtlMinutes
 		);
 

@@ -4,16 +4,21 @@ import {
 	HttpErrorHelper,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
-	type IHttpRequestIdentity,
 	type IHttpResponse,
 	type IHttpServerRequest
 } from "@twin.org/api-models";
-import { BaseError, Guards, Is } from "@twin.org/core";
+import {
+	ContextIdHelper,
+	ContextIdKeys,
+	ContextIdStore,
+	type IContextIds
+} from "@twin.org/context";
+import { BaseError, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
-import type { IAuthHeaderProcessorConstructorOptions } from "../models/IAuthHeaderProcessorConstructorOptions";
-import { TokenHelper } from "../utils/tokenHelper";
+import type { IAuthHeaderProcessorConstructorOptions } from "../models/IAuthHeaderProcessorConstructorOptions.js";
+import { TokenHelper } from "../utils/tokenHelper.js";
 
 /**
  * Handle a JWT token in the authorization header or cookies and validate it to populate request context identity.
@@ -52,7 +57,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	 * The node identity.
 	 * @internal
 	 */
-	private _nodeIdentity?: string;
+	private _nodeId?: string;
 
 	/**
 	 * Create a new instance of AuthCookiePreProcessor.
@@ -65,14 +70,22 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return AuthHeaderProcessor.CLASS_NAME;
+	}
+
+	/**
 	 * The service needs to be started when the application is initialized.
-	 * @param nodeIdentity The identity of the node.
 	 * @param nodeLoggingComponentType The node logging component type.
 	 * @returns Nothing.
 	 */
-	public async start(nodeIdentity?: string, nodeLoggingComponentType?: string): Promise<void> {
-		Guards.string(AuthHeaderProcessor.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
-		this._nodeIdentity = nodeIdentity;
+	public async start(nodeLoggingComponentType?: string): Promise<void> {
+		const contextIds = await ContextIdStore.getContextIds();
+		ContextIdHelper.guard(contextIds, ContextIdKeys.Node);
+		this._nodeId = contextIds[ContextIdKeys.Node];
 	}
 
 	/**
@@ -80,14 +93,14 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
 	 */
 	public async pre(
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IBaseRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
 		if (!Is.empty(route) && !(route.skipAuth ?? false)) {
@@ -99,11 +112,11 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 
 				const headerAndPayload = await TokenHelper.verify(
 					this._vaultConnector,
-					`${this._nodeIdentity}/${this._signingKeyName}`,
+					`${this._nodeId}/${this._signingKeyName}`,
 					tokenAndLocation?.token
 				);
 
-				requestIdentity.userIdentity = headerAndPayload.payload?.sub;
+				contextIds[ContextIdKeys.User] = headerAndPayload.payload?.sub;
 				processorState.authToken = tokenAndLocation?.token;
 				processorState.authTokenLocation = tokenAndLocation?.location;
 			} catch (err) {
@@ -118,14 +131,14 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
 	 */
 	public async post(
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IBaseRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
 		const responseAuthOperation = processorState?.authOperation;

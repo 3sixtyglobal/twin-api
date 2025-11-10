@@ -4,7 +4,7 @@ import type { IRestRouteEntryPoint } from "@twin.org/api-models";
 import {
 	generateRestRoutesAuthentication,
 	tagsAuthentication
-} from "./routes/entityStorageAuthenticationRoutes";
+} from "./routes/entityStorageAuthenticationRoutes.js";
 
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{

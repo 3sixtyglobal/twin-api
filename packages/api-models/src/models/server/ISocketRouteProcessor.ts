@@ -1,10 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IBaseRouteProcessor } from "./IBaseRouteProcessor";
-import type { IHttpRequestIdentity } from "../protocol/IHttpRequestIdentity";
-import type { IHttpResponse } from "../protocol/IHttpResponse";
-import type { ISocketServerRequest } from "../protocol/ISocketServerRequest";
-import type { ISocketRoute } from "../routes/ISocketRoute";
+import type { IBaseRouteProcessor } from "./IBaseRouteProcessor.js";
+import type { IHttpResponse } from "../protocol/IHttpResponse.js";
+import type { ISocketServerRequest } from "../protocol/ISocketServerRequest.js";
+import type { ISocketRoute } from "../routes/ISocketRoute.js";
 
 /**
  * The definition for a processor for handling socket routes.
@@ -42,7 +41,6 @@ export interface ISocketRouteProcessor
 	 * @param request The server request object containing the socket id and other parameters.
 	 * @param response The response data to send if any.
 	 * @param route The route being requested, if a matching one was found.
-	 * @param requestIdentity The identity context for the request.
 	 * @param processorState The state handed through the processors.
 	 * @param responseEmitter The function to emit a response.
 	 * @param loggingComponentType The logging component type for the request.
@@ -52,7 +50,6 @@ export interface ISocketRouteProcessor
 		request: ISocketServerRequest,
 		response: IHttpResponse,
 		route: ISocketRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
 		processorState: { [id: string]: unknown },
 		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>,
 		loggingComponentType?: string

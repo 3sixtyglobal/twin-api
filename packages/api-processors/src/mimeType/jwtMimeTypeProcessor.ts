@@ -15,6 +15,14 @@ export class JwtMimeTypeProcessor implements IMimeTypeProcessor {
 	public static readonly CLASS_NAME: string = nameof<JwtMimeTypeProcessor>();
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return JwtMimeTypeProcessor.CLASS_NAME;
+	}
+
+	/**
 	 * Get the MIME types that this handler can handle.
 	 * @returns The MIME types that this handler can handle.
 	 */

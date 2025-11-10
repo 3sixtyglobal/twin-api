@@ -72,6 +72,13 @@
 			"extra-files": [
 				"src/index.ts"
 			]
+		},
+		"packages/api-tenant-processor": {
+			"package-name": "api-tenant-processor",
+			"changelog-path": "docs/changelog.md",
+			"extra-files": [
+				"src/index.ts"
+			]
 		}
 	},
 	"plugins": [
@@ -88,7 +95,8 @@
 				"api-rest-client",
 				"api-auth-entity-storage-models",
 				"api-auth-entity-storage-service",
-				"api-auth-entity-storage-rest-client"
+				"api-auth-entity-storage-rest-client",
+				"api-tenant-processor"
 			]
 		}
 	]

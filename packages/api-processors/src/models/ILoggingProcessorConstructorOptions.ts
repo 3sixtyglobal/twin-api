@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-
-import type { ILoggingProcessorConfig } from "./ILoggingProcessorConfig";
+import type { ILoggingProcessorConfig } from "./ILoggingProcessorConfig.js";
 
 /**
  * Options for the LoggingProcessor constructor.

@@ -1,9 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { nameof } from "@twin.org/nameof";
-import type { IHttpRequestContext } from "../../../src/models/protocol/IHttpRequestContext";
-import type { INotFoundResponse } from "../../../src/models/responses/errors/INotFoundResponse";
-import type { IRestRoute } from "../../../src/models/routes/IRestRoute";
+import type { IHttpRequestContext } from "../../../src/models/protocol/IHttpRequestContext.js";
+import type { INotFoundResponse } from "../../../src/models/responses/errors/INotFoundResponse.js";
+import type { IRestRoute } from "../../../src/models/routes/IRestRoute.js";
 
 /**
  * Create a new item.

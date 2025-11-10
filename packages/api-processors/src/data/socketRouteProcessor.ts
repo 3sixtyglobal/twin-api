@@ -3,7 +3,6 @@
 import {
 	HttpErrorHelper,
 	type IHttpRequest,
-	type IHttpRequestIdentity,
 	type IHttpResponse,
 	type ISocketRequestContext,
 	type ISocketRoute,
@@ -13,7 +12,7 @@ import {
 import { Is, NotFoundError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HttpStatusCode } from "@twin.org/web";
-import type { ISocketRouteProcessorConstructorOptions } from "../models/ISocketRouteProcessorConstructorOptions";
+import type { ISocketRouteProcessorConstructorOptions } from "../models/ISocketRouteProcessorConstructorOptions.js";
 
 /**
  * Process the socket request and hands it on to the route handler.
@@ -39,6 +38,14 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return SocketRouteProcessor.CLASS_NAME;
+	}
+
+	/**
 	 * Process the connected event.
 	 * @param request The server request object containing the socket id and other parameters.
 	 * @param route The route being requested, if a matching one was found.
@@ -59,7 +66,7 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 					loggingComponentType
 				};
 
-				await route.connected(socketRequestContext);
+				route.connected(socketRequestContext);
 			} catch {}
 		}
 	}
@@ -85,17 +92,16 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 					loggingComponentType
 				};
 
-				await route.disconnected(socketRequestContext);
+				route.disconnected(socketRequestContext);
 			} catch {}
 		}
 	}
 
 	/**
-	 * Process the REST request for the specified route.
+	 * Process the socket request for the specified route.
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
 	 * @param processorState The state handed through the processors.
 	 * @param responseEmitter The function to emit a response.
 	 * @param loggingComponentType The logging component type for the request.
@@ -104,7 +110,6 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 		request: ISocketServerRequest,
 		response: IHttpResponse,
 		route: ISocketRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
 		processorState: { [id: string]: unknown },
 		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>,
 		loggingComponentType?: string
@@ -133,18 +138,17 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 					};
 
 					const socketRequestContext: ISocketRequestContext = {
-						...requestIdentity,
 						socketId: request.socketId,
 						serverRequest: request,
 						processorState,
 						loggingComponentType
 					};
 
-					await route.handler(socketRequestContext, req, async (topic, restRouteResponse) => {
-						response.headers = restRouteResponse?.headers;
-						response.body = restRouteResponse?.body;
+					route.handler(socketRequestContext, req, async (topic, socketRouteResponse) => {
+						response.headers = socketRouteResponse?.headers;
+						response.body = socketRouteResponse?.body;
 						response.statusCode =
-							restRouteResponse.statusCode ?? response.statusCode ?? HttpStatusCode.ok;
+							socketRouteResponse.statusCode ?? response.statusCode ?? HttpStatusCode.ok;
 						await responseEmitter(topic, response);
 					});
 				} catch (err) {

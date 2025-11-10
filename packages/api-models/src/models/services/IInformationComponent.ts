@@ -1,9 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IComponent } from "@twin.org/core";
-import type { HealthStatus } from "./healthStatus";
-import type { IHealthInfo } from "./IHealthInfo";
-import type { IServerInfo } from "./IServerInfo";
+import type { HealthStatus } from "./healthStatus.js";
+import type { IHealthInfo } from "./IHealthInfo.js";
+import type { IServerInfo } from "./IServerInfo.js";
 
 /**
  * The information component for the server.

@@ -10,10 +10,16 @@ export interface IAuthenticationAdminComponent extends IComponent {
 	 * Create a login for the user.
 	 * @param email The email address for the user.
 	 * @param password The password for the user.
-	 * @param identity The DID to associate with the account.
+	 * @param userIdentity The DID to associate with the account.
+	 * @param organizationIdentity The organization of the user.
 	 * @returns Nothing.
 	 */
-	create(email: string, password: string, identity: string): Promise<void>;
+	create(
+		email: string,
+		password: string,
+		userIdentity: string,
+		organizationIdentity: string
+	): Promise<void>;
 
 	/**
 	 * Remove the current user.

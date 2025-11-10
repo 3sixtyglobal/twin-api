@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { Factory } from "@twin.org/core";
-import type { IMimeTypeProcessor } from "../models/server/IMimeTypeProcessor";
+import type { IMimeTypeProcessor } from "../models/server/IMimeTypeProcessor.js";
 
 /**
  * Factory for creating implementation of mime type processor types.

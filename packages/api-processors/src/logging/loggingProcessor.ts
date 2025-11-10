@@ -3,15 +3,15 @@
 import type {
 	IBaseRoute,
 	IBaseRouteProcessor,
-	IHttpRequestIdentity,
 	IHttpResponse,
 	IHttpServerRequest
 } from "@twin.org/api-models";
+import type { IContextIds } from "@twin.org/context";
 import { Coerce, ComponentFactory, Is, ObjectHelper } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
-import type { ILoggingProcessorConstructorOptions } from "../models/ILoggingProcessorConstructorOptions";
+import type { ILoggingProcessorConstructorOptions } from "../models/ILoggingProcessorConstructorOptions.js";
 
 /**
  * Process the REST request and log its information.
@@ -58,18 +58,26 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return LoggingProcessor.CLASS_NAME;
+	}
+
+	/**
 	 * Pre process the REST request for the specified route.
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
 	 */
 	public async pre(
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IBaseRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
 		const now = process.hrtime.bigint();
@@ -107,14 +115,14 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
 	 */
 	public async post(
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IBaseRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
 		let data: { [id: string]: unknown } | undefined;

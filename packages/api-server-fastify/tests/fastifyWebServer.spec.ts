@@ -6,9 +6,16 @@ import { ComponentFactory, NotImplementedError } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode } from "@twin.org/web";
 import { io } from "socket.io-client";
-import { FastifyWebServer } from "../src/fastifyWebServer";
+import { FastifyWebServer } from "../src/fastifyWebServer.js";
+
+const basePort = Math.floor(Math.random() * 1000);
+let port = 3000 + basePort;
 
 describe("api-server-fastify", () => {
+	beforeEach(async () => {
+		port++;
+	});
+
 	test("Can create an instance of the server", () => {
 		const server = new FastifyWebServer();
 		expect(server).toBeDefined();
@@ -50,8 +57,8 @@ describe("api-server-fastify", () => {
 		await server.build(
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, processorState) => {
 						counter++;
 						const req = {
 							pathParams: request.pathParams,
@@ -60,7 +67,6 @@ describe("api-server-fastify", () => {
 						};
 						const socketRouteResponse = await route?.handler(
 							{
-								...requestIdentity,
 								serverRequest: request,
 								processorState
 							},
@@ -83,12 +89,15 @@ describe("api-server-fastify", () => {
 						body: { data: "bar" }
 					})
 				}
-			]
+			],
+			undefined,
+			undefined,
+			{ port }
 		);
 
 		await server.start();
 
-		const response = await fetch("http://localhost:3000/");
+		const response = await fetch(`http://localhost:${port}/`);
 		const json = await response.json();
 
 		expect(counter).toEqual(1);
@@ -103,8 +112,8 @@ describe("api-server-fastify", () => {
 		await server.build(
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, contextIds, processorState) => {
 						HttpErrorHelper.buildResponse(
 							response,
 							{ name: "Error", message: "AuthError" },
@@ -124,12 +133,15 @@ describe("api-server-fastify", () => {
 						body: { data: "bar" }
 					})
 				}
-			]
+			],
+			undefined,
+			undefined,
+			{ port }
 		);
 
 		await server.start();
 
-		const response = await fetch("http://localhost:3000/");
+		const response = await fetch(`http://localhost:${port}/`);
 		const json = await response.json();
 
 		expect(response.status).toEqual(HttpStatusCode.unauthorized);
@@ -181,8 +193,8 @@ describe("api-server-fastify", () => {
 		await server.build(
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, contextIds, processorState) => {
 						response.headers ??= {};
 						response.headers[HeaderTypes.SetCookie] =
 							"foo=bar; Max-Age=1000; Domain=localhost; Path=/; Expires=Tue, 01 Jul 2025 10:01:11 GMT; HttpOnly; Secure; SameSite=strict";
@@ -201,34 +213,26 @@ describe("api-server-fastify", () => {
 			],
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
+					className: () => "RouteProcessor",
 					connected: async (request, route) => {
-						connectedSocketId = request.socketId as string;
+						connectedSocketId = request.socketId;
 						connectedCookie = request.headers?.[HeaderTypes.Cookie] as string;
 					},
 					disconnected: async (request, route) => {
-						disconnectedSocketId = request.socketId as string;
+						disconnectedSocketId = request.socketId;
 						disconnectedCookie = request.headers?.[HeaderTypes.Cookie] as string;
 					},
-					pre: async (request, response, route, requestIdentity, processorState) => {
-						preSocketId = request.socketId as string;
+					pre: async (request, response, route, contextIds, processorState) => {
+						preSocketId = request.socketId;
 						preCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						preData = request.body?.data as number;
 					},
-					process: async (
-						request,
-						response,
-						route,
-						requestIdentity,
-						processorState,
-						responseEmitter
-					) => {
+					process: async (request, response, route, processorState, responseEmitter) => {
 						processSocketId = request.socketId;
 						processCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						processData = request.body?.data as number;
-						await route?.handler(
+						route?.handler(
 							{
-								...requestIdentity,
 								serverRequest: request,
 								processorState,
 								socketId: request.socketId
@@ -263,17 +267,18 @@ describe("api-server-fastify", () => {
 						});
 					}
 				}
-			]
+			],
+			{ port }
 		);
 
 		await server.start();
 
 		// Need to manually get and set the cookie as we are not using a browser which would
 		// automatically handle this.
-		const fetchResponse = await fetch("http://localhost:3000/cookie");
+		const fetchResponse = await fetch(`http://localhost:${port}/cookie`);
 		const cookie = fetchResponse.headers.get("set-cookie") ?? "";
 
-		const socket = io("http://localhost:3000/test-namespace", {
+		const socket = io(`http://localhost:${port}/test-namespace`, {
 			path: "/my-sockets",
 			withCredentials: true,
 			transports: ["websocket"],
@@ -345,8 +350,8 @@ describe("api-server-fastify", () => {
 			undefined,
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, contextIds, processorState) => {
 						HttpErrorHelper.buildResponse(
 							response,
 							{ name: "Error", message: "AuthError" },
@@ -365,12 +370,13 @@ describe("api-server-fastify", () => {
 						});
 					}
 				}
-			]
+			],
+			{ port }
 		);
 
 		await server.start();
 
-		const socket = io("http://localhost:3000/test-namespace", {
+		const socket = io(`http://localhost:${port}/test-namespace`, {
 			transports: ["websocket"],
 			path: "/socket"
 		});
@@ -407,18 +413,10 @@ describe("api-server-fastify", () => {
 			undefined,
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (
-						request,
-						response,
-						route,
-						requestIdentity,
-						processorState,
-						responseEmitter
-					) => {
-						await route?.handler(
+					className: () => "RouteProcessor",
+					process: async (request, response, route, processorState, responseEmitter) => {
+						route?.handler(
 							{
-								...requestIdentity,
 								serverRequest: request,
 								processorState,
 								socketId: request.socketId
@@ -448,12 +446,13 @@ describe("api-server-fastify", () => {
 						});
 					}
 				}
-			]
+			],
+			{ port }
 		);
 
 		await server.start();
 
-		const socket = io("http://localhost:3000/test-namespace", {
+		const socket = io(`http://localhost:${port}/test-namespace`, {
 			transports: ["websocket"],
 			path: "/socket"
 		});
@@ -490,7 +489,7 @@ describe("api-server-fastify", () => {
 		let body = "";
 
 		const logger: ILoggingComponent = {
-			CLASS_NAME: "logger",
+			className: () => "logger",
 			log: async (logEntry: ILogEntry) => {
 				logEntries.push(logEntry);
 			},
@@ -504,8 +503,8 @@ describe("api-server-fastify", () => {
 		await server.build(
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, contextIds, processorState) => {
 						body = request.body;
 					}
 				},
@@ -520,12 +519,15 @@ describe("api-server-fastify", () => {
 					summary: "",
 					handler: async (httpRequestContext, request) => {}
 				}
-			]
+			],
+			undefined,
+			undefined,
+			{ port }
 		);
 
 		await server.start();
 
-		await fetch("http://localhost:3000/", {
+		await fetch(`http://localhost:${port}/`, {
 			method: "POST",
 			headers: { "Content-Type": "application/jwt" },
 			body: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ"

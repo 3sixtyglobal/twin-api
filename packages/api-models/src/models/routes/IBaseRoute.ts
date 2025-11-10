@@ -24,4 +24,11 @@ export interface IBaseRoute {
 	 * The features supported by additional processors to run for this route.
 	 */
 	processorFeatures?: string[];
+
+	/**
+	 * The data for additional processors to run for this route.
+	 */
+	processorData?: {
+		[key: string]: unknown;
+	};
 }

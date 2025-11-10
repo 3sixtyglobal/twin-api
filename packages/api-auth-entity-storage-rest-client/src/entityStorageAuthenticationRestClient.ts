@@ -35,6 +35,14 @@ export class EntityStorageAuthenticationRestClient
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return EntityStorageAuthenticationRestClient.CLASS_NAME;
+	}
+
+	/**
 	 * Perform a login for the user.
 	 * @param email The email address for the user.
 	 * @param password The password for the user.

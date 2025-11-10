@@ -30,4 +30,10 @@ export class AuthenticationUser {
 	 */
 	@property({ type: "string" })
 	public identity!: string;
+
+	/**
+	 * The users organization.
+	 */
+	@property({ type: "string" })
+	public organization!: string;
 }

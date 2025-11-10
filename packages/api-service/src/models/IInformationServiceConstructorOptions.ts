@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IInformationServiceConfig } from "./IInformationServiceConfig";
+import type { IInformationServiceConfig } from "./IInformationServiceConfig.js";
 
 /**
  * Options for the InformationService constructor.

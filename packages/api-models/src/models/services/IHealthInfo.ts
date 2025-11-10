@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { HealthStatus } from "./healthStatus";
+import type { HealthStatus } from "./healthStatus.js";
 
 /**
  * The status of the server.

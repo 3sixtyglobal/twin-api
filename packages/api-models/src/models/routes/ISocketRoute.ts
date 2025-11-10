@@ -1,9 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IBaseRoute } from "./IBaseRoute";
-import type { IHttpRequest } from "../protocol/IHttpRequest";
-import type { IHttpResponse } from "../protocol/IHttpResponse";
-import type { ISocketRequestContext } from "../protocol/ISocketRequestContext";
+import type { IBaseRoute } from "./IBaseRoute.js";
+import type { IHttpRequest } from "../protocol/IHttpRequest.js";
+import type { IHttpResponse } from "../protocol/IHttpResponse.js";
+import type { ISocketRequestContext } from "../protocol/ISocketRequestContext.js";
 
 /**
  * Interface which defines a socket route.

@@ -1,10 +1,10 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IRestRouteProcessor } from "./IRestRouteProcessor";
-import type { ISocketRouteProcessor } from "./ISocketRouteProcessor";
-import type { IWebServerOptions } from "./IWebServerOptions";
-import type { IRestRoute } from "../routes/IRestRoute";
-import type { ISocketRoute } from "../routes/ISocketRoute";
+import type { IRestRouteProcessor } from "./IRestRouteProcessor.js";
+import type { ISocketRouteProcessor } from "./ISocketRouteProcessor.js";
+import type { IWebServerOptions } from "./IWebServerOptions.js";
+import type { IRestRoute } from "../routes/IRestRoute.js";
+import type { ISocketRoute } from "../routes/ISocketRoute.js";
 
 /**
  * Interface describing a web server.
