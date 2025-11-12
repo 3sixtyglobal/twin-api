@@ -3,9 +3,9 @@
 import type { IValidationFailure } from "@twin.org/core";
 import { DataTypeHelper } from "@twin.org/data-core";
 import { JsonLdDataTypes } from "@twin.org/data-json-ld";
-import { AuditableItemStreamDataTypes } from "../../src/dataTypes/auditableItemStreamDataTypes";
-import { AuditableItemStreamContexts } from "../../src/models/auditableItemStreamContexts";
-import { AuditableItemStreamTypes } from "../../src/models/auditableItemStreamTypes";
+import { AuditableItemStreamDataTypes } from "../../src/dataTypes/auditableItemStreamDataTypes.js";
+import { AuditableItemStreamContexts } from "../../src/models/auditableItemStreamContexts.js";
+import { AuditableItemStreamTypes } from "../../src/models/auditableItemStreamTypes.js";
 
 describe("AuditableItemStreamDataTypes", () => {
 	beforeAll(async () => {
@@ -22,8 +22,7 @@ describe("AuditableItemStreamDataTypes", () => {
 				id: "foo",
 				dateCreated: new Date().toISOString(),
 				immutableInterval: 10,
-				nodeIdentity: "node",
-				userIdentity: "user"
+				organizationIdentity: "org"
 			},
 			validationFailures
 		);
@@ -45,8 +44,7 @@ describe("AuditableItemStreamDataTypes", () => {
 				id: "foo",
 				dateCreated: new Date().toISOString(),
 				immutableInterval: 10,
-				nodeIdentity: "node",
-				userIdentity: "user",
+				organizationIdentity: "org",
 				proofId: "1111"
 			},
 			validationFailures

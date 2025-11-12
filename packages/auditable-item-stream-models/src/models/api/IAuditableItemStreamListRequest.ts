@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { SortDirection } from "@twin.org/entity";
 import type { HeaderTypes, MimeTypes } from "@twin.org/web";
-import type { IAuditableItemStream } from "../IAuditableItemStream";
+import type { IAuditableItemStream } from "../IAuditableItemStream.js";
 
 /**
  * Get the a list of the streams.

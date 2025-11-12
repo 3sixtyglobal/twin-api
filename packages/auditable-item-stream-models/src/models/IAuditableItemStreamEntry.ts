@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IJsonLdContextDefinitionElement, IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { IImmutableProofVerification } from "@twin.org/immutable-proof-models";
-import type { AuditableItemStreamContexts } from "./auditableItemStreamContexts";
-import type { AuditableItemStreamTypes } from "./auditableItemStreamTypes";
+import type { AuditableItemStreamContexts } from "./auditableItemStreamContexts.js";
+import type { AuditableItemStreamTypes } from "./auditableItemStreamTypes.js";
 
 /**
  * Interface describing an entry for the stream.

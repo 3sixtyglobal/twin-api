@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAuditableItemStreamServiceConfig } from "./IAuditableItemStreamServiceConfig";
+import type { IAuditableItemStreamServiceConfig } from "./IAuditableItemStreamServiceConfig.js";
 
 /**
  * Options for the auditable item stream service constructor.

@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { HeaderTypes, MimeTypes } from "@twin.org/web";
-import type { IAuditableItemStreamList } from "../IAuditableItemStreamList";
+import type { IAuditableItemStreamList } from "../IAuditableItemStreamList.js";
 
 /**
  * The response to getting the a list of the streams.

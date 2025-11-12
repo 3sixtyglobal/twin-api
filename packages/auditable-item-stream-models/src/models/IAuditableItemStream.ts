@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IJsonLdContextDefinitionElement, IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { IImmutableProofVerification } from "@twin.org/immutable-proof-models";
-import type { AuditableItemStreamContexts } from "./auditableItemStreamContexts";
-import type { AuditableItemStreamTypes } from "./auditableItemStreamTypes";
-import type { IAuditableItemStreamEntry } from "./IAuditableItemStreamEntry";
+import type { AuditableItemStreamContexts } from "./auditableItemStreamContexts.js";
+import type { AuditableItemStreamTypes } from "./auditableItemStreamTypes.js";
+import type { IAuditableItemStreamEntry } from "./IAuditableItemStreamEntry.js";
 
 /**
  * Interface describing an auditable item stream.
@@ -40,14 +40,14 @@ export interface IAuditableItemStream {
 	dateModified?: string;
 
 	/**
-	 * The identity of the node which controls the stream.
+	 * The identity of the organization which controls the stream.
 	 */
-	nodeIdentity: string;
+	organizationIdentity?: string;
 
 	/**
 	 * The identity of the user who created the stream.
 	 */
-	userIdentity: string;
+	userIdentity?: string;
 
 	/**
 	 * The object to associate with the entry as JSON-LD.

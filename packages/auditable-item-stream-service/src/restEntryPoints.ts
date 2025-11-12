@@ -4,7 +4,7 @@ import type { IRestRouteEntryPoint } from "@twin.org/api-models";
 import {
 	generateRestRoutesAuditableItemStream,
 	tagsAuditableItemStream
-} from "./auditableItemStreamRoutes";
+} from "./auditableItemStreamRoutes.js";
 
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{

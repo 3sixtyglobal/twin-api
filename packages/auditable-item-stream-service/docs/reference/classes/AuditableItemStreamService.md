@@ -36,9 +36,27 @@ Runtime name for the class.
 
 ## Methods
 
+### className()
+
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`IAuditableItemStreamComponent.className`
+
+***
+
 ### create()
 
-> **create**(`stream`, `options?`, `userIdentity?`, `nodeIdentity?`): `Promise`\<`string`\>
+> **create**(`stream`, `options?`): `Promise`\<`string`\>
 
 Create a new stream.
 
@@ -70,18 +88,6 @@ Options for creating the stream.
 
 After how many entries do we add immutable checks, defaults to service configured value.
 A value of 0 will disable integrity checks, 1 will be every item, or any other integer for an interval.
-
-##### userIdentity?
-
-`string`
-
-The identity to create the auditable item stream operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
 
 #### Returns
 
@@ -155,7 +161,7 @@ NotFoundError if the stream is not found
 
 ### update()
 
-> **update**(`stream`, `userIdentity?`, `nodeIdentity?`): `Promise`\<`void`\>
+> **update**(`stream`): `Promise`\<`void`\>
 
 Update a stream.
 
@@ -177,18 +183,6 @@ The id of the stream to update.
 
 The object for the stream as JSON-LD.
 
-##### userIdentity?
-
-`string`
-
-The identity to create the auditable item stream operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
-
 #### Returns
 
 `Promise`\<`void`\>
@@ -203,7 +197,7 @@ Nothing.
 
 ### remove()
 
-> **remove**(`id`, `userIdentity?`, `nodeIdentity?`): `Promise`\<`void`\>
+> **remove**(`id`): `Promise`\<`void`\>
 
 Delete the stream.
 
@@ -214,18 +208,6 @@ Delete the stream.
 `string`
 
 The id of the stream to remove.
-
-##### userIdentity?
-
-`string`
-
-The identity to create the auditable item stream operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
 
 #### Returns
 
@@ -297,7 +279,7 @@ The entities, which can be partial if a limited keys list was provided.
 
 ### createEntry()
 
-> **createEntry**(`streamId`, `entryObject`, `userIdentity?`, `nodeIdentity?`): `Promise`\<`string`\>
+> **createEntry**(`streamId`, `entryObject`): `Promise`\<`string`\>
 
 Create an entry in the stream.
 
@@ -314,18 +296,6 @@ The id of the stream to update.
 `IJsonLdNodeObject`
 
 The object for the stream as JSON-LD.
-
-##### userIdentity?
-
-`string`
-
-The identity to create the auditable item stream operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
 
 #### Returns
 
@@ -423,7 +393,7 @@ NotFoundError if the stream is not found.
 
 ### updateEntry()
 
-> **updateEntry**(`streamId`, `entryId`, `entryObject`, `userIdentity?`, `nodeIdentity?`): `Promise`\<`void`\>
+> **updateEntry**(`streamId`, `entryId`, `entryObject`): `Promise`\<`void`\>
 
 Update an entry in the stream.
 
@@ -447,18 +417,6 @@ The id of the entry to update.
 
 The object for the entry as JSON-LD.
 
-##### userIdentity?
-
-`string`
-
-The identity to create the auditable item stream operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
-
 #### Returns
 
 `Promise`\<`void`\>
@@ -473,7 +431,7 @@ Nothing.
 
 ### removeEntry()
 
-> **removeEntry**(`streamId`, `entryId`, `userIdentity?`, `nodeIdentity?`): `Promise`\<`void`\>
+> **removeEntry**(`streamId`, `entryId`): `Promise`\<`void`\>
 
 Delete from the stream.
 
@@ -490,18 +448,6 @@ The id of the stream to remove from.
 `string`
 
 The id of the entry to remove.
-
-##### userIdentity?
-
-`string`
-
-The identity to create the auditable item stream operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
 
 #### Returns
 
@@ -651,7 +597,7 @@ NotFoundError if the stream is not found.
 
 ### removeVerifiable()
 
-> **removeVerifiable**(`streamId`, `nodeIdentity?`): `Promise`\<`void`\>
+> **removeVerifiable**(`streamId`): `Promise`\<`void`\>
 
 Remove the verifiable storage for the stream and entries.
 
@@ -662,12 +608,6 @@ Remove the verifiable storage for the stream and entries.
 `string`
 
 The id of the stream to remove the storage from.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
 
 #### Returns
 

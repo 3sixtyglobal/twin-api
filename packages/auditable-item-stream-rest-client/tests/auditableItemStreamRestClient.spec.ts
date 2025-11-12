@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { AuditableItemStreamRestClient } from "../src/auditableItemStreamRestClient";
+import { AuditableItemStreamRestClient } from "../src/auditableItemStreamRestClient.js";
 
 describe("AuditableItemStreamRestClient", () => {
 	test("Can create an instance", async () => {

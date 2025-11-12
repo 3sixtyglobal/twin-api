@@ -60,6 +60,14 @@ export class AuditableItemStreamRestClient
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return AuditableItemStreamRestClient.CLASS_NAME;
+	}
+
+	/**
 	 * Create a new stream.
 	 * @param stream The stream to create.
 	 * @param stream.annotationObject The object for the stream as JSON-LD.

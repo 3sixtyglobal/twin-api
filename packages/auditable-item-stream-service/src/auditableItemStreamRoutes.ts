@@ -161,8 +161,7 @@ export function generateRestRoutesAuditableItemStream(
 									"@type": "Note",
 									content: "This is a simple note"
 								},
-								nodeIdentity: "tst:1234567890",
-								userIdentity: "tst:1234567890",
+								organizationIdentity: "did:iota:1234567890",
 								proofId: "0101010101010101010101010101010101010101010101010101010101010101",
 								immutableInterval: 10,
 								entries: [
@@ -213,8 +212,7 @@ export function generateRestRoutesAuditableItemStream(
 									"@type": "Note",
 									content: "This is a simple note"
 								},
-								nodeIdentity: "tst:1234567890",
-								userIdentity: "tst:1234567890",
+								organizationIdentity: "did:iota:1234567890",
 								proofId: "0101010101010101010101010101010101010101010101010101010101010101",
 								immutableInterval: 10,
 								entries: [
@@ -362,8 +360,7 @@ export function generateRestRoutesAuditableItemStream(
 											"@type": "Note",
 											content: "This is a simple note"
 										},
-										nodeIdentity: "tst:1234567890",
-										userIdentity: "tst:1234567890",
+										organizationIdentity: "did:iota:1234567890",
 										proofId: "0101010101010101010101010101010101010101010101010101010101010101",
 										immutableInterval: 10
 									}
@@ -406,8 +403,7 @@ export function generateRestRoutesAuditableItemStream(
 											"@type": "Note",
 											content: "This is a simple note"
 										},
-										nodeIdentity: "tst:1234567890",
-										userIdentity: "tst:1234567890",
+										organizationIdentity: "did:iota:1234567890",
 										proofId: "0101010101010101010101010101010101010101010101010101010101010101",
 										immutableInterval: 10
 									}
@@ -893,9 +889,7 @@ export async function auditableItemStreamCreate(
 		},
 		{
 			immutableInterval: request.body?.immutableInterval
-		},
-		httpRequestContext.userIdentity,
-		httpRequestContext.nodeIdentity
+		}
 	);
 	return {
 		statusCode: HttpStatusCode.created,
@@ -969,14 +963,10 @@ export async function auditableItemStreamUpdate(
 	);
 
 	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
-	await component.update(
-		{
-			id: request.pathParams.id,
-			annotationObject: request.body.annotationObject
-		},
-		httpRequestContext.userIdentity,
-		httpRequestContext.nodeIdentity
-	);
+	await component.update({
+		id: request.pathParams.id,
+		annotationObject: request.body.annotationObject
+	});
 	return {
 		statusCode: HttpStatusCode.noContent
 	};
@@ -1003,11 +993,7 @@ export async function auditableItemStreamDelete(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
 	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
-	await component.remove(
-		request.pathParams.id,
-		httpRequestContext.userIdentity,
-		httpRequestContext.nodeIdentity
-	);
+	await component.remove(request.pathParams.id);
 	return {
 		statusCode: HttpStatusCode.noContent
 	};
@@ -1080,12 +1066,7 @@ export async function auditableItemStreamCreateEntry(
 	Guards.objectValue(ROUTES_SOURCE, nameof(request.body.entryObject), request.body.entryObject);
 
 	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
-	const id = await component.createEntry(
-		request.pathParams.id,
-		request.body.entryObject,
-		httpRequestContext.userIdentity,
-		httpRequestContext.nodeIdentity
-	);
+	const id = await component.createEntry(request.pathParams.id, request.body.entryObject);
 	return {
 		statusCode: HttpStatusCode.created,
 		headers: {
@@ -1116,12 +1097,7 @@ export async function auditableItemStreamDeleteEntry(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.entryId), request.pathParams.entryId);
 
 	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
-	await component.removeEntry(
-		request.pathParams.id,
-		request.pathParams.entryId,
-		httpRequestContext.userIdentity,
-		httpRequestContext.nodeIdentity
-	);
+	await component.removeEntry(request.pathParams.id, request.pathParams.entryId);
 
 	return {
 		statusCode: HttpStatusCode.noContent
@@ -1159,9 +1135,7 @@ export async function auditableItemStreamUpdateEntry(
 	await component.updateEntry(
 		request.pathParams.id,
 		request.pathParams.entryId,
-		request.body.entryObject,
-		httpRequestContext.userIdentity,
-		httpRequestContext.nodeIdentity
+		request.body.entryObject
 	);
 	return {
 		statusCode: HttpStatusCode.noContent

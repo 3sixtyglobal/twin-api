@@ -32,16 +32,16 @@ export class AuditableItemStream {
 	public dateModified?: string;
 
 	/**
-	 * The identity of the node which controls the stream.
+	 * The identity of the organization which controls the stream.
 	 */
-	@property({ type: "string" })
-	public nodeIdentity!: string;
+	@property({ type: "string", optional: true })
+	public organizationIdentity?: string;
 
 	/**
 	 * The identity of the user which created the stream.
 	 */
-	@property({ type: "string" })
-	public userIdentity!: string;
+	@property({ type: "string", optional: true })
+	public userIdentity?: string;
 
 	/**
 	 * Object to associate with the stream as JSON-LD.

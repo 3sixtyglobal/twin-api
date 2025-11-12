@@ -251,8 +251,7 @@
 														"@type": "Note",
 														"content": "This is a simple note"
 													},
-													"nodeIdentity": "tst:1234567890",
-													"userIdentity": "tst:1234567890",
+													"organizationIdentity": "did:iota:1234567890",
 													"proofId": "0101010101010101010101010101010101010101010101010101010101010101",
 													"immutableInterval": 10
 												}
@@ -293,8 +292,7 @@
 														"@type": "Note",
 														"content": "This is a simple note"
 													},
-													"nodeIdentity": "tst:1234567890",
-													"userIdentity": "tst:1234567890",
+													"organizationIdentity": "did:iota:1234567890",
 													"proofId": "0101010101010101010101010101010101010101010101010101010101010101",
 													"immutableInterval": 10
 												}
@@ -502,8 +500,7 @@
 												"@type": "Note",
 												"content": "This is a simple note"
 											},
-											"nodeIdentity": "tst:1234567890",
-											"userIdentity": "tst:1234567890",
+											"organizationIdentity": "did:iota:1234567890",
 											"proofId": "0101010101010101010101010101010101010101010101010101010101010101",
 											"immutableInterval": 10,
 											"entries": [
@@ -549,8 +546,7 @@
 												"@type": "Note",
 												"content": "This is a simple note"
 											},
-											"nodeIdentity": "tst:1234567890",
-											"userIdentity": "tst:1234567890",
+											"organizationIdentity": "did:iota:1234567890",
 											"proofId": "0101010101010101010101010101010101010101010101010101010101010101",
 											"immutableInterval": 10,
 											"entries": [
@@ -2119,22 +2115,19 @@
 					},
 					"entries": {
 						"type": "array",
-						"items": false,
-						"description": "The entries for the stream.",
-						"prefixItems": [
-							{
-								"type": "object",
-								"properties": {
-									"entryObject": {
-										"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
-									}
-								},
-								"required": [
-									"entryObject"
-								],
-								"additionalProperties": false
-							}
-						]
+						"items": {
+							"type": "object",
+							"properties": {
+								"entryObject": {
+									"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
+								}
+							},
+							"required": [
+								"entryObject"
+							],
+							"additionalProperties": false
+						},
+						"description": "The entries for the stream."
 					},
 					"immutableInterval": {
 						"type": "number",

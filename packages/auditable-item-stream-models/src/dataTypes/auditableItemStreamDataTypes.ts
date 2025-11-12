@@ -1,13 +1,13 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { DataTypeHandlerFactory, type IJsonSchema } from "@twin.org/data-core";
-import { AuditableItemStreamContexts } from "../models/auditableItemStreamContexts";
-import { AuditableItemStreamTypes } from "../models/auditableItemStreamTypes";
-import AuditableItemStreamSchema from "../schemas/AuditableItemStream.json";
-import AuditableItemStreamEntrySchema from "../schemas/AuditableItemStreamEntry.json";
-import AuditableItemStreamEntryListSchema from "../schemas/AuditableItemStreamEntryList.json";
-import AuditableItemStreamEntryObjectListSchema from "../schemas/AuditableItemStreamEntryObjectList.json";
-import AuditableItemStreamListSchema from "../schemas/AuditableItemStreamList.json";
+import { AuditableItemStreamContexts } from "../models/auditableItemStreamContexts.js";
+import { AuditableItemStreamTypes } from "../models/auditableItemStreamTypes.js";
+import AuditableItemStreamSchema from "../schemas/AuditableItemStream.json" with { type: "json" };
+import AuditableItemStreamEntrySchema from "../schemas/AuditableItemStreamEntry.json" with { type: "json" };
+import AuditableItemStreamEntryListSchema from "../schemas/AuditableItemStreamEntryList.json" with { type: "json" };
+import AuditableItemStreamEntryObjectListSchema from "../schemas/AuditableItemStreamEntryObjectList.json" with { type: "json" };
+import AuditableItemStreamListSchema from "../schemas/AuditableItemStreamList.json" with { type: "json" };
 
 /**
  * Handle all the data types for auditable item stream.
