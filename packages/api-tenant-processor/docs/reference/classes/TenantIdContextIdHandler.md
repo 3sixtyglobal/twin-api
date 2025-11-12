@@ -30,7 +30,7 @@ Runtime name for the class.
 
 > **short**(`value`): `string`
 
-The short form of the tenant id is the same as the full version.
+The short form of the tenant id is the base64 version to compact.
 
 #### Parameters
 

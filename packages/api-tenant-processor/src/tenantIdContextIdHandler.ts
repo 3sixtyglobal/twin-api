@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IContextIdHandler } from "@twin.org/context";
-import { Guards } from "@twin.org/core";
+import { Converter, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 
 /**
@@ -14,12 +14,12 @@ export class TenantIdContextIdHandler implements IContextIdHandler {
 	public static readonly CLASS_NAME: string = nameof<TenantIdContextIdHandler>();
 
 	/**
-	 * The short form of the tenant id is the same as the full version.
+	 * The short form of the tenant id is the base64 version to compact.
 	 * @param value The full context id value.
 	 * @returns Short form string.
 	 */
 	public short(value: string): string {
-		return value;
+		return Converter.bytesToBase64(Converter.hexToBytes(value));
 	}
 
 	/**
