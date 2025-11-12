@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.0.3-next.2](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.1...api-tenant-processor-v0.0.3-next.2) (2025-11-12)
+
+
+### Features
+
+* reduce short form tenant id length ([bcda377](https://github.com/twinfoundation/api/commit/bcda377daed03b21fd1c6ffe47bad4a45d96602b))
+
+
+### Bug Fixes
+
+* remove extraneous type ([f85c52c](https://github.com/twinfoundation/api/commit/f85c52c55caa3a7a64f6f675842f0ea59289a5d9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.1 to 0.0.3-next.2
+
 ## [0.0.3-next.1](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.0...api-tenant-processor-v0.0.3-next.1) (2025-11-10)
 
 
