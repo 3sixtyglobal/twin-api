@@ -19,7 +19,7 @@ export class TenantIdContextIdHandler implements IContextIdHandler {
 	 * @returns Short form string.
 	 */
 	public short(value: string): string {
-		return Converter.bytesToBase64(Converter.hexToBytes(value));
+		return Converter.bytesToBase64Url(Converter.hexToBytes(value));
 	}
 
 	/**
