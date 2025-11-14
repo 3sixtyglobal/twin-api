@@ -100,13 +100,17 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 			level: "info",
 			source: LoggingProcessor.CLASS_NAME,
 			ts: Date.now(),
-			message: `===> ${request.method} ${requestUrl}`,
-			data:
-				this._includeBody && isJson
-					? (this.processJson("body", ObjectHelper.clone(request?.body)) as {
-							[key: string]: unknown;
-						})
-					: undefined
+			message: "requestMessage",
+			data: {
+				method: request.method,
+				requestUrl,
+				body:
+					this._includeBody && isJson
+						? (this.processJson("body", ObjectHelper.clone(request?.body)) as {
+								[key: string]: unknown;
+							})
+						: undefined
+			}
 		});
 	}
 
@@ -164,16 +168,35 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 			}
 		}
 
-		await this._logging?.log({
-			level:
-				Is.number(response.statusCode) && response.statusCode >= HttpStatusCode.badRequest
-					? "error"
-					: "info",
-			source: LoggingProcessor.CLASS_NAME,
-			ts: Date.now(),
-			message: `<=== ${response.statusCode ?? ""} ${request.method} ${requestUrl} duration: ${elapsedMicroSeconds}µs`,
-			data
-		});
+		if (Is.number(response.statusCode) && response.statusCode >= HttpStatusCode.badRequest) {
+			await this._logging?.log({
+				level: "error",
+				source: LoggingProcessor.CLASS_NAME,
+				ts: Date.now(),
+				message: "responseMessage",
+				data: {
+					statusCode: response.statusCode,
+					method: request.method,
+					requestUrl: requestUrl ?? "",
+					elapsedMicroSeconds,
+					...data
+				}
+			});
+		} else {
+			await this._logging?.log({
+				level: "info",
+				source: LoggingProcessor.CLASS_NAME,
+				ts: Date.now(),
+				message: "responseMessage",
+				data: {
+					statusCode: response.statusCode,
+					method: request.method,
+					requestUrl: requestUrl ?? "",
+					elapsedMicroSeconds,
+					...data
+				}
+			});
+		}
 	}
 
 	/**

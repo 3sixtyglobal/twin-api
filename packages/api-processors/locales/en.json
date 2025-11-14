@@ -8,6 +8,15 @@
 		},
 		"jsonLdMimeTypeProcessor": {
 			"invalidJsonLd": "The JSON-LD content is invalid or missing '@context'."
+		},
+		"loggingProcessor": {
+			"responseMessage": "<=== {statusCode} {method} {requestUrl} duration: {elapsedMicroSeconds}µs"
+		}
+	},
+	"info": {
+		"loggingProcessor": {
+			"requestMessage": "===> {method} {requestUrl}",
+			"responseMessage": "<=== {statusCode} {method} {requestUrl} duration: {elapsedMicroSeconds}µs"
 		}
 	}
 }

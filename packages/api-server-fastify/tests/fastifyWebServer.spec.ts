@@ -537,8 +537,8 @@ describe("api-server-fastify", () => {
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ"
 		);
 		expect(logEntries.length).toEqual(2);
-		expect(logEntries[0].message.startsWith("===> POST /")).toEqual(true);
-		expect(logEntries[1].message.startsWith("<===  POST")).toEqual(true);
+		expect(logEntries[0].message.startsWith("requestMessage")).toEqual(true);
+		expect(logEntries[1].message.startsWith("responseMessage")).toEqual(true);
 
 		await server.stop();
 	});
