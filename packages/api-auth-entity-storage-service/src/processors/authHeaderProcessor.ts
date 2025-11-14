@@ -13,7 +13,7 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, Is } from "@twin.org/core";
+import { BaseError, Coerce, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
@@ -117,6 +117,8 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				);
 
 				contextIds[ContextIdKeys.User] = headerAndPayload.payload?.sub;
+				contextIds[ContextIdKeys.Organization] = Coerce.string(headerAndPayload.payload?.org);
+
 				processorState.authToken = tokenAndLocation?.token;
 				processorState.authTokenLocation = tokenAndLocation?.location;
 			} catch (err) {
