@@ -495,6 +495,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		const contextIds: IContextIds = {};
 		const processorState = restRoute?.processorData ?? {};
 
+		if (Is.object(httpServerRequest.pathParams)) {
+			for (const key of Object.keys(httpServerRequest.pathParams)) {
+				httpServerRequest.pathParams[key] = decodeURIComponent(httpServerRequest.pathParams[key]);
+			}
+		}
+		if (Is.object(httpServerRequest.query)) {
+			for (const key of Object.keys(httpServerRequest.query)) {
+				httpServerRequest.query[key] = decodeURIComponent(httpServerRequest.query[key]);
+			}
+		}
+
 		await this.runProcessorsRest(
 			restRouteProcessors,
 			restRoute,
