@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.0.3-next.3](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.2...api-tenant-processor-v0.0.3-next.3) (2025-11-14)
+
+
+### Features
+
+* add tests for tenant id handler ([c868e7e](https://github.com/twinfoundation/api/commit/c868e7e5831e13df39b8994c40834e51f69fa0b9))
+
+
+### Bug Fixes
+
+* use base64Url for tenant id short form so it doesn't include slash ([7210771](https://github.com/twinfoundation/api/commit/72107718650acd05440ce9d9bf10905e6052281c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.2 to 0.0.3-next.3
+
 ## [0.0.3-next.2](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.1...api-tenant-processor-v0.0.3-next.2) (2025-11-12)
 
 

@@ -1,5 +1,21 @@
 # @twin.org/api-auth-entity-storage-service - Changelog
 
+## [0.0.3-next.3](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.2...api-auth-entity-storage-service-v0.0.3-next.3) (2025-11-14)
+
+
+### Bug Fixes
+
+* include org in context ids from jwt ([a12cfdd](https://github.com/twinfoundation/api/commit/a12cfdddb05e2ed0300b26f3d7c0cfc033e59bd3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.2 to 0.0.3-next.3
+    * @twin.org/api-core bumped from 0.0.3-next.2 to 0.0.3-next.3
+    * @twin.org/api-models bumped from 0.0.3-next.2 to 0.0.3-next.3
+
 ## [0.0.3-next.2](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.1...api-auth-entity-storage-service-v0.0.3-next.2) (2025-11-12)
 
 

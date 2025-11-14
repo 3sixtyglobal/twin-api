@@ -1,5 +1,19 @@
 # @twin.org/api-processors - Changelog
 
+## [0.0.3-next.3](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.2...api-processors-v0.0.3-next.3) (2025-11-14)
+
+
+### Miscellaneous Chores
+
+* **api-processors:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.2 to 0.0.3-next.3
+
 ## [0.0.3-next.2](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.1...api-processors-v0.0.3-next.2) (2025-11-12)
 
 

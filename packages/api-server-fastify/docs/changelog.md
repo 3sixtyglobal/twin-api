@@ -1,5 +1,21 @@
 # @twin.org/api-server-fastify - Changelog
 
+## [0.0.3-next.3](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.2...api-server-fastify-v0.0.3-next.3) (2025-11-14)
+
+
+### Miscellaneous Chores
+
+* **api-server-fastify:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.2 to 0.0.3-next.3
+    * @twin.org/api-models bumped from 0.0.3-next.2 to 0.0.3-next.3
+    * @twin.org/api-processors bumped from 0.0.3-next.2 to 0.0.3-next.3
+
 ## [0.0.3-next.2](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.1...api-server-fastify-v0.0.3-next.2) (2025-11-12)
 
 
