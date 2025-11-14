@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.3-next.5](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.4...api-models-v0.0.3-next.5) (2025-11-14)
+
+
+### Features
+
+* decodeURIComponent for query and path params ([ead68a2](https://github.com/twinfoundation/api/commit/ead68a257425c10dd912497f7edd473c469ca132))
+
 ## [0.0.3-next.4](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.3...api-models-v0.0.3-next.4) (2025-11-14)
 
 

@@ -1,5 +1,21 @@
 # @twin.org/api-server-fastify - Changelog
 
+## [0.0.3-next.5](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.4...api-server-fastify-v0.0.3-next.5) (2025-11-14)
+
+
+### Features
+
+* decodeURIComponent for query and path params ([ead68a2](https://github.com/twinfoundation/api/commit/ead68a257425c10dd912497f7edd473c469ca132))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.4 to 0.0.3-next.5
+    * @twin.org/api-models bumped from 0.0.3-next.4 to 0.0.3-next.5
+    * @twin.org/api-processors bumped from 0.0.3-next.4 to 0.0.3-next.5
+
 ## [0.0.3-next.4](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.3...api-server-fastify-v0.0.3-next.4) (2025-11-14)
 
 

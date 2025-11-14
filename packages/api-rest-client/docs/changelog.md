@@ -1,5 +1,20 @@
 # @twin.org/api-rest-client - Changelog
 
+## [0.0.3-next.5](https://github.com/twinfoundation/api/compare/api-rest-client-v0.0.3-next.4...api-rest-client-v0.0.3-next.5) (2025-11-14)
+
+
+### Miscellaneous Chores
+
+* **api-rest-client:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.4 to 0.0.3-next.5
+    * @twin.org/api-models bumped from 0.0.3-next.4 to 0.0.3-next.5
+
 ## [0.0.3-next.4](https://github.com/twinfoundation/api/compare/api-rest-client-v0.0.3-next.3...api-rest-client-v0.0.3-next.4) (2025-11-14)
 
 
