@@ -1,5 +1,26 @@
 # @twin.org/api-core - Changelog
 
+## [0.0.3-next.4](https://github.com/twinfoundation/api/compare/api-core-v0.0.3-next.3...api-core-v0.0.3-next.4) (2025-11-14)
+
+
+### Features
+
+* add authentication generators and process features option ([a67edf1](https://github.com/twinfoundation/api/commit/a67edf1df212bd8ab94a40cddf5338551155696f))
+* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.3 to 0.0.3-next.4
+
 ## [0.0.3-next.3](https://github.com/twinfoundation/api/compare/api-core-v0.0.3-next.2...api-core-v0.0.3-next.3) (2025-11-14)
 
 
