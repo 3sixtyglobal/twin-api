@@ -1,5 +1,21 @@
 # @twin.org/api-auth-entity-storage-service - Changelog
 
+## [0.0.3-next.6](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.5...api-auth-entity-storage-service-v0.0.3-next.6) (2025-11-20)
+
+
+### Features
+
+* check tenant id in auth if set ([66f7337](https://github.com/twinfoundation/api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.5 to 0.0.3-next.6
+    * @twin.org/api-core bumped from 0.0.3-next.5 to 0.0.3-next.6
+    * @twin.org/api-models bumped from 0.0.3-next.5 to 0.0.3-next.6
+
 ## [0.0.3-next.5](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.4...api-auth-entity-storage-service-v0.0.3-next.5) (2025-11-14)
 
 

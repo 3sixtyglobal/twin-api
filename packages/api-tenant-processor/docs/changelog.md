@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.0.3-next.6](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.5...api-tenant-processor-v0.0.3-next.6) (2025-11-20)
+
+
+### Features
+
+* check tenant id in auth if set ([937ba0c](https://github.com/twinfoundation/api/commit/937ba0cd790038556a7b2af251e52b43cb059df4))
+* check tenant id in auth if set ([66f7337](https://github.com/twinfoundation/api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.5 to 0.0.3-next.6
+
 ## [0.0.3-next.5](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.4...api-tenant-processor-v0.0.3-next.5) (2025-11-14)
 
 
