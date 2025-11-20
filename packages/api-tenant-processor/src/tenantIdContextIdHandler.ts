@@ -14,6 +14,14 @@ export class TenantIdContextIdHandler implements IContextIdHandler {
 	public static readonly CLASS_NAME: string = nameof<TenantIdContextIdHandler>();
 
 	/**
+	 * The class name of the component.
+	 * @returns The class name.
+	 */
+	public className(): string {
+		return TenantIdContextIdHandler.CLASS_NAME;
+	}
+
+	/**
 	 * The short form of the tenant id is the base64 version to compact.
 	 * @param value The full context id value.
 	 * @returns Short form string.

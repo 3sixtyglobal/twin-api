@@ -145,11 +145,18 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				throw new GeneralError(EntityStorageAuthenticationService.CLASS_NAME, "passwordMismatch");
 			}
 
+			// This might be undefined if the login is performed in a single tenant context
+			// if is verified during the token processing, tenant id will be matched against
+			// the context
+			const contextIds = await ContextIdStore.getContextIds();
+			const tenantId = contextIds?.[ContextIdKeys.Tenant];
+
 			const tokenAndExpiry = await TokenHelper.createToken(
 				this._vaultConnector,
 				`${this._nodeId}/${this._signingKeyName}`,
 				user.identity,
 				user.organization,
+				tenantId,
 				this._defaultTtlMinutes
 			);
 
@@ -194,6 +201,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			`${this._nodeId}/${this._signingKeyName}`,
 			headerAndPayload.payload.sub ?? "",
 			Is.stringValue(headerAndPayload.payload.org) ? headerAndPayload.payload.org : "",
+			Is.stringValue(headerAndPayload.payload.tid) ? headerAndPayload.payload.tid : "",
 			this._defaultTtlMinutes
 		);
 

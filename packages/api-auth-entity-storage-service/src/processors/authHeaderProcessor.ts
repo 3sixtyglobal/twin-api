@@ -13,7 +13,7 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, Coerce, Is } from "@twin.org/core";
+import { BaseError, Coerce, GeneralError, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
@@ -115,6 +115,12 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 					`${this._nodeId}/${this._signingKeyName}`,
 					tokenAndLocation?.token
 				);
+
+				// If tenant id is defined in the context, then it must match the one in the token
+				// but both can be undefined in a single tenant context
+				if (contextIds?.[ContextIdKeys.Tenant] !== headerAndPayload?.payload?.tid) {
+					throw new GeneralError(AuthHeaderProcessor.CLASS_NAME, "tenantIdMismatch");
+				}
 
 				contextIds[ContextIdKeys.User] = headerAndPayload.payload?.sub;
 				contextIds[ContextIdKeys.Organization] = Coerce.string(headerAndPayload.payload?.org);

@@ -24,7 +24,7 @@ Runtime name for the class.
 
 ### createToken()
 
-> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `ttlMinutes`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
 
 Create a new token.
 
@@ -51,6 +51,12 @@ The subject for the token.
 ##### organizationIdentity
 
 The organization for the token.
+
+`string` | `undefined`
+
+##### tenantId
+
+The tenant id for the token.
 
 `string` | `undefined`
 

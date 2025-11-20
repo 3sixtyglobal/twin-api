@@ -27,6 +27,7 @@ export class TokenHelper {
 	 * @param signingKeyName The signing key name.
 	 * @param userIdentity The subject for the token.
 	 * @param organizationIdentity The organization for the token.
+	 * @param tenantId The tenant id for the token.
 	 * @param ttlMinutes The time to live for the token in minutes.
 	 * @returns The new token and its expiry date.
 	 */
@@ -35,6 +36,7 @@ export class TokenHelper {
 		signingKeyName: string,
 		userIdentity: string,
 		organizationIdentity: string | undefined,
+		tenantId: string | undefined,
 		ttlMinutes: number
 	): Promise<{
 		token: string;
@@ -48,6 +50,7 @@ export class TokenHelper {
 			{
 				sub: userIdentity,
 				org: organizationIdentity,
+				tid: tenantId,
 				exp: nowSeconds + ttlSeconds
 			},
 			async (header, payload) =>
