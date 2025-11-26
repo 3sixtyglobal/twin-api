@@ -39,24 +39,34 @@ export class HttpErrorHelper {
 		const flattened = BaseError.flatten(error);
 
 		let httpStatusCode: HttpStatusCode = HttpStatusCode.internalServerError;
-		if (
-			flattened.some(e => BaseError.isErrorName(e, GuardError.CLASS_NAME)) ||
-			flattened.some(e => BaseError.isErrorName(e, ValidationError.CLASS_NAME))
-		) {
-			httpStatusCode = HttpStatusCode.badRequest;
-		} else if (
-			flattened.some(e => BaseError.isErrorName(e, ConflictError.CLASS_NAME)) ||
-			flattened.some(e => BaseError.isErrorName(e, AlreadyExistsError.CLASS_NAME))
-		) {
-			httpStatusCode = HttpStatusCode.conflict;
-		} else if (flattened.some(e => BaseError.isErrorName(e, NotFoundError.CLASS_NAME))) {
-			httpStatusCode = HttpStatusCode.notFound;
-		} else if (flattened.some(e => BaseError.isErrorName(e, UnauthorizedError.CLASS_NAME))) {
-			httpStatusCode = HttpStatusCode.unauthorized;
-		} else if (flattened.some(e => BaseError.isErrorName(e, NotImplementedError.CLASS_NAME))) {
-			httpStatusCode = HttpStatusCode.forbidden;
-		} else if (flattened.some(e => BaseError.isErrorName(e, UnprocessableError.CLASS_NAME))) {
-			httpStatusCode = HttpStatusCode.unprocessableEntity;
+
+		const errorTypeMap: { [id: string]: HttpStatusCode } = {
+			[GuardError.CLASS_NAME]: HttpStatusCode.badRequest,
+			[ValidationError.CLASS_NAME]: HttpStatusCode.badRequest,
+			[ConflictError.CLASS_NAME]: HttpStatusCode.conflict,
+			[AlreadyExistsError.CLASS_NAME]: HttpStatusCode.conflict,
+			[NotFoundError.CLASS_NAME]: HttpStatusCode.notFound,
+			[UnauthorizedError.CLASS_NAME]: HttpStatusCode.unauthorized,
+			[NotImplementedError.CLASS_NAME]: HttpStatusCode.forbidden,
+			[UnprocessableError.CLASS_NAME]: HttpStatusCode.unprocessableEntity
+		};
+
+		// First check the primary error, as we don't want to override that with a sub error
+		if (flattened.length > 0) {
+			const primaryError = flattened[0];
+			if (errorTypeMap[primaryError.name]) {
+				httpStatusCode = errorTypeMap[primaryError.name];
+			}
+
+			// The primary error is still internal server error, check the sub errors
+			if (httpStatusCode === HttpStatusCode.internalServerError) {
+				for (const className in errorTypeMap) {
+					if (flattened.some(e => BaseError.isErrorName(e, className))) {
+						httpStatusCode = errorTypeMap[className];
+						break;
+					}
+				}
+			}
 		}
 
 		const returnError = error.toJsonObject(includeStack);

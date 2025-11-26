@@ -544,9 +544,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			[id: string]: unknown;
 		}
 	): Promise<void> {
-		try {
-			const filteredProcessors = this.filterRouteProcessors(restRoute, restRouteProcessors);
+		let hasPreError = false;
+		const filteredProcessors = this.filterRouteProcessors(restRoute, restRouteProcessors);
 
+		try {
 			for (const routeProcessor of filteredProcessors) {
 				const pre = routeProcessor.pre?.bind(routeProcessor);
 				if (Is.function(pre)) {
@@ -560,24 +561,45 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					);
 				}
 			}
+		} catch (err) {
+			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
+			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			hasPreError = true;
+		}
 
-			// Run the processors within an async context
-			// so that any services can access the context ids
-			await ContextIdStore.run(contextIds, async () => {
-				for (const routeProcessor of filteredProcessors) {
-					const process = routeProcessor.process?.bind(routeProcessor);
-					if (Is.function(process)) {
-						await process(
-							httpServerRequest,
-							httpResponse,
-							restRoute,
-							processorState,
-							this._loggingComponentType
-						);
+		// Don't run the main processing if there was an error in the pre processing
+		// As this is likely to perform tasks such as authentication which may have failed
+		if (!hasPreError) {
+			try {
+				// Run the processors within an async context
+				// so that any services can access the context ids
+				await ContextIdStore.run(contextIds, async () => {
+					for (const routeProcessor of filteredProcessors) {
+						const process = routeProcessor.process?.bind(routeProcessor);
+						if (Is.function(process)) {
+							await process(
+								httpServerRequest,
+								httpResponse,
+								restRoute,
+								processorState,
+								this._loggingComponentType
+							);
+						}
 					}
-				}
-			});
+				});
+			} catch (err) {
+				const { error, httpStatusCode } = HttpErrorHelper.processError(
+					err,
+					this._includeErrorStack
+				);
+				HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+				hasPreError = true;
+			}
+		}
 
+		try {
+			// Always run the post processors, even if there was an error earlier
+			// as they may perform cleanup tasks, or logging etc
 			for (const routeProcessor of filteredProcessors) {
 				const post = routeProcessor.post?.bind(routeProcessor);
 				if (Is.function(post)) {
@@ -592,8 +614,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				}
 			}
 		} catch (err) {
-			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
-			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			// Just log post processor errors
+			await this._logging?.log({
+				level: "error",
+				ts: Date.now(),
+				source: FastifyWebServer.CLASS_NAME,
+				message: "postProcessorError",
+				error: BaseError.fromError(err),
+				data: {
+					route: restRoute?.path ?? ""
+				}
+			});
 		}
 	}
 

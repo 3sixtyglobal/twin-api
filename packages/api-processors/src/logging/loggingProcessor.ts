@@ -106,9 +106,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 				requestUrl,
 				body:
 					this._includeBody && isJson
-						? (this.processJson("body", ObjectHelper.clone(request?.body)) as {
-								[key: string]: unknown;
-							})
+						? this.processJson("body", ObjectHelper.clone(request?.body))
 						: undefined
 			}
 		});
