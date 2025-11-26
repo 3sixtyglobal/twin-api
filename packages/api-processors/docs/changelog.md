@@ -1,5 +1,19 @@
 # @twin.org/api-processors - Changelog
 
+## [0.0.3-next.7](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.6...api-processors-v0.0.3-next.7) (2025-11-26)
+
+
+### Bug Fixes
+
+* error handling make sure primary error takes precedence ([84b61f2](https://github.com/twinfoundation/api/commit/84b61f27fe5e4919c0c9f9a1edc8ff46dc45c1f7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.6 to 0.0.3-next.7
+
 ## [0.0.3-next.6](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.5...api-processors-v0.0.3-next.6) (2025-11-20)
 
 
