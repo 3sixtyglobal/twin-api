@@ -102,7 +102,9 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 		status: HealthStatus,
 		details?: string
 	): Promise<void> {
-		throw new NotSupportedError(InformationRestClient.CLASS_NAME, nameof("setComponentHealth"));
+		throw new NotSupportedError(InformationRestClient.CLASS_NAME, "notSupportedOnClient", {
+			methodName: "setComponentHealth"
+		});
 	}
 
 	/**
@@ -111,6 +113,8 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 	 * @returns Nothing.
 	 */
 	public async removeComponentHealth(name: string): Promise<void> {
-		throw new NotSupportedError(InformationRestClient.CLASS_NAME, nameof("removeComponentHealth"));
+		throw new NotSupportedError(InformationRestClient.CLASS_NAME, "notSupportedOnClient", {
+			methodName: "removeComponentHealth"
+		});
 	}
 }
