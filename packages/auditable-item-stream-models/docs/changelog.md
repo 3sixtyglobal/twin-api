@@ -1,5 +1,12 @@
 # @twin.org/auditable-item-stream-models - Changelog
 
+## [0.0.3-next.2](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.1...auditable-item-stream-models-v0.0.3-next.2) (2025-11-28)
+
+
+### Features
+
+* update background task service ([a7b8857](https://github.com/twinfoundation/auditable-item-stream/commit/a7b885783dfd37d3757127e61e8b0b982c232d36))
+
 ## [0.0.3-next.1](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.0...auditable-item-stream-models-v0.0.3-next.1) (2025-11-12)
 
 
