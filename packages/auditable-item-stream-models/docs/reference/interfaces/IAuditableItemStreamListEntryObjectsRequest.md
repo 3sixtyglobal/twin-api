@@ -44,7 +44,7 @@ The conditions to filter the stream, JSON stringified IComparator[].
 
 #### includeDeleted?
 
-> `optional` **includeDeleted**: `string` \| `boolean`
+> `optional` **includeDeleted**: `string`
 
 Whether to include deleted entries, defaults to false.
 

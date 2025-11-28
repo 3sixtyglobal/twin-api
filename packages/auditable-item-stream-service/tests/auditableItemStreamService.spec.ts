@@ -3,11 +3,15 @@
 import { TenantIdContextIdHandler } from "@twin.org/api-tenant-processor";
 import {
 	type BackgroundTask,
-	EntityStorageBackgroundTaskConnector,
+	BackgroundTaskService,
 	initSchema as initSchemaBackgroundTask
-} from "@twin.org/background-task-connector-entity-storage";
-import { BackgroundTaskConnectorFactory } from "@twin.org/background-task-models";
-import { ContextIdHandlerFactory, ContextIdKeys, ContextIdStore } from "@twin.org/context";
+} from "@twin.org/background-task-service";
+import {
+	ContextIdHandlerFactory,
+	ContextIdKeys,
+	ContextIdStore,
+	type IContextIds
+} from "@twin.org/context";
 import { ComponentFactory, Converter, ObjectHelper, RandomHelper } from "@twin.org/core";
 import { ComparisonOperator } from "@twin.org/entity";
 import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
@@ -83,11 +87,14 @@ describe("AuditableItemStreamService", () => {
 		}));
 
 		// Mock the module helper to execute the method in the same thread, so we don't have to create an engine
-		ModuleHelper.execModuleMethodThread = vi
+		ModuleHelper.execModuleMethodThreadMessage = vi
 			.fn()
-			.mockImplementation(async (module, method, args) =>
-				ModuleHelper.execModuleMethod(module, method, args)
-			);
+			.mockImplementation((module, completed) => ({
+				executeMethod: async (method: string, args?: unknown, contextIds?: IContextIds) => {
+					const res = await ModuleHelper.execModuleMethod(module, method, args as unknown[]);
+					completed(method, res);
+				}
+			}));
 	});
 
 	afterAll(async () => {
@@ -131,8 +138,8 @@ describe("AuditableItemStreamService", () => {
 		});
 		EntityStorageConnectorFactory.register("background-task", () => backgroundTaskStorage);
 
-		const backgroundTask = new EntityStorageBackgroundTaskConnector();
-		BackgroundTaskConnectorFactory.register("background-task", () => backgroundTask);
+		const backgroundTask = new BackgroundTaskService();
+		ComponentFactory.register("background-task", () => backgroundTask);
 		await backgroundTask.start();
 
 		const immutableProofService = new ImmutableProofService();
@@ -212,7 +219,7 @@ describe("AuditableItemStreamService", () => {
 						proofObjectId: "ais:0101010101010101010101010101010101010101010101010101010101010101"
 					})
 				),
-				id: "0404040404040404040404040404040404040404040404040404040404040404",
+				id: "0505050505050505050505050505050505050505050505050505050505050505",
 				maxAllowListSize: 100
 			}
 		]);
@@ -353,7 +360,7 @@ describe("AuditableItemStreamService", () => {
 						proofObjectId: "ais:0101010101010101010101010101010101010101010101010101010101010101"
 					})
 				),
-				id: "0808080808080808080808080808080808080808080808080808080808080808",
+				id: "0909090909090909090909090909090909090909090909090909090909090909",
 				maxAllowListSize: 100
 			},
 			{
@@ -383,7 +390,7 @@ describe("AuditableItemStreamService", () => {
 							"ais:0101010101010101010101010101010101010101010101010101010101010101:0404040404040404040404040404040404040404040404040404040404040404"
 					})
 				),
-				id: "0909090909090909090909090909090909090909090909090909090909090909",
+				id: "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
 				maxAllowListSize: 100
 			}
 		]);
@@ -558,7 +565,7 @@ describe("AuditableItemStreamService", () => {
 						proofObjectId: "ais:0101010101010101010101010101010101010101010101010101010101010101"
 					})
 				),
-				id: "0808080808080808080808080808080808080808080808080808080808080808",
+				id: "0909090909090909090909090909090909090909090909090909090909090909",
 				maxAllowListSize: 100
 			},
 			{
@@ -588,7 +595,7 @@ describe("AuditableItemStreamService", () => {
 							"ais:0101010101010101010101010101010101010101010101010101010101010101:0404040404040404040404040404040404040404040404040404040404040404"
 					})
 				),
-				id: "0909090909090909090909090909090909090909090909090909090909090909",
+				id: "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
 				maxAllowListSize: 100
 			}
 		]);
@@ -854,7 +861,7 @@ describe("AuditableItemStreamService", () => {
 						proofObjectId: "ais:0101010101010101010101010101010101010101010101010101010101010101"
 					})
 				),
-				id: "0808080808080808080808080808080808080808080808080808080808080808",
+				id: "0909090909090909090909090909090909090909090909090909090909090909",
 				maxAllowListSize: 100
 			},
 			{
@@ -884,7 +891,7 @@ describe("AuditableItemStreamService", () => {
 							"ais:0101010101010101010101010101010101010101010101010101010101010101:0404040404040404040404040404040404040404040404040404040404040404"
 					})
 				),
-				id: "0909090909090909090909090909090909090909090909090909090909090909",
+				id: "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
 				maxAllowListSize: 100
 			}
 		]);
@@ -1022,7 +1029,7 @@ describe("AuditableItemStreamService", () => {
 						proofObjectId: "ais:0101010101010101010101010101010101010101010101010101010101010101"
 					})
 				),
-				id: "0909090909090909090909090909090909090909090909090909090909090909",
+				id: "0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
 				maxAllowListSize: 100
 			},
 			{
@@ -1052,7 +1059,7 @@ describe("AuditableItemStreamService", () => {
 							"ais:0101010101010101010101010101010101010101010101010101010101010101:0404040404040404040404040404040404040404040404040404040404040404"
 					})
 				),
-				id: "0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
+				id: "0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c",
 				maxAllowListSize: 100
 			}
 		]);

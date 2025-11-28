@@ -44,6 +44,6 @@ The query parameters.
 
 #### verifyEntry?
 
-> `optional` **verifyEntry**: `string` \| `boolean`
+> `optional` **verifyEntry**: `string`
 
 Verify the entry, defaults to false.

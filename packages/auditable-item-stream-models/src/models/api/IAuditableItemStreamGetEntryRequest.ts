@@ -35,6 +35,6 @@ export interface IAuditableItemStreamGetEntryRequest {
 		/**
 		 * Verify the entry, defaults to false.
 		 */
-		verifyEntry?: boolean | string;
+		verifyEntry?: string;
 	};
 }

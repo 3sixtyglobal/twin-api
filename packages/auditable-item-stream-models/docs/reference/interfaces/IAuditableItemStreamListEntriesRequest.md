@@ -44,13 +44,13 @@ The conditions to filter the stream, JSON stringified IComparator[].
 
 #### includeDeleted?
 
-> `optional` **includeDeleted**: `string` \| `boolean`
+> `optional` **includeDeleted**: `string`
 
 Whether to include deleted entries, defaults to false.
 
 #### verifyEntries?
 
-> `optional` **verifyEntries**: `string` \| `boolean`
+> `optional` **verifyEntries**: `string`
 
 Should the entries be verified, defaults to false.
 
@@ -62,7 +62,7 @@ Retrieve the entries in ascending/descending time order, defaults to Ascending.
 
 #### limit?
 
-> `optional` **limit**: `string` \| `boolean`
+> `optional` **limit**: `string`
 
 How many entries to return.
 

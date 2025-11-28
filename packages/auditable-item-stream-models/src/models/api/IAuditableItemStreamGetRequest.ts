@@ -32,21 +32,21 @@ export interface IAuditableItemStreamGetRequest {
 		 * The entries will be limited to the first page of entries in date descending order.
 		 * If you want to get more entries you can use the returned cursor with the get entries method.
 		 */
-		includeEntries?: boolean | string;
+		includeEntries?: string;
 
 		/**
 		 * Whether to include deleted entries, defaults to false.
 		 */
-		includeDeleted?: boolean | string;
+		includeDeleted?: string;
 
 		/**
 		 * Should the stream be verified, defaults to false.
 		 */
-		verifyStream?: boolean | string;
+		verifyStream?: string;
 
 		/**
 		 * Should the entries be verified, defaults to false.
 		 */
-		verifyEntries?: boolean | string;
+		verifyEntries?: string;
 	};
 }

@@ -38,7 +38,7 @@ The parameters from the query.
 
 #### includeEntries?
 
-> `optional` **includeEntries**: `string` \| `boolean`
+> `optional` **includeEntries**: `string`
 
 Whether to include the entries, defaults to false.
 The entries will be limited to the first page of entries in date descending order.
@@ -46,18 +46,18 @@ If you want to get more entries you can use the returned cursor with the get ent
 
 #### includeDeleted?
 
-> `optional` **includeDeleted**: `string` \| `boolean`
+> `optional` **includeDeleted**: `string`
 
 Whether to include deleted entries, defaults to false.
 
 #### verifyStream?
 
-> `optional` **verifyStream**: `string` \| `boolean`
+> `optional` **verifyStream**: `string`
 
 Should the stream be verified, defaults to false.
 
 #### verifyEntries?
 
-> `optional` **verifyEntries**: `string` \| `boolean`
+> `optional` **verifyEntries**: `string`
 
 Should the entries be verified, defaults to false.
