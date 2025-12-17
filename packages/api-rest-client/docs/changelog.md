@@ -1,5 +1,20 @@
 # @twin.org/api-rest-client - Changelog
 
+## [0.0.3-next.8](https://github.com/twinfoundation/api/compare/api-rest-client-v0.0.3-next.7...api-rest-client-v0.0.3-next.8) (2025-12-17)
+
+
+### Bug Fixes
+
+* not supported error handling ([5cc1a50](https://github.com/twinfoundation/api/commit/5cc1a507243f37fda5855acb622b2a3f4d91080f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.7 to 0.0.3-next.8
+    * @twin.org/api-models bumped from 0.0.3-next.7 to 0.0.3-next.8
+
 ## [0.0.3-next.7](https://github.com/twinfoundation/api/compare/api-rest-client-v0.0.3-next.6...api-rest-client-v0.0.3-next.7) (2025-11-26)
 
 
