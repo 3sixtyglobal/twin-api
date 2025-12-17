@@ -79,6 +79,10 @@ export class TenantProcessor implements IBaseRouteProcessor {
 		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
+		if (route?.path.endsWith("health")) {
+			return;
+		}
+
 		const apiKey = request.headers?.[this._apiKeyName] ?? request.query?.[this._apiKeyName];
 		let errorResponse: IError | undefined;
 
