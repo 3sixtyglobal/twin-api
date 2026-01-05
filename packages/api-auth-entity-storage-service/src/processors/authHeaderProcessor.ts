@@ -16,7 +16,7 @@ import {
 import { BaseError, Coerce, GeneralError, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
-import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
+import { CookieHelper, HeaderTypes, HttpStatusCode } from "@twin.org/web";
 import type { IAuthHeaderProcessorConstructorOptions } from "../models/IAuthHeaderProcessorConstructorOptions.js";
 import { TokenHelper } from "../utils/tokenHelper.js";
 
@@ -150,6 +150,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
 		const responseAuthOperation = processorState?.authOperation;
+		const responseAuthToken = processorState?.authToken;
 
 		// We don't populate the cookie if the incoming request was from an authorization header.
 		if (
@@ -159,16 +160,27 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 		) {
 			if (
 				(responseAuthOperation === "login" || responseAuthOperation === "refresh") &&
-				Is.stringValue(response.body?.token)
+				Is.stringValue(responseAuthToken)
 			) {
 				response.headers ??= {};
-				response.headers[HeaderTypes.SetCookie] =
-					`${this._cookieName}=${response.body.token}; Secure; HttpOnly; SameSite=None; Path=/`;
-				delete response.body.token;
+				response.headers[HeaderTypes.SetCookie] = CookieHelper.createCookie(
+					this._cookieName,
+					responseAuthToken,
+					{
+						secure: true,
+						httpOnly: true,
+						sameSite: "None",
+						path: "/"
+					}
+				);
 			} else if (responseAuthOperation === "logout") {
 				response.headers ??= {};
-				response.headers[HeaderTypes.SetCookie] =
-					`${this._cookieName}=; Max-Age=0; Secure; HttpOnly; SameSite=None; Path=/`;
+				response.headers[HeaderTypes.SetCookie] = CookieHelper.deleteCookie(this._cookieName, {
+					secure: true,
+					httpOnly: true,
+					sameSite: "None",
+					path: "/"
+				});
 			}
 		}
 	}

@@ -10,9 +10,11 @@ import type {
 	IUpdatePasswordRequest
 } from "@twin.org/api-auth-entity-storage-models";
 import { BaseRestClient } from "@twin.org/api-core";
-import type { IBaseRestClientConfig, INoContentResponse } from "@twin.org/api-models";
+import type { INoContentResponse } from "@twin.org/api-models";
 import { Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
+import { CookieHelper, HeaderTypes } from "@twin.org/web";
+import type { IEntityStorageAuthenticationRestClientConstructorOptions } from "./models/entityStorageAuthenticationRestClientConstructorOptions.js";
 
 /**
  * The client to connect to the authentication service.
@@ -27,11 +29,25 @@ export class EntityStorageAuthenticationRestClient
 	public static readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationRestClient>();
 
 	/**
+	 * The default name for the access token as a cookie.
+	 * @internal
+	 */
+	public static readonly DEFAULT_COOKIE_NAME: string = "access_token";
+
+	/**
+	 * The name of the cookie to use for storing the auth token.
+	 * @internal
+	 */
+	private readonly _cookieName: string;
+
+	/**
 	 * Create a new instance of EntityStorageAuthenticationRestClient.
 	 * @param config The configuration for the client.
 	 */
-	constructor(config: IBaseRestClientConfig) {
+	constructor(config: IEntityStorageAuthenticationRestClientConstructorOptions) {
 		super(nameof<EntityStorageAuthenticationRestClient>(), config, "authentication");
+		this._cookieName =
+			config.cookieName ?? EntityStorageAuthenticationRestClient.DEFAULT_COOKIE_NAME;
 	}
 
 	/**
@@ -69,7 +85,13 @@ export class EntityStorageAuthenticationRestClient
 			}
 		});
 
-		return response.body;
+		return {
+			token: CookieHelper.getCookieFromHeaders(
+				response?.headers?.[HeaderTypes.SetCookie],
+				this._cookieName
+			),
+			expiry: response.body.expiry
+		};
 	}
 
 	/**
@@ -104,7 +126,13 @@ export class EntityStorageAuthenticationRestClient
 			}
 		);
 
-		return response.body;
+		return {
+			token: CookieHelper.getCookieFromHeaders(
+				response?.headers?.[HeaderTypes.SetCookie],
+				this._cookieName
+			),
+			expiry: response.body.expiry
+		};
 	}
 
 	/**

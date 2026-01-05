@@ -78,7 +78,6 @@ export function generateRestRoutesAuthentication(
 						description: "The response for the login request.",
 						response: {
 							body: {
-								token: "eyJhbGciOiJIU...sw5c",
 								expiry: 1722514341067
 							}
 						}
@@ -153,7 +152,6 @@ export function generateRestRoutesAuthentication(
 						description: "The response for the refresh token request.",
 						response: {
 							body: {
-								token: "eyJhbGciOiJIU...sw5c",
 								expiry: 1722514341067
 							}
 						}
@@ -226,6 +224,7 @@ export async function authenticationLogin(
 	// Need to give a hint to any auth processors about the operation
 	// in case they need to manipulate the response
 	httpRequestContext.processorState.authOperation = "login";
+	httpRequestContext.processorState.authToken = result.token;
 
 	return {
 		body: result
@@ -282,6 +281,7 @@ export async function authenticationRefreshToken(
 	// Need to give a hint to any auth processors about the operation
 	// in case they need to manipulate the response
 	httpRequestContext.processorState.authOperation = "refresh";
+	httpRequestContext.processorState.authToken = result.token;
 
 	return {
 		body: result

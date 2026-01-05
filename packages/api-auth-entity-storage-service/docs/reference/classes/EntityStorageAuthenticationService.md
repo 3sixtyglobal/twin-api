@@ -140,7 +140,7 @@ Nothing.
 
 ### refresh()
 
-> **refresh**(`token?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+> **refresh**(`token?`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
 Refresh the token.
 
@@ -154,7 +154,7 @@ The token to refresh, if it uses a mechanism with public access.
 
 #### Returns
 
-`Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+`Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
 The refreshed token, if it uses a mechanism with public access.
 

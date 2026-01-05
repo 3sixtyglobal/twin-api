@@ -186,7 +186,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	 * @returns The refreshed token, if it uses a mechanism with public access.
 	 */
 	public async refresh(token?: string): Promise<{
-		token: string;
+		token?: string;
 		expiry: number;
 	}> {
 		// If the verify fails on the current token then it will throw an exception.

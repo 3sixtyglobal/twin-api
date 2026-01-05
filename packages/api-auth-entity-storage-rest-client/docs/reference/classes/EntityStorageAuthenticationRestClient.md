@@ -22,7 +22,7 @@ Create a new instance of EntityStorageAuthenticationRestClient.
 
 ##### config
 
-`IBaseRestClientConfig`
+[`IEntityStorageAuthenticationRestClientConstructorOptions`](../interfaces/IEntityStorageAuthenticationRestClientConstructorOptions.md)
 
 The configuration for the client.
 

@@ -4,17 +4,25 @@ Response from a refresh on the auth token.
 
 ## Properties
 
+### headers?
+
+> `optional` **headers**: `object`
+
+Response headers.
+
+#### set-cookie?
+
+> `optional` **set-cookie**: `string`
+
+The cookie containing the auth token.
+
+***
+
 ### body
 
 > **body**: `object`
 
 The refresh token details.
-
-#### token?
-
-> `optional` **token**: `string`
-
-The refreshed token, if it uses a mechanism with public access.
 
 #### expiry
 
