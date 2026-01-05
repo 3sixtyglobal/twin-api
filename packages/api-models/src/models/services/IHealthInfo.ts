@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { HealthStatus } from "./healthStatus.js";
+import type { IHealthComponentInfo } from "./IHealthComponentInfo.js";
 
 /**
  * The status of the server.
@@ -14,20 +15,5 @@ export interface IHealthInfo {
 	/**
 	 * The status of the components.
 	 */
-	components?: {
-		/**
-		 * The name of the component.
-		 */
-		name: string;
-
-		/**
-		 * The status of the component.
-		 */
-		status: HealthStatus;
-
-		/**
-		 * The details for the status.
-		 */
-		details?: string;
-	}[];
+	components?: IHealthComponentInfo[];
 }

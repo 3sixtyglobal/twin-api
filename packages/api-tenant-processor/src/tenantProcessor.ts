@@ -79,35 +79,33 @@ export class TenantProcessor implements IBaseRouteProcessor {
 		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
-		if (route?.path.endsWith("health")) {
-			return;
-		}
+		if (!Is.empty(route) && !(route.skipTenant ?? false)) {
+			const apiKey = request.headers?.[this._apiKeyName] ?? request.query?.[this._apiKeyName];
+			let errorResponse: IError | undefined;
 
-		const apiKey = request.headers?.[this._apiKeyName] ?? request.query?.[this._apiKeyName];
-		let errorResponse: IError | undefined;
+			if (Is.stringValue(apiKey)) {
+				try {
+					const nodeTenant = await this._entityStorageConnector.get(apiKey, "apiKey");
 
-		if (Is.stringValue(apiKey)) {
-			try {
-				const nodeTenant = await this._entityStorageConnector.get(apiKey, "apiKey");
-
-				if (Is.empty(nodeTenant)) {
-					errorResponse = new UnauthorizedError(TenantProcessor.CLASS_NAME, "apiKeyNotFound", {
-						key: apiKey
-					});
-				} else {
-					contextIds[ContextIdKeys.Tenant] = nodeTenant.id;
+					if (Is.empty(nodeTenant)) {
+						errorResponse = new UnauthorizedError(TenantProcessor.CLASS_NAME, "apiKeyNotFound", {
+							key: apiKey
+						});
+					} else {
+						contextIds[ContextIdKeys.Tenant] = nodeTenant.id;
+					}
+				} catch (err) {
+					errorResponse = BaseError.fromError(err);
 				}
-			} catch (err) {
-				errorResponse = BaseError.fromError(err);
+			} else {
+				errorResponse = new UnauthorizedError(TenantProcessor.CLASS_NAME, "missingApiKey", {
+					keyName: this._apiKeyName
+				});
 			}
-		} else {
-			errorResponse = new UnauthorizedError(TenantProcessor.CLASS_NAME, "missingApiKey", {
-				keyName: this._apiKeyName
-			});
-		}
 
-		if (!Is.empty(errorResponse)) {
-			HttpErrorHelper.buildResponse(response, errorResponse, HttpStatusCode.unauthorized);
+			if (!Is.empty(errorResponse)) {
+				HttpErrorHelper.buildResponse(response, errorResponse, HttpStatusCode.unauthorized);
+			}
 		}
 	}
 }

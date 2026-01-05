@@ -18,7 +18,16 @@
 		"**/wordlists/**",
 		"changelog.md"
 	],
-	"words": ["abbrev", "autorelease", "Fastify", "nameof", "openapi", "requestor", "Stiftung"],
+	"words": [
+		"abbrev",
+		"autorelease",
+		"Fastify",
+		"livez",
+		"nameof",
+		"openapi",
+		"requestor",
+		"Stiftung"
+	],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",
 		"/eslint-disable.*/",

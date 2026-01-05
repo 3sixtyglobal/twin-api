@@ -216,6 +216,24 @@ The OpenAPI spec.
 
 ***
 
+### livez()
+
+> **livez**(): `Promise`\<`boolean`\>
+
+Is the server live.
+
+#### Returns
+
+`Promise`\<`boolean`\>
+
+True if the server is live.
+
+#### Implementation of
+
+`IInformationComponent.livez`
+
+***
+
 ### health()
 
 > **health**(): `Promise`\<`IHealthInfo`\>

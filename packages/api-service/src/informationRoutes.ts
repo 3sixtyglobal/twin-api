@@ -8,6 +8,7 @@ import type {
 	IServerFavIconResponse,
 	IServerHealthResponse,
 	IServerInfoResponse,
+	IServerLivezResponse,
 	IServerRootResponse,
 	IServerSpecResponse,
 	ITag
@@ -53,13 +54,17 @@ export function generateRestRoutesInformation(
 						id: "serverRootResponse",
 						description: "The response for the root request.",
 						response: {
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
 							body: "API Server - 1.0.0"
 						}
 					}
 				]
 			}
 		],
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
 	};
 
 	const informationRoute: IRestRoute<INoContentRequest, IServerInfoResponse> = {
@@ -104,7 +109,48 @@ export function generateRestRoutesInformation(
 				mimeType: "image/x-icon"
 			}
 		],
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
+	};
+
+	const livezRoute: IRestRoute<INoContentRequest, IServerLivezResponse> = {
+		operationId: "serverLivez",
+		summary: "Get the livez status for the server",
+		tag: tagsInformation[0].name,
+		method: "GET",
+		path: `${baseRouteName}/livez`,
+		handler: async (httpRequestContext, request) =>
+			serverLivez(httpRequestContext, componentName, request),
+		responseType: [
+			{
+				type: nameof<IServerLivezResponse>(),
+				mimeType: MimeTypes.PlainText,
+				examples: [
+					{
+						id: "livezResponseOK",
+						description: "The response for the liveness request.",
+						response: {
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "ok"
+						}
+					},
+					{
+						id: "livezResponseFailure",
+						description: "The response for the liveness request with errors.",
+						response: {
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "failed"
+						}
+					}
+				]
+			}
+		],
+		skipAuth: true,
+		skipTenant: true
 	};
 
 	const healthRoute: IRestRoute<INoContentRequest, IServerHealthResponse> = {
@@ -213,7 +259,7 @@ export function generateRestRoutesInformation(
 		skipAuth: true
 	};
 
-	return [rootRoute, favIconRoute, informationRoute, healthRoute, specRoute];
+	return [rootRoute, favIconRoute, informationRoute, livezRoute, healthRoute, specRoute];
 }
 
 /**
@@ -230,6 +276,9 @@ export async function serverRoot(
 ): Promise<IServerRootResponse> {
 	const component = ComponentFactory.get<IInformationComponent>(componentName);
 	return {
+		headers: {
+			[HeaderTypes.ContentType]: MimeTypes.PlainText
+		},
 		body: await component.root()
 	};
 }
@@ -249,6 +298,27 @@ export async function serverInfo(
 	const component = ComponentFactory.get<IInformationComponent>(componentName);
 	return {
 		body: await component.info()
+	};
+}
+
+/**
+ * Get the livez for the server.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function serverLivez(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: INoContentRequest
+): Promise<IServerLivezResponse> {
+	const component = ComponentFactory.get<IInformationComponent>(componentName);
+	return {
+		headers: {
+			[HeaderTypes.ContentType]: MimeTypes.PlainText
+		},
+		body: (await component.livez()) ? "ok" : "failed"
 	};
 }
 

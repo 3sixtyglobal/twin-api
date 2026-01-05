@@ -144,6 +144,24 @@ The OpenAPI spec.
 
 ***
 
+### livez()
+
+> **livez**(): `Promise`\<`boolean`\>
+
+Is the server live.
+
+#### Returns
+
+`Promise`\<`boolean`\>
+
+True if the server is live.
+
+#### Implementation of
+
+`IInformationComponent.livez`
+
+***
+
 ### health()
 
 > **health**(): `Promise`\<`IHealthInfo`\>
@@ -164,7 +182,7 @@ The service health.
 
 ### setComponentHealth()
 
-> **setComponentHealth**(`name`, `status`, `details?`): `Promise`\<`void`\>
+> **setComponentHealth**(`name`, `status`, `details?`, `tenantId?`): `Promise`\<`void`\>
 
 Set the status of a component.
 
@@ -188,6 +206,12 @@ The status of the component.
 
 The details for the status.
 
+##### tenantId?
+
+`string`
+
+The tenant id, optional if the health status is not tenant specific.
+
 #### Returns
 
 `Promise`\<`void`\>
@@ -202,7 +226,7 @@ Nothing.
 
 ### removeComponentHealth()
 
-> **removeComponentHealth**(`name`): `Promise`\<`void`\>
+> **removeComponentHealth**(`name`, `tenantId?`): `Promise`\<`void`\>
 
 Remove the status of a component.
 
@@ -213,6 +237,12 @@ Remove the status of a component.
 `string`
 
 The component name.
+
+##### tenantId?
+
+`string`
+
+The tenant id, optional if the health status is not tenant specific.
 
 #### Returns
 

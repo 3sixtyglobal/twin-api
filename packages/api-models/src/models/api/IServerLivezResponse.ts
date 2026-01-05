@@ -3,9 +3,9 @@
 import type { HeaderTypes, MimeTypes } from "@twin.org/web";
 
 /**
- * The root text for the server.
+ * The livez of the server.
  */
-export interface IServerRootResponse {
+export interface IServerLivezResponse {
 	/**
 	 * The headers for the response.
 	 */
@@ -14,7 +14,7 @@ export interface IServerRootResponse {
 	};
 
 	/**
-	 * The root text for the server.
+	 * The livez information for the server.
 	 */
-	body: string;
+	body: "ok" | "failed";
 }

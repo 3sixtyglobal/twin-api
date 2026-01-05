@@ -11,6 +11,7 @@ import type {
 	IServerHealthResponse,
 	IServerInfo,
 	IServerInfoResponse,
+	IServerLivezResponse,
 	IServerRootResponse,
 	IServerSpecResponse
 } from "@twin.org/api-models";
@@ -79,6 +80,15 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 	public async spec(): Promise<unknown> {
 		const response = await this.fetch<INoContentRequest, IServerSpecResponse>("/spec", "GET");
 		return response.body;
+	}
+
+	/**
+	 * Is the server live.
+	 * @returns True if the server is live.
+	 */
+	public async livez(): Promise<boolean> {
+		const response = await this.fetch<INoContentRequest, IServerLivezResponse>("/livez", "GET");
+		return response.body === "ok";
 	}
 
 	/**

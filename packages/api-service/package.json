@@ -30,6 +30,7 @@
 	"dependencies": {
 		"@twin.org/api-models": "0.0.3-next.8",
 		"@twin.org/core": "next",
+		"@twin.org/context": "next",
 		"@twin.org/nameof": "next",
 		"@twin.org/web": "next"
 	},

@@ -34,6 +34,12 @@ export interface IInformationComponent extends IComponent {
 	spec(): Promise<unknown>;
 
 	/**
+	 * Is the server live.
+	 * @returns True if the server is live.
+	 */
+	livez(): Promise<boolean>;
+
+	/**
 	 * Get the server health.
 	 * @returns The service health.
 	 */
@@ -44,14 +50,21 @@ export interface IInformationComponent extends IComponent {
 	 * @param name The component name.
 	 * @param status The status of the component.
 	 * @param details The details for the status.
+	 * @param tenantId The tenant id, optional if the health status is not tenant specific.
 	 * @returns Nothing.
 	 */
-	setComponentHealth(name: string, status: HealthStatus, details?: string): Promise<void>;
+	setComponentHealth(
+		name: string,
+		status: HealthStatus,
+		details?: string,
+		tenantId?: string
+	): Promise<void>;
 
 	/**
 	 * Remove the status of a component.
 	 * @param name The component name.
+	 * @param tenantId The tenant id, optional if the health status is not tenant specific.
 	 * @returns Nothing.
 	 */
-	removeComponentHealth(name: string): Promise<void>;
+	removeComponentHealth(name: string, tenantId?: string): Promise<void>;
 }

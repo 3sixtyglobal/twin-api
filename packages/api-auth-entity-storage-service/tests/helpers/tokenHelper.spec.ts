@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HeaderTypes } from "@twin.org/web";
+import { HeaderTypes, type IHttpHeaders } from "@twin.org/web";
 import { TokenHelper } from "../../src/utils/tokenHelper.js";
 
 describe("TokenHelper", () => {
@@ -74,5 +74,22 @@ describe("TokenHelper", () => {
 		const headers = { [HeaderTypes.Cookie]: "token=   spacedcookie   " };
 		const result = TokenHelper.extractTokenFromHeaders(headers, "token");
 		expect(result).toEqual({ token: "spacedcookie", location: "cookie" });
+	});
+
+	it("should extract from a real headers object", () => {
+		const headers: IHttpHeaders = {
+			"access-control-allow-credentials": "true",
+			"access-control-expose-headers": "content-disposition, location",
+			"content-type": "application/json; charset=utf-8",
+			cookie:
+				"access_token=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg1MTdjN2Q3MjBjOTBlYWRlMmRmMzZkYWZjZjIxMzgzMThiMGViYjgwMzgyYTNhM2MwZDdlYjZmMzBjYmM5YjVlIiwib3JnIjoiZGlkOmVudGl0eS1zdG9yYWdlOjB4ODgwNjZiYzc2YmIxNGViMmQ3ZDc1ZjE4NTg0NWMzZTMxMTVlOGQ3OWVlN2I4NmE3OTYzYWVmM2ViNTg3MjY4MyIsImV4cCI6MTc2NzU5MTQ3OH0.wuQkxGHAe-qTfl1OzMlRi4WzoYG5pi6EV76xoSzHPVmuVT4W3XaS8aauEeMfIZd-DDBMsCcsVgcQwSxMOtqNBg; value2=bob"
+		};
+
+		const result = TokenHelper.extractTokenFromHeaders(headers, "access_token");
+		expect(result).toEqual({
+			token:
+				"eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg1MTdjN2Q3MjBjOTBlYWRlMmRmMzZkYWZjZjIxMzgzMThiMGViYjgwMzgyYTNhM2MwZDdlYjZmMzBjYmM5YjVlIiwib3JnIjoiZGlkOmVudGl0eS1zdG9yYWdlOjB4ODgwNjZiYzc2YmIxNGViMmQ3ZDc1ZjE4NTg0NWMzZTMxMTVlOGQ3OWVlN2I4NmE3OTYzYWVmM2ViNTg3MjY4MyIsImV4cCI6MTc2NzU5MTQ3OH0.wuQkxGHAe-qTfl1OzMlRi4WzoYG5pi6EV76xoSzHPVmuVT4W3XaS8aauEeMfIZd-DDBMsCcsVgcQwSxMOtqNBg",
+			location: "cookie"
+		});
 	});
 });

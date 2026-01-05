@@ -46,11 +46,23 @@ The path to use for routing.
 
 > `optional` **skipAuth**: `boolean`
 
-Skips the authentication for this route.
+Skips the authentication requirement for this route.
 
 #### Inherited from
 
 [`IBaseRoute`](IBaseRoute.md).[`skipAuth`](IBaseRoute.md#skipauth)
+
+***
+
+### skipTenant?
+
+> `optional` **skipTenant**: `boolean`
+
+Skips the tenant requirement for this route.
+
+#### Inherited from
+
+[`IBaseRoute`](IBaseRoute.md).[`skipTenant`](IBaseRoute.md#skiptenant)
 
 ***
 

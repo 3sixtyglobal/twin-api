@@ -1,6 +1,6 @@
-# Interface: IServerRootResponse
+# Interface: IServerLivezResponse
 
-The root text for the server.
+The livez of the server.
 
 ## Properties
 
@@ -18,6 +18,6 @@ The headers for the response.
 
 ### body
 
-> **body**: `string`
+> **body**: `"ok"` \| `"failed"`
 
-The root text for the server.
+The livez information for the server.

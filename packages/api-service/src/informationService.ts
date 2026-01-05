@@ -3,10 +3,12 @@
 import { readFile } from "node:fs/promises";
 import type {
 	HealthStatus,
+	IHealthComponentInfo,
 	IHealthInfo,
 	IInformationComponent,
 	IServerInfo
 } from "@twin.org/api-models";
+import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import { Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import type { IInformationServiceConstructorOptions } from "./models/IInformationServiceConstructorOptions.js";
@@ -30,7 +32,10 @@ export class InformationService implements IInformationComponent {
 	 * The server health.
 	 * @internal
 	 */
-	private readonly _healthInfo: IHealthInfo;
+	private readonly _healthInfo: {
+		status: HealthStatus;
+		components?: (IHealthComponentInfo & { tenantId?: string })[];
+	};
 
 	/**
 	 * The path to the favicon Spec.
@@ -135,6 +140,20 @@ export class InformationService implements IInformationComponent {
 	}
 
 	/**
+	 * Is the server live.
+	 * @returns True if the server is live.
+	 */
+	public async livez(): Promise<boolean> {
+		let errorCount = 0;
+
+		if (Is.arrayValue(this._healthInfo.components)) {
+			errorCount = this._healthInfo.components.filter(c => c.status === "error").length;
+		}
+
+		return errorCount === 0;
+	}
+
+	/**
 	 * Get the server health.
 	 * @returns The service health.
 	 */
@@ -142,9 +161,17 @@ export class InformationService implements IInformationComponent {
 		let errorCount = 0;
 		let warningCount = 0;
 
-		if (Is.arrayValue(this._healthInfo.components)) {
-			errorCount = this._healthInfo.components.filter(c => c.status === "error").length;
-			warningCount = this._healthInfo.components.filter(c => c.status === "warning").length;
+		const contextIds = await ContextIdStore.getContextIds();
+		const tenantId = contextIds?.[ContextIdKeys.Tenant];
+
+		// Filter so we only get components that are not tenant specific or match the tenant id
+		const components = this._healthInfo.components?.filter(
+			c => Is.empty(c.tenantId) || c.tenantId === tenantId
+		);
+
+		if (Is.arrayValue(components)) {
+			errorCount = components.filter(c => c.status === "error").length;
+			warningCount = components.filter(c => c.status === "warning").length;
 		}
 
 		if (errorCount > 0) {
@@ -155,7 +182,14 @@ export class InformationService implements IInformationComponent {
 			this._healthInfo.status = "ok";
 		}
 
-		return this._healthInfo;
+		return {
+			status: this._healthInfo.status,
+			components: components?.map(c => ({
+				name: c.name,
+				status: c.status,
+				details: c.details
+			}))
+		};
 	}
 
 	/**
@@ -163,21 +197,26 @@ export class InformationService implements IInformationComponent {
 	 * @param name The component name.
 	 * @param status The status of the component.
 	 * @param details The details for the status.
+	 * @param tenantId The tenant id, optional if the health status is not tenant specific.
 	 * @returns Nothing.
 	 */
 	public async setComponentHealth(
 		name: string,
 		status: HealthStatus,
-		details?: string
+		details?: string,
+		tenantId?: string
 	): Promise<void> {
-		const component = this._healthInfo.components?.find(c => c.name === name);
+		const component = Is.empty(tenantId)
+			? this._healthInfo.components?.find(c => c.name === name && Is.empty(c.tenantId))
+			: this._healthInfo.components?.find(c => c.name === name && c.tenantId === tenantId);
 
 		if (Is.undefined(component)) {
 			this._healthInfo.components ??= [];
 			this._healthInfo.components.push({
 				name,
 				status,
-				details
+				details,
+				tenantId
 			});
 		} else {
 			component.status = status;
@@ -188,11 +227,15 @@ export class InformationService implements IInformationComponent {
 	/**
 	 * Remove the status of a component.
 	 * @param name The component name.
+	 * @param tenantId The tenant id, optional if the health status is not tenant specific.
 	 * @returns Nothing.
 	 */
-	public async removeComponentHealth(name: string): Promise<void> {
+	public async removeComponentHealth(name: string, tenantId?: string): Promise<void> {
 		if (Is.arrayValue(this._healthInfo.components)) {
-			const componentIndex = this._healthInfo.components.findIndex(c => c.name === name);
+			const componentIndex = Is.empty(tenantId)
+				? this._healthInfo.components?.findIndex(c => c.name === name && Is.empty(c.tenantId))
+				: this._healthInfo.components?.findIndex(c => c.name === name && c.tenantId === tenantId);
+
 			if (componentIndex !== -1) {
 				this._healthInfo.components.splice(componentIndex, 1);
 			}
