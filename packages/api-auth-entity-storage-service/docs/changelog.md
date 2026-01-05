@@ -1,5 +1,39 @@
 # @twin.org/api-auth-entity-storage-service - Changelog
 
+## [0.0.3-next.9](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.8...api-auth-entity-storage-service-v0.0.3-next.9) (2026-01-05)
+
+
+### Features
+
+* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* add livez endpoint ([#57](https://github.com/twinfoundation/api/issues/57)) ([ef007db](https://github.com/twinfoundation/api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* check tenant id in auth if set ([66f7337](https://github.com/twinfoundation/api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
+* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* modify authHeaderProcessor to retain token in response body ([#53](https://github.com/twinfoundation/api/issues/53)) ([5d9ae76](https://github.com/twinfoundation/api/commit/5d9ae76b5b52a8e10dac391b2d5784638a186583))
+* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use new extractBearer method ([3e0cc54](https://github.com/twinfoundation/api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
+* use new extractBearerToken method ([df654e9](https://github.com/twinfoundation/api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
+* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+
+
+### Bug Fixes
+
+* include org in context ids from jwt ([a12cfdd](https://github.com/twinfoundation/api/commit/a12cfdddb05e2ed0300b26f3d7c0cfc033e59bd3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.8 to 0.0.3-next.9
+    * @twin.org/api-core bumped from 0.0.3-next.8 to 0.0.3-next.9
+    * @twin.org/api-models bumped from 0.0.3-next.8 to 0.0.3-next.9
+
 ## [0.0.3-next.8](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.7...api-auth-entity-storage-service-v0.0.3-next.8) (2025-12-17)
 
 

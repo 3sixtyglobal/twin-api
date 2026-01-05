@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-service",
-	"version": "0.0.3-next.8",
+	"version": "0.0.3-next.9",
 	"description": "Information contract implementation and REST endpoint definitions",
 	"repository": {
 		"type": "git",
@@ -28,7 +28,7 @@
 		"dist:no-test": "npm run clean && npm run build && npm run test:build && npm run docs"
 	},
 	"dependencies": {
-		"@twin.org/api-models": "0.0.3-next.8",
+		"@twin.org/api-models": "0.0.3-next.9",
 		"@twin.org/core": "next",
 		"@twin.org/context": "next",
 		"@twin.org/nameof": "next",
