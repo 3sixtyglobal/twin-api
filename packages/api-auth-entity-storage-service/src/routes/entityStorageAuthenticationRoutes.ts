@@ -227,7 +227,9 @@ export async function authenticationLogin(
 	httpRequestContext.processorState.authToken = result.token;
 
 	return {
-		body: result
+		body: {
+			expiry: result.expiry
+		}
 	};
 }
 
@@ -284,7 +286,9 @@ export async function authenticationRefreshToken(
 	httpRequestContext.processorState.authToken = result.token;
 
 	return {
-		body: result
+		body: {
+			expiry: result.expiry
+		}
 	};
 }
 
