@@ -1,5 +1,21 @@
 # @twin.org/api-auth-entity-storage-service - Changelog
 
+## [0.0.3-next.10](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.9...api-auth-entity-storage-service-v0.0.3-next.10) (2026-01-05)
+
+
+### Bug Fixes
+
+* remove token from return payload ([eaa4266](https://github.com/twinfoundation/api/commit/eaa42661b8540881b0751f5d2513258b3413f3ef))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.9 to 0.0.3-next.10
+    * @twin.org/api-core bumped from 0.0.3-next.9 to 0.0.3-next.10
+    * @twin.org/api-models bumped from 0.0.3-next.9 to 0.0.3-next.10
+
 ## [0.0.3-next.9](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.8...api-auth-entity-storage-service-v0.0.3-next.9) (2026-01-05)
 
 

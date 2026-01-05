@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.3-next.10](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.9...api-models-v0.0.3-next.10) (2026-01-05)
+
+
+### Miscellaneous Chores
+
+* **api-models:** Synchronize repo versions
+
 ## [0.0.3-next.9](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.8...api-models-v0.0.3-next.9) (2026-01-05)
 
 
