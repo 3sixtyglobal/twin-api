@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Guards } from "@twin.org/core";
+import { GeneralError, Guards } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -50,7 +50,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 	 * @returns The tenant or undefined if not found.
 	 */
 	public async get(tenantId: string): Promise<ITenant | undefined> {
-		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId);
+		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId, 32);
 
 		let tenant;
 
@@ -67,7 +67,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 	 * @returns The tenant or undefined if not found.
 	 */
 	public async getByApiKey(apiKey: string): Promise<ITenant | undefined> {
-		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(apiKey), apiKey);
+		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(apiKey), apiKey, 32);
 
 		let tenant;
 
@@ -85,6 +85,13 @@ export class TenantAdminService implements ITenantAdminComponent {
 	 */
 	public async set(tenant: ITenant): Promise<void> {
 		Guards.objectValue<ITenant>(TenantAdminService.CLASS_NAME, nameof(tenant), tenant);
+		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenant.id), tenant.id, 32);
+		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenant.apiKey), tenant.apiKey, 32);
+
+		const existingApiKey = await this.getByApiKey(tenant.apiKey);
+		if (existingApiKey && existingApiKey.id !== tenant.id) {
+			throw new GeneralError(TenantAdminService.CLASS_NAME, "apiKeyAlreadyInUse");
+		}
 
 		const tenantEntity = new Tenant();
 		tenantEntity.id = tenant.id;
@@ -101,7 +108,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 	 * @returns Nothing.
 	 */
 	public async remove(tenantId: string): Promise<void> {
-		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId);
+		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId, 32);
 
 		return this._entityStorageConnector.remove(tenantId);
 	}

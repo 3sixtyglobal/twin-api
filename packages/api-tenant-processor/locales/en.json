@@ -3,6 +3,9 @@
 		"tenantProcessor": {
 			"missingApiKey": "API key header or query param \"{keyName}\" is missing or invalid.",
 			"apiKeyNotFound": "No node tenant found for API key \"{key}\"."
+		},
+		"tenantAdminService": {
+			"apiKeyAlreadyInUse": "The provided API key is already in use by another tenant."
 		}
 	}
 }
