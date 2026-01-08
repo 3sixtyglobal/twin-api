@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.11](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.10...api-tenant-processor-v0.0.3-next.11) (2026-01-08)
+
+
+### Bug Fixes
+
+* duplicate api keys ([#61](https://github.com/twinfoundation/api/issues/61)) ([5519c2d](https://github.com/twinfoundation/api/commit/5519c2d077d9b3d4b5fc7d5f073ef67cd000a367))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.10 to 0.0.3-next.11
+
 ## [0.0.3-next.10](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.9...api-tenant-processor-v0.0.3-next.10) (2026-01-05)
 
 
