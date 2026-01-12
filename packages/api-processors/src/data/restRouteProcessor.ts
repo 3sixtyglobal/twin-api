@@ -78,6 +78,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 			} else {
 				try {
 					const req: IHttpRequest = {
+						headers: request.headers,
 						pathParams: request.pathParams,
 						query: request.query,
 						body: request.body
