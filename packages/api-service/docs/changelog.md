@@ -1,5 +1,19 @@
 # @twin.org/api-service - Changelog
 
+## [0.0.3-next.12](https://github.com/twinfoundation/api/compare/api-service-v0.0.3-next.11...api-service-v0.0.3-next.12) (2026-01-12)
+
+
+### Miscellaneous Chores
+
+* **api-service:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.11 to 0.0.3-next.12
+
 ## [0.0.3-next.11](https://github.com/twinfoundation/api/compare/api-service-v0.0.3-next.10...api-service-v0.0.3-next.11) (2026-01-08)
 
 
