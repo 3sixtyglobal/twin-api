@@ -149,8 +149,8 @@ export function generateRestRoutesAuditableItemStream(
 						response: {
 							body: {
 								"@context": [
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: AuditableItemStreamTypes.Stream,
 								id: "ais:1234567890",
@@ -167,8 +167,8 @@ export function generateRestRoutesAuditableItemStream(
 								entries: [
 									{
 										"@context": [
-											AuditableItemStreamContexts.ContextRoot,
-											AuditableItemStreamContexts.ContextRootCommon
+											AuditableItemStreamContexts.Namespace,
+											AuditableItemStreamContexts.NamespaceCommon
 										],
 										type: AuditableItemStreamTypes.StreamEntry,
 										id: "tst:1234567890",
@@ -200,8 +200,8 @@ export function generateRestRoutesAuditableItemStream(
 							},
 							body: {
 								"@context": [
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: AuditableItemStreamTypes.Stream,
 								id: "ais:1234567890",
@@ -218,8 +218,8 @@ export function generateRestRoutesAuditableItemStream(
 								entries: [
 									{
 										"@context": [
-											AuditableItemStreamContexts.ContextRoot,
-											AuditableItemStreamContexts.ContextRootCommon
+											AuditableItemStreamContexts.Namespace,
+											AuditableItemStreamContexts.NamespaceCommon
 										],
 										type: AuditableItemStreamTypes.StreamEntry,
 										id: "tst:1234567890",
@@ -340,16 +340,16 @@ export function generateRestRoutesAuditableItemStream(
 						response: {
 							body: {
 								"@context": [
-									SchemaOrgContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									SchemaOrgContexts.Namespace,
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamList],
 								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
-											AuditableItemStreamContexts.ContextRoot,
-											AuditableItemStreamContexts.ContextRootCommon
+											AuditableItemStreamContexts.Namespace,
+											AuditableItemStreamContexts.NamespaceCommon
 										],
 										type: AuditableItemStreamTypes.Stream,
 										id: "ais:1234567890",
@@ -383,16 +383,16 @@ export function generateRestRoutesAuditableItemStream(
 							},
 							body: {
 								"@context": [
-									SchemaOrgContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									SchemaOrgContexts.Namespace,
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamList],
 								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
-											AuditableItemStreamContexts.ContextRoot,
-											AuditableItemStreamContexts.ContextRootCommon
+											AuditableItemStreamContexts.Namespace,
+											AuditableItemStreamContexts.NamespaceCommon
 										],
 										type: AuditableItemStreamTypes.Stream,
 										id: "ais:1234567890",
@@ -573,8 +573,8 @@ export function generateRestRoutesAuditableItemStream(
 						response: {
 							body: {
 								"@context": [
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: AuditableItemStreamTypes.StreamEntry,
 								id: "tst:1234567890",
@@ -604,8 +604,8 @@ export function generateRestRoutesAuditableItemStream(
 							},
 							body: {
 								"@context": [
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: AuditableItemStreamTypes.StreamEntry,
 								id: "tst:1234567890",
@@ -710,16 +710,16 @@ export function generateRestRoutesAuditableItemStream(
 						response: {
 							body: {
 								"@context": [
-									SchemaOrgContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									SchemaOrgContexts.Namespace,
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamEntryList],
 								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
-											AuditableItemStreamContexts.ContextRoot,
-											AuditableItemStreamContexts.ContextRootCommon
+											AuditableItemStreamContexts.Namespace,
+											AuditableItemStreamContexts.NamespaceCommon
 										],
 										type: AuditableItemStreamTypes.StreamEntry,
 										id: "tst:1234567890",
@@ -752,16 +752,16 @@ export function generateRestRoutesAuditableItemStream(
 							},
 							body: {
 								"@context": [
-									SchemaOrgContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									SchemaOrgContexts.Namespace,
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamEntryList],
 								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
-											AuditableItemStreamContexts.ContextRoot,
-											AuditableItemStreamContexts.ContextRootCommon
+											AuditableItemStreamContexts.Namespace,
+											AuditableItemStreamContexts.NamespaceCommon
 										],
 										type: AuditableItemStreamTypes.StreamEntry,
 										id: "tst:1234567890",
@@ -821,9 +821,9 @@ export function generateRestRoutesAuditableItemStream(
 						response: {
 							body: {
 								"@context": [
-									SchemaOrgContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRoot,
-									AuditableItemStreamContexts.ContextRootCommon
+									SchemaOrgContexts.Namespace,
+									AuditableItemStreamContexts.Namespace,
+									AuditableItemStreamContexts.NamespaceCommon
 								],
 								type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamEntryObjectList],
 								[SchemaOrgTypes.ItemListElement]: [

@@ -223,8 +223,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				userIdentity: contextIds?.[ContextIdKeys.User],
 				dateCreated: context.now,
 				immutableInterval: context.immutableInterval,
-				indexCounter: 0,
-				proofId: ""
+				indexCounter: 0
 			};
 
 			// Create the JSON-LD object we want to use for the proof
@@ -237,7 +236,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			);
 
 			// Create the proof for the stream object
-			streamEntity.proofId = await this._immutableProofComponent.create(streamModel);
+			if (context.immutableInterval > 0) {
+				streamEntity.proofId = await this._immutableProofComponent.create(streamModel);
+			}
 
 			if (Is.arrayValue(stream.entries)) {
 				for (const entry of stream.entries) {
@@ -324,7 +325,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			}
 
 			if (verifyStream || verifyEntries) {
-				streamModel["@context"].push(ImmutableProofContexts.ContextRoot);
+				streamModel["@context"].push(ImmutableProofContexts.Namespace);
 			}
 
 			const result = await JsonLdProcessor.compact(streamModel, streamModel["@context"]);
@@ -492,9 +493,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 
 			const list: IAuditableItemStreamList = {
 				"@context": [
-					SchemaOrgContexts.ContextRoot,
-					AuditableItemStreamContexts.ContextRoot,
-					AuditableItemStreamContexts.ContextRootCommon
+					SchemaOrgContexts.Namespace,
+					AuditableItemStreamContexts.Namespace,
+					AuditableItemStreamContexts.NamespaceCommon
 				],
 				type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamList],
 				[SchemaOrgTypes.ItemListElement]: (results.entities as AuditableItemStream[]).map(e =>
@@ -644,7 +645,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			const entry = this.streamEntryEntityToJsonLd(result.entity);
 
 			if (verifyEntry) {
-				entry["@context"].push(ImmutableProofContexts.ContextRoot);
+				entry["@context"].push(ImmutableProofContexts.Namespace);
 				entry.verification = result.verification;
 			}
 
@@ -959,9 +960,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 
 			const list: IAuditableItemStreamEntryList = {
 				"@context": [
-					SchemaOrgContexts.ContextRoot,
-					AuditableItemStreamContexts.ContextRoot,
-					AuditableItemStreamContexts.ContextRootCommon
+					SchemaOrgContexts.Namespace,
+					AuditableItemStreamContexts.Namespace,
+					AuditableItemStreamContexts.NamespaceCommon
 				],
 				type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamEntryList],
 				[SchemaOrgTypes.ItemListElement]: result.entries,
@@ -969,7 +970,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			};
 
 			if (verifyEntries) {
-				list["@context"].push(ImmutableProofContexts.ContextRoot);
+				list["@context"].push(ImmutableProofContexts.Namespace);
 			}
 
 			const result2 = await JsonLdProcessor.compact(list, list["@context"]);
@@ -1039,9 +1040,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 
 			const list: IAuditableItemStreamEntryObjectList = {
 				"@context": [
-					SchemaOrgContexts.ContextRoot,
-					AuditableItemStreamContexts.ContextRoot,
-					AuditableItemStreamContexts.ContextRootCommon
+					SchemaOrgContexts.Namespace,
+					AuditableItemStreamContexts.Namespace,
+					AuditableItemStreamContexts.NamespaceCommon
 				],
 				type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamEntryObjectList],
 				[SchemaOrgTypes.ItemListElement]: result.entries.map(m => m.entryObject),
@@ -1113,9 +1114,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	): IAuditableItemStream & IJsonLdNodeObject {
 		const model: IAuditableItemStream & IJsonLdNodeObject = {
 			"@context": [
-				AuditableItemStreamContexts.ContextRoot,
-				AuditableItemStreamContexts.ContextRootCommon,
-				SchemaOrgContexts.ContextRoot
+				AuditableItemStreamContexts.Namespace,
+				AuditableItemStreamContexts.NamespaceCommon,
+				SchemaOrgContexts.Namespace
 			],
 			type: AuditableItemStreamTypes.Stream,
 			id: `${AuditableItemStreamService._NAMESPACE}:${streamEntity.id}`,
@@ -1142,9 +1143,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	): IAuditableItemStreamEntry & IJsonLdNodeObject {
 		const streamEntryModel: IAuditableItemStreamEntry & IJsonLdNodeObject = {
 			"@context": [
-				AuditableItemStreamContexts.ContextRoot,
-				AuditableItemStreamContexts.ContextRootCommon,
-				SchemaOrgContexts.ContextRoot
+				AuditableItemStreamContexts.Namespace,
+				AuditableItemStreamContexts.NamespaceCommon,
+				SchemaOrgContexts.Namespace
 			],
 			type: AuditableItemStreamTypes.StreamEntry,
 			id: `${AuditableItemStreamService._NAMESPACE}:${streamEntryEntity.streamId}:${streamEntryEntity.id}`,

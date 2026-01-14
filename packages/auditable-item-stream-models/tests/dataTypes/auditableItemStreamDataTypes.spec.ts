@@ -17,7 +17,7 @@ describe("AuditableItemStreamDataTypes", () => {
 		const validationFailures: IValidationFailure[] = [];
 		const isValid = await DataTypeHelper.validate(
 			"",
-			`${AuditableItemStreamContexts.ContextRoot}${AuditableItemStreamTypes.Stream}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
 			{
 				id: "foo",
 				dateCreated: new Date().toISOString(),
@@ -34,11 +34,11 @@ describe("AuditableItemStreamDataTypes", () => {
 		const validationFailures: IValidationFailure[] = [];
 		const isValid = await DataTypeHelper.validate(
 			"",
-			`${AuditableItemStreamContexts.ContextRoot}${AuditableItemStreamTypes.Stream}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
 			{
 				"@context": [
-					AuditableItemStreamContexts.ContextRoot,
-					AuditableItemStreamContexts.ContextRootCommon
+					AuditableItemStreamContexts.Namespace,
+					AuditableItemStreamContexts.NamespaceCommon
 				],
 				type: AuditableItemStreamTypes.Stream,
 				id: "foo",

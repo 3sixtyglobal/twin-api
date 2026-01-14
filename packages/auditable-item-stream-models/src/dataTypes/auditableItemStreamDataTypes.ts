@@ -18,36 +18,36 @@ export class AuditableItemStreamDataTypes {
 	 */
 	public static registerTypes(): void {
 		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.ContextRoot}${AuditableItemStreamTypes.Stream}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
 			() => ({
-				context: AuditableItemStreamContexts.ContextRoot,
+				namespace: AuditableItemStreamContexts.Namespace,
 				type: AuditableItemStreamTypes.Stream,
 				defaultValue: {},
 				jsonSchema: async () => AuditableItemStreamSchema as IJsonSchema
 			})
 		);
 		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.ContextRoot}${AuditableItemStreamTypes.StreamList}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.StreamList}`,
 			() => ({
-				context: AuditableItemStreamContexts.ContextRoot,
+				namespace: AuditableItemStreamContexts.Namespace,
 				type: AuditableItemStreamTypes.StreamList,
 				defaultValue: {},
 				jsonSchema: async () => AuditableItemStreamListSchema as IJsonSchema
 			})
 		);
 		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.ContextRoot}${AuditableItemStreamTypes.StreamEntry}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.StreamEntry}`,
 			() => ({
-				context: AuditableItemStreamContexts.ContextRoot,
+				namespace: AuditableItemStreamContexts.Namespace,
 				type: AuditableItemStreamTypes.StreamEntry,
 				defaultValue: {},
 				jsonSchema: async () => AuditableItemStreamEntrySchema as IJsonSchema
 			})
 		);
 		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.ContextRoot}${AuditableItemStreamTypes.StreamEntryList}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.StreamEntryList}`,
 			() => ({
-				context: AuditableItemStreamContexts.ContextRoot,
+				namespace: AuditableItemStreamContexts.Namespace,
 				type: AuditableItemStreamTypes.StreamEntryList,
 				defaultValue: {},
 				jsonSchema: async () => AuditableItemStreamEntryListSchema as IJsonSchema
@@ -55,9 +55,9 @@ export class AuditableItemStreamDataTypes {
 		);
 
 		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.ContextRoot}${AuditableItemStreamTypes.StreamEntryObjectList}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.StreamEntryObjectList}`,
 			() => ({
-				context: AuditableItemStreamContexts.ContextRoot,
+				namespace: AuditableItemStreamContexts.Namespace,
 				type: AuditableItemStreamTypes.StreamEntryObjectList,
 				defaultValue: {},
 				jsonSchema: async () => AuditableItemStreamEntryObjectListSchema as IJsonSchema

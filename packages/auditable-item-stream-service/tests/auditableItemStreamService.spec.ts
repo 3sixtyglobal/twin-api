@@ -445,6 +445,94 @@ describe("AuditableItemStreamService", () => {
 		});
 	});
 
+	test("Can create a stream with a single object and multiple entries with no immutability", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create(
+			{
+				annotationObject: {
+					"@context": "https://www.w3.org/ns/activitystreams",
+					"@type": "Note",
+					content: "This is a simple note"
+				},
+				entries: [
+					{
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
+					}
+				]
+			},
+			{
+				immutableInterval: 0
+			}
+		);
+
+		expect(streamId.startsWith("ais:")).toEqual(true);
+
+		const streamStore = streamStorage.getStore();
+
+		expect(streamStore).toEqual([
+			{
+				partitionId: TEST_TENANT_IDENTITY_SHORT,
+				id: "0101010101010101010101010101010101010101010101010101010101010101",
+				dateCreated: "2024-08-22T11:56:56.272Z",
+				dateModified: "2024-08-22T11:56:56.272Z",
+				organizationIdentity: TEST_ORGANIZATION_IDENTITY,
+				userIdentity: TEST_USER_IDENTITY,
+				annotationObject: {
+					"@context": "https://www.w3.org/ns/activitystreams",
+					"@type": "Note",
+					content: "This is a simple note"
+				},
+				immutableInterval: 0,
+				indexCounter: 2
+			}
+		]);
+
+		const entryStore = streamEntryStorage.getStore();
+
+		expect(entryStore).toEqual([
+			{
+				partitionId: TEST_TENANT_IDENTITY_SHORT,
+				streamId: "0101010101010101010101010101010101010101010101010101010101010101",
+				dateCreated: "2024-08-22T11:56:56.272Z",
+				id: "0202020202020202020202020202020202020202020202020202020202020202",
+				entryObject: {
+					"@context": "https://www.w3.org/ns/activitystreams",
+					"@type": "Note",
+					content: "This is an entry note 1"
+				},
+				userIdentity: TEST_USER_IDENTITY,
+				index: 0
+			},
+			{
+				partitionId: TEST_TENANT_IDENTITY_SHORT,
+				streamId: "0101010101010101010101010101010101010101010101010101010101010101",
+				dateCreated: "2024-08-22T11:56:56.272Z",
+				id: "0303030303030303030303030303030303030303030303030303030303030303",
+				entryObject: {
+					"@context": "https://www.w3.org/ns/activitystreams",
+					"@type": "Note",
+					content: "This is an entry note 2"
+				},
+				userIdentity: TEST_USER_IDENTITY,
+				index: 1
+			}
+		]);
+
+		const verifiableStore = verifiableStorage.getStore();
+		expect(verifiableStore).toEqual([]);
+	});
+
 	test("Can get a stream with a single object and multiple entries", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({

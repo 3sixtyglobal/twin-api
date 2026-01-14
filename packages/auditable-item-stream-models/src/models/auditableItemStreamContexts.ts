@@ -7,14 +7,14 @@
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AuditableItemStreamContexts = {
 	/**
-	 * The context root for the auditable item stream types.
+	 * The namespace for the auditable item stream types.
 	 */
-	ContextRoot: "https://schema.twindev.org/ais/",
+	Namespace: "https://schema.twindev.org/ais/",
 
 	/**
-	 * The context root for the common types.
+	 * The namespace for the common types.
 	 */
-	ContextRootCommon: "https://schema.twindev.org/common/"
+	NamespaceCommon: "https://schema.twindev.org/common/"
 } as const;
 
 /**
