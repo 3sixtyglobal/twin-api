@@ -13,7 +13,6 @@
 - [IServerLivezResponse](interfaces/IServerLivezResponse.md)
 - [IServerRootResponse](interfaces/IServerRootResponse.md)
 - [IServerSpecResponse](interfaces/IServerSpecResponse.md)
-- [IAuthenticationGenerator](interfaces/IAuthenticationGenerator.md)
 - [IBaseRestClientConfig](interfaces/IBaseRestClientConfig.md)
 - [IBaseSocketClientConfig](interfaces/IBaseSocketClientConfig.md)
 - [IHttpRequest](interfaces/IHttpRequest.md)
@@ -65,7 +64,6 @@
 
 ## Variables
 
-- [AuthenticationGeneratorFactory](variables/AuthenticationGeneratorFactory.md)
 - [MimeTypeProcessorFactory](variables/MimeTypeProcessorFactory.md)
 - [RestRouteProcessorFactory](variables/RestRouteProcessorFactory.md)
 - [SocketRouteProcessorFactory](variables/SocketRouteProcessorFactory.md)

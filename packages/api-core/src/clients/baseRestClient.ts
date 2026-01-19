@@ -1,11 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import {
-	AuthenticationGeneratorFactory,
-	type IBaseRestClientConfig,
-	type IHttpRequest,
-	type IHttpResponse
-} from "@twin.org/api-models";
+import type { IBaseRestClientConfig, IHttpRequest, IHttpResponse } from "@twin.org/api-models";
 import { BaseError, Coerce, Guards, Is, StringHelper, type IKeyValue } from "@twin.org/core";
 import { nameof, nameofCamelCase } from "@twin.org/nameof";
 import {
@@ -89,19 +84,12 @@ export abstract class BaseRestClient {
 	 * @param route The route of the request.
 	 * @param method The http method.
 	 * @param request Request to send to the endpoint.
-	 * @param options Additional options for the request.
-	 * @param options.authenticationGeneratorType Use a custom authentication type for the request.
-	 * @param options.authenticationData Used to authenticate and will be passed to the configured authentication provider for the request.
 	 * @returns The response.
 	 */
 	public async fetch<T extends IHttpRequest, U extends IHttpResponse>(
 		route: string,
 		method: HttpMethod,
-		request?: T,
-		options?: {
-			authenticationGeneratorType?: string;
-			authenticationData?: unknown;
-		}
+		request?: T
 	): Promise<U> {
 		Guards.stringValue(this._implementationName, nameof(route), route);
 		Guards.arrayOneOf(this._implementationName, nameof(method), method, Object.values(HttpMethod));
@@ -168,17 +156,6 @@ export abstract class BaseRestClient {
 			requestHeaders = { ...requestHeaders, ...this._headers };
 		}
 
-		let includeCredentials = this._includeCredentials;
-		if (Is.stringValue(options?.authenticationGeneratorType)) {
-			const authenticationGenerator = AuthenticationGeneratorFactory.get(
-				options?.authenticationGeneratorType
-			);
-
-			await authenticationGenerator.addAuthentication(requestHeaders, options?.authenticationData);
-
-			includeCredentials = false;
-		}
-
 		const response = await FetchHelper.fetch(
 			this._implementationName,
 			`${this._endpointWithPrefix}${finalRoute}`,
@@ -187,7 +164,7 @@ export abstract class BaseRestClient {
 			{
 				headers: requestHeaders,
 				timeoutMs: this._timeout,
-				includeCredentials
+				includeCredentials: this._includeCredentials
 			}
 		);
 

@@ -1,6 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-export * from "./factories/authenticationGeneratorFactory.js";
 export * from "./factories/mimeTypeProcessorFactory.js";
 export * from "./factories/restRouteProcessorFactory.js";
 export * from "./factories/socketRouteProcessorFactory.js";
@@ -12,7 +11,6 @@ export * from "./models/api/IServerInfoResponse.js";
 export * from "./models/api/IServerLivezResponse.js";
 export * from "./models/api/IServerRootResponse.js";
 export * from "./models/api/IServerSpecResponse.js";
-export * from "./models/client/IAuthenticationGenerator.js";
 export * from "./models/config/IBaseRestClientConfig.js";
 export * from "./models/config/IBaseSocketClientConfig.js";
 export * from "./models/protocol/IHttpRequest.js";
