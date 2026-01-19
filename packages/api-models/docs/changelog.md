@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.3-next.13](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.12...api-models-v0.0.3-next.13) (2026-01-19)
+
+
+### Features
+
+* remove authentication generators ([#66](https://github.com/twinfoundation/api/issues/66)) ([adaa169](https://github.com/twinfoundation/api/commit/adaa1698df1c5ccb0ad645a7a7c0d3ef82ef6ac1))
+
 ## [0.0.3-next.12](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.11...api-models-v0.0.3-next.12) (2026-01-12)
 
 

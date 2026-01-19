@@ -1,5 +1,20 @@
 # @twin.org/api-rest-client - Changelog
 
+## [0.0.3-next.13](https://github.com/twinfoundation/api/compare/api-rest-client-v0.0.3-next.12...api-rest-client-v0.0.3-next.13) (2026-01-19)
+
+
+### Features
+
+* remove authentication generators ([#66](https://github.com/twinfoundation/api/issues/66)) ([adaa169](https://github.com/twinfoundation/api/commit/adaa1698df1c5ccb0ad645a7a7c0d3ef82ef6ac1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.12 to 0.0.3-next.13
+    * @twin.org/api-models bumped from 0.0.3-next.12 to 0.0.3-next.13
+
 ## [0.0.3-next.12](https://github.com/twinfoundation/api/compare/api-rest-client-v0.0.3-next.11...api-rest-client-v0.0.3-next.12) (2026-01-12)
 
 
