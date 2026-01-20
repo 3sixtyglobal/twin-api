@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.3-next.14](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.13...api-models-v0.0.3-next.14) (2026-01-20)
+
+
+### Features
+
+* export error type map ([#68](https://github.com/twinfoundation/api/issues/68)) ([697dfc4](https://github.com/twinfoundation/api/commit/697dfc4c9f6a7be493bf4b3619d7bcebf2e4584e))
+
 ## [0.0.3-next.13](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.12...api-models-v0.0.3-next.13) (2026-01-19)
 
 
