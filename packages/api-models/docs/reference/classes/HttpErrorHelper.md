@@ -12,6 +12,18 @@ Class to help with processing http errors.
 
 `HttpErrorHelper`
 
+## Properties
+
+### ERROR\_TYPE\_MAP
+
+> `readonly` `static` **ERROR\_TYPE\_MAP**: `object`
+
+Mapping of error types to status codes.
+
+#### Index Signature
+
+\[`id`: `string`\]: `HttpStatusCode`
+
 ## Methods
 
 ### processError()

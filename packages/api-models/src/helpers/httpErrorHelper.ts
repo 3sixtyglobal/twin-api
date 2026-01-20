@@ -20,6 +20,20 @@ import type { IHttpResponse } from "../models/protocol/IHttpResponse.js";
  */
 export class HttpErrorHelper {
 	/**
+	 * Mapping of error types to status codes.
+	 */
+	public static readonly ERROR_TYPE_MAP: { [id: string]: HttpStatusCode } = {
+		[GuardError.CLASS_NAME]: HttpStatusCode.badRequest,
+		[ValidationError.CLASS_NAME]: HttpStatusCode.badRequest,
+		[ConflictError.CLASS_NAME]: HttpStatusCode.conflict,
+		[AlreadyExistsError.CLASS_NAME]: HttpStatusCode.conflict,
+		[NotFoundError.CLASS_NAME]: HttpStatusCode.notFound,
+		[UnauthorizedError.CLASS_NAME]: HttpStatusCode.unauthorized,
+		[NotImplementedError.CLASS_NAME]: HttpStatusCode.forbidden,
+		[UnprocessableError.CLASS_NAME]: HttpStatusCode.unprocessableEntity
+	};
+
+	/**
 	 * Process the errors from the routes.
 	 * @param err The error to process.
 	 * @param includeStack Should the stack be included in the error.
@@ -40,29 +54,18 @@ export class HttpErrorHelper {
 
 		let httpStatusCode: HttpStatusCode = HttpStatusCode.internalServerError;
 
-		const errorTypeMap: { [id: string]: HttpStatusCode } = {
-			[GuardError.CLASS_NAME]: HttpStatusCode.badRequest,
-			[ValidationError.CLASS_NAME]: HttpStatusCode.badRequest,
-			[ConflictError.CLASS_NAME]: HttpStatusCode.conflict,
-			[AlreadyExistsError.CLASS_NAME]: HttpStatusCode.conflict,
-			[NotFoundError.CLASS_NAME]: HttpStatusCode.notFound,
-			[UnauthorizedError.CLASS_NAME]: HttpStatusCode.unauthorized,
-			[NotImplementedError.CLASS_NAME]: HttpStatusCode.forbidden,
-			[UnprocessableError.CLASS_NAME]: HttpStatusCode.unprocessableEntity
-		};
-
 		// First check the primary error, as we don't want to override that with a sub error
 		if (flattened.length > 0) {
 			const primaryError = flattened[0];
-			if (errorTypeMap[primaryError.name]) {
-				httpStatusCode = errorTypeMap[primaryError.name];
+			if (HttpErrorHelper.ERROR_TYPE_MAP[primaryError.name]) {
+				httpStatusCode = HttpErrorHelper.ERROR_TYPE_MAP[primaryError.name];
 			}
 
 			// The primary error is still internal server error, check the sub errors
 			if (httpStatusCode === HttpStatusCode.internalServerError) {
-				for (const className in errorTypeMap) {
+				for (const className in HttpErrorHelper.ERROR_TYPE_MAP) {
 					if (flattened.some(e => BaseError.isErrorName(e, className))) {
-						httpStatusCode = errorTypeMap[className];
+						httpStatusCode = HttpErrorHelper.ERROR_TYPE_MAP[className];
 						break;
 					}
 				}
