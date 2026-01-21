@@ -13,9 +13,9 @@ export interface IAuditableItemStreamEntryObjectList {
 	 * JSON-LD Context.
 	 */
 	"@context": [
-		typeof SchemaOrgContexts.Namespace,
-		typeof AuditableItemStreamContexts.Namespace,
-		typeof AuditableItemStreamContexts.NamespaceCommon,
+		typeof SchemaOrgContexts.Context,
+		typeof AuditableItemStreamContexts.Context,
+		typeof AuditableItemStreamContexts.ContextCommon,
 		...IJsonLdContextDefinitionElement[]
 	];
 
