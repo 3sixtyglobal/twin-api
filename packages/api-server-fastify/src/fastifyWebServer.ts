@@ -483,9 +483,15 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		reply: FastifyReply,
 		restRoute?: IRestRoute
 	): Promise<FastifyReply> {
+		const port =
+			(request.port === 80 && request.protocol === "http") ||
+			(request.port === 443 && request.protocol === "https")
+				? ""
+				: `:${request.port}`;
+
 		const httpServerRequest: IHttpServerRequest = {
 			method: request.method.toUpperCase() as HttpMethod,
-			url: `${request.protocol}://${request.hostname}${request.url}`,
+			url: `${request.protocol}://${request.hostname}${port}${request.url}`,
 			body: request.body,
 			query: request.query as IHttpRequestQuery,
 			pathParams: request.params as IHttpRequestPathParams,
