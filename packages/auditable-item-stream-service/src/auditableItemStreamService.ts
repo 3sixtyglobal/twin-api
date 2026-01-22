@@ -645,7 +645,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			const entry = this.streamEntryEntityToJsonLd(result.entity);
 
 			if (verifyEntry) {
-				entry["@context"].push(ImmutableProofContexts.Namespace);
+				entry["@context"].push(ImmutableProofContexts.Context);
 				entry.verification = result.verification;
 			}
 
