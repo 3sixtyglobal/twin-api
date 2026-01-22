@@ -1,5 +1,21 @@
 # @twin.org/api-server-fastify - Changelog
 
+## [0.0.3-next.15](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.14...api-server-fastify-v0.0.3-next.15) (2026-01-22)
+
+
+### Bug Fixes
+
+* missing port in server request url ([#71](https://github.com/twinfoundation/api/issues/71)) ([21d1bb5](https://github.com/twinfoundation/api/commit/21d1bb57e7dac5c737266876b7521130db1df975))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.14 to 0.0.3-next.15
+    * @twin.org/api-models bumped from 0.0.3-next.14 to 0.0.3-next.15
+    * @twin.org/api-processors bumped from 0.0.3-next.14 to 0.0.3-next.15
+
 ## [0.0.3-next.14](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.13...api-server-fastify-v0.0.3-next.14) (2026-01-20)
 
 
