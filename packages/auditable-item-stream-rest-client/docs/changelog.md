@@ -1,5 +1,19 @@
 # @twin.org/auditable-item-stream-rest-client - Changelog
 
+## [0.0.3-next.5](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.3-next.4...auditable-item-stream-rest-client-v0.0.3-next.5) (2026-01-22)
+
+
+### Miscellaneous Chores
+
+* **auditable-item-stream-rest-client:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.4 to 0.0.3-next.5
+
 ## [0.0.3-next.4](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.3-next.3...auditable-item-stream-rest-client-v0.0.3-next.4) (2026-01-21)
 
 

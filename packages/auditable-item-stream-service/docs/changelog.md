@@ -1,5 +1,19 @@
 # @twin.org/auditable-item-stream-service - Changelog
 
+## [0.0.3-next.5](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.4...auditable-item-stream-service-v0.0.3-next.5) (2026-01-22)
+
+
+### Bug Fixes
+
+* context usage ([6f45f33](https://github.com/twinfoundation/auditable-item-stream/commit/6f45f33b77b64ba7fe543782718f7364e2c11b2f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.4 to 0.0.3-next.5
+
 ## [0.0.3-next.4](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.3...auditable-item-stream-service-v0.0.3-next.4) (2026-01-21)
 
 
