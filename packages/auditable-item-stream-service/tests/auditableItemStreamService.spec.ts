@@ -1585,9 +1585,9 @@ describe("AuditableItemStreamService", () => {
 
 		await service.get(streamId, { includeEntries: true });
 
-		const entries = await service.getEntries(streamId, { verifyEntries: true });
+		const entriesAndCursor = await service.getEntries(streamId, { verifyEntries: true });
 
-		expect(entries).toEqual({
+		expect(entriesAndCursor.entries).toEqual({
 			"@context": [
 				"https://schema.org",
 				"https://schema.twindev.org/ais/",
@@ -1658,7 +1658,7 @@ describe("AuditableItemStreamService", () => {
 
 		await service.get(streamId, { includeEntries: true });
 
-		const entries = await service.getEntries(streamId, {
+		const entriesAndCursor = await service.getEntries(streamId, {
 			verifyEntries: true,
 			conditions: [
 				{
@@ -1674,7 +1674,7 @@ describe("AuditableItemStreamService", () => {
 			]
 		});
 
-		expect(entries).toEqual({
+		expect(entriesAndCursor.entries).toEqual({
 			"@context": [
 				"https://schema.org",
 				"https://schema.twindev.org/ais/",
@@ -1728,8 +1728,8 @@ describe("AuditableItemStreamService", () => {
 			});
 		}
 
-		const result = await service.query();
-		expect(result).toEqual({
+		const resultAndCursor = await service.query();
+		expect(resultAndCursor.entries).toEqual({
 			"@context": [
 				"https://schema.org",
 				"https://schema.twindev.org/ais/",

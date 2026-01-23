@@ -161,7 +161,7 @@ Nothing.
 
 ### query()
 
-> **query**(`conditions?`, `orderBy?`, `orderByDirection?`, `properties?`, `cursor?`, `limit?`): `Promise`\<[`IAuditableItemStreamList`](IAuditableItemStreamList.md)\>
+> **query**(`conditions?`, `orderBy?`, `orderByDirection?`, `properties?`, `cursor?`, `limit?`): `Promise`\<\{ `entries`: [`IAuditableItemStreamList`](IAuditableItemStreamList.md); `cursor?`: `string`; \}\>
 
 Query all the streams, will not return entries.
 
@@ -205,7 +205,7 @@ Limit the number of entities to return.
 
 #### Returns
 
-`Promise`\<[`IAuditableItemStreamList`](IAuditableItemStreamList.md)\>
+`Promise`\<\{ `entries`: [`IAuditableItemStreamList`](IAuditableItemStreamList.md); `cursor?`: `string`; \}\>
 
 The entities, which can be partial if a limited keys list was provided.
 
@@ -377,7 +377,7 @@ Nothing.
 
 ### getEntries()
 
-> **getEntries**(`streamId`, `options?`): `Promise`\<[`IAuditableItemStreamEntryList`](IAuditableItemStreamEntryList.md)\>
+> **getEntries**(`streamId`, `options?`): `Promise`\<\{ `entries`: [`IAuditableItemStreamEntryList`](IAuditableItemStreamEntryList.md); `cursor?`: `string`; \}\>
 
 Get the entries for the stream.
 
@@ -431,7 +431,7 @@ Retrieve the entries in ascending/descending time order, defaults to Ascending.
 
 #### Returns
 
-`Promise`\<[`IAuditableItemStreamEntryList`](IAuditableItemStreamEntryList.md)\>
+`Promise`\<\{ `entries`: [`IAuditableItemStreamEntryList`](IAuditableItemStreamEntryList.md); `cursor?`: `string`; \}\>
 
 The stream and entries if found.
 
@@ -443,7 +443,7 @@ NotFoundError if the stream is not found.
 
 ### getEntryObjects()
 
-> **getEntryObjects**(`streamId`, `options?`): `Promise`\<[`IAuditableItemStreamEntryObjectList`](IAuditableItemStreamEntryObjectList.md)\>
+> **getEntryObjects**(`streamId`, `options?`): `Promise`\<\{ `entries`: [`IAuditableItemStreamEntryObjectList`](IAuditableItemStreamEntryObjectList.md); `cursor?`: `string`; \}\>
 
 Get the entry objects for the stream.
 
@@ -491,7 +491,7 @@ Retrieve the entries in ascending/descending time order, defaults to Ascending.
 
 #### Returns
 
-`Promise`\<[`IAuditableItemStreamEntryObjectList`](IAuditableItemStreamEntryObjectList.md)\>
+`Promise`\<\{ `entries`: [`IAuditableItemStreamEntryObjectList`](IAuditableItemStreamEntryObjectList.md); `cursor?`: `string`; \}\>
 
 The stream and entries if found.
 

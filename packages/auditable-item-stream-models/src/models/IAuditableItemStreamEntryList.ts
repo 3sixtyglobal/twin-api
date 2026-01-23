@@ -29,9 +29,4 @@ export interface IAuditableItemStreamEntryList {
 	 * The entries in the stream.
 	 */
 	[SchemaOrgTypes.ItemListElement]: IAuditableItemStreamEntry[];
-
-	/**
-	 * Cursor for the next chunk of entries.
-	 */
-	[SchemaOrgTypes.NextItem]?: string;
 }

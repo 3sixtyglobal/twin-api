@@ -32,10 +32,10 @@ import {
 	type IAuditableItemStreamUpdateEntryRequest,
 	type IAuditableItemStreamUpdateRequest
 } from "@twin.org/auditable-item-stream-models";
-import { Coerce, ComponentFactory, Guards } from "@twin.org/core";
+import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { SchemaOrgContexts, SchemaOrgTypes } from "@twin.org/standards-schema-org";
-import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
+import { HeaderHelper, HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
 
 /**
  * The source used when communicating about these routes.
@@ -364,8 +364,7 @@ export function generateRestRoutesAuditableItemStream(
 										proofId: "0101010101010101010101010101010101010101010101010101010101010101",
 										immutableInterval: 10
 									}
-								],
-								[SchemaOrgTypes.NextItem]: "1"
+								]
 							}
 						}
 					}
@@ -407,8 +406,7 @@ export function generateRestRoutesAuditableItemStream(
 										proofId: "0101010101010101010101010101010101010101010101010101010101010101",
 										immutableInterval: 10
 									}
-								],
-								[SchemaOrgTypes.NextItem]: "1"
+								]
 							}
 						}
 					}
@@ -733,8 +731,7 @@ export function generateRestRoutesAuditableItemStream(
 											description: "A description of the event"
 										}
 									}
-								],
-								[SchemaOrgTypes.NextItem]: "1"
+								]
 							}
 						}
 					}
@@ -775,8 +772,7 @@ export function generateRestRoutesAuditableItemStream(
 											description: "A description of the event"
 										}
 									}
-								],
-								[SchemaOrgTypes.NextItem]: "1"
+								]
 							}
 						}
 					}
@@ -833,8 +829,7 @@ export function generateRestRoutesAuditableItemStream(
 										startDate: "2011-04-09T20:00:00Z",
 										description: "A description of the event"
 									}
-								],
-								[SchemaOrgTypes.NextItem]: "1"
+								]
 							}
 						}
 					}
@@ -1031,11 +1026,24 @@ export async function auditableItemStreamList(
 		Coerce.integer(request.query?.limit)
 	);
 
+	const headers: {
+		[HeaderTypes.ContentType]: typeof MimeTypes.Json | typeof MimeTypes.JsonLd;
+		[HeaderTypes.Link]?: string | string[];
+	} = {
+		[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+	};
+
+	if (Is.stringValue(result.cursor) && Is.stringValue(httpRequestContext.serverRequest?.url)) {
+		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
+			httpRequestContext.serverRequest.url,
+			{ cursor: result.cursor },
+			"next"
+		);
+	}
+
 	return {
-		headers: {
-			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
-		},
-		body: result
+		headers,
+		body: result.entries
 	};
 }
 
@@ -1245,11 +1253,24 @@ export async function auditableItemStreamListEntries(
 		cursor: request.query?.cursor
 	});
 
+	const headers: {
+		[HeaderTypes.ContentType]: typeof MimeTypes.Json | typeof MimeTypes.JsonLd;
+		[HeaderTypes.Link]?: string | string[];
+	} = {
+		[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+	};
+
+	if (Is.stringValue(result.cursor) && Is.stringValue(httpRequestContext.serverRequest?.url)) {
+		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
+			httpRequestContext.serverRequest.url,
+			{ cursor: result.cursor },
+			"next"
+		);
+	}
+
 	return {
-		headers: {
-			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
-		},
-		body: result
+		headers,
+		body: result.entries
 	};
 }
 
@@ -1289,10 +1310,23 @@ export async function auditableItemStreamListEntryObjects(
 		cursor: request.query?.cursor
 	});
 
+	const headers: {
+		[HeaderTypes.ContentType]: typeof MimeTypes.Json | typeof MimeTypes.JsonLd;
+		[HeaderTypes.Link]?: string | string[];
+	} = {
+		[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+	};
+
+	if (Is.stringValue(result.cursor) && Is.stringValue(httpRequestContext.serverRequest?.url)) {
+		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
+			httpRequestContext.serverRequest.url,
+			{ cursor: result.cursor },
+			"next"
+		);
+	}
+
 	return {
-		headers: {
-			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
-		},
-		body: result
+		headers,
+		body: result.entries
 	};
 }

@@ -25,11 +25,3 @@ JSON-LD Type.
 > **itemListElement**: [`IAuditableItemStream`](IAuditableItemStream.md)[]
 
 The item streams.
-
-***
-
-### nextItem?
-
-> `optional` **nextItem**: `string`
-
-Cursor for the next chunk of streams.

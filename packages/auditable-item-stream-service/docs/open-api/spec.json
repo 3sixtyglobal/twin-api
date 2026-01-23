@@ -255,8 +255,7 @@
 													"proofId": "0101010101010101010101010101010101010101010101010101010101010101",
 													"immutableInterval": 10
 												}
-											],
-											"nextItem": "1"
+											]
 										}
 									}
 								}
@@ -296,8 +295,7 @@
 													"proofId": "0101010101010101010101010101010101010101010101010101010101010101",
 													"immutableInterval": 10
 												}
-											],
-											"nextItem": "1"
+											]
 										}
 									}
 								}
@@ -1732,8 +1730,7 @@
 														"description": "A description of the event"
 													}
 												}
-											],
-											"nextItem": "1"
+											]
 										}
 									}
 								}
@@ -1772,8 +1769,7 @@
 														"description": "A description of the event"
 													}
 												}
-											],
-											"nextItem": "1"
+											]
 										}
 									}
 								}
@@ -1975,8 +1971,7 @@
 													"startDate": "2011-04-09T20:00:00Z",
 													"description": "A description of the event"
 												}
-											],
-											"nextItem": "1"
+											]
 										}
 									}
 								}

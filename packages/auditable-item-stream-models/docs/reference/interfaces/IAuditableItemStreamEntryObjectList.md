@@ -25,11 +25,3 @@ JSON-LD Type.
 > **itemListElement**: `IJsonLdNodeObject`[]
 
 The entry objects in the stream.
-
-***
-
-### nextItem?
-
-> `optional` **nextItem**: `string`
-
-Cursor for the next chunk of entry objects.

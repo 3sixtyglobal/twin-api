@@ -89,7 +89,10 @@ export interface IAuditableItemStreamComponent extends IComponent {
 		properties?: (keyof IAuditableItemStream)[],
 		cursor?: string,
 		limit?: number
-	): Promise<IAuditableItemStreamList>;
+	): Promise<{
+		entries: IAuditableItemStreamList;
+		cursor?: string;
+	}>;
 
 	/**
 	 * Create an entry in the stream.
@@ -165,7 +168,10 @@ export interface IAuditableItemStreamComponent extends IComponent {
 			cursor?: string;
 			order?: SortDirection;
 		}
-	): Promise<IAuditableItemStreamEntryList>;
+	): Promise<{
+		entries: IAuditableItemStreamEntryList;
+		cursor?: string;
+	}>;
 
 	/**
 	 * Get the entry objects for the stream.
@@ -188,7 +194,10 @@ export interface IAuditableItemStreamComponent extends IComponent {
 			cursor?: string;
 			order?: SortDirection;
 		}
-	): Promise<IAuditableItemStreamEntryObjectList>;
+	): Promise<{
+		entries: IAuditableItemStreamEntryObjectList;
+		cursor?: string;
+	}>;
 
 	/**
 	 * Remove the verifiable storage for the stream and entries.

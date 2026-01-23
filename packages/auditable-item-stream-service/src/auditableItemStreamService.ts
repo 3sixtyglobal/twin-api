@@ -454,7 +454,10 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 		properties?: (keyof IAuditableItemStream)[],
 		cursor?: string,
 		limit?: number
-	): Promise<IAuditableItemStreamList> {
+	): Promise<{
+		entries: IAuditableItemStreamList;
+		cursor?: string;
+	}> {
 		try {
 			let propertiesToReturn: (keyof IAuditableItemStream)[] = properties ?? [
 				"id",
@@ -500,12 +503,14 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamList],
 				[SchemaOrgTypes.ItemListElement]: (results.entities as AuditableItemStream[]).map(e =>
 					this.streamEntityToJsonLd(e)
-				),
-				[SchemaOrgTypes.NextItem]: results.cursor
+				)
 			};
 
 			const result = await JsonLdProcessor.compact(list, list["@context"]);
-			return result;
+			return {
+				entries: result,
+				cursor: results.cursor
+			};
 		} catch (error) {
 			throw new GeneralError(
 				AuditableItemStreamService.CLASS_NAME,
@@ -924,7 +929,10 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			cursor?: string;
 			order?: SortDirection;
 		}
-	): Promise<IAuditableItemStreamEntryList> {
+	): Promise<{
+		entries: IAuditableItemStreamEntryList;
+		cursor?: string;
+	}> {
 		Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(streamId), streamId);
 
 		const urnParsed = Urn.fromValidString(streamId);
@@ -965,8 +973,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 					AuditableItemStreamContexts.ContextCommon
 				],
 				type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamEntryList],
-				[SchemaOrgTypes.ItemListElement]: result.entries,
-				[SchemaOrgTypes.NextItem]: result.cursor
+				[SchemaOrgTypes.ItemListElement]: result.entries
 			};
 
 			if (verifyEntries) {
@@ -974,7 +981,10 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			}
 
 			const result2 = await JsonLdProcessor.compact(list, list["@context"]);
-			return result2;
+			return {
+				entries: result2,
+				cursor: result.cursor
+			};
 		} catch (error) {
 			throw new GeneralError(
 				AuditableItemStreamService.CLASS_NAME,
@@ -1006,7 +1016,10 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			cursor?: string;
 			order?: SortDirection;
 		}
-	): Promise<IAuditableItemStreamEntryObjectList> {
+	): Promise<{
+		entries: IAuditableItemStreamEntryObjectList;
+		cursor?: string;
+	}> {
 		Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(streamId), streamId);
 
 		const urnParsed = Urn.fromValidString(streamId);
@@ -1045,12 +1058,14 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 					AuditableItemStreamContexts.ContextCommon
 				],
 				type: [SchemaOrgTypes.ItemList, AuditableItemStreamTypes.StreamEntryObjectList],
-				[SchemaOrgTypes.ItemListElement]: result.entries.map(m => m.entryObject),
-				[SchemaOrgTypes.NextItem]: result.cursor
+				[SchemaOrgTypes.ItemListElement]: result.entries.map(m => m.entryObject)
 			};
 
 			const result2 = await JsonLdProcessor.compact(list, list["@context"]);
-			return result2;
+			return {
+				entries: result2,
+				cursor: result.cursor
+			};
 		} catch (error) {
 			throw new GeneralError(
 				AuditableItemStreamService.CLASS_NAME,

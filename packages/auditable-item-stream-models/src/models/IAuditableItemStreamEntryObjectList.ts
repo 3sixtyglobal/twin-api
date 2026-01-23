@@ -28,9 +28,4 @@ export interface IAuditableItemStreamEntryObjectList {
 	 * The entry objects in the stream.
 	 */
 	[SchemaOrgTypes.ItemListElement]: IJsonLdNodeObject[];
-
-	/**
-	 * Cursor for the next chunk of entry objects.
-	 */
-	[SchemaOrgTypes.NextItem]?: string;
 }
