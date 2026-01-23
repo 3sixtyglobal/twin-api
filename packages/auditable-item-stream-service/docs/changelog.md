@@ -1,5 +1,19 @@
 # @twin.org/auditable-item-stream-service - Changelog
 
+## [0.0.3-next.6](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.5...auditable-item-stream-service-v0.0.3-next.6) (2026-01-23)
+
+
+### Features
+
+* replace nextItem property with Link header ([#37](https://github.com/twinfoundation/auditable-item-stream/issues/37)) ([83578f1](https://github.com/twinfoundation/auditable-item-stream/commit/83578f19fb964703f1b452c5d13430060e36e620))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.5 to 0.0.3-next.6
+
 ## [0.0.3-next.5](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.4...auditable-item-stream-service-v0.0.3-next.5) (2026-01-22)
 
 
