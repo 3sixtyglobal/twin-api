@@ -1,12 +1,12 @@
 {
-	"packages/api-models": "0.0.3-next.15",
-	"packages/api-core": "0.0.3-next.15",
-	"packages/api-processors": "0.0.3-next.15",
-	"packages/api-server-fastify": "0.0.3-next.15",
-	"packages/api-service": "0.0.3-next.15",
-	"packages/api-rest-client": "0.0.3-next.15",
-	"packages/api-auth-entity-storage-models": "0.0.3-next.15",
-	"packages/api-auth-entity-storage-service": "0.0.3-next.15",
-	"packages/api-auth-entity-storage-rest-client": "0.0.3-next.15",
-	"packages/api-tenant-processor": "0.0.3-next.15"
+	"packages/api-models": "0.0.3-next.16",
+	"packages/api-core": "0.0.3-next.16",
+	"packages/api-processors": "0.0.3-next.16",
+	"packages/api-server-fastify": "0.0.3-next.16",
+	"packages/api-service": "0.0.3-next.16",
+	"packages/api-rest-client": "0.0.3-next.16",
+	"packages/api-auth-entity-storage-models": "0.0.3-next.16",
+	"packages/api-auth-entity-storage-service": "0.0.3-next.16",
+	"packages/api-auth-entity-storage-rest-client": "0.0.3-next.16",
+	"packages/api-tenant-processor": "0.0.3-next.16"
 }

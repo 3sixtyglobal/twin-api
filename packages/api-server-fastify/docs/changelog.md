@@ -1,5 +1,21 @@
 # @twin.org/api-server-fastify - Changelog
 
+## [0.0.3-next.16](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.15...api-server-fastify-v0.0.3-next.16) (2026-01-26)
+
+
+### Features
+
+* public base url ([#70](https://github.com/twinfoundation/api/issues/70)) ([5b958cd](https://github.com/twinfoundation/api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.15 to 0.0.3-next.16
+    * @twin.org/api-models bumped from 0.0.3-next.15 to 0.0.3-next.16
+    * @twin.org/api-processors bumped from 0.0.3-next.15 to 0.0.3-next.16
+
 ## [0.0.3-next.15](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.14...api-server-fastify-v0.0.3-next.15) (2026-01-22)
 
 
