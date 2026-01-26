@@ -1,5 +1,19 @@
 # @twin.org/auditable-item-stream-service - Changelog
 
+## [0.0.3-next.7](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.6...auditable-item-stream-service-v0.0.3-next.7) (2026-01-26)
+
+
+### Features
+
+* use new hosting url for cursor links ([b4a7ae0](https://github.com/twinfoundation/auditable-item-stream/commit/b4a7ae0be43f5e59b9951bf7967996021d99aa9b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.6 to 0.0.3-next.7
+
 ## [0.0.3-next.6](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.5...auditable-item-stream-service-v0.0.3-next.6) (2026-01-23)
 
 
