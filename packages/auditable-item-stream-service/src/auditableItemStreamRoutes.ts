@@ -3,6 +3,7 @@
 import {
 	HttpParameterHelper,
 	type ICreatedResponse,
+	type IHostingComponent,
 	type IHttpRequestContext,
 	type INoContentResponse,
 	type INotFoundResponse,
@@ -914,8 +915,6 @@ export async function auditableItemStreamGet(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
-
 	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
 	const result = await component.get(request.pathParams.id, {
 		includeEntries: Coerce.boolean(request.query?.includeEntries),
@@ -926,7 +925,10 @@ export async function auditableItemStreamGet(
 
 	return {
 		headers: {
-			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+			[HeaderTypes.ContentType]:
+				request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd
+					? MimeTypes.JsonLd
+					: MimeTypes.Json
 		},
 		body: result
 	};
@@ -1013,9 +1015,11 @@ export async function auditableItemStreamList(
 		request.query
 	);
 
-	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
+	const hostingService = ComponentFactory.get<IHostingComponent>(
+		httpRequestContext.hostingComponentType ?? "hosting"
+	);
 
-	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
+	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
 
 	const result = await component.query(
 		HttpParameterHelper.objectFromString(request.query?.conditions),
@@ -1026,16 +1030,14 @@ export async function auditableItemStreamList(
 		Coerce.integer(request.query?.limit)
 	);
 
-	const headers: {
-		[HeaderTypes.ContentType]: typeof MimeTypes.Json | typeof MimeTypes.JsonLd;
-		[HeaderTypes.Link]?: string | string[];
-	} = {
-		[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+	const headers: IAuditableItemStreamListResponse["headers"] = {
+		[HeaderTypes.ContentType]:
+			request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? MimeTypes.JsonLd : MimeTypes.Json
 	};
 
-	if (Is.stringValue(result.cursor) && Is.stringValue(httpRequestContext.serverRequest?.url)) {
+	if (Is.stringValue(result.cursor)) {
 		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			httpRequestContext.serverRequest.url,
+			await hostingService.buildPublicUrl(httpRequestContext.serverRequest.url),
 			{ cursor: result.cursor },
 			"next"
 		);
@@ -1171,8 +1173,6 @@ export async function auditableItemStreamGetEntry(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.entryId), request.pathParams.entryId);
 
-	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
-
 	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
 	const result = await component.getEntry(request.pathParams.id, request.pathParams.entryId, {
 		verifyEntry: Coerce.boolean(request.query?.verifyEntry)
@@ -1180,7 +1180,10 @@ export async function auditableItemStreamGetEntry(
 
 	return {
 		headers: {
-			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+			[HeaderTypes.ContentType]:
+				request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd
+					? MimeTypes.JsonLd
+					: MimeTypes.Json
 		},
 		body: result
 	};
@@ -1207,14 +1210,15 @@ export async function auditableItemStreamGetEntryObject(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.entryId), request.pathParams.entryId);
 
-	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
-
 	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
 	const result = await component.getEntryObject(request.pathParams.id, request.pathParams.entryId);
 
 	return {
 		headers: {
-			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+			[HeaderTypes.ContentType]:
+				request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd
+					? MimeTypes.JsonLd
+					: MimeTypes.Json
 		},
 		body: result
 	};
@@ -1240,9 +1244,11 @@ export async function auditableItemStreamListEntries(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
+	const hostingService = ComponentFactory.get<IHostingComponent>(
+		httpRequestContext.hostingComponentType ?? "hosting"
+	);
 
-	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
+	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
 
 	const result = await component.getEntries(request.pathParams.id, {
 		conditions: HttpParameterHelper.objectFromString(request.query?.conditions),
@@ -1253,16 +1259,14 @@ export async function auditableItemStreamListEntries(
 		cursor: request.query?.cursor
 	});
 
-	const headers: {
-		[HeaderTypes.ContentType]: typeof MimeTypes.Json | typeof MimeTypes.JsonLd;
-		[HeaderTypes.Link]?: string | string[];
-	} = {
-		[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+	const headers: IAuditableItemStreamListEntriesResponse["headers"] = {
+		[HeaderTypes.ContentType]:
+			request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? MimeTypes.JsonLd : MimeTypes.Json
 	};
 
-	if (Is.stringValue(result.cursor) && Is.stringValue(httpRequestContext.serverRequest?.url)) {
+	if (Is.stringValue(result.cursor)) {
 		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			httpRequestContext.serverRequest.url,
+			await hostingService.buildPublicUrl(httpRequestContext.serverRequest.url),
 			{ cursor: result.cursor },
 			"next"
 		);
@@ -1298,9 +1302,11 @@ export async function auditableItemStreamListEntryObjects(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
+	const hostingService = ComponentFactory.get<IHostingComponent>(
+		httpRequestContext.hostingComponentType ?? "hosting"
+	);
 
-	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
+	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
 
 	const result = await component.getEntryObjects(request.pathParams.id, {
 		conditions: HttpParameterHelper.objectFromString(request.query?.conditions),
@@ -1310,16 +1316,14 @@ export async function auditableItemStreamListEntryObjects(
 		cursor: request.query?.cursor
 	});
 
-	const headers: {
-		[HeaderTypes.ContentType]: typeof MimeTypes.Json | typeof MimeTypes.JsonLd;
-		[HeaderTypes.Link]?: string | string[];
-	} = {
-		[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+	const headers: IAuditableItemStreamListEntryObjectsResponse["headers"] = {
+		[HeaderTypes.ContentType]:
+			request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? MimeTypes.JsonLd : MimeTypes.Json
 	};
 
-	if (Is.stringValue(result.cursor) && Is.stringValue(httpRequestContext.serverRequest?.url)) {
+	if (Is.stringValue(result.cursor)) {
 		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			httpRequestContext.serverRequest.url,
+			await hostingService.buildPublicUrl(httpRequestContext.serverRequest.url),
 			{ cursor: result.cursor },
 			"next"
 		);
