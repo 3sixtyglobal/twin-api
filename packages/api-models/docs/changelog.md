@@ -1,5 +1,12 @@
 # @twin.org/api-models - Changelog
 
+## [0.0.3-next.17](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.16...api-models-v0.0.3-next.17) (2026-01-26)
+
+
+### Features
+
+* update public origin building ([6c8e042](https://github.com/twinfoundation/api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
+
 ## [0.0.3-next.16](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.15...api-models-v0.0.3-next.16) (2026-01-26)
 
 
