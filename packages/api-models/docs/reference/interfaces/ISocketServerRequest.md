@@ -62,6 +62,18 @@ Data to return send as the body.
 
 ***
 
+### url
+
+> **url**: `string`
+
+The request url.
+
+#### Inherited from
+
+[`IHttpServerRequest`](IHttpServerRequest.md).[`url`](IHttpServerRequest.md#url)
+
+***
+
 ### method?
 
 > `optional` **method**: `HttpMethod`
@@ -71,18 +83,6 @@ The request method.
 #### Inherited from
 
 [`IHttpServerRequest`](IHttpServerRequest.md).[`method`](IHttpServerRequest.md#method)
-
-***
-
-### url?
-
-> `optional` **url**: `string`
-
-The request url.
-
-#### Inherited from
-
-[`IHttpServerRequest`](IHttpServerRequest.md).[`url`](IHttpServerRequest.md#url)
 
 ***
 

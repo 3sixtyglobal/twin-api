@@ -9,12 +9,12 @@ import type { IHttpRequest } from "./IHttpRequest.js";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IHttpServerRequest<T = any> extends IHttpRequest<T> {
 	/**
+	 * The request url.
+	 */
+	url: string;
+
+	/**
 	 * The request method.
 	 */
 	method?: HttpMethod;
-
-	/**
-	 * The request url.
-	 */
-	url?: string;
 }

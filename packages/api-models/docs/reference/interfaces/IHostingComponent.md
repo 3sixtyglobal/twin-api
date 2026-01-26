@@ -54,7 +54,7 @@ The public origin for the tenant.
 
 ### buildPublicUrl()
 
-> **buildPublicUrl**(`url`, `serverRequestUrl?`): `Promise`\<`string`\>
+> **buildPublicUrl**(`url`): `Promise`\<`string`\>
 
 Build a public url based on the public origin and the url provided.
 
@@ -65,12 +65,6 @@ Build a public url based on the public origin and the url provided.
 `string`
 
 The url to build upon the public origin.
-
-##### serverRequestUrl?
-
-`string`
-
-The url of the current server request if there is one.
 
 #### Returns
 

@@ -66,16 +66,16 @@ Data to return send as the body.
 
 ***
 
+### url
+
+> **url**: `string`
+
+The request url.
+
+***
+
 ### method?
 
 > `optional` **method**: `HttpMethod`
 
 The request method.
-
-***
-
-### url?
-
-> `optional` **url**: `string`
-
-The request url.

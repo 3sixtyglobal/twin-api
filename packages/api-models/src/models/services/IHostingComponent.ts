@@ -23,8 +23,7 @@ export interface IHostingComponent extends IComponent {
 	/**
 	 * Build a public url based on the public origin and the url provided.
 	 * @param url The url to build upon the public origin.
-	 * @param serverRequestUrl The url of the current server request if there is one.
 	 * @returns The full url based on the public origin.
 	 */
-	buildPublicUrl(url: string, serverRequestUrl?: string): Promise<string>;
+	buildPublicUrl(url: string): Promise<string>;
 }

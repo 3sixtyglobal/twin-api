@@ -109,11 +109,10 @@ export class HostingService implements IHostingComponent {
 	/**
 	 * Build a public url based on the public origin and the url provided.
 	 * @param url The url to build upon the public origin.
-	 * @param serverRequestUrl The url of the current server request if there is one.
 	 * @returns The full url based on the public origin.
 	 */
-	public async buildPublicUrl(url: string, serverRequestUrl?: string): Promise<string> {
-		const publicOrigin = await this.getPublicOrigin(serverRequestUrl);
+	public async buildPublicUrl(url: string): Promise<string> {
+		const publicOrigin = await this.getPublicOrigin(url);
 		return HttpUrlHelper.replaceOrigin(url, publicOrigin);
 	}
 }
