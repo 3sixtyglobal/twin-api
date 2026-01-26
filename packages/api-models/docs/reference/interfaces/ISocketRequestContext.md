@@ -48,6 +48,18 @@ Logging component type for the request.
 
 ***
 
+### hostingComponentType?
+
+> `optional` **hostingComponentType**: `string`
+
+Hosting component type for the request.
+
+#### Inherited from
+
+[`IHttpRequestContext`](IHttpRequestContext.md).[`hostingComponentType`](IHttpRequestContext.md#hostingcomponenttype)
+
+***
+
 ### socketId
 
 > **socketId**: `string`

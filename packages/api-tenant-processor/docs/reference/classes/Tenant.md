@@ -43,3 +43,19 @@ The label of the tenant.
 > **dateCreated**: `string`
 
 The date the tenant was created.
+
+***
+
+### publicOrigin?
+
+> `optional` **publicOrigin**: `string`
+
+The origin available to the public for accessing the API.
+
+***
+
+### isNodeTenant
+
+> **isNodeTenant**: `boolean`
+
+Indicates whether the tenant is the node tenant.

@@ -30,4 +30,16 @@ export class Tenant {
 	 */
 	@property({ type: "string" })
 	public dateCreated!: string;
+
+	/**
+	 * The origin available to the public for accessing the API.
+	 */
+	@property({ type: "string", optional: true })
+	public publicOrigin?: string;
+
+	/**
+	 * Indicates whether the tenant is the node tenant.
+	 */
+	@property({ type: "boolean" })
+	public isNodeTenant!: boolean;
 }

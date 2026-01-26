@@ -10,8 +10,6 @@
 
 ## Interfaces
 
-- [ITenant](interfaces/ITenant.md)
-- [ITenantAdminComponent](interfaces/ITenantAdminComponent.md)
 - [ITenantAdminServiceConfig](interfaces/ITenantAdminServiceConfig.md)
 - [ITenantAdminServiceConstructorOptions](interfaces/ITenantAdminServiceConstructorOptions.md)
 - [ITenantProcessorConfig](interfaces/ITenantProcessorConfig.md)

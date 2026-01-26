@@ -22,6 +22,13 @@ export interface ITenantAdminComponent extends IComponent {
 	getByApiKey(apiKey: string): Promise<ITenant | undefined>;
 
 	/**
+	 * Get a tenant by its public origin.
+	 * @param publicOrigin The origin of the tenant.
+	 * @returns The tenant or undefined if not found.
+	 */
+	getByPublicOrigin(publicOrigin: string): Promise<ITenant | undefined>;
+
+	/**
 	 * Set a tenant.
 	 * @param tenant The tenant to store.
 	 * @returns Nothing.
@@ -37,9 +44,15 @@ export interface ITenantAdminComponent extends IComponent {
 
 	/**
 	 * Query tenants with pagination.
+	 * @param options Optional query options.
+	 * @param options.isNodeTenant Whether to filter for node admin tenants.
 	 * @param cursor The cursor to start from.
 	 * @param limit The maximum number of tenants to return.
 	 * @returns The tenants and the next cursor if more tenants are available.
 	 */
-	query(cursor?: string, limit?: number): Promise<{ tenants: ITenant[]; cursor?: string }>;
+	query(
+		options?: { isNodeTenant?: boolean },
+		cursor?: string,
+		limit?: number
+	): Promise<{ tenants: ITenant[]; cursor?: string }>;
 }

@@ -24,4 +24,14 @@ export interface ITenant {
 	 * The date the tenant was created.
 	 */
 	dateCreated: string;
+
+	/**
+	 * The public origin available to the public for accessing the API.
+	 */
+	publicOrigin?: string;
+
+	/**
+	 * Indicates whether the tenant is the node tenant.
+	 */
+	isNodeTenant: boolean;
 }

@@ -4,6 +4,7 @@
 
 - [HttpErrorHelper](classes/HttpErrorHelper.md)
 - [HttpParameterHelper](classes/HttpParameterHelper.md)
+- [HttpUrlHelper](classes/HttpUrlHelper.md)
 
 ## Interfaces
 
@@ -53,8 +54,11 @@
 - [IWebServerOptions](interfaces/IWebServerOptions.md)
 - [IHealthComponentInfo](interfaces/IHealthComponentInfo.md)
 - [IHealthInfo](interfaces/IHealthInfo.md)
+- [IHostingComponent](interfaces/IHostingComponent.md)
 - [IInformationComponent](interfaces/IInformationComponent.md)
 - [IServerInfo](interfaces/IServerInfo.md)
+- [ITenant](interfaces/ITenant.md)
+- [ITenantAdminComponent](interfaces/ITenantAdminComponent.md)
 
 ## Type Aliases
 

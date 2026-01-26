@@ -33,3 +33,11 @@ The state handed through the processors.
 > `optional` **loggingComponentType**: `string`
 
 Logging component type for the request.
+
+***
+
+### hostingComponentType?
+
+> `optional` **hostingComponentType**: `string`
+
+Hosting component type for the request.

@@ -41,7 +41,7 @@ The features supported by this processor.
 
 ### pre()?
 
-> `optional` **pre**(`request`, `response`, `route`, `contextIds`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
+> `optional` **pre**(`request`, `response`, `route`, `contextIds`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
 Pre process the REST request for the specified route.
 
@@ -75,11 +75,21 @@ The context IDs of the request.
 
 The state handed through the processors.
 
-##### loggingComponentType?
+##### componentTypes?
+
+The component types for the request.
+
+###### loggingComponentType?
 
 `string`
 
-The logging component type for the request.
+The logging component type.
+
+###### hostingComponentType?
+
+`string`
+
+The hosting component type.
 
 #### Returns
 
@@ -91,7 +101,7 @@ Promise that resolves when the request is processed.
 
 ### post()?
 
-> `optional` **post**(`request`, `response`, `route`, `contextIds`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
+> `optional` **post**(`request`, `response`, `route`, `contextIds`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
 Post process the REST request for the specified route.
 
@@ -125,11 +135,21 @@ The context IDs of the request.
 
 The state handed through the processors.
 
-##### loggingComponentType?
+##### componentTypes?
+
+The component types for the request.
+
+###### loggingComponentType?
 
 `string`
 
-The logging component type for the request.
+The logging component type.
+
+###### hostingComponentType?
+
+`string`
+
+The hosting component type.
 
 #### Returns
 

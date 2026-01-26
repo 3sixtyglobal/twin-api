@@ -93,6 +93,9 @@ export class TenantProcessor implements IBaseRouteProcessor {
 						});
 					} else {
 						contextIds[ContextIdKeys.Tenant] = nodeTenant.id;
+						if (Is.stringValue(nodeTenant.publicOrigin)) {
+							processorState.publicOrigin = nodeTenant.publicOrigin;
+						}
 					}
 				} catch (err) {
 					errorResponse = BaseError.fromError(err);

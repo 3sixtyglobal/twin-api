@@ -1,6 +1,6 @@
 // Copyright 2025 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Converter, RandomHelper } from "@twin.org/core";
+import { RandomHelper } from "@twin.org/core";
 
 /**
  * Helper class for tenant id related operations.
@@ -11,7 +11,7 @@ export class TenantIdHelper {
 	 * @returns A new tenant ID.
 	 */
 	public static generateTenantId(): string {
-		return Converter.bytesToHex(RandomHelper.generate(16));
+		return RandomHelper.generateUuidV7("compact");
 	}
 
 	/**
@@ -19,6 +19,6 @@ export class TenantIdHelper {
 	 * @returns A new API Key.
 	 */
 	public static generateApiKey(): string {
-		return Converter.bytesToHex(RandomHelper.generate(16));
+		return RandomHelper.generateUuidV7("compact");
 	}
 }

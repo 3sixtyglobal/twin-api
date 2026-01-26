@@ -77,6 +77,12 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	private readonly _logging?: ILoggingComponent;
 
 	/**
+	 * The hosting component type.
+	 * @internal
+	 */
+	private readonly _hostingComponentType?: string;
+
+	/**
 	 * The options for the server.
 	 * @internal
 	 */
@@ -119,6 +125,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	constructor(options?: IFastifyWebServerConstructorOptions) {
 		this._loggingComponentType = options?.loggingComponentType;
 		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType ?? "logging");
+		this._hostingComponentType = options?.hostingComponentType;
 		this._fastify = Fastify({
 			routerOptions: {
 				maxParamLength: 2000
@@ -557,14 +564,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			for (const routeProcessor of filteredProcessors) {
 				const pre = routeProcessor.pre?.bind(routeProcessor);
 				if (Is.function(pre)) {
-					await pre(
-						httpServerRequest,
-						httpResponse,
-						restRoute,
-						contextIds,
-						processorState,
-						this._loggingComponentType
-					);
+					await pre(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
+						loggingComponentType: this._loggingComponentType,
+						hostingComponentType: this._hostingComponentType
+					});
 				}
 			}
 		} catch (err) {
@@ -583,13 +586,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					for (const routeProcessor of filteredProcessors) {
 						const process = routeProcessor.process?.bind(routeProcessor);
 						if (Is.function(process)) {
-							await process(
-								httpServerRequest,
-								httpResponse,
-								restRoute,
-								processorState,
-								this._loggingComponentType
-							);
+							await process(httpServerRequest, httpResponse, restRoute, processorState, {
+								loggingComponentType: this._loggingComponentType,
+								hostingComponentType: this._hostingComponentType
+							});
 						}
 					}
 				});
@@ -609,14 +609,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			for (const routeProcessor of filteredProcessors) {
 				const post = routeProcessor.post?.bind(routeProcessor);
 				if (Is.function(post)) {
-					await post(
-						httpServerRequest,
-						httpResponse,
-						restRoute,
-						contextIds,
-						processorState,
-						this._loggingComponentType
-					);
+					await post(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
+						loggingComponentType: this._loggingComponentType,
+						hostingComponentType: this._hostingComponentType
+					});
 				}
 			}
 		} catch (err) {
@@ -764,7 +760,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 							socketRoute,
 							contextIds,
 							responseProcessorState,
-							this._loggingComponentType
+							{
+								loggingComponentType: this._loggingComponentType,
+								hostingComponentType: this._hostingComponentType
+							}
 						);
 					}
 				}
@@ -786,14 +785,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			for (const socketRouteProcessor of filteredProcessors) {
 				const pre = socketRouteProcessor.pre?.bind(socketRouteProcessor);
 				if (Is.function(pre)) {
-					await pre(
-						socketServerRequest,
-						httpResponse,
-						socketRoute,
-						contextIds,
-						processorState,
-						this._loggingComponentType
-					);
+					await pre(socketServerRequest, httpResponse, socketRoute, contextIds, processorState, {
+						loggingComponentType: this._loggingComponentType,
+						hostingComponentType: this._hostingComponentType
+					});
 				}
 			}
 

@@ -52,6 +52,28 @@ The tenant or undefined if not found.
 
 ***
 
+### getByPublicOrigin()
+
+> **getByPublicOrigin**(`publicOrigin`): `Promise`\<[`ITenant`](ITenant.md) \| `undefined`\>
+
+Get a tenant by its public origin.
+
+#### Parameters
+
+##### publicOrigin
+
+`string`
+
+The origin of the tenant.
+
+#### Returns
+
+`Promise`\<[`ITenant`](ITenant.md) \| `undefined`\>
+
+The tenant or undefined if not found.
+
+***
+
 ### set()
 
 > **set**(`tenant`): `Promise`\<`void`\>
@@ -98,11 +120,21 @@ Nothing.
 
 ### query()
 
-> **query**(`cursor?`, `limit?`): `Promise`\<\{ `tenants`: [`ITenant`](ITenant.md)[]; `cursor?`: `string`; \}\>
+> **query**(`options?`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: [`ITenant`](ITenant.md)[]; `cursor?`: `string`; \}\>
 
 Query tenants with pagination.
 
 #### Parameters
+
+##### options?
+
+Optional query options.
+
+###### isNodeTenant?
+
+`boolean`
+
+Whether to filter for node admin tenants.
 
 ##### cursor?
 

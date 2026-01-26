@@ -2,10 +2,13 @@
 
 ## Classes
 
+- [HostingService](classes/HostingService.md)
 - [InformationService](classes/InformationService.md)
 
 ## Interfaces
 
+- [IHostingServiceConfig](interfaces/IHostingServiceConfig.md)
+- [IHostingServiceConstructorOptions](interfaces/IHostingServiceConstructorOptions.md)
 - [IInformationServiceConfig](interfaces/IInformationServiceConfig.md)
 - [IInformationServiceConstructorOptions](interfaces/IInformationServiceConstructorOptions.md)
 

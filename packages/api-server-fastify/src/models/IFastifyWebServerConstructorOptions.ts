@@ -13,6 +13,11 @@ export interface IFastifyWebServerConstructorOptions {
 	loggingComponentType?: string;
 
 	/**
+	 * The type of the hosting component to use.
+	 */
+	hostingComponentType?: string;
+
+	/**
 	 * Additional configuration for the server.
 	 */
 	config?: IFastifyWebServerConfig;

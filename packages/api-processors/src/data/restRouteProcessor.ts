@@ -51,14 +51,19 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 	 * @param response The outgoing response.
 	 * @param route The route to process.
 	 * @param processorState The state handed through the processors.
-	 * @param loggingComponentType The logging component type for the request.
+	 * @param componentTypes The component types for the request.
+	 * @param componentTypes.loggingComponentType The logging component type.
+	 * @param componentTypes.hostingComponentType The hosting component type.
 	 */
 	public async process(
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IRestRoute | undefined,
 		processorState: { [id: string]: unknown },
-		loggingComponentType?: string
+		componentTypes?: {
+			loggingComponentType?: string;
+			hostingComponentType?: string;
+		}
 	): Promise<void> {
 		// Don't handle the route if another processor has already set the response
 		// status code e.g. from an auth processor
@@ -88,7 +93,8 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 						{
 							serverRequest: request,
 							processorState,
-							loggingComponentType
+							loggingComponentType: componentTypes?.loggingComponentType,
+							hostingComponentType: componentTypes?.hostingComponentType
 						},
 						req
 					);

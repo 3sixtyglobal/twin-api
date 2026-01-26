@@ -4,7 +4,7 @@ Service for performing email messaging operations to a connector.
 
 ## Implements
 
-- [`ITenantAdminComponent`](../interfaces/ITenantAdminComponent.md)
+- `ITenantAdminComponent`
 
 ## Constructors
 
@@ -56,7 +56,7 @@ The class name of the component.
 
 ### get()
 
-> **get**(`tenantId`): `Promise`\<[`ITenant`](../interfaces/ITenant.md) \| `undefined`\>
+> **get**(`tenantId`): `Promise`\<`ITenant` \| `undefined`\>
 
 Get a tenant by its id.
 
@@ -70,19 +70,19 @@ The id of the tenant.
 
 #### Returns
 
-`Promise`\<[`ITenant`](../interfaces/ITenant.md) \| `undefined`\>
+`Promise`\<`ITenant` \| `undefined`\>
 
 The tenant or undefined if not found.
 
 #### Implementation of
 
-[`ITenantAdminComponent`](../interfaces/ITenantAdminComponent.md).[`get`](../interfaces/ITenantAdminComponent.md#get)
+`ITenantAdminComponent.get`
 
 ***
 
 ### getByApiKey()
 
-> **getByApiKey**(`apiKey`): `Promise`\<[`ITenant`](../interfaces/ITenant.md) \| `undefined`\>
+> **getByApiKey**(`apiKey`): `Promise`\<`ITenant` \| `undefined`\>
 
 Get a tenant by its api key.
 
@@ -96,13 +96,39 @@ The api key of the tenant.
 
 #### Returns
 
-`Promise`\<[`ITenant`](../interfaces/ITenant.md) \| `undefined`\>
+`Promise`\<`ITenant` \| `undefined`\>
 
 The tenant or undefined if not found.
 
 #### Implementation of
 
-[`ITenantAdminComponent`](../interfaces/ITenantAdminComponent.md).[`getByApiKey`](../interfaces/ITenantAdminComponent.md#getbyapikey)
+`ITenantAdminComponent.getByApiKey`
+
+***
+
+### getByPublicOrigin()
+
+> **getByPublicOrigin**(`publicOrigin`): `Promise`\<`ITenant` \| `undefined`\>
+
+Get a tenant by its public origin.
+
+#### Parameters
+
+##### publicOrigin
+
+`string`
+
+The public origin of the tenant.
+
+#### Returns
+
+`Promise`\<`ITenant` \| `undefined`\>
+
+The tenant or undefined if not found.
+
+#### Implementation of
+
+`ITenantAdminComponent.getByPublicOrigin`
 
 ***
 
@@ -116,7 +142,7 @@ Set a tenant.
 
 ##### tenant
 
-[`ITenant`](../interfaces/ITenant.md)
+`ITenant`
 
 The tenant to store.
 
@@ -128,7 +154,7 @@ Nothing.
 
 #### Implementation of
 
-[`ITenantAdminComponent`](../interfaces/ITenantAdminComponent.md).[`set`](../interfaces/ITenantAdminComponent.md#set)
+`ITenantAdminComponent.set`
 
 ***
 
@@ -154,17 +180,27 @@ Nothing.
 
 #### Implementation of
 
-[`ITenantAdminComponent`](../interfaces/ITenantAdminComponent.md).[`remove`](../interfaces/ITenantAdminComponent.md#remove)
+`ITenantAdminComponent.remove`
 
 ***
 
 ### query()
 
-> **query**(`cursor?`, `limit?`): `Promise`\<\{ `tenants`: [`ITenant`](../interfaces/ITenant.md)[]; `cursor?`: `string`; \}\>
+> **query**(`options?`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: `ITenant`[]; `cursor?`: `string`; \}\>
 
 Query tenants with pagination.
 
 #### Parameters
+
+##### options?
+
+Optional query options.
+
+###### isNodeTenant?
+
+`boolean`
+
+Whether to filter for node admin tenants.
 
 ##### cursor?
 
@@ -180,10 +216,10 @@ The maximum number of tenants to return.
 
 #### Returns
 
-`Promise`\<\{ `tenants`: [`ITenant`](../interfaces/ITenant.md)[]; `cursor?`: `string`; \}\>
+`Promise`\<\{ `tenants`: `ITenant`[]; `cursor?`: `string`; \}\>
 
 The tenants and the next cursor if more tenants are available.
 
 #### Implementation of
 
-[`ITenantAdminComponent`](../interfaces/ITenantAdminComponent.md).[`query`](../interfaces/ITenantAdminComponent.md#query)
+`ITenantAdminComponent.query`

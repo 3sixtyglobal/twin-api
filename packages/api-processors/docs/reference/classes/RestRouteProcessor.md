@@ -56,7 +56,7 @@ The class name of the component.
 
 ### process()
 
-> **process**(`request`, `response`, `route`, `processorState`, `loggingComponentType?`): `Promise`\<`void`\>
+> **process**(`request`, `response`, `route`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
 Process the REST request for the specified route.
 
@@ -84,11 +84,21 @@ The route to process.
 
 The state handed through the processors.
 
-##### loggingComponentType?
+##### componentTypes?
+
+The component types for the request.
+
+###### loggingComponentType?
 
 `string`
 
-The logging component type for the request.
+The logging component type.
+
+###### hostingComponentType?
+
+`string`
+
+The hosting component type.
 
 #### Returns
 
