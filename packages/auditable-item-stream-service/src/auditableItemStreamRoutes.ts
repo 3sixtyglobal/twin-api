@@ -1015,7 +1015,7 @@ export async function auditableItemStreamList(
 		request.query
 	);
 
-	const hostingService = ComponentFactory.get<IHostingComponent>(
+	const hostingComponent = ComponentFactory.get<IHostingComponent>(
 		httpRequestContext.hostingComponentType ?? "hosting"
 	);
 
@@ -1037,7 +1037,7 @@ export async function auditableItemStreamList(
 
 	if (Is.stringValue(result.cursor)) {
 		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			await hostingService.buildPublicUrl(httpRequestContext.serverRequest.url),
+			await hostingComponent.buildPublicUrl(httpRequestContext.serverRequest.url),
 			{ cursor: result.cursor },
 			"next"
 		);
@@ -1244,7 +1244,7 @@ export async function auditableItemStreamListEntries(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const hostingService = ComponentFactory.get<IHostingComponent>(
+	const hostingComponent = ComponentFactory.get<IHostingComponent>(
 		httpRequestContext.hostingComponentType ?? "hosting"
 	);
 
@@ -1266,7 +1266,7 @@ export async function auditableItemStreamListEntries(
 
 	if (Is.stringValue(result.cursor)) {
 		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			await hostingService.buildPublicUrl(httpRequestContext.serverRequest.url),
+			await hostingComponent.buildPublicUrl(httpRequestContext.serverRequest.url),
 			{ cursor: result.cursor },
 			"next"
 		);
@@ -1302,7 +1302,7 @@ export async function auditableItemStreamListEntryObjects(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const hostingService = ComponentFactory.get<IHostingComponent>(
+	const hostingComponent = ComponentFactory.get<IHostingComponent>(
 		httpRequestContext.hostingComponentType ?? "hosting"
 	);
 
@@ -1323,7 +1323,7 @@ export async function auditableItemStreamListEntryObjects(
 
 	if (Is.stringValue(result.cursor)) {
 		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			await hostingService.buildPublicUrl(httpRequestContext.serverRequest.url),
+			await hostingComponent.buildPublicUrl(httpRequestContext.serverRequest.url),
 			{ cursor: result.cursor },
 			"next"
 		);
