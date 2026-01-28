@@ -30,41 +30,49 @@ export interface IAuditableItemStreamEntry {
 
 	/**
 	 * The date/time of when the entry was created.
+	 * json-ld namespace:schema
 	 */
 	dateCreated: string;
 
 	/**
 	 * The date/time of when the entry was modified.
+	 * json-ld namespace:schema
 	 */
 	dateModified?: string;
 
 	/**
 	 * The date/time of when the entry was deleted, as we never actually remove items.
+	 * json-ld namespace:schema
 	 */
 	dateDeleted?: string;
 
 	/**
 	 * The identity of the user which added the entry to the stream.
+	 * json-ld namespace:twin-common
 	 */
 	userIdentity?: string;
 
 	/**
 	 * The object to associate with the entry as JSON-LD.
+	 * json-ld type:json
 	 */
 	entryObject: IJsonLdNodeObject;
 
 	/**
 	 * The index of the entry in the stream.
+	 * json-ld type:schema:Integer
 	 */
 	index: number;
 
 	/**
 	 * The id of the immutable proof.
+	 * json-ld type:schema:identifier
 	 */
 	proofId?: string;
 
 	/**
 	 * The verification of the entry.
+	 * json-ld id
 	 */
 	verification?: IImmutableProofVerification;
 }

@@ -1,0 +1,39 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "twin-ais": "https://schema.twindev.org/ais/",
+    "twin-common": "https://schema.twindev.org/common/",
+    "schema": "http://schema.org/",
+    "id": "@id",
+    "type": "@type",
+    "AuditableItemStreamEntry": "twin-ais:AuditableItemStreamEntry",
+    "AuditableItemStream": "twin-ais:AuditableItemStream",
+    "AuditableItemStreamList": "twin-ais:AuditableItemStreamList",
+    "AuditableItemStreamEntryList": "twin-ais:AuditableItemStreamEntryList",
+    "AuditableItemStreamEntryObjectList": "twin-ais:AuditableItemStreamEntryObjectList",
+    "entries": {
+      "@id": "twin-ais:entries",
+      "@container": "@set"
+    },
+    "entryObject": {
+      "@id": "twin-ais:entryObject",
+      "@type": "@json"
+    },
+    "immutableInterval": {
+      "@id": "twin-ais:immutableInterval",
+      "@type": "schema:Integer"
+    },
+    "index": {
+      "@id": "twin-ais:index",
+      "@type": "schema:Integer"
+    },
+    "proofId": {
+      "@id": "twin-ais:proofId",
+      "@type": "schema:identifier"
+    },
+    "verification": {
+      "@id": "twin-ais:verification"
+    }
+  }
+}

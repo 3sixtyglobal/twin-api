@@ -25,3 +25,4 @@ JSON-LD Type.
 > **itemListElement**: [`IAuditableItemStream`](IAuditableItemStream.md)[]
 
 The item streams.
+json-ld namespace:schema

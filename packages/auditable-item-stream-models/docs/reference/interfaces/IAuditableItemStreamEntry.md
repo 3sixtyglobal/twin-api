@@ -33,6 +33,7 @@ The id of the entry.
 > **dateCreated**: `string`
 
 The date/time of when the entry was created.
+json-ld namespace:schema
 
 ***
 
@@ -41,6 +42,7 @@ The date/time of when the entry was created.
 > `optional` **dateModified**: `string`
 
 The date/time of when the entry was modified.
+json-ld namespace:schema
 
 ***
 
@@ -49,6 +51,7 @@ The date/time of when the entry was modified.
 > `optional` **dateDeleted**: `string`
 
 The date/time of when the entry was deleted, as we never actually remove items.
+json-ld namespace:schema
 
 ***
 
@@ -57,6 +60,7 @@ The date/time of when the entry was deleted, as we never actually remove items.
 > `optional` **userIdentity**: `string`
 
 The identity of the user which added the entry to the stream.
+json-ld namespace:twin-common
 
 ***
 
@@ -65,6 +69,7 @@ The identity of the user which added the entry to the stream.
 > **entryObject**: `IJsonLdNodeObject`
 
 The object to associate with the entry as JSON-LD.
+json-ld type:json
 
 ***
 
@@ -73,6 +78,7 @@ The object to associate with the entry as JSON-LD.
 > **index**: `number`
 
 The index of the entry in the stream.
+json-ld type:schema:Integer
 
 ***
 
@@ -81,6 +87,7 @@ The index of the entry in the stream.
 > `optional` **proofId**: `string`
 
 The id of the immutable proof.
+json-ld type:schema:identifier
 
 ***
 
@@ -89,3 +96,4 @@ The id of the immutable proof.
 > `optional` **verification**: `IImmutableProofVerification`
 
 The verification of the entry.
+json-ld id

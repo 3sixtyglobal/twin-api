@@ -25,3 +25,4 @@ JSON-LD Type.
 > **itemListElement**: `IJsonLdNodeObject`[]
 
 The entry objects in the stream.
+json-ld namespace:schema
