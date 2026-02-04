@@ -26,6 +26,11 @@ export interface ITenant {
 	dateCreated: string;
 
 	/**
+	 * The date the tenant was modified.
+	 */
+	dateModified: string;
+
+	/**
 	 * The public origin available to the public for accessing the API.
 	 */
 	publicOrigin?: string;

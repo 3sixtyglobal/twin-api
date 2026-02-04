@@ -8,9 +8,53 @@ Configuration for the tenant admin component
 
 ## Methods
 
+### create()
+
+> **create**(`tenant`): `Promise`\<`string`\>
+
+Create a tenant.
+
+#### Parameters
+
+##### tenant
+
+`Omit`\<[`ITenant`](ITenant.md), `"id"` \| `"dateCreated"` \| `"dateModified"`\> & `object`
+
+The tenant to store.
+
+#### Returns
+
+`Promise`\<`string`\>
+
+The tenant id.
+
+***
+
+### update()
+
+> **update**(`tenant`): `Promise`\<`void`\>
+
+Update a tenant.
+
+#### Parameters
+
+##### tenant
+
+`Partial`\<`Omit`\<[`ITenant`](ITenant.md), `"dateCreated"` \| `"dateModified"`\>\>
+
+The tenant to update.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+***
+
 ### get()
 
-> **get**(`tenantId`): `Promise`\<[`ITenant`](ITenant.md) \| `undefined`\>
+> **get**(`tenantId`): `Promise`\<[`ITenant`](ITenant.md)\>
 
 Get a tenant by its id.
 
@@ -24,15 +68,19 @@ The id of the tenant.
 
 #### Returns
 
-`Promise`\<[`ITenant`](ITenant.md) \| `undefined`\>
+`Promise`\<[`ITenant`](ITenant.md)\>
 
-The tenant or undefined if not found.
+The tenant.
+
+#### Throws
+
+Error if the tenant is not found.
 
 ***
 
 ### getByApiKey()
 
-> **getByApiKey**(`apiKey`): `Promise`\<[`ITenant`](ITenant.md) \| `undefined`\>
+> **getByApiKey**(`apiKey`): `Promise`\<[`ITenant`](ITenant.md)\>
 
 Get a tenant by its api key.
 
@@ -46,15 +94,19 @@ The api key of the tenant.
 
 #### Returns
 
-`Promise`\<[`ITenant`](ITenant.md) \| `undefined`\>
+`Promise`\<[`ITenant`](ITenant.md)\>
 
-The tenant or undefined if not found.
+The tenant.
+
+#### Throws
+
+Error if the tenant is not found.
 
 ***
 
 ### getByPublicOrigin()
 
-> **getByPublicOrigin**(`publicOrigin`): `Promise`\<[`ITenant`](ITenant.md) \| `undefined`\>
+> **getByPublicOrigin**(`publicOrigin`): `Promise`\<[`ITenant`](ITenant.md)\>
 
 Get a tenant by its public origin.
 
@@ -68,31 +120,13 @@ The origin of the tenant.
 
 #### Returns
 
-`Promise`\<[`ITenant`](ITenant.md) \| `undefined`\>
+`Promise`\<[`ITenant`](ITenant.md)\>
 
-The tenant or undefined if not found.
+The tenant.
 
-***
+#### Throws
 
-### set()
-
-> **set**(`tenant`): `Promise`\<`void`\>
-
-Set a tenant.
-
-#### Parameters
-
-##### tenant
-
-[`ITenant`](ITenant.md)
-
-The tenant to store.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
+Error if the tenant is not found.
 
 ***
 
@@ -115,6 +149,10 @@ The id of the tenant.
 `Promise`\<`void`\>
 
 Nothing.
+
+#### Throws
+
+Error if the tenant is not found.
 
 ***
 

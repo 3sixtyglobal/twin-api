@@ -66,6 +66,18 @@ Skips the tenant requirement for this route.
 
 ***
 
+### requiredScope?
+
+> `optional` **requiredScope**: `string`[]
+
+The user must have one of the specified scopes to access the route.
+
+#### Inherited from
+
+[`IBaseRoute`](IBaseRoute.md).[`requiredScope`](IBaseRoute.md#requiredscope)
+
+***
+
 ### processorFeatures?
 
 > `optional` **processorFeatures**: `string`[]

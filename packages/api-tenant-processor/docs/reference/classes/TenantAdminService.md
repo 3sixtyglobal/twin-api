@@ -56,7 +56,7 @@ The class name of the component.
 
 ### get()
 
-> **get**(`tenantId`): `Promise`\<`ITenant` \| `undefined`\>
+> **get**(`tenantId`): `Promise`\<`ITenant`\>
 
 Get a tenant by its id.
 
@@ -70,9 +70,13 @@ The id of the tenant.
 
 #### Returns
 
-`Promise`\<`ITenant` \| `undefined`\>
+`Promise`\<`ITenant`\>
 
-The tenant or undefined if not found.
+The tenant.
+
+#### Throws
+
+Error if the tenant is not found.
 
 #### Implementation of
 
@@ -82,7 +86,7 @@ The tenant or undefined if not found.
 
 ### getByApiKey()
 
-> **getByApiKey**(`apiKey`): `Promise`\<`ITenant` \| `undefined`\>
+> **getByApiKey**(`apiKey`): `Promise`\<`ITenant`\>
 
 Get a tenant by its api key.
 
@@ -96,9 +100,13 @@ The api key of the tenant.
 
 #### Returns
 
-`Promise`\<`ITenant` \| `undefined`\>
+`Promise`\<`ITenant`\>
 
-The tenant or undefined if not found.
+The tenant.
+
+#### Throws
+
+Error if the tenant is not found.
 
 #### Implementation of
 
@@ -108,7 +116,7 @@ The tenant or undefined if not found.
 
 ### getByPublicOrigin()
 
-> **getByPublicOrigin**(`publicOrigin`): `Promise`\<`ITenant` \| `undefined`\>
+> **getByPublicOrigin**(`publicOrigin`): `Promise`\<`ITenant`\>
 
 Get a tenant by its public origin.
 
@@ -118,13 +126,17 @@ Get a tenant by its public origin.
 
 `string`
 
-The public origin of the tenant.
+The origin of the tenant.
 
 #### Returns
 
-`Promise`\<`ITenant` \| `undefined`\>
+`Promise`\<`ITenant`\>
 
-The tenant or undefined if not found.
+The tenant.
+
+#### Throws
+
+Error if the tenant is not found.
 
 #### Implementation of
 
@@ -132,29 +144,55 @@ The tenant or undefined if not found.
 
 ***
 
-### set()
+### create()
 
-> **set**(`tenant`): `Promise`\<`void`\>
+> **create**(`tenant`): `Promise`\<`string`\>
 
-Set a tenant.
+Create a tenant.
 
 #### Parameters
 
 ##### tenant
 
-`ITenant`
+`Omit`\<`ITenant`, `"id"` \| `"dateCreated"` \| `"dateModified"`\> & `object`
 
 The tenant to store.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`string`\>
 
-Nothing.
+The tenant id.
 
 #### Implementation of
 
-`ITenantAdminComponent.set`
+`ITenantAdminComponent.create`
+
+***
+
+### update()
+
+> **update**(`tenant`): `Promise`\<`void`\>
+
+Update a tenant.
+
+#### Parameters
+
+##### tenant
+
+`Partial`\<`Omit`\<`ITenant`, `"dateCreated"` \| `"dateModified"`\>\>
+
+The tenant to update.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+The nothing.
+
+#### Implementation of
+
+`ITenantAdminComponent.update`
 
 ***
 

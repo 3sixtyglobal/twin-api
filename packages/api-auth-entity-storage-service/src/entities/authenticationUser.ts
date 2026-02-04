@@ -28,7 +28,7 @@ export class AuthenticationUser {
 	/**
 	 * The user identity.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", isSecondary: true })
 	public identity!: string;
 
 	/**
@@ -36,4 +36,10 @@ export class AuthenticationUser {
 	 */
 	@property({ type: "string" })
 	public organization!: string;
+
+	/**
+	 * The scope assigned to the user, comma separated.
+	 */
+	@property({ type: "string" })
+	public scope!: string;
 }

@@ -16,7 +16,7 @@ export class Tenant {
 	/**
 	 * The api key for the tenant.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", isSecondary: true })
 	public apiKey!: string;
 
 	/**
@@ -32,9 +32,15 @@ export class Tenant {
 	public dateCreated!: string;
 
 	/**
+	 * The date the tenant was modified.
+	 */
+	@property({ type: "string" })
+	public dateModified!: string;
+
+	/**
 	 * The origin available to the public for accessing the API.
 	 */
-	@property({ type: "string", optional: true })
+	@property({ type: "string", optional: true, isSecondary: true })
 	public publicOrigin?: string;
 
 	/**

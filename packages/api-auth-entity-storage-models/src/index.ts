@@ -8,3 +8,4 @@ export * from "./models/api/IRefreshTokenResponse.js";
 export * from "./models/api/IUpdatePasswordRequest.js";
 export * from "./models/IAuthenticationAdminComponent.js";
 export * from "./models/IAuthenticationComponent.js";
+export * from "./models/IAuthenticationUser.js";

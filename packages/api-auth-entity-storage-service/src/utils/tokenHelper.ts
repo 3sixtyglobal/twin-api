@@ -30,6 +30,7 @@ export class TokenHelper {
 	 * @param organizationIdentity The organization for the token.
 	 * @param tenantId The tenant id for the token.
 	 * @param ttlMinutes The time to live for the token in minutes.
+	 * @param scope The scopes for the token.
 	 * @returns The new token and its expiry date.
 	 */
 	public static async createToken(
@@ -38,7 +39,8 @@ export class TokenHelper {
 		userIdentity: string,
 		organizationIdentity: string | undefined,
 		tenantId: string | undefined,
-		ttlMinutes: number
+		ttlMinutes: number,
+		scope?: string
 	): Promise<{
 		token: string;
 		expiry: number;
@@ -52,7 +54,8 @@ export class TokenHelper {
 				sub: userIdentity,
 				org: organizationIdentity,
 				tid: tenantId,
-				exp: nowSeconds + ttlSeconds
+				exp: nowSeconds + ttlSeconds,
+				scope
 			},
 			async (header, payload) =>
 				VaultConnectorHelper.jwtSigner(vaultConnector, signingKeyName, header, payload)
@@ -69,13 +72,15 @@ export class TokenHelper {
 	 * @param vaultConnector The vault connector.
 	 * @param signingKeyName The signing key name.
 	 * @param token The token to verify.
+	 * @param requiredScopes The required scopes.
 	 * @returns The verified details.
 	 * @throws UnauthorizedError if the token is missing, invalid or expired.
 	 */
 	public static async verify(
 		vaultConnector: IVaultConnector,
 		signingKeyName: string,
-		token: string | undefined
+		token: string | undefined,
+		requiredScopes?: string[]
 	): Promise<{
 		header: IJwtHeader;
 		payload: IJwtPayload;
@@ -98,6 +103,18 @@ export class TokenHelper {
 			decoded.payload.exp < Math.trunc(Date.now() / 1000)
 		) {
 			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "expired");
+		}
+
+		if (Is.arrayValue(requiredScopes)) {
+			const tokenScopes = Is.stringValue(decoded.payload.scope)
+				? decoded.payload.scope.split(" ")
+				: [];
+
+			for (const requiredScope of requiredScopes) {
+				if (!tokenScopes.includes(requiredScope)) {
+					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "insufficientScopes");
+				}
+			}
 		}
 
 		return {

@@ -4,6 +4,7 @@
 
 - [IAuthenticationAdminComponent](interfaces/IAuthenticationAdminComponent.md)
 - [IAuthenticationComponent](interfaces/IAuthenticationComponent.md)
+- [IAuthenticationUser](interfaces/IAuthenticationUser.md)
 - [ILoginRequest](interfaces/ILoginRequest.md)
 - [ILoginResponse](interfaces/ILoginResponse.md)
 - [ILogoutRequest](interfaces/ILogoutRequest.md)

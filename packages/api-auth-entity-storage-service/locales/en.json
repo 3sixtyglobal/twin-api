@@ -8,6 +8,8 @@
 		"entityStorageAuthenticationAdminService": {
 			"userExists": "The user with the specified e-mail already exists",
 			"createUserFailed": "Creating the user failed",
+			"getUserFailed": "Getting the user failed",
+			"updateUserFailed": "Updating the user failed",
 			"removeUserFailed": "Removing the user failed",
 			"updatePasswordFailed": "Updating the user's password failed",
 			"passwordTooShort": "The password is too short, it must be at least {minLength} characters long",
@@ -18,7 +20,8 @@
 			"missing": "The JSON Web token could not be found in the authorization header",
 			"payloadMissingSubject": "The JSON Web token payload does not contain a subject",
 			"payloadMissingOrganization": "The JSON Web token payload does not contain an organization",
-			"expired": "The JSON Web token has expired"
+			"expired": "The JSON Web token has expired",
+			"insufficientScopes": "The JSON Web token does not have the required scopes to access this resource"
 		},
 		"authHeaderProcessor": {
 			"tenantIdMismatch": "The tenant ID in the token does not match the tenant ID in the context"

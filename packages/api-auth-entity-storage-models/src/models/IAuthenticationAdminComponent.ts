@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IComponent } from "@twin.org/core";
+import type { IAuthenticationUser } from "./IAuthenticationUser.js";
 
 /**
  * Contract definition for authentication admin component.
@@ -8,21 +9,34 @@ import type { IComponent } from "@twin.org/core";
 export interface IAuthenticationAdminComponent extends IComponent {
 	/**
 	 * Create a login for the user.
-	 * @param email The email address for the user.
-	 * @param password The password for the user.
-	 * @param userIdentity The DID to associate with the account.
-	 * @param organizationIdentity The organization of the user.
+	 * @param user The user to create.
 	 * @returns Nothing.
 	 */
-	create(
-		email: string,
-		password: string,
-		userIdentity: string,
-		organizationIdentity: string
-	): Promise<void>;
+	create(user: Omit<IAuthenticationUser, "salt">): Promise<void>;
 
 	/**
-	 * Remove the current user.
+	 * Update a login for the user.
+	 * @param user The user to update.
+	 * @returns Nothing.
+	 */
+	update(user: Partial<Omit<IAuthenticationUser, "password" | "salt">>): Promise<void>;
+
+	/**
+	 * Get a user by email.
+	 * @param email The email address of the user to get.
+	 * @returns The user details.
+	 */
+	get(email: string): Promise<Omit<IAuthenticationUser, "password" | "salt">>;
+
+	/**
+	 * Get a user by identity.
+	 * @param identity The identity of the user to get.
+	 * @returns The user details.
+	 */
+	getByIdentity(identity: string): Promise<Omit<IAuthenticationUser, "password" | "salt">>;
+
+	/**
+	 * Remove a current user.
 	 * @param email The email address of the user to remove.
 	 * @returns Nothing.
 	 */

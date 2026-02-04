@@ -1,6 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAuthenticationAdminComponent } from "@twin.org/api-auth-entity-storage-models";
+import type {
+	IAuthenticationAdminComponent,
+	IAuthenticationUser
+} from "@twin.org/api-auth-entity-storage-models";
 import { Converter, GeneralError, Guards, Is, NotFoundError, RandomHelper } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
@@ -62,62 +65,61 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 
 	/**
 	 * Create a login for the user.
-	 * @param email The email address for the user.
-	 * @param password The password for the user.
-	 * @param userIdentity The DID to associate with the account.
-	 * @param organizationIdentity The organization of the user.
+	 * @param user The user to create.
 	 * @returns Nothing.
 	 */
-	public async create(
-		email: string,
-		password: string,
-		userIdentity: string,
-		organizationIdentity: string
-	): Promise<void> {
-		Guards.stringValue(EntityStorageAuthenticationAdminService.CLASS_NAME, nameof(email), email);
-		Guards.stringValue(
+	public async create(user: Omit<IAuthenticationUser, "salt">): Promise<void> {
+		Guards.object<IAuthenticationUser>(
 			EntityStorageAuthenticationAdminService.CLASS_NAME,
-			nameof(password),
-			password
+			nameof(user),
+			user
 		);
 		Guards.stringValue(
 			EntityStorageAuthenticationAdminService.CLASS_NAME,
-			nameof(userIdentity),
-			userIdentity
+			nameof(user.email),
+			user.email
 		);
 		Guards.stringValue(
 			EntityStorageAuthenticationAdminService.CLASS_NAME,
-			nameof(organizationIdentity),
-			organizationIdentity
+			nameof(user.password),
+			user.password
+		);
+		Guards.stringValue(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(user.userIdentity),
+			user.userIdentity
+		);
+		Guards.stringValue(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(user.organizationIdentity),
+			user.organizationIdentity
+		);
+		Guards.array<string>(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(user.scope),
+			user.scope
 		);
 
 		try {
-			if (password.length < this._minPasswordLength) {
-				throw new GeneralError(
-					EntityStorageAuthenticationAdminService.CLASS_NAME,
-					"passwordTooShort",
-					{
-						minLength: this._minPasswordLength
-					}
-				);
-			}
+			this.validatePassword(user.password);
 
-			const user = await this._userEntityStorage.get(email);
-			if (user) {
+			const existingUser = await this._userEntityStorage.get(user.email);
+			if (Is.object<AuthenticationUser>(existingUser)) {
 				throw new GeneralError(EntityStorageAuthenticationAdminService.CLASS_NAME, "userExists");
 			}
 
 			const saltBytes = RandomHelper.generate(16);
-			const passwordBytes = Converter.utf8ToBytes(password);
+			const passwordBytes = Converter.utf8ToBytes(user.password);
 
 			const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
 
 			const newUser: AuthenticationUser = {
-				email,
+				email: user.email,
 				salt: Converter.bytesToBase64(saltBytes),
 				password: hashedPassword,
-				identity: userIdentity,
-				organization: organizationIdentity
+				identity: user.userIdentity,
+				organization: user.organizationIdentity,
+				scope: user.scope.map(s => s.trim().toLocaleLowerCase()).join(",")
 			};
 
 			await this._userEntityStorage.set(newUser);
@@ -125,6 +127,148 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,
 				"createUserFailed",
+				undefined,
+				error
+			);
+		}
+	}
+
+	/**
+	 * Update a login for the user.
+	 * @param user The user to update.
+	 * @returns Nothing.
+	 */
+	public async update(
+		user: Partial<Omit<IAuthenticationUser, "password" | "salt">>
+	): Promise<void> {
+		Guards.object<IAuthenticationUser>(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(user),
+			user
+		);
+		Guards.stringValue(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(user.email),
+			user.email
+		);
+
+		if (!Is.empty(user.userIdentity)) {
+			Guards.stringValue(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				nameof(user.userIdentity),
+				user.userIdentity
+			);
+		}
+		if (!Is.empty(user.organizationIdentity)) {
+			Guards.stringValue(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				nameof(user.organizationIdentity),
+				user.organizationIdentity
+			);
+		}
+		if (!Is.empty(user.scope)) {
+			Guards.array<string>(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				nameof(user.scope),
+				user.scope
+			);
+		}
+
+		try {
+			const existingUser = await this._userEntityStorage.get(user.email);
+			if (!Is.object<AuthenticationUser>(existingUser)) {
+				throw new NotFoundError(
+					EntityStorageAuthenticationAdminService.CLASS_NAME,
+					"userNotFound",
+					user.email
+				);
+			}
+
+			existingUser.identity = user.userIdentity ?? existingUser.identity;
+			existingUser.organization = user.organizationIdentity ?? existingUser.organization;
+			existingUser.scope = Is.array(user.scope)
+				? user.scope.map(s => s.trim().toLocaleLowerCase()).join(",")
+				: user.scope;
+
+			await this._userEntityStorage.set(existingUser);
+		} catch (error) {
+			throw new GeneralError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"updateUserFailed",
+				undefined,
+				error
+			);
+		}
+	}
+
+	/**
+	 * Get a user by email.
+	 * @param email The email address of the user to get.
+	 * @returns The user details.
+	 */
+	public async get(email: string): Promise<Omit<IAuthenticationUser, "password" | "salt">> {
+		Guards.stringValue(EntityStorageAuthenticationAdminService.CLASS_NAME, nameof(email), email);
+
+		try {
+			const user = await this._userEntityStorage.get(email);
+			if (!Is.object<AuthenticationUser>(user)) {
+				throw new NotFoundError(
+					EntityStorageAuthenticationAdminService.CLASS_NAME,
+					"userNotFound",
+					email
+				);
+			}
+
+			return {
+				email: user.email,
+				userIdentity: user.identity,
+				organizationIdentity: user.organization,
+				scope: user.scope.split(",")
+			};
+		} catch (error) {
+			throw new GeneralError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"getUserFailed",
+				undefined,
+				error
+			);
+		}
+	}
+
+	/**
+	 * Get a user by identity.
+	 * @param identity The identity of the user to get.
+	 * @returns The user details.
+	 */
+	public async getByIdentity(
+		identity: string
+	): Promise<Omit<IAuthenticationUser, "password" | "salt">> {
+		Guards.stringValue(
+			EntityStorageAuthenticationAdminService.CLASS_NAME,
+			nameof(identity),
+			identity
+		);
+
+		try {
+			const user = await this._userEntityStorage.get(identity, "identity");
+			if (!Is.object<AuthenticationUser>(user)) {
+				throw new NotFoundError(
+					EntityStorageAuthenticationAdminService.CLASS_NAME,
+					"userNotFound",
+					identity
+				);
+			}
+
+			return {
+				email: user.email,
+				userIdentity: user.identity,
+				organizationIdentity: user.organization,
+				scope: user.scope.split(",")
+			};
+		} catch (error) {
+			throw new GeneralError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"getUserFailed",
 				undefined,
 				error
 			);
@@ -141,7 +285,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 
 		try {
 			const user = await this._userEntityStorage.get(email);
-			if (!user) {
+			if (!Is.object<AuthenticationUser>(user)) {
 				throw new NotFoundError(
 					EntityStorageAuthenticationAdminService.CLASS_NAME,
 					"userNotFound",
@@ -191,7 +335,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			}
 
 			const user = await this._userEntityStorage.get(email);
-			if (!user) {
+			if (!Is.object<AuthenticationUser>(user)) {
 				throw new NotFoundError(
 					EntityStorageAuthenticationAdminService.CLASS_NAME,
 					"userNotFound",
@@ -223,7 +367,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				salt: Converter.bytesToBase64(saltBytes),
 				password: hashedPassword,
 				identity: user.identity,
-				organization: user.organization
+				organization: user.organization,
+				scope: user.scope
 			};
 
 			await this._userEntityStorage.set(updatedUser);
@@ -233,6 +378,23 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				"updatePasswordFailed",
 				undefined,
 				error
+			);
+		}
+	}
+
+	/**
+	 * Validate the password against the policy.
+	 * @param password The password to validate.
+	 * @internal
+	 */
+	private validatePassword(password: string): void {
+		if (password.length < this._minPasswordLength) {
+			throw new GeneralError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"passwordTooShort",
+				{
+					minLength: this._minPasswordLength
+				}
 			);
 		}
 	}

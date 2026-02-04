@@ -8,37 +8,50 @@ import type { ITenant } from "./ITenant.js";
  */
 export interface ITenantAdminComponent extends IComponent {
 	/**
+	 * Create a tenant.
+	 * @param tenant The tenant to store.
+	 * @returns The tenant id.
+	 */
+	create(
+		tenant: Omit<ITenant, "id" | "dateCreated" | "dateModified"> & { id?: string }
+	): Promise<string>;
+
+	/**
+	 * Update a tenant.
+	 * @param tenant The tenant to update.
+	 * @returns Nothing.
+	 */
+	update(tenant: Partial<Omit<ITenant, "dateCreated" | "dateModified">>): Promise<void>;
+
+	/**
 	 * Get a tenant by its id.
 	 * @param tenantId The id of the tenant.
-	 * @returns The tenant or undefined if not found.
+	 * @returns The tenant.
+	 * @throws Error if the tenant is not found.
 	 */
-	get(tenantId: string): Promise<ITenant | undefined>;
+	get(tenantId: string): Promise<ITenant>;
 
 	/**
 	 * Get a tenant by its api key.
 	 * @param apiKey The api key of the tenant.
-	 * @returns The tenant or undefined if not found.
+	 * @returns The tenant.
+	 * @throws Error if the tenant is not found.
 	 */
-	getByApiKey(apiKey: string): Promise<ITenant | undefined>;
+	getByApiKey(apiKey: string): Promise<ITenant>;
 
 	/**
 	 * Get a tenant by its public origin.
 	 * @param publicOrigin The origin of the tenant.
-	 * @returns The tenant or undefined if not found.
+	 * @returns The tenant.
+	 * @throws Error if the tenant is not found.
 	 */
-	getByPublicOrigin(publicOrigin: string): Promise<ITenant | undefined>;
-
-	/**
-	 * Set a tenant.
-	 * @param tenant The tenant to store.
-	 * @returns Nothing.
-	 */
-	set(tenant: ITenant): Promise<void>;
+	getByPublicOrigin(publicOrigin: string): Promise<ITenant>;
 
 	/**
 	 * Remove a tenant by its id.
 	 * @param tenantId The id of the tenant.
 	 * @returns Nothing.
+	 * @throws Error if the tenant is not found.
 	 */
 	remove(tenantId: string): Promise<void>;
 

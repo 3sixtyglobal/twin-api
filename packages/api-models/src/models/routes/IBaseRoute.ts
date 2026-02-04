@@ -26,6 +26,11 @@ export interface IBaseRoute {
 	skipTenant?: boolean;
 
 	/**
+	 * The user must have one of the specified scopes to access the route.
+	 */
+	requiredScope?: string[];
+
+	/**
 	 * The features supported by additional processors to run for this route.
 	 */
 	processorFeatures?: string[];

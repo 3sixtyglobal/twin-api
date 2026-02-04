@@ -24,7 +24,7 @@ Runtime name for the class.
 
 ### createToken()
 
-> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
 
 Create a new token.
 
@@ -66,6 +66,12 @@ The tenant id for the token.
 
 The time to live for the token in minutes.
 
+##### scope?
+
+`string`
+
+The scopes for the token.
+
 #### Returns
 
 `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
@@ -76,7 +82,7 @@ The new token and its expiry date.
 
 ### verify()
 
-> `static` **verify**(`vaultConnector`, `signingKeyName`, `token`): `Promise`\<\{ `header`: `JWTHeaderParameters`; `payload`: `JWTPayload`; \}\>
+> `static` **verify**(`vaultConnector`, `signingKeyName`, `token`, `requiredScopes?`): `Promise`\<\{ `header`: `JWTHeaderParameters`; `payload`: `JWTPayload`; \}\>
 
 Verify the token.
 
@@ -99,6 +105,12 @@ The signing key name.
 The token to verify.
 
 `string` | `undefined`
+
+##### requiredScopes?
+
+`string`[]
+
+The required scopes.
 
 #### Returns
 

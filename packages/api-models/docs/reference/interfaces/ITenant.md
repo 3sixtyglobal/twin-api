@@ -36,6 +36,14 @@ The date the tenant was created.
 
 ***
 
+### dateModified
+
+> **dateModified**: `string`
+
+The date the tenant was modified.
+
+***
+
 ### publicOrigin?
 
 > `optional` **publicOrigin**: `string`

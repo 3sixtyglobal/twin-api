@@ -1,16 +1,6 @@
-# Class: AuthenticationUser
+# Interface: IAuthenticationUser
 
-Class defining the storage for user login credentials.
-
-## Constructors
-
-### Constructor
-
-> **new AuthenticationUser**(): `AuthenticationUser`
-
-#### Returns
-
-`AuthenticationUser`
+Contract definition for authentication user.
 
 ## Properties
 
@@ -38,17 +28,17 @@ The salt for the password.
 
 ***
 
-### identity
+### userIdentity
 
-> **identity**: `string`
+> **userIdentity**: `string`
 
 The user identity.
 
 ***
 
-### organization
+### organizationIdentity
 
-> **organization**: `string`
+> **organizationIdentity**: `string`
 
 The users organization.
 
@@ -56,6 +46,6 @@ The users organization.
 
 ### scope
 
-> **scope**: `string`
+> **scope**: `string`[]
 
 The scope assigned to the user, comma separated.

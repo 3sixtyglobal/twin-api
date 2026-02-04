@@ -6,6 +6,7 @@ import type {
 } from "@twin.org/api-auth-entity-storage-models";
 import { ContextIdHelper, ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
+	Coerce,
 	ComponentFactory,
 	Converter,
 	GeneralError,
@@ -157,7 +158,8 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				user.identity,
 				user.organization,
 				tenantId,
-				this._defaultTtlMinutes
+				this._defaultTtlMinutes,
+				user.scope
 			);
 
 			return tokenAndExpiry;
@@ -202,7 +204,8 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			headerAndPayload.payload.sub ?? "",
 			Is.stringValue(headerAndPayload.payload.org) ? headerAndPayload.payload.org : "",
 			Is.stringValue(headerAndPayload.payload.tid) ? headerAndPayload.payload.tid : "",
-			this._defaultTtlMinutes
+			this._defaultTtlMinutes,
+			Coerce.string(headerAndPayload.payload?.scope)
 		);
 
 		return refreshTokenAndExpiry;

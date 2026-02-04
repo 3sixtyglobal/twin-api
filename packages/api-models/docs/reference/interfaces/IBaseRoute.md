@@ -41,6 +41,14 @@ Skips the tenant requirement for this route.
 
 ***
 
+### requiredScope?
+
+> `optional` **requiredScope**: `string`[]
+
+The user must have one of the specified scopes to access the route.
+
+***
+
 ### processorFeatures?
 
 > `optional` **processorFeatures**: `string`[]

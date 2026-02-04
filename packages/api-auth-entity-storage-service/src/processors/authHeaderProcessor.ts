@@ -113,7 +113,8 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				const headerAndPayload = await TokenHelper.verify(
 					this._vaultConnector,
 					`${this._nodeId}/${this._signingKeyName}`,
-					tokenAndLocation?.token
+					tokenAndLocation?.token,
+					route.requiredScope
 				);
 
 				// If tenant id is defined in the context, then it must match the one in the token

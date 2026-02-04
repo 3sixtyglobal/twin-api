@@ -5,7 +5,8 @@
 			"apiKeyNotFound": "No node tenant found for API key \"{key}\"."
 		},
 		"tenantAdminService": {
-			"apiKeyAlreadyInUse": "The provided API key is already in use by another tenant."
+			"apiKeyAlreadyInUse": "The provided API key is already in use by another tenant.",
+			"tenantNotFound": "Tenant with ID \"{notFoundId}\" not found."
 		}
 	}
 }

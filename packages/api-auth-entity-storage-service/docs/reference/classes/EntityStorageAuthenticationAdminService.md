@@ -56,35 +56,17 @@ The class name of the component.
 
 ### create()
 
-> **create**(`email`, `password`, `userIdentity`, `organizationIdentity`): `Promise`\<`void`\>
+> **create**(`user`): `Promise`\<`void`\>
 
 Create a login for the user.
 
 #### Parameters
 
-##### email
+##### user
 
-`string`
+`Omit`\<`IAuthenticationUser`, `"salt"`\>
 
-The email address for the user.
-
-##### password
-
-`string`
-
-The password for the user.
-
-##### userIdentity
-
-`string`
-
-The DID to associate with the account.
-
-##### organizationIdentity
-
-`string`
-
-The organization of the user.
+The user to create.
 
 #### Returns
 
@@ -95,6 +77,84 @@ Nothing.
 #### Implementation of
 
 `IAuthenticationAdminComponent.create`
+
+***
+
+### update()
+
+> **update**(`user`): `Promise`\<`void`\>
+
+Update a login for the user.
+
+#### Parameters
+
+##### user
+
+`Partial`\<`Omit`\<`IAuthenticationUser`, `"password"` \| `"salt"`\>\>
+
+The user to update.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IAuthenticationAdminComponent.update`
+
+***
+
+### get()
+
+> **get**(`email`): `Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
+
+Get a user by email.
+
+#### Parameters
+
+##### email
+
+`string`
+
+The email address of the user to get.
+
+#### Returns
+
+`Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
+
+The user details.
+
+#### Implementation of
+
+`IAuthenticationAdminComponent.get`
+
+***
+
+### getByIdentity()
+
+> **getByIdentity**(`identity`): `Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
+
+Get a user by identity.
+
+#### Parameters
+
+##### identity
+
+`string`
+
+The identity of the user to get.
+
+#### Returns
+
+`Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
+
+The user details.
+
+#### Implementation of
+
+`IAuthenticationAdminComponent.getByIdentity`
 
 ***
 
