@@ -1,5 +1,12 @@
 # @twin.org/api-auth-entity-storage-models - Changelog
 
+## [0.0.3-next.19](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-models-v0.0.3-next.18...api-auth-entity-storage-models-v0.0.3-next.19) (2026-02-06)
+
+
+### Features
+
+* user admin service ([#77](https://github.com/twinfoundation/api/issues/77)) ([c8491df](https://github.com/twinfoundation/api/commit/c8491df7b07c1f45560c8a78c6adc806d0ececbb))
+
 ## [0.0.3-next.18](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-models-v0.0.3-next.17...api-auth-entity-storage-models-v0.0.3-next.18) (2026-02-04)
 
 

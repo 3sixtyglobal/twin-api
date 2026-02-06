@@ -1,5 +1,21 @@
 # @twin.org/api-server-fastify - Changelog
 
+## [0.0.3-next.19](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.18...api-server-fastify-v0.0.3-next.19) (2026-02-06)
+
+
+### Features
+
+* user admin service ([#77](https://github.com/twinfoundation/api/issues/77)) ([c8491df](https://github.com/twinfoundation/api/commit/c8491df7b07c1f45560c8a78c6adc806d0ececbb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.18 to 0.0.3-next.19
+    * @twin.org/api-models bumped from 0.0.3-next.18 to 0.0.3-next.19
+    * @twin.org/api-processors bumped from 0.0.3-next.18 to 0.0.3-next.19
+
 ## [0.0.3-next.18](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.17...api-server-fastify-v0.0.3-next.18) (2026-02-04)
 
 
