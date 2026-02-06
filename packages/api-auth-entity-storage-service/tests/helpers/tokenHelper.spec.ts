@@ -1,6 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HeaderTypes, type IHttpHeaders } from "@twin.org/web";
+import { UnauthorizedError } from "@twin.org/core";
+import type { IVaultConnector } from "@twin.org/vault-models";
+import { HeaderTypes, type IHttpHeaders, Jwt } from "@twin.org/web";
 import { TokenHelper } from "../../src/utils/tokenHelper.js";
 
 describe("TokenHelper", () => {
@@ -90,6 +92,377 @@ describe("TokenHelper", () => {
 			token:
 				"eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg1MTdjN2Q3MjBjOTBlYWRlMmRmMzZkYWZjZjIxMzgzMThiMGViYjgwMzgyYTNhM2MwZDdlYjZmMzBjYmM5YjVlIiwib3JnIjoiZGlkOmVudGl0eS1zdG9yYWdlOjB4ODgwNjZiYzc2YmIxNGViMmQ3ZDc1ZjE4NTg0NWMzZTMxMTVlOGQ3OWVlN2I4NmE3OTYzYWVmM2ViNTg3MjY4MyIsImV4cCI6MTc2NzU5MTQ3OH0.wuQkxGHAe-qTfl1OzMlRi4WzoYG5pi6EV76xoSzHPVmuVT4W3XaS8aauEeMfIZd-DDBMsCcsVgcQwSxMOtqNBg",
 			location: "cookie"
+		});
+	});
+
+	describe("verify with scopes", () => {
+		const mockVaultConnector: IVaultConnector = {
+			get: vi.fn(),
+			set: vi.fn(),
+			remove: vi.fn()
+		} as unknown as IVaultConnector;
+
+		const signingKeyName = "test-key";
+
+		it("should verify token with matching required scopes", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org123",
+				exp: Math.trunc(Date.now() / 1000) + 3600,
+				scope: "read,write,admin"
+			};
+
+			const token = "mock.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token, [
+				"read",
+				"write"
+			]);
+
+			expect(result.payload).toEqual(payload);
+		});
+
+		it("should verify token when no scopes are required", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org123",
+				exp: Math.trunc(Date.now() / 1000) + 3600,
+				scope: "read,write"
+			};
+
+			const token = "mock.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token);
+
+			expect(result.payload).toEqual(payload);
+		});
+
+		it("should verify token when required scopes is empty array", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org123",
+				exp: Math.trunc(Date.now() / 1000) + 3600,
+				scope: "read"
+			};
+
+			const token = "mock.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token, []);
+
+			expect(result.payload).toEqual(payload);
+		});
+
+		it("should throw UnauthorizedError when token is missing required scope", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org123",
+				exp: Math.trunc(Date.now() / 1000) + 3600,
+				scope: "read"
+			};
+
+			const token = "mock.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(
+				TokenHelper.verify(mockVaultConnector, signingKeyName, token, ["read", "write"])
+			).rejects.toThrow(UnauthorizedError);
+		});
+
+		it("should throw UnauthorizedError when token has no scopes but scopes are required", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org123",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "mock.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(
+				TokenHelper.verify(mockVaultConnector, signingKeyName, token, ["admin"])
+			).rejects.toThrow(UnauthorizedError);
+		});
+
+		it("should throw UnauthorizedError when token has empty scope string but scopes are required", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org123",
+				exp: Math.trunc(Date.now() / 1000) + 3600,
+				scope: ""
+			};
+
+			const token = "mock.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(
+				TokenHelper.verify(mockVaultConnector, signingKeyName, token, ["read"])
+			).rejects.toThrow(UnauthorizedError);
+		});
+
+		it("should verify token with exact single scope match", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org123",
+				exp: Math.trunc(Date.now() / 1000) + 3600,
+				scope: "admin"
+			};
+
+			const token = "mock.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token, ["admin"]);
+
+			expect(result.payload).toEqual(payload);
+		});
+
+		it("should verify token when all required scopes are present among multiple scopes", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org123",
+				exp: Math.trunc(Date.now() / 1000) + 3600,
+				scope: "read,write,delete,admin,execute"
+			};
+
+			const token = "mock.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token, [
+				"write",
+				"admin"
+			]);
+
+			expect(result.payload).toEqual(payload);
+		});
+
+		it("should throw UnauthorizedError for missing token", async () => {
+			await expect(
+				TokenHelper.verify(mockVaultConnector, signingKeyName, undefined, ["read"])
+			).rejects.toThrow(UnauthorizedError);
+		});
+
+		it("should throw UnauthorizedError for empty token", async () => {
+			await expect(
+				TokenHelper.verify(mockVaultConnector, signingKeyName, "", ["read"])
+			).rejects.toThrow(UnauthorizedError);
+		});
+	});
+
+	describe("verify token validation", () => {
+		const mockVaultConnector: IVaultConnector = {
+			get: vi.fn(),
+			set: vi.fn(),
+			remove: vi.fn()
+		} as unknown as IVaultConnector;
+
+		const signingKeyName = "test-key";
+
+		it("should verify a valid token with all required fields", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "valid.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token);
+
+			expect(result.payload).toEqual(payload);
+			expect(result.header).toEqual({ alg: "EdDSA" });
+		});
+
+		it("should throw UnauthorizedError when token is expired", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) - 3600 // Expired 1 hour ago
+			};
+
+			const token = "expired.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(TokenHelper.verify(mockVaultConnector, signingKeyName, token)).rejects.toThrow(
+				UnauthorizedError
+			);
+		});
+
+		it("should throw UnauthorizedError when subject is missing", async () => {
+			const payload = {
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "no-subject.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(TokenHelper.verify(mockVaultConnector, signingKeyName, token)).rejects.toThrow(
+				UnauthorizedError
+			);
+		});
+
+		it("should throw UnauthorizedError when subject is empty string", async () => {
+			const payload = {
+				sub: "",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "empty-subject.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(TokenHelper.verify(mockVaultConnector, signingKeyName, token)).rejects.toThrow(
+				UnauthorizedError
+			);
+		});
+
+		it("should throw UnauthorizedError when organization is missing", async () => {
+			const payload = {
+				sub: "user123",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "no-org.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(TokenHelper.verify(mockVaultConnector, signingKeyName, token)).rejects.toThrow(
+				UnauthorizedError
+			);
+		});
+
+		it("should throw UnauthorizedError when organization is empty string", async () => {
+			const payload = {
+				sub: "user123",
+				org: "",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "empty-org.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(TokenHelper.verify(mockVaultConnector, signingKeyName, token)).rejects.toThrow(
+				UnauthorizedError
+			);
+		});
+
+		it("should verify token without expiry field", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456"
+			};
+
+			const token = "no-expiry.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token);
+
+			expect(result.payload).toEqual(payload);
+		});
+
+		it("should verify token with tenant ID", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				tid: "tenant789",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "with-tenant.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token);
+
+			expect(result.payload).toEqual(payload);
+		});
+
+		it("should verify token with additional custom claims", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600,
+				customClaim: "customValue",
+				roles: ["admin", "editor"]
+			};
+
+			const token = "custom-claims.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(mockVaultConnector, signingKeyName, token);
+
+			expect(result.payload).toEqual(payload);
+		});
+
+		it("should throw UnauthorizedError when token is exactly at expiry time", async () => {
+			const now = Math.trunc(Date.now() / 1000);
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: now - 1 // Expired just now
+			};
+
+			const token = "just-expired.jwt.token";
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(TokenHelper.verify(mockVaultConnector, signingKeyName, token)).rejects.toThrow(
+				UnauthorizedError
+			);
 		});
 	});
 });

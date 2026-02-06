@@ -5,6 +5,7 @@ import type {
 	IAuthenticationUser
 } from "@twin.org/api-auth-entity-storage-models";
 import { Converter, GeneralError, Guards, Is, NotFoundError, RandomHelper } from "@twin.org/core";
+import { PasswordGenerator, PasswordValidator } from "@twin.org/crypto";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -12,7 +13,6 @@ import {
 import { nameof } from "@twin.org/nameof";
 import type { AuthenticationUser } from "../entities/authenticationUser.js";
 import type { IEntityStorageAuthenticationAdminServiceConstructorOptions } from "../models/IEntityStorageAuthenticationAdminServiceConstructorOptions.js";
-import { PasswordHelper } from "../utils/passwordHelper.js";
 
 /**
  * Implementation of the authentication component using entity storage.
@@ -24,12 +24,6 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	public static readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationAdminService>();
 
 	/**
-	 * The minimum password length.
-	 * @internal
-	 */
-	private static readonly _DEFAULT_MIN_PASSWORD_LENGTH: number = 8;
-
-	/**
 	 * The entity storage for users.
 	 * @internal
 	 */
@@ -39,7 +33,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	 * The minimum password length.
 	 * @internal
 	 */
-	private readonly _minPasswordLength: number;
+	private readonly _minPasswordLength?: number;
 
 	/**
 	 * Create a new instance of EntityStorageAuthentication.
@@ -50,9 +44,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			options?.userEntityStorageType ?? "authentication-user"
 		);
 
-		this._minPasswordLength =
-			options?.config?.minPasswordLength ??
-			EntityStorageAuthenticationAdminService._DEFAULT_MIN_PASSWORD_LENGTH;
+		this._minPasswordLength = options?.config?.minPasswordLength;
 	}
 
 	/**
@@ -101,7 +93,9 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 		);
 
 		try {
-			this.validatePassword(user.password);
+			PasswordValidator.validatePassword(user.password, {
+				minLength: this._minPasswordLength
+			});
 
 			const existingUser = await this._userEntityStorage.get(user.email);
 			if (Is.object<AuthenticationUser>(existingUser)) {
@@ -111,7 +105,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			const saltBytes = RandomHelper.generate(16);
 			const passwordBytes = Converter.utf8ToBytes(user.password);
 
-			const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
+			const hashedPassword = await PasswordGenerator.hashPassword(passwordBytes, saltBytes);
 
 			const newUser: AuthenticationUser = {
 				email: user.email,
@@ -324,15 +318,9 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 		);
 
 		try {
-			if (newPassword.length < this._minPasswordLength) {
-				throw new GeneralError(
-					EntityStorageAuthenticationAdminService.CLASS_NAME,
-					"passwordTooShort",
-					{
-						minLength: this._minPasswordLength
-					}
-				);
-			}
+			PasswordValidator.validatePassword(newPassword, {
+				minLength: this._minPasswordLength
+			});
 
 			const user = await this._userEntityStorage.get(email);
 			if (!Is.object<AuthenticationUser>(user)) {
@@ -347,9 +335,9 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				const saltBytes = Converter.base64ToBytes(user.salt);
 				const passwordBytes = Converter.utf8ToBytes(currentPassword);
 
-				const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
+				const hashedPassword = await PasswordGenerator.hashPassword(passwordBytes, saltBytes);
 
-				if (hashedPassword !== user.password) {
+				if (!PasswordValidator.comparePasswordHashes(hashedPassword, user.password)) {
 					throw new GeneralError(
 						EntityStorageAuthenticationAdminService.CLASS_NAME,
 						"currentPasswordMismatch"
@@ -360,7 +348,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			const saltBytes = RandomHelper.generate(16);
 			const passwordBytes = Converter.utf8ToBytes(newPassword);
 
-			const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
+			const hashedPassword = await PasswordGenerator.hashPassword(passwordBytes, saltBytes);
 
 			const updatedUser: AuthenticationUser = {
 				email,
@@ -378,23 +366,6 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				"updatePasswordFailed",
 				undefined,
 				error
-			);
-		}
-	}
-
-	/**
-	 * Validate the password against the policy.
-	 * @param password The password to validate.
-	 * @internal
-	 */
-	private validatePassword(password: string): void {
-		if (password.length < this._minPasswordLength) {
-			throw new GeneralError(
-				EntityStorageAuthenticationAdminService.CLASS_NAME,
-				"passwordTooShort",
-				{
-					minLength: this._minPasswordLength
-				}
 			);
 		}
 	}

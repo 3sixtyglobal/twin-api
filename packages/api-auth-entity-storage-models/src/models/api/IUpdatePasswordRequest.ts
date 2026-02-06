@@ -2,19 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Update a users password.
+ * Update the current user's password.
  */
 export interface IUpdatePasswordRequest {
-	/**
-	 * The path parameters for the request.
-	 */
-	pathParams: {
-		/**
-		 * The user email.
-		 */
-		email: string;
-	};
-
 	/**
 	 * The body of the request.
 	 */

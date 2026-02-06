@@ -36,7 +36,7 @@ export interface IAuthenticationAdminComponent extends IComponent {
 	getByIdentity(identity: string): Promise<Omit<IAuthenticationUser, "password" | "salt">>;
 
 	/**
-	 * Remove a current user.
+	 * Remove a user.
 	 * @param email The email address of the user to remove.
 	 * @returns Nothing.
 	 */

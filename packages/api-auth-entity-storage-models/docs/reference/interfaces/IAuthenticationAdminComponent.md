@@ -100,7 +100,7 @@ The user details.
 
 > **remove**(`email`): `Promise`\<`void`\>
 
-Remove a current user.
+Remove a user.
 
 #### Parameters
 

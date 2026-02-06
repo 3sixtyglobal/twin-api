@@ -1,22 +1,8 @@
 # Interface: IUpdatePasswordRequest
 
-Update a users password.
+Update the current user's password.
 
 ## Properties
-
-### pathParams
-
-> **pathParams**: `object`
-
-The path parameters for the request.
-
-#### email
-
-> **email**: `string`
-
-The user email.
-
-***
 
 ### body
 

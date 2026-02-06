@@ -107,7 +107,7 @@ export class TokenHelper {
 
 		if (Is.arrayValue(requiredScopes)) {
 			const tokenScopes = Is.stringValue(decoded.payload.scope)
-				? decoded.payload.scope.split(" ")
+				? decoded.payload.scope.split(",")
 				: [];
 
 			for (const requiredScope of requiredScopes) {

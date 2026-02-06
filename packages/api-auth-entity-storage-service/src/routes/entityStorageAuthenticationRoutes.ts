@@ -166,10 +166,10 @@ export function generateRestRoutesAuthentication(
 
 	const updatePasswordRoute: IRestRoute<IUpdatePasswordRequest, INoContentResponse> = {
 		operationId: "authenticationUpdatePassword",
-		summary: "Update the user's password",
+		summary: "Update the current user's password",
 		tag: tagsAuthentication[0].name,
 		method: "PUT",
-		path: `${baseRouteName}/:email/password`,
+		path: `${baseRouteName}/password`,
 		handler: async (httpRequestContext, request) =>
 			authenticationUpdatePassword(httpRequestContext, componentName, request),
 		requestType: {
@@ -177,11 +177,8 @@ export function generateRestRoutesAuthentication(
 			examples: [
 				{
 					id: "updatePasswordRequestExample",
-					description: "The request to update the user's password.",
+					description: "The request to update the current user's password.",
 					request: {
-						pathParams: {
-							email: "john:example.com"
-						},
 						body: {
 							currentPassword: "MyNewPassword123!",
 							newPassword: "MyNewPassword123!"
@@ -305,20 +302,11 @@ export async function authenticationUpdatePassword(
 	request: IUpdatePasswordRequest
 ): Promise<INoContentResponse> {
 	Guards.object<IUpdatePasswordRequest>(ROUTES_SOURCE, nameof(request), request);
-	Guards.object<IUpdatePasswordRequest["pathParams"]>(
-		ROUTES_SOURCE,
-		nameof(request.pathParams),
-		request.pathParams
-	);
 	Guards.object<IUpdatePasswordRequest["body"]>(ROUTES_SOURCE, nameof(request.body), request.body);
 
 	const component = ComponentFactory.get<IAuthenticationComponent>(componentName);
 
-	await component.updatePassword(
-		request.pathParams.email,
-		request.body.currentPassword,
-		request.body.newPassword
-	);
+	await component.updatePassword(request.body.currentPassword, request.body.newPassword);
 
 	return {
 		statusCode: HttpStatusCode.noContent

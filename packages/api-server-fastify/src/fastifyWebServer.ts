@@ -492,7 +492,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	): Promise<FastifyReply> {
 		const port =
 			(request.port === 80 && request.protocol === "http") ||
-			(request.port === 443 && request.protocol === "https")
+			(request.port === 443 && request.protocol === "https") ||
+			!Is.integer(request.port)
 				? ""
 				: `:${request.port}`;
 

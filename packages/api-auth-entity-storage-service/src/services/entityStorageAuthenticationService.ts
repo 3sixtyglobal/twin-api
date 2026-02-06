@@ -12,8 +12,10 @@ import {
 	GeneralError,
 	Guards,
 	Is,
+	NotFoundError,
 	UnauthorizedError
 } from "@twin.org/core";
+import { PasswordGenerator, PasswordValidator } from "@twin.org/crypto";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -22,7 +24,6 @@ import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import type { AuthenticationUser } from "../entities/authenticationUser.js";
 import type { IEntityStorageAuthenticationServiceConstructorOptions } from "../models/IEntityStorageAuthenticationServiceConstructorOptions.js";
-import { PasswordHelper } from "../utils/passwordHelper.js";
 import { TokenHelper } from "../utils/tokenHelper.js";
 
 /**
@@ -140,9 +141,9 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			const saltBytes = Converter.base64ToBytes(user.salt);
 			const passwordBytes = Converter.utf8ToBytes(password);
 
-			const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
+			const hashedPassword = await PasswordGenerator.hashPassword(passwordBytes, saltBytes);
 
-			if (hashedPassword !== user.password) {
+			if (!PasswordValidator.comparePasswordHashes(hashedPassword, user.password)) {
 				throw new GeneralError(EntityStorageAuthenticationService.CLASS_NAME, "passwordMismatch");
 			}
 
@@ -179,7 +180,8 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	 * @returns Nothing.
 	 */
 	public async logout(token?: string): Promise<void> {
-		// Nothing to do here.
+		// Nothing to do here, as we are stateless.
+		// The cookie will be revoked by the REST route handling
 	}
 
 	/**
@@ -213,16 +215,27 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 	/**
 	 * Update the user's password.
-	 * @param email The email address of the user to update.
 	 * @param currentPassword The current password for the user.
 	 * @param newPassword The new password for the user.
 	 * @returns Nothing.
 	 */
-	public async updatePassword(
-		email: string,
-		currentPassword: string,
-		newPassword: string
-	): Promise<void> {
-		return this._authenticationAdminService.updatePassword(email, newPassword, currentPassword);
+	public async updatePassword(currentPassword: string, newPassword: string): Promise<void> {
+		const contextIds = await ContextIdStore.getContextIds();
+		ContextIdHelper.guard(contextIds, ContextIdKeys.User);
+
+		const user = await this._userEntityStorage.get(contextIds[ContextIdKeys.User]);
+		if (!Is.object<AuthenticationUser>(user)) {
+			throw new NotFoundError(
+				EntityStorageAuthenticationService.CLASS_NAME,
+				"userNotFound",
+				contextIds[ContextIdKeys.User]
+			);
+		}
+
+		return this._authenticationAdminService.updatePassword(
+			user.email,
+			newPassword,
+			currentPassword
+		);
 	}
 }

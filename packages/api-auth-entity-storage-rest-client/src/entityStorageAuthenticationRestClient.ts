@@ -137,17 +137,11 @@ export class EntityStorageAuthenticationRestClient
 
 	/**
 	 * Update the user's password.
-	 * @param email The email address of the user to update.
 	 * @param currentPassword The current password for the user.
 	 * @param newPassword The new password for the user.
 	 * @returns Nothing.
 	 */
-	public async updatePassword(
-		email: string,
-		currentPassword: string,
-		newPassword: string
-	): Promise<void> {
-		Guards.stringValue(EntityStorageAuthenticationRestClient.CLASS_NAME, nameof(email), email);
+	public async updatePassword(currentPassword: string, newPassword: string): Promise<void> {
 		Guards.stringValue(
 			EntityStorageAuthenticationRestClient.CLASS_NAME,
 			nameof(currentPassword),
@@ -159,10 +153,7 @@ export class EntityStorageAuthenticationRestClient
 			newPassword
 		);
 
-		await this.fetch<IUpdatePasswordRequest, INoContentResponse>("/:email/password", "PUT", {
-			pathParams: {
-				email
-			},
+		await this.fetch<IUpdatePasswordRequest, INoContentResponse>("/password", "PUT", {
 			body: {
 				currentPassword,
 				newPassword

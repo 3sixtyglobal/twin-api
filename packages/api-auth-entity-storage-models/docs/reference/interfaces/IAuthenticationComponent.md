@@ -82,17 +82,11 @@ The refreshed token, if it uses a mechanism with public access.
 
 ### updatePassword()
 
-> **updatePassword**(`email`, `currentPassword`, `newPassword`): `Promise`\<`void`\>
+> **updatePassword**(`currentPassword`, `newPassword`): `Promise`\<`void`\>
 
 Update the user's password.
 
 #### Parameters
-
-##### email
-
-`string`
-
-The email address of the user to update.
 
 ##### currentPassword
 

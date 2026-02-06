@@ -6,7 +6,6 @@
 - [AuthHeaderProcessor](classes/AuthHeaderProcessor.md)
 - [EntityStorageAuthenticationAdminService](classes/EntityStorageAuthenticationAdminService.md)
 - [EntityStorageAuthenticationService](classes/EntityStorageAuthenticationService.md)
-- [PasswordHelper](classes/PasswordHelper.md)
 - [TokenHelper](classes/TokenHelper.md)
 
 ## Interfaces
@@ -21,10 +20,18 @@
 ## Variables
 
 - [restEntryPoints](variables/restEntryPoints.md)
+- [tagsAuthenticationAdmin](variables/tagsAuthenticationAdmin.md)
 - [tagsAuthentication](variables/tagsAuthentication.md)
 
 ## Functions
 
+- [generateRestRoutesAuthenticationAdmin](functions/generateRestRoutesAuthenticationAdmin.md)
+- [authenticationAdminCreateUser](functions/authenticationAdminCreateUser.md)
+- [authenticationAdminUpdateUser](functions/authenticationAdminUpdateUser.md)
+- [authenticationAdminUpdateUserPassword](functions/authenticationAdminUpdateUserPassword.md)
+- [authenticationAdminGetUser](functions/authenticationAdminGetUser.md)
+- [authenticationAdminGetUserByIdentity](functions/authenticationAdminGetUserByIdentity.md)
+- [authenticationAdminRemoveUser](functions/authenticationAdminRemoveUser.md)
 - [generateRestRoutesAuthentication](functions/generateRestRoutesAuthentication.md)
 - [authenticationLogin](functions/authenticationLogin.md)
 - [authenticationLogout](functions/authenticationLogout.md)
