@@ -1,5 +1,21 @@
 # @twin.org/api-auth-entity-storage-service - Changelog
 
+## [0.0.3-next.20](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.19...api-auth-entity-storage-service-v0.0.3-next.20) (2026-02-09)
+
+
+### Features
+
+* location encoding ([#79](https://github.com/twinfoundation/api/issues/79)) ([c684465](https://github.com/twinfoundation/api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.19 to 0.0.3-next.20
+    * @twin.org/api-core bumped from 0.0.3-next.19 to 0.0.3-next.20
+    * @twin.org/api-models bumped from 0.0.3-next.19 to 0.0.3-next.20
+
 ## [0.0.3-next.19](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.18...api-auth-entity-storage-service-v0.0.3-next.19) (2026-02-06)
 
 

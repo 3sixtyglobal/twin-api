@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-tenant-processor",
-	"version": "0.0.3-next.19",
+	"version": "0.0.3-next.20",
 	"description": "API Tenant Processor for converting and api key to a tenant id.",
 	"repository": {
 		"type": "git",
@@ -29,7 +29,7 @@
 		"dist:no-test": "npm run clean && npm run build && npm run merge-locales && npm run docs"
 	},
 	"dependencies": {
-		"@twin.org/api-models": "0.0.3-next.19",
+		"@twin.org/api-models": "0.0.3-next.20",
 		"@twin.org/context": "next",
 		"@twin.org/core": "next",
 		"@twin.org/entity": "next",
