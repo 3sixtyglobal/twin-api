@@ -9,7 +9,7 @@ import type {
 	ITag,
 	ITenantAdminComponent
 } from "@twin.org/api-models";
-import { Coerce, ComponentFactory, Guards, Is, StringHelper } from "@twin.org/core";
+import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HeaderHelper, HeaderTypes, HttpStatusCode } from "@twin.org/web";
 import type { ITenantCreateRequest } from "./models/api/ITenantCreateRequest.js";
@@ -492,20 +492,12 @@ export async function tenantCreate(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.body), request.body);
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
-	const hostingComponent = ComponentFactory.get<IHostingComponent>(
-		httpRequestContext.hostingComponentType ?? "hosting"
-	);
-
 	const createdId = await component.create(request.body);
-
-	const publicCreateUrl = await hostingComponent.buildPublicUrl(
-		httpRequestContext.serverRequest.url
-	);
 
 	return {
 		statusCode: HttpStatusCode.created,
 		headers: {
-			[HeaderTypes.Location]: `${StringHelper.trimTrailingSlashes(publicCreateUrl)}/${createdId}`
+			[HeaderTypes.Location]: createdId
 		}
 	};
 }
