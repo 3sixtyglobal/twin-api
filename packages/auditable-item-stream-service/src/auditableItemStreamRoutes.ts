@@ -108,7 +108,7 @@ export function generateRestRoutesAuditableItemStream(
 						response: {
 							statusCode: HttpStatusCode.created,
 							headers: {
-								[HeaderTypes.Location]: "ais:1234567890"
+								[HeaderTypes.Location]: "ais%3A1234567890"
 							}
 						}
 					}
@@ -458,7 +458,7 @@ export function generateRestRoutesAuditableItemStream(
 						response: {
 							statusCode: HttpStatusCode.created,
 							headers: {
-								[HeaderTypes.Location]: "ais:1234567890:01010101010"
+								[HeaderTypes.Location]: "ais%3A1234567890%3A01010101010"
 							}
 						}
 					}

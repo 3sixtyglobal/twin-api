@@ -21,7 +21,6 @@ import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
 	Coerce,
 	ComponentFactory,
-	Converter,
 	GeneralError,
 	Guards,
 	Is,
@@ -208,7 +207,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				);
 			}
 
-			const id = Converter.bytesToHex(RandomHelper.generate(32), false);
+			const id = RandomHelper.generateUuidV7("compact");
 
 			const context: IAuditableItemStreamServiceContext = {
 				now: new Date(Date.now()).toISOString(),
@@ -1203,7 +1202,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 		}
 
 		const entity: AuditableItemStreamEntry = {
-			id: entry.id ?? Converter.bytesToHex(RandomHelper.generate(32), false),
+			id: entry.id ?? RandomHelper.generateUuidV7("compact"),
 			streamId,
 			dateCreated: entry.dateCreated ?? context.now,
 			dateDeleted: entry.dateDeleted,

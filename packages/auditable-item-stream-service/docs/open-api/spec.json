@@ -73,7 +73,7 @@
 								"schema": {
 									"type": "string"
 								},
-								"description": "e.g. ais:1234567890"
+								"description": "e.g. ais%3A1234567890"
 							}
 						}
 					},
@@ -941,7 +941,7 @@
 								"schema": {
 									"type": "string"
 								},
-								"description": "e.g. ais:1234567890:01010101010"
+								"description": "e.g. ais%3A1234567890%3A01010101010"
 							}
 						}
 					},
