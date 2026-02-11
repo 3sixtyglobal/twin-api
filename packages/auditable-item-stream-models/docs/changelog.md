@@ -1,5 +1,12 @@
 # @twin.org/auditable-item-stream-models - Changelog
 
+## [0.0.3-next.8](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.7...auditable-item-stream-models-v0.0.3-next.8) (2026-02-11)
+
+
+### Features
+
+* add ts-to-jsonld-context tool ([dd8693a](https://github.com/twinfoundation/auditable-item-stream/commit/dd8693aaca305b703878b69495508191cd4a769a))
+
 ## [0.0.3-next.7](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.6...auditable-item-stream-models-v0.0.3-next.7) (2026-01-26)
 
 

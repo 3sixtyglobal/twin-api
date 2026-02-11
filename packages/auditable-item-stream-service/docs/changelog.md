@@ -1,5 +1,20 @@
 # @twin.org/auditable-item-stream-service - Changelog
 
+## [0.0.3-next.8](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.7...auditable-item-stream-service-v0.0.3-next.8) (2026-02-11)
+
+
+### Features
+
+* update naming ([b89e5ce](https://github.com/twinfoundation/auditable-item-stream/commit/b89e5ce9bb46e5e4f1d63407eb0ccd195743542d))
+* use uuidv7 for ids ([#40](https://github.com/twinfoundation/auditable-item-stream/issues/40)) ([a550757](https://github.com/twinfoundation/auditable-item-stream/commit/a5507579e5667d1ff9984934af0969ea4681416e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.7 to 0.0.3-next.8
+
 ## [0.0.3-next.7](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.6...auditable-item-stream-service-v0.0.3-next.7) (2026-01-26)
 
 
