@@ -91,6 +91,15 @@ json-ld type:schema:Integer
 
 ***
 
+### numberOfItems
+
+> **numberOfItems**: `number`
+
+How many entries are in the stream.
+json-ld type:schema:numberOfItems
+
+***
+
 ### entries?
 
 > `optional` **entries**: [`IAuditableItemStreamEntry`](IAuditableItemStreamEntry.md)[]

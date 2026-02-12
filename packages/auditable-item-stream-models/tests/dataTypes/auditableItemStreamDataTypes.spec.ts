@@ -45,7 +45,8 @@ describe("AuditableItemStreamDataTypes", () => {
 				dateCreated: new Date().toISOString(),
 				immutableInterval: 10,
 				organizationIdentity: "org",
-				proofId: "1111"
+				proofId: "1111",
+				numberOfItems: 0
 			},
 			validationFailures
 		);

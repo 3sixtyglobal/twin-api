@@ -231,7 +231,7 @@ describe("AuditableItemStreamService", () => {
 				organizationIdentity: TEST_ORGANIZATION_IDENTITY,
 				userIdentity: TEST_USER_IDENTITY,
 				immutableInterval: 10,
-				indexCounter: 0,
+				numberOfItems: 0,
 				proofId: "immutable-proof:019179f26c5072028202020202020202"
 			}
 		]);
@@ -301,7 +301,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note"
 			},
 			immutableInterval: 10,
-			indexCounter: 2,
+			numberOfItems: 2,
 			proofId: "immutable-proof:019179f26c5072028202020202020202"
 		});
 
@@ -410,7 +410,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note"
 			},
 			immutableInterval: 0,
-			indexCounter: 2
+			numberOfItems: 2
 		});
 
 		const entryStore = streamEntryStorage.getStore();
@@ -525,6 +525,7 @@ describe("AuditableItemStreamService", () => {
 				}
 			],
 			immutableInterval: 10,
+			numberOfItems: 2,
 			proofId: "immutable-proof:019179f26c5072028202020202020202",
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
@@ -644,6 +645,7 @@ describe("AuditableItemStreamService", () => {
 				}
 			],
 			immutableInterval: 10,
+			numberOfItems: 2,
 			proofId: "immutable-proof:019179f26c5072028202020202020202",
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
@@ -714,7 +716,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note xxx"
 			},
 			immutableInterval: 10,
-			indexCounter: 2,
+			numberOfItems: 2,
 			proofId: "immutable-proof:019179f26c5072028202020202020202"
 		});
 
@@ -826,7 +828,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note"
 			},
 			immutableInterval: 10,
-			indexCounter: 3,
+			numberOfItems: 3,
 			proofId: "immutable-proof:019179f26c5072028202020202020202"
 		});
 
@@ -956,7 +958,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note"
 			},
 			immutableInterval: 10,
-			indexCounter: 12,
+			numberOfItems: 12,
 			proofId: "immutable-proof:019179f26c5072028202020202020202"
 		});
 
@@ -1046,7 +1048,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note"
 			},
 			immutableInterval: 10,
-			indexCounter: 2,
+			numberOfItems: 2,
 			proofId: "immutable-proof:019179f26c5072028202020202020202"
 		});
 	});
@@ -1107,7 +1109,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note"
 			},
 			immutableInterval: 10,
-			indexCounter: 2,
+			numberOfItems: 2,
 			proofId: "immutable-proof:019179f26c5072028202020202020202"
 		});
 	});
@@ -1160,7 +1162,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note"
 			},
 			immutableInterval: 10,
-			indexCounter: 2,
+			numberOfItems: 2,
 			proofId: "immutable-proof:019179f26c5072028202020202020202"
 		});
 
@@ -1230,7 +1232,7 @@ describe("AuditableItemStreamService", () => {
 				content: "This is a simple note"
 			},
 			immutableInterval: 1,
-			indexCounter: 2
+			numberOfItems: 2
 		});
 
 		const streamEntryStore = streamEntryStorage.getStore();

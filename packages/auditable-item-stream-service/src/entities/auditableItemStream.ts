@@ -50,10 +50,10 @@ export class AuditableItemStream {
 	public annotationObject?: IJsonLdNodeObject;
 
 	/**
-	 * The counter for the entry index.
+	 * The number of items in the stream.
 	 */
 	@property({ type: "integer" })
-	public indexCounter!: number;
+	public numberOfItems!: number;
 
 	/**
 	 * After how many entries do we add immutable checks.

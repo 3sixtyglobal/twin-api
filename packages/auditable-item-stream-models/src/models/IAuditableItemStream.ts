@@ -72,6 +72,12 @@ export interface IAuditableItemStream {
 	immutableInterval: number;
 
 	/**
+	 * How many entries are in the stream.
+	 * json-ld type:schema:numberOfItems
+	 */
+	numberOfItems: number;
+
+	/**
 	 * Entries in the stream.
 	 * json-ld container:set
 	 */

@@ -222,7 +222,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				userIdentity: contextIds?.[ContextIdKeys.User],
 				dateCreated: context.now,
 				immutableInterval: context.immutableInterval,
-				indexCounter: 0
+				numberOfItems: 0
 			};
 
 			// Create the JSON-LD object we want to use for the proof
@@ -248,7 +248,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			// Add these dynamic properties to the stream object after the proof has been created.
 			streamEntity.dateModified = context.now;
 			streamEntity.annotationObject = stream.annotationObject;
-			streamEntity.indexCounter = context.indexCounter;
+			streamEntity.numberOfItems = context.indexCounter;
 
 			await this._streamStorage.set(streamEntity);
 
@@ -556,7 +556,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			const context: IAuditableItemStreamServiceContext = {
 				now: new Date(Date.now()).toISOString(),
 				contextIds,
-				indexCounter: streamEntity.indexCounter,
+				indexCounter: streamEntity.numberOfItems,
 				immutableInterval: streamEntity.immutableInterval
 			};
 
@@ -565,7 +565,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			});
 
 			streamEntity.dateModified = context.now;
-			streamEntity.indexCounter = context.indexCounter;
+			streamEntity.numberOfItems = context.indexCounter;
 
 			await this._streamStorage.set(streamEntity);
 
@@ -789,7 +789,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			const context: IAuditableItemStreamServiceContext = {
 				now: new Date(Date.now()).toISOString(),
 				contextIds,
-				indexCounter: streamEntity.indexCounter,
+				indexCounter: streamEntity.numberOfItems,
 				immutableInterval: streamEntity.immutableInterval
 			};
 
@@ -799,7 +799,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			});
 
 			streamEntity.dateModified = context.now;
-			streamEntity.indexCounter = context.indexCounter;
+			streamEntity.numberOfItems = context.indexCounter;
 
 			await this._streamStorage.set(streamEntity);
 
@@ -877,7 +877,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				const context: IAuditableItemStreamServiceContext = {
 					now: new Date(Date.now()).toISOString(),
 					contextIds,
-					indexCounter: streamEntity.indexCounter,
+					indexCounter: streamEntity.numberOfItems,
 					immutableInterval: streamEntity.immutableInterval
 				};
 
@@ -887,7 +887,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				});
 
 				streamEntity.dateModified = context.now;
-				streamEntity.indexCounter = context.indexCounter;
+				streamEntity.numberOfItems = context.indexCounter;
 				await this._streamStorage.set(streamEntity);
 
 				await this._eventBusComponent?.publish<IAuditableItemStreamEventBusStreamEntryDeleted>(
@@ -1140,7 +1140,8 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			userIdentity: streamEntity.userIdentity,
 			annotationObject: streamEntity.annotationObject,
 			immutableInterval: streamEntity.immutableInterval,
-			proofId: streamEntity.proofId
+			proofId: streamEntity.proofId,
+			numberOfItems: streamEntity.numberOfItems
 		};
 
 		return model;

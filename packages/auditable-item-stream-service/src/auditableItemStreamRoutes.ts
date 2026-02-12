@@ -165,6 +165,7 @@ export function generateRestRoutesAuditableItemStream(
 								organizationIdentity: "did:iota:1234567890",
 								proofId: "0101010101010101010101010101010101010101010101010101010101010101",
 								immutableInterval: 10,
+								numberOfItems: 1,
 								entries: [
 									{
 										"@context": [
@@ -216,6 +217,7 @@ export function generateRestRoutesAuditableItemStream(
 								organizationIdentity: "did:iota:1234567890",
 								proofId: "0101010101010101010101010101010101010101010101010101010101010101",
 								immutableInterval: 10,
+								numberOfItems: 1,
 								entries: [
 									{
 										"@context": [
@@ -363,7 +365,8 @@ export function generateRestRoutesAuditableItemStream(
 										},
 										organizationIdentity: "did:iota:1234567890",
 										proofId: "0101010101010101010101010101010101010101010101010101010101010101",
-										immutableInterval: 10
+										immutableInterval: 10,
+										numberOfItems: 0
 									}
 								]
 							}
@@ -405,7 +408,8 @@ export function generateRestRoutesAuditableItemStream(
 										},
 										organizationIdentity: "did:iota:1234567890",
 										proofId: "0101010101010101010101010101010101010101010101010101010101010101",
-										immutableInterval: 10
+										immutableInterval: 10,
+										numberOfItems: 0
 									}
 								]
 							}
@@ -424,7 +428,7 @@ export function generateRestRoutesAuditableItemStream(
 		summary: "Create a new stream entry",
 		tag: tagsAuditableItemStream[0].name,
 		method: "POST",
-		path: `${baseRouteName}/:id`,
+		path: `${baseRouteName}/:id/entries`,
 		handler: async (httpRequestContext, request) =>
 			auditableItemStreamCreateEntry(httpRequestContext, componentName, request),
 		requestType: {
@@ -472,7 +476,7 @@ export function generateRestRoutesAuditableItemStream(
 		summary: "Delete an entry from the stream",
 		tag: tagsAuditableItemStream[0].name,
 		method: "DELETE",
-		path: `${baseRouteName}/:id/:entryId`,
+		path: `${baseRouteName}/:id/entries/:entryId`,
 		handler: async (httpRequestContext, request) =>
 			auditableItemStreamDeleteEntry(httpRequestContext, componentName, request),
 		requestType: {
@@ -504,7 +508,7 @@ export function generateRestRoutesAuditableItemStream(
 		summary: "Update a stream entry",
 		tag: tagsAuditableItemStream[0].name,
 		method: "PUT",
-		path: `${baseRouteName}/:id/:entryId`,
+		path: `${baseRouteName}/:id/entries/:entryId`,
 		handler: async (httpRequestContext, request) =>
 			auditableItemStreamUpdateEntry(httpRequestContext, componentName, request),
 		requestType: {
@@ -546,7 +550,7 @@ export function generateRestRoutesAuditableItemStream(
 		summary: "Get a stream entry",
 		tag: tagsAuditableItemStream[0].name,
 		method: "GET",
-		path: `${baseRouteName}/:id/:entryId`,
+		path: `${baseRouteName}/:id/entries/:entryId`,
 		handler: async (httpRequestContext, request) =>
 			auditableItemStreamGetEntry(httpRequestContext, componentName, request),
 		requestType: {
@@ -633,10 +637,10 @@ export function generateRestRoutesAuditableItemStream(
 		IAuditableItemStreamGetEntryObjectResponse
 	> = {
 		operationId: "auditableItemStreamGetEntryObject",
-		summary: "Get a stream entry",
+		summary: "Get a stream entry object",
 		tag: tagsAuditableItemStream[0].name,
 		method: "GET",
-		path: `${baseRouteName}/:id/:entryId/object`,
+		path: `${baseRouteName}/:id/entries/:entryId/object`,
 		handler: async (httpRequestContext, request) =>
 			auditableItemStreamGetEntryObject(httpRequestContext, componentName, request),
 		requestType: {

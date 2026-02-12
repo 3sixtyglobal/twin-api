@@ -238,7 +238,7 @@ export class AuditableItemStreamRestClient
 		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<IAuditableItemStreamCreateEntryRequest, ICreatedResponse>(
-			"/:id",
+			"/:id/entries",
 			"POST",
 			{
 				pathParams: {
@@ -275,7 +275,7 @@ export class AuditableItemStreamRestClient
 		const response = await this.fetch<
 			IAuditableItemStreamGetEntryRequest,
 			IAuditableItemStreamGetEntryResponse
-		>("/:id/:entryId", "GET", {
+		>("/:id/entries/:entryId", "GET", {
 			headers: {
 				[HeaderTypes.Accept]: MimeTypes.JsonLd
 			},
@@ -305,7 +305,7 @@ export class AuditableItemStreamRestClient
 		const response = await this.fetch<
 			IAuditableItemStreamGetEntryObjectRequest,
 			IAuditableItemStreamGetEntryObjectResponse
-		>("/:id/:entryId/object", "GET", {
+		>("/:id/entries/:entryId/object", "GET", {
 			headers: {
 				[HeaderTypes.Accept]: MimeTypes.JsonLd
 			},
@@ -334,7 +334,7 @@ export class AuditableItemStreamRestClient
 		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(entryId), entryId);
 
 		await this.fetch<IAuditableItemStreamUpdateEntryRequest, INoContentResponse>(
-			"/:id/:entryId",
+			"/:id/entries/:entryId",
 			"PUT",
 			{
 				pathParams: {
@@ -359,7 +359,7 @@ export class AuditableItemStreamRestClient
 		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(entryId), entryId);
 
 		await this.fetch<IAuditableItemStreamDeleteEntryRequest, INoContentResponse>(
-			"/:id/:entryId",
+			"/:id/entries/:entryId",
 			"DELETE",
 			{
 				pathParams: {

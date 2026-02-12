@@ -62,11 +62,11 @@ Object to associate with the stream as JSON-LD.
 
 ***
 
-### indexCounter
+### numberOfItems
 
-> **indexCounter**: `number`
+> **numberOfItems**: `number`
 
-The counter for the entry index.
+The number of items in the stream.
 
 ***
 
