@@ -1,5 +1,12 @@
 # @twin.org/auditable-item-stream-models - Changelog
 
+## [0.0.3-next.9](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.8...auditable-item-stream-models-v0.0.3-next.9) (2026-02-12)
+
+
+### Features
+
+* add number of items ([#47](https://github.com/twinfoundation/auditable-item-stream/issues/47)) ([149fc9f](https://github.com/twinfoundation/auditable-item-stream/commit/149fc9f505a86af0578551c09f7e8aa763f01be7))
+
 ## [0.0.3-next.8](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.7...auditable-item-stream-models-v0.0.3-next.8) (2026-02-11)
 
 
