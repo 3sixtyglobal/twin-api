@@ -31,13 +31,13 @@ export interface IAuditableItemStream {
 
 	/**
 	 * The date/time of when the stream was created.
-	 * json-ld namespace:schema
+	 * json-ld namespace:sch
 	 */
 	dateCreated: string;
 
 	/**
 	 * The date/time of when the stream was modified.
-	 * json-ld namespace:schema
+	 * json-ld namespace:sch
 	 */
 	dateModified?: string;
 
@@ -61,19 +61,19 @@ export interface IAuditableItemStream {
 
 	/**
 	 * The id of the immutable proof for the stream.
-	 * json-ld type:schema:identifier
+	 * json-ld type:sch:identifier
 	 */
 	proofId?: string;
 
 	/**
 	 * After how many entries do we add immutable checks.
-	 * json-ld type:schema:Integer
+	 * json-ld type:sch:Integer
 	 */
 	immutableInterval: number;
 
 	/**
 	 * How many entries are in the stream.
-	 * json-ld type:schema:numberOfItems
+	 * json-ld id:sch:numberOfItems
 	 */
 	numberOfItems: number;
 

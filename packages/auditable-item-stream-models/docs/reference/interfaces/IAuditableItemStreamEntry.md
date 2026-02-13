@@ -33,7 +33,7 @@ The id of the entry.
 > **dateCreated**: `string`
 
 The date/time of when the entry was created.
-json-ld namespace:schema
+json-ld namespace:sch
 
 ***
 
@@ -42,7 +42,7 @@ json-ld namespace:schema
 > `optional` **dateModified**: `string`
 
 The date/time of when the entry was modified.
-json-ld namespace:schema
+json-ld namespace:sch
 
 ***
 
@@ -51,7 +51,7 @@ json-ld namespace:schema
 > `optional` **dateDeleted**: `string`
 
 The date/time of when the entry was deleted, as we never actually remove items.
-json-ld namespace:schema
+json-ld namespace:sch
 
 ***
 
@@ -78,7 +78,7 @@ json-ld type:json
 > **index**: `number`
 
 The index of the entry in the stream.
-json-ld type:schema:Integer
+json-ld type:sch:Integer
 
 ***
 
@@ -87,7 +87,7 @@ json-ld type:schema:Integer
 > `optional` **proofId**: `string`
 
 The id of the immutable proof.
-json-ld type:schema:identifier
+json-ld type:sch:identifier
 
 ***
 
