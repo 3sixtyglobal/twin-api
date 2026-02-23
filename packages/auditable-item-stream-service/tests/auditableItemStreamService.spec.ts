@@ -94,8 +94,7 @@ function expectImmutableProof(immutableProof: IImmutableProof, created: string):
 		type: "DataIntegrityProof",
 		created,
 		cryptosuite: "eddsa-jcs-2022",
-		proofPurpose: "assertionMethod",
-		verificationMethod: `${TEST_ORGANIZATION_IDENTITY}#immutable-proof-assertion`
+		proofPurpose: "assertionMethod"
 	});
 
 	const proofValue = (immutableProof as unknown as { proofValue?: unknown }).proofValue;
