@@ -907,7 +907,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 
 	/**
 	 * Get the entries for the stream.
-	 * @param streamId The id of the stream to get.
+	 * @param streamId The id of the stream to get, if undefined returns all matching entries.
 	 * @param options Additional options for the get operation.
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
@@ -919,7 +919,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	 * @throws NotFoundError if the stream is not found.
 	 */
 	public async getEntries(
-		streamId: string,
+		streamId?: string,
 		options?: {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
@@ -932,24 +932,33 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 		entries: IAuditableItemStreamEntryList;
 		cursor?: string;
 	}> {
-		Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(streamId), streamId);
+		let streamNamespaceId;
+		if (!Is.empty(streamId)) {
+			Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(streamId), streamId);
 
-		const urnParsed = Urn.fromValidString(streamId);
+			const urnParsed = Urn.fromValidString(streamId);
 
-		if (urnParsed.namespaceIdentifier() !== AuditableItemStreamService._NAMESPACE) {
-			throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "namespaceMismatch", {
-				namespace: AuditableItemStreamService._NAMESPACE,
-				id: streamId
-			});
+			if (urnParsed.namespaceIdentifier() !== AuditableItemStreamService._NAMESPACE) {
+				throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "namespaceMismatch", {
+					namespace: AuditableItemStreamService._NAMESPACE,
+					id: streamId
+				});
+			}
+
+			streamNamespaceId = urnParsed.namespaceSpecific(0);
 		}
 
 		try {
-			const streamNamespaceId = urnParsed.namespaceSpecific(0);
+			if (Is.stringValue(streamNamespaceId)) {
+				const streamEntity = await this._streamStorage.get(streamNamespaceId);
 
-			const streamEntity = await this._streamStorage.get(streamNamespaceId);
-
-			if (Is.empty(streamEntity)) {
-				throw new NotFoundError(AuditableItemStreamService.CLASS_NAME, "streamNotFound", streamId);
+				if (Is.empty(streamEntity)) {
+					throw new NotFoundError(
+						AuditableItemStreamService.CLASS_NAME,
+						"streamNotFound",
+						streamId
+					);
+				}
 			}
 
 			const verifyEntries = options?.verifyEntries ?? false;
@@ -996,7 +1005,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 
 	/**
 	 * Get the entry objects for the stream.
-	 * @param streamId The id of the stream to get.
+	 * @param streamId The id of the stream to get, if undefined returns all matching entries.
 	 * @param options Additional options for the get operation.
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
@@ -1007,7 +1016,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	 * @throws NotFoundError if the stream is not found.
 	 */
 	public async getEntryObjects(
-		streamId: string,
+		streamId?: string,
 		options?: {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
@@ -1019,24 +1028,33 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 		entries: IAuditableItemStreamEntryObjectList;
 		cursor?: string;
 	}> {
-		Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(streamId), streamId);
+		let streamNamespaceId;
+		if (!Is.empty(streamId)) {
+			Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(streamId), streamId);
 
-		const urnParsed = Urn.fromValidString(streamId);
+			const urnParsed = Urn.fromValidString(streamId);
 
-		if (urnParsed.namespaceIdentifier() !== AuditableItemStreamService._NAMESPACE) {
-			throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "namespaceMismatch", {
-				namespace: AuditableItemStreamService._NAMESPACE,
-				id: streamId
-			});
+			if (urnParsed.namespaceIdentifier() !== AuditableItemStreamService._NAMESPACE) {
+				throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "namespaceMismatch", {
+					namespace: AuditableItemStreamService._NAMESPACE,
+					id: streamId
+				});
+			}
+
+			streamNamespaceId = urnParsed.namespaceSpecific(0);
 		}
 
 		try {
-			const streamNamespaceId = urnParsed.namespaceSpecific(0);
+			if (Is.stringValue(streamNamespaceId)) {
+				const streamEntity = await this._streamStorage.get(streamNamespaceId);
 
-			const streamEntity = await this._streamStorage.get(streamNamespaceId);
-
-			if (Is.empty(streamEntity)) {
-				throw new NotFoundError(AuditableItemStreamService.CLASS_NAME, "streamNotFound", streamId);
+				if (Is.empty(streamEntity)) {
+					throw new NotFoundError(
+						AuditableItemStreamService.CLASS_NAME,
+						"streamNotFound",
+						streamId
+					);
+				}
 			}
 
 			const result = await this.findEntries(
@@ -1312,7 +1330,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	 * @internal
 	 */
 	private async findEntries(
-		streamId: string,
+		streamId?: string,
 		includeDeleted?: boolean,
 		verifyEntries?: boolean,
 		conditions?: IComparator[],
@@ -1326,13 +1344,15 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	}> {
 		const needToVerify = verifyEntries ?? false;
 
-		const combinedConditions: IComparator[] = [
-			{
+		const combinedConditions: IComparator[] = [];
+
+		if (Is.stringValue(streamId)) {
+			combinedConditions.push({
 				property: "streamId",
 				comparison: ComparisonOperator.Equals,
 				value: streamId
-			}
-		];
+			});
+		}
 
 		if (Is.stringValue(cursor)) {
 			const parts = cursor.split("|");

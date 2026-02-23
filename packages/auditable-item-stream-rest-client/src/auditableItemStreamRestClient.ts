@@ -24,8 +24,10 @@ import type {
 	IAuditableItemStreamGetRequest,
 	IAuditableItemStreamGetResponse,
 	IAuditableItemStreamList,
+	IAuditableItemStreamListEntriesNoStreamRequest,
 	IAuditableItemStreamListEntriesRequest,
 	IAuditableItemStreamListEntriesResponse,
+	IAuditableItemStreamListEntryObjectsNoStreamRequest,
 	IAuditableItemStreamListEntryObjectsRequest,
 	IAuditableItemStreamListEntryObjectsResponse,
 	IAuditableItemStreamListRequest,
@@ -33,7 +35,7 @@ import type {
 	IAuditableItemStreamUpdateEntryRequest,
 	IAuditableItemStreamUpdateRequest
 } from "@twin.org/auditable-item-stream-models";
-import { Coerce, Guards, NotSupportedError } from "@twin.org/core";
+import { Coerce, Guards, Is, NotSupportedError } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { IComparator, SortDirection } from "@twin.org/entity";
 import { nameof } from "@twin.org/nameof";
@@ -372,7 +374,7 @@ export class AuditableItemStreamRestClient
 
 	/**
 	 * Get the entries for the stream.
-	 * @param id The id of the stream to get.
+	 * @param id The id of the stream to get, if undefined returns all matching entries.
 	 * @param options Additional options for the get operation.
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
@@ -384,7 +386,7 @@ export class AuditableItemStreamRestClient
 	 * @throws NotFoundError if the stream is not found.
 	 */
 	public async getEntries(
-		id: string,
+		id?: string,
 		options?: {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
@@ -397,27 +399,42 @@ export class AuditableItemStreamRestClient
 		entries: IAuditableItemStreamEntryList;
 		cursor?: string;
 	}> {
-		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+		const queryParams = {
+			conditions: HttpParameterHelper.objectToString(options?.conditions),
+			includeDeleted: Coerce.string(options?.includeDeleted),
+			verifyEntries: Coerce.string(options?.verifyEntries),
+			limit: Coerce.string(options?.limit),
+			cursor: options?.cursor,
+			order: options?.order
+		};
 
-		const response = await this.fetch<
-			IAuditableItemStreamListEntriesRequest,
-			IAuditableItemStreamListEntriesResponse
-		>("/:id/entries", "GET", {
-			headers: {
-				[HeaderTypes.Accept]: MimeTypes.JsonLd
-			},
-			pathParams: {
-				id
-			},
-			query: {
-				conditions: HttpParameterHelper.objectToString(options?.conditions),
-				includeDeleted: Coerce.string(options?.includeDeleted),
-				verifyEntries: Coerce.string(options?.verifyEntries),
-				limit: Coerce.string(options?.limit),
-				cursor: options?.cursor,
-				order: options?.order
-			}
-		});
+		let response;
+		if (!Is.empty(id)) {
+			Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+
+			response = await this.fetch<
+				IAuditableItemStreamListEntriesRequest,
+				IAuditableItemStreamListEntriesResponse
+			>("/:id/entries", "GET", {
+				headers: {
+					[HeaderTypes.Accept]: MimeTypes.JsonLd
+				},
+				pathParams: {
+					id
+				},
+				query: queryParams
+			});
+		} else {
+			response = await this.fetch<
+				IAuditableItemStreamListEntriesNoStreamRequest,
+				IAuditableItemStreamListEntriesResponse
+			>("/entries", "GET", {
+				headers: {
+					[HeaderTypes.Accept]: MimeTypes.JsonLd
+				},
+				query: queryParams
+			});
+		}
 
 		return {
 			entries: response.body,
@@ -428,7 +445,7 @@ export class AuditableItemStreamRestClient
 
 	/**
 	 * Get the entry objects for the stream.
-	 * @param id The id of the stream to get.
+	 * @param id The id of the stream to get, if undefined returns all matching entries.
 	 * @param options Additional options for the get operation.
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
@@ -439,7 +456,7 @@ export class AuditableItemStreamRestClient
 	 * @throws NotFoundError if the stream is not found.
 	 */
 	public async getEntryObjects(
-		id: string,
+		id?: string,
 		options?: {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
@@ -451,26 +468,40 @@ export class AuditableItemStreamRestClient
 		entries: IAuditableItemStreamEntryObjectList;
 		cursor?: string;
 	}> {
-		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+		const queryParams = {
+			conditions: HttpParameterHelper.objectToString(options?.conditions),
+			includeDeleted: Coerce.string(options?.includeDeleted),
+			limit: Coerce.string(options?.limit),
+			cursor: options?.cursor,
+			order: options?.order
+		};
 
-		const response = await this.fetch<
-			IAuditableItemStreamListEntryObjectsRequest,
-			IAuditableItemStreamListEntryObjectsResponse
-		>("/:id/entries/objects", "GET", {
-			headers: {
-				[HeaderTypes.Accept]: MimeTypes.JsonLd
-			},
-			pathParams: {
-				id
-			},
-			query: {
-				conditions: HttpParameterHelper.objectToString(options?.conditions),
-				includeDeleted: Coerce.string(options?.includeDeleted),
-				limit: Coerce.string(options?.limit),
-				cursor: Coerce.string(options?.cursor),
-				order: options?.order
-			}
-		});
+		let response;
+		if (!Is.empty(id)) {
+			Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+			response = await this.fetch<
+				IAuditableItemStreamListEntryObjectsRequest,
+				IAuditableItemStreamListEntryObjectsResponse
+			>("/:id/entries/objects", "GET", {
+				headers: {
+					[HeaderTypes.Accept]: MimeTypes.JsonLd
+				},
+				pathParams: {
+					id
+				},
+				query: queryParams
+			});
+		} else {
+			response = await this.fetch<
+				IAuditableItemStreamListEntryObjectsNoStreamRequest,
+				IAuditableItemStreamListEntryObjectsResponse
+			>("/entries/objects", "GET", {
+				headers: {
+					[HeaderTypes.Accept]: MimeTypes.JsonLd
+				},
+				query: queryParams
+			});
+		}
 
 		return {
 			entries: response.body,

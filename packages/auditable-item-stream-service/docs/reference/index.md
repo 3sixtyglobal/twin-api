@@ -30,5 +30,7 @@
 - [auditableItemStreamGetEntry](functions/auditableItemStreamGetEntry.md)
 - [auditableItemStreamGetEntryObject](functions/auditableItemStreamGetEntryObject.md)
 - [auditableItemStreamListEntries](functions/auditableItemStreamListEntries.md)
+- [auditableItemStreamListEntriesNoStream](functions/auditableItemStreamListEntriesNoStream.md)
 - [auditableItemStreamListEntryObjects](functions/auditableItemStreamListEntryObjects.md)
+- [auditableItemStreamListEntryObjectsNoStream](functions/auditableItemStreamListEntryObjectsNoStream.md)
 - [initSchema](functions/initSchema.md)

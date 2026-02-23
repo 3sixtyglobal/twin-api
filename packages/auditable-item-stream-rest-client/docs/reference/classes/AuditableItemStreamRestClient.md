@@ -471,17 +471,17 @@ Nothing.
 
 ### getEntries()
 
-> **getEntries**(`id`, `options?`): `Promise`\<\{ `entries`: `IAuditableItemStreamEntryList`; `cursor?`: `string`; \}\>
+> **getEntries**(`id?`, `options?`): `Promise`\<\{ `entries`: `IAuditableItemStreamEntryList`; `cursor?`: `string`; \}\>
 
 Get the entries for the stream.
 
 #### Parameters
 
-##### id
+##### id?
 
 `string`
 
-The id of the stream to get.
+The id of the stream to get, if undefined returns all matching entries.
 
 ##### options?
 
@@ -541,17 +541,17 @@ NotFoundError if the stream is not found.
 
 ### getEntryObjects()
 
-> **getEntryObjects**(`id`, `options?`): `Promise`\<\{ `entries`: `IAuditableItemStreamEntryObjectList`; `cursor?`: `string`; \}\>
+> **getEntryObjects**(`id?`, `options?`): `Promise`\<\{ `entries`: `IAuditableItemStreamEntryObjectList`; `cursor?`: `string`; \}\>
 
 Get the entry objects for the stream.
 
 #### Parameters
 
-##### id
+##### id?
 
 `string`
 
-The id of the stream to get.
+The id of the stream to get, if undefined returns all matching entries.
 
 ##### options?
 

@@ -147,7 +147,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 
 	/**
 	 * Get the entries for the stream.
-	 * @param streamId The id of the stream to get.
+	 * @param streamId The id of the stream to get, if undefined returns all matching entries.
 	 * @param options Additional options for the get operation.
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
@@ -159,7 +159,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 	 * @throws NotFoundError if the stream is not found.
 	 */
 	getEntries(
-		streamId: string,
+		streamId?: string,
 		options?: {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
@@ -175,7 +175,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 
 	/**
 	 * Get the entry objects for the stream.
-	 * @param streamId The id of the stream to get.
+	 * @param streamId The id of the stream to get, if undefined returns all matching entries.
 	 * @param options Additional options for the get operation.
 	 * @param options.conditions The conditions to filter the stream.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
@@ -186,7 +186,7 @@ export interface IAuditableItemStreamComponent extends IComponent {
 	 * @throws NotFoundError if the stream is not found.
 	 */
 	getEntryObjects(
-		streamId: string,
+		streamId?: string,
 		options?: {
 			conditions?: IComparator[];
 			includeDeleted?: boolean;
