@@ -2509,7 +2509,6 @@
 				"required": [
 					"entryObject"
 				],
-				"additionalProperties": false,
 				"description": "The data to be used in the stream."
 			},
 			"AuditableItemStreamCreateRequest": {
@@ -2539,7 +2538,6 @@
 						"description": "After how many entries do we add immutable checks, defaults to service configured value. A value of 0 will disable immutable checks, 1 will be every item, or any other integer for an interval."
 					}
 				},
-				"additionalProperties": false,
 				"description": "The data to be used in the stream."
 			},
 			"AuditableItemStreamUpdateEntryRequest": {
@@ -2552,7 +2550,6 @@
 				"required": [
 					"entryObject"
 				],
-				"additionalProperties": false,
 				"description": "The data to be used in the entry."
 			},
 			"AuditableItemStreamUpdateRequest": {
@@ -2562,7 +2559,6 @@
 						"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
 					}
 				},
-				"additionalProperties": false,
 				"description": "The data to be used in the stream."
 			},
 			"Error": {
@@ -2597,12 +2593,10 @@
 					"name",
 					"message"
 				],
-				"additionalProperties": false,
 				"description": "Model to describe serialized error."
 			},
 			"NotFoundResponse": {
 				"type": "object",
-				"additionalProperties": false,
 				"properties": {
 					"notFoundId": {
 						"type": "string",

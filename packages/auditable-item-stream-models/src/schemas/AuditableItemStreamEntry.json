@@ -71,6 +71,5 @@
 		"dateCreated",
 		"entryObject",
 		"index"
-	],
-	"additionalProperties": false
+	]
 }
