@@ -8,8 +8,10 @@ import type { ISocketRoute } from "../routes/ISocketRoute.js";
 /**
  * The definition for a processor for handling socket routes.
  */
-export interface ISocketRouteProcessor
-	extends IBaseRouteProcessor<ISocketRoute, ISocketServerRequest> {
+export interface ISocketRouteProcessor extends IBaseRouteProcessor<
+	ISocketRoute,
+	ISocketServerRequest
+> {
 	/**
 	 * Process the connected event.
 	 * @param request The server request object containing the socket id and other parameters.
