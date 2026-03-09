@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/api-processors",
 	"version": "0.0.3-next.20",
-	"description": "Route processors for use with API servers",
+	"description": "Reusable request and route processors for logging, context handling, and content negotiation.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/api.git",

@@ -1,6 +1,6 @@
 # TWIN API Server Fastify
 
-Use [Fastify](https://fastify.dev/) as the core web server for APIs.
+This package provides Fastify web server integration for exposing API routes with consistent runtime behaviour. It builds on the Fastify framework to offer a predictable hosting layer for API services.
 
 ## Installation
 

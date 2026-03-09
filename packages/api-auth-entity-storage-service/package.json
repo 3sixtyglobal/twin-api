@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/api-auth-entity-storage-service",
 	"version": "0.0.3-next.20",
-	"description": "Auth Entity Storage contract implementation and REST endpoint definitions",
+	"description": "Authentication service implementation and REST routes backed by entity storage.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/api.git",

@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/api-server-fastify",
 	"version": "0.0.3-next.20",
-	"description": "Use Fastify as the core web server for APIs",
+	"description": "Fastify web server integration for exposing API routes with consistent runtime behaviour.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/api.git",

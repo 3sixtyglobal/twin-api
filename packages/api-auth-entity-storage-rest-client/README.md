@@ -1,11 +1,11 @@
-# TWIN Auth Entity Storage
+# TWIN API Auth Entity Storage REST Client
 
-Perform REST authentication using entity storage.
+This package provides REST clients for authentication and admin operations against entity storage endpoints.
 
 ## Installation
 
 ```shell
-npm install @twin.org/api-auth-entity-storage
+npm install @twin.org/api-auth-entity-storage-rest-client
 ```
 
 ## Examples

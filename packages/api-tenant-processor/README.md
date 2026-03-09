@@ -1,6 +1,6 @@
 # TWIN API Tenant Processor
 
-Will read `x-api-key` from HTTP header or query params and convert it to a tenant id, to be used for partitioning data.
+This package provides tenant resolution services and route handlers that derive tenant context from API keys.
 
 ## Installation
 

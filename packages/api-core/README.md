@@ -1,6 +1,6 @@
 # TWIN API Core
 
-Contains classes for use with APIs.
+This package provides base client classes and common helpers for building HTTP and socket integrations.
 
 ## Installation
 

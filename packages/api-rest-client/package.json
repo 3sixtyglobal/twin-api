@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/api-rest-client",
 	"version": "0.0.3-next.20",
-	"description": "Information contract implementation which can connect to REST endpoints",
+	"description": "REST client implementation for consuming information and hosting endpoints.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/api.git",

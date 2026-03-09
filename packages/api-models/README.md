@@ -1,6 +1,6 @@
 # TWIN API Models
 
-Contains models for use with APIs.
+This package provides shared API contracts, route types, and response models used across services and clients.
 
 ## Installation
 

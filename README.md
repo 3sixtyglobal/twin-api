@@ -1,19 +1,21 @@
 # TWIN API
 
-This mono-repository contains packages which are used when providing or connecting to APIs.
+This repository provides a modular API stack for defining contracts, implementing services, exposing server endpoints, and consuming those endpoints from client applications. The packages are designed to work together so teams can compose reliable API capabilities without duplicating cross-cutting concerns such as routing, request processing, authentication, and tenant context handling.
+
+Alongside the core API building blocks, the repository also includes entity storage authentication and tenant processing components that can be adopted independently or integrated into a broader platform architecture. The overall goal is to keep API development consistent, maintainable, and straightforward to extend across different deployment contexts.
 
 ## Packages
 
-- [api-models](packages/api-models/README.md) - Contains models for use with APIs.
-- [api-core](packages/api-core/README.md) - Contains classes for use with APIs.
-- [api-processors](packages/api-processors/README.md) - Route processors for use with API servers.
-- [api-service](packages/api-service/README.md) - Information contract implementation and REST endpoint definitions.
-- [api-rest-client](packages/api-rest-client/README.md) - Information contract implementation which can connect to REST endpoints.
-- [api-server-fastify](packages/api-server-fastify/README.md) - Use [Fastify](https://fastify.dev/) as the core web server for APIs.
-- [api-auth-entity-storage-models](packages/api-auth-entity-storage/README.md) - Models which define the structure of the Auth Entity Storage contracts.
-- [api-auth-entity-storage-service](packages/api-auth-entity-storage/README.md) - Auth Entity Storage contract implementation and REST endpoint definitions.
-- [api-auth-entity-storage-rest-client](packages/api-auth-entity-storage/README.md) - Auth Entity Storage contract implementation which can connect to REST endpoints.
-- [api-tenant-processor](packages/api-tenant-processor/README.md) - An API processor which converts `x-api-key` in headers or query params in to a context id for the tenant.
+- [api-models](packages/api-models/README.md) - Shared API contracts, route types, and response models used across services and clients.
+- [api-core](packages/api-core/README.md) - Base client classes and common helpers for building HTTP and socket integrations.
+- [api-processors](packages/api-processors/README.md) - Reusable request and route processors for logging, context handling, and content negotiation.
+- [api-server-fastify](packages/api-server-fastify/README.md) - Fastify web server integration for exposing API routes with consistent runtime behaviour.
+- [api-service](packages/api-service/README.md) - Information and hosting service implementations with generated REST route handlers.
+- [api-rest-client](packages/api-rest-client/README.md) - REST client implementation for consuming information and hosting endpoints.
+- [api-auth-entity-storage-models](packages/api-auth-entity-storage-models/README.md) - Contracts for authentication flows and admin user management with entity storage.
+- [api-auth-entity-storage-service](packages/api-auth-entity-storage-service/README.md) - Authentication service implementation and REST routes backed by entity storage.
+- [api-auth-entity-storage-rest-client](packages/api-auth-entity-storage-rest-client/README.md) - REST clients for authentication and admin operations against entity storage endpoints.
+- [api-tenant-processor](packages/api-tenant-processor/README.md) - Tenant resolution services and route handlers that derive tenant context from API keys.
 
 ## Contributing
 

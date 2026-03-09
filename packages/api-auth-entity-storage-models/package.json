@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/api-auth-entity-storage-models",
 	"version": "0.0.3-next.20",
-	"description": "Models which define the structure of the Auth Entity Storage contracts.",
+	"description": "Contracts for authentication flows and admin user management with entity storage.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/api.git",

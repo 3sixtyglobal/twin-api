@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/api-auth-entity-storage-rest-client",
 	"version": "0.0.3-next.20",
-	"description": "Perform REST authentication using entity storage.",
+	"description": "REST clients for authentication and admin operations against entity storage endpoints.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/api.git",

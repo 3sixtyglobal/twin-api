@@ -1,6 +1,6 @@
 # TWIN API Processors
 
-Route processors for use with API servers.
+This package provides reusable request and route processors for logging, context handling, and content negotiation.
 
 ## Installation
 

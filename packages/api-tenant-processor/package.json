@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/api-tenant-processor",
 	"version": "0.0.3-next.20",
-	"description": "API Tenant Processor for converting and api key to a tenant id.",
+	"description": "Tenant resolution services and route handlers that derive tenant context from API keys.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/api.git",

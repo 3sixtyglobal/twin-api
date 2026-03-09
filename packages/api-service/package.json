@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/api-service",
 	"version": "0.0.3-next.20",
-	"description": "Information contract implementation and REST endpoint definitions",
+	"description": "Information and hosting service implementations with generated REST route handlers.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/api.git",

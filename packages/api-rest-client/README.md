@@ -1,6 +1,6 @@
 # TWIN API REST Client
 
-Information contract implementation which can connect to REST endpoints.
+This package provides a REST client implementation for consuming information and hosting endpoints.
 
 ## Installation
 
