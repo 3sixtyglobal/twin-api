@@ -27,7 +27,7 @@ export interface IAuditableItemStreamEntryList {
 
 	/**
 	 * The entries in the stream.
-	 * json-ld namespace:sch
+	 * @json-ld namespace:sch
 	 */
 	[SchemaOrgTypes.ItemListElement]: IAuditableItemStreamEntry[];
 }
