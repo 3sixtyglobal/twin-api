@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/auditable-item-stream-service",
 	"version": "0.0.3-next.11",
-	"description": "Auditable Item Stream contract implementation and REST endpoint definitions",
+	"description": "Service implementation and REST route generation for managing auditable streams and entries.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/auditable-item-stream.git",

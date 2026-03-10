@@ -1,7 +1,7 @@
 {
 	"name": "@twin.org/auditable-item-stream",
 	"version": "0.0.0",
-	"description": "Auditable Item Stream",
+	"description": "Monorepo for auditable item stream models, service, and REST client packages.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/auditable-item-stream.git"
