@@ -1,4 +1,4 @@
-# @twin.org/api-server-fastify - Changelog
+# Changelog
 
 ## [0.0.3-next.20](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.19...api-server-fastify-v0.0.3-next.20) (2026-02-09)
 

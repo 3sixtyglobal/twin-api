@@ -1,4 +1,4 @@
-# @twin.org/api-processors - Changelog
+# Changelog
 
 ## [0.0.3-next.20](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.19...api-processors-v0.0.3-next.20) (2026-02-09)
 

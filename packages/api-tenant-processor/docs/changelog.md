@@ -311,4 +311,4 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.0 to 0.0.3-next.1
 
-## @twin.org/api-tenant-processor - Changelog
+## Changelog

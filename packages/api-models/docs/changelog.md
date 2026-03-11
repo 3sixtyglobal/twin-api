@@ -1,4 +1,4 @@
-# @twin.org/api-models - Changelog
+# Changelog
 
 ## [0.0.3-next.20](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.19...api-models-v0.0.3-next.20) (2026-02-09)
 
