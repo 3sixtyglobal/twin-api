@@ -10,12 +10,6 @@ Options for the IHostingService constructor.
 
 The tenant admin component type.
 
-#### Default
-
-```ts
-tenant-admin
-```
-
 ***
 
 ### config

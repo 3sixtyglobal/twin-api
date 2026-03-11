@@ -10,12 +10,6 @@ Options for the Tenant Admin Service constructor.
 
 The entity storage for the tenants.
 
-#### Default
-
-```ts
-tenant
-```
-
 ***
 
 ### config?

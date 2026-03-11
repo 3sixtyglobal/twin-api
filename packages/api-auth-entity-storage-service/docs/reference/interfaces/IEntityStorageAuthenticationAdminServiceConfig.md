@@ -9,9 +9,3 @@ Configuration for the entity storage authentication admin service.
 > `optional` **minPasswordLength**: `number`
 
 The minimum password length.
-
-#### Default
-
-```ts
-8
-```

@@ -10,12 +10,6 @@ Options for the web server.
 
 The port to bind the web server to.
 
-#### Default
-
-```ts
-3000
-```
-
 ***
 
 ### host?
@@ -24,12 +18,6 @@ The port to bind the web server to.
 
 The address to bind the web server to.
 
-#### Default
-
-```ts
-localhost
-```
-
 ***
 
 ### methods?
@@ -37,12 +25,6 @@ localhost
 > `optional` **methods**: `HttpMethod`[]
 
 The methods that the server accepts.
-
-#### Default
-
-```ts
-["GET", "PUT", "POST", "DELETE", "OPTIONS"]
-```
 
 ***
 
@@ -67,9 +49,3 @@ And additional exposed headers.
 > `optional` **corsOrigins**: `string` \| `string`[]
 
 The allowed CORS domains.
-
-#### Default
-
-```ts
-["*"]
-```

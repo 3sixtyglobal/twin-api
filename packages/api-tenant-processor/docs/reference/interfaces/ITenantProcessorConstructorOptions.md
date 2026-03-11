@@ -10,12 +10,6 @@ Options for the Tenant Processor constructor.
 
 The entity storage for the tenants.
 
-#### Default
-
-```ts
-tenant
-```
-
 ***
 
 ### config?
