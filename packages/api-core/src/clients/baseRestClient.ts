@@ -156,6 +156,10 @@ export abstract class BaseRestClient {
 			requestHeaders = { ...requestHeaders, ...this._headers };
 		}
 
+		if (Is.object(request?.headers)) {
+			requestHeaders = { ...requestHeaders, ...request.headers };
+		}
+
 		const response = await FetchHelper.fetch(
 			this._implementationName,
 			`${this._endpointWithPrefix}${finalRoute}`,
