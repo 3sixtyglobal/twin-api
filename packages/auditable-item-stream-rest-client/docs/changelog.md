@@ -1,4 +1,4 @@
-# @twin.org/auditable-item-stream-rest-client - Changelog
+# Changelog
 
 ## [0.0.3-next.11](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.3-next.10...auditable-item-stream-rest-client-v0.0.3-next.11) (2026-02-25)
 
