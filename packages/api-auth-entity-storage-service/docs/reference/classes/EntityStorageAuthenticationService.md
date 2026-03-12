@@ -28,7 +28,7 @@ The dependencies for the identity connector.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -36,7 +36,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -54,7 +54,7 @@ The class name of the component.
 
 ***
 
-### start()
+### start() {#start}
 
 > **start**(`nodeLoggingComponentType?`): `Promise`\<`void`\>
 
@@ -80,7 +80,7 @@ Nothing.
 
 ***
 
-### login()
+### login() {#login}
 
 > **login**(`email`, `password`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
@@ -112,7 +112,7 @@ The authentication token for the user, if it uses a mechanism with public access
 
 ***
 
-### logout()
+### logout() {#logout}
 
 > **logout**(`token?`): `Promise`\<`void`\>
 
@@ -138,7 +138,7 @@ Nothing.
 
 ***
 
-### refresh()
+### refresh() {#refresh}
 
 > **refresh**(`token?`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
@@ -164,7 +164,7 @@ The refreshed token, if it uses a mechanism with public access.
 
 ***
 
-### updatePassword()
+### updatePassword() {#updatepassword}
 
 > **updatePassword**(`currentPassword`, `newPassword`): `Promise`\<`void`\>
 

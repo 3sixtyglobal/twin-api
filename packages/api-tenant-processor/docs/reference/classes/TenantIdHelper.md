@@ -14,7 +14,7 @@ Helper class for tenant id related operations.
 
 ## Methods
 
-### generateTenantId()
+### generateTenantId() {#generatetenantid}
 
 > `static` **generateTenantId**(): `string`
 
@@ -28,7 +28,7 @@ A new tenant ID.
 
 ***
 
-### generateApiKey()
+### generateApiKey() {#generateapikey}
 
 > `static` **generateApiKey**(): `string`
 

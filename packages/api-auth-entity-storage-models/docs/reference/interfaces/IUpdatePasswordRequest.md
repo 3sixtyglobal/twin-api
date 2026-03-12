@@ -4,7 +4,7 @@ Update the current user's password.
 
 ## Properties
 
-### body
+### body {#body}
 
 > **body**: `object`
 

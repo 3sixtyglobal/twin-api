@@ -4,7 +4,7 @@ Perform a logout on the auth token.
 
 ## Properties
 
-### query?
+### query? {#query}
 
 > `optional` **query**: `object`
 

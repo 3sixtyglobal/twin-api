@@ -4,7 +4,7 @@ The list of tenants.
 
 ## Properties
 
-### query
+### query {#query}
 
 > **query**: `object`
 

@@ -8,7 +8,7 @@ A REST request with no input parameters.
 
 ## Properties
 
-### headers?
+### headers? {#headers}
 
 > `optional` **headers**: `undefined`
 
@@ -20,7 +20,7 @@ Incoming Http Headers.
 
 ***
 
-### pathParams?
+### pathParams? {#pathparams}
 
 > `optional` **pathParams**: `undefined`
 
@@ -32,7 +32,7 @@ The path parameters.
 
 ***
 
-### query?
+### query? {#query}
 
 > `optional` **query**: `undefined`
 
@@ -44,7 +44,7 @@ The query parameters.
 
 ***
 
-### body?
+### body? {#body}
 
 > `optional` **body**: `undefined`
 

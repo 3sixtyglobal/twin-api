@@ -4,7 +4,7 @@ Options for the StaticContextIdProcessor constructor.
 
 ## Properties
 
-### config
+### config {#config}
 
 > **config**: [`IStaticContextIdProcessorConfig`](IStaticContextIdProcessorConfig.md)
 

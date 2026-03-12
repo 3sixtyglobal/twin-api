@@ -4,7 +4,7 @@ Options for the AuthHeaderProcessor constructor.
 
 ## Properties
 
-### vaultConnectorType?
+### vaultConnectorType? {#vaultconnectortype}
 
 > `optional` **vaultConnectorType**: `string`
 
@@ -12,7 +12,7 @@ The vault for the private keys.
 
 ***
 
-### config?
+### config? {#config}
 
 > `optional` **config**: [`IAuthHeaderProcessorConfig`](IAuthHeaderProcessorConfig.md)
 

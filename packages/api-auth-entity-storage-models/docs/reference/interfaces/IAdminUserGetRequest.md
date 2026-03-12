@@ -4,7 +4,7 @@ Get a user as an admin.
 
 ## Properties
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 

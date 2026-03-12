@@ -4,7 +4,7 @@ The health of the server.
 
 ## Properties
 
-### body
+### body {#body}
 
 > **body**: [`IHealthInfo`](IHealthInfo.md)
 

@@ -4,7 +4,7 @@ The tenant to get by id.
 
 ## Properties
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 

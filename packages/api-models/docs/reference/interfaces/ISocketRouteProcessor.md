@@ -8,7 +8,7 @@ The definition for a processor for handling socket routes.
 
 ## Methods
 
-### features()?
+### features()? {#features}
 
 > `optional` **features**(): `string`[]
 
@@ -28,7 +28,7 @@ The features supported by this processor.
 
 ***
 
-### pre()?
+### pre()? {#pre}
 
 > `optional` **pre**(`request`, `response`, `route`, `contextIds`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
@@ -92,7 +92,7 @@ Promise that resolves when the request is processed.
 
 ***
 
-### post()?
+### post()? {#post}
 
 > `optional` **post**(`request`, `response`, `route`, `contextIds`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
@@ -156,7 +156,7 @@ Promise that resolves when the request is processed.
 
 ***
 
-### connected()?
+### connected()? {#connected}
 
 > `optional` **connected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
 
@@ -190,7 +190,7 @@ Promise that resolves when the request is processed.
 
 ***
 
-### disconnected()?
+### disconnected()? {#disconnected}
 
 > `optional` **disconnected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
 
@@ -224,7 +224,7 @@ Promise that resolves when the request is processed.
 
 ***
 
-### process()?
+### process()? {#process}
 
 > `optional` **process**(`request`, `response`, `route`, `processorState`, `responseEmitter`, `loggingComponentType?`): `Promise`\<`void`\>
 

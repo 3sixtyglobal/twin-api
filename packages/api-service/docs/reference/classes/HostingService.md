@@ -28,7 +28,7 @@ The options to create the service.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -36,7 +36,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -54,7 +54,7 @@ The class name of the component.
 
 ***
 
-### getPublicOrigin()
+### getPublicOrigin() {#getpublicorigin}
 
 > **getPublicOrigin**(`serverRequestUrl?`): `Promise`\<`string`\>
 
@@ -80,7 +80,7 @@ The public origin.
 
 ***
 
-### getTenantOrigin()
+### getTenantOrigin() {#gettenantorigin}
 
 > **getTenantOrigin**(`tenantId`): `Promise`\<`string` \| `undefined`\>
 
@@ -106,7 +106,7 @@ The public origin for the tenant.
 
 ***
 
-### buildPublicUrl()
+### buildPublicUrl() {#buildpublicurl}
 
 > **buildPublicUrl**(`url`): `Promise`\<`string`\>
 

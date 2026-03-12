@@ -4,7 +4,7 @@ Perform a refresh of the auth token.
 
 ## Properties
 
-### query?
+### query? {#query}
 
 > `optional` **query**: `object`
 

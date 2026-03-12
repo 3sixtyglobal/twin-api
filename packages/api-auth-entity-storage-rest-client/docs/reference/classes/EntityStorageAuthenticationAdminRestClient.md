@@ -36,7 +36,7 @@ The configuration for the client.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -44,7 +44,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -62,7 +62,7 @@ The class name of the component.
 
 ***
 
-### create()
+### create() {#create}
 
 > **create**(`user`): `Promise`\<`void`\>
 
@@ -88,7 +88,7 @@ Nothing.
 
 ***
 
-### update()
+### update() {#update}
 
 > **update**(`user`): `Promise`\<`void`\>
 
@@ -114,7 +114,7 @@ Nothing.
 
 ***
 
-### get()
+### get() {#get}
 
 > **get**(`email`): `Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
 
@@ -140,7 +140,7 @@ The user details.
 
 ***
 
-### getByIdentity()
+### getByIdentity() {#getbyidentity}
 
 > **getByIdentity**(`identity`): `Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
 
@@ -166,7 +166,7 @@ The user details.
 
 ***
 
-### remove()
+### remove() {#remove}
 
 > **remove**(`email`): `Promise`\<`void`\>
 
@@ -192,7 +192,7 @@ Nothing.
 
 ***
 
-### updatePassword()
+### updatePassword() {#updatepassword}
 
 > **updatePassword**(`email`, `newPassword`, `currentPassword?`): `Promise`\<`void`\>
 
@@ -230,7 +230,7 @@ Nothing.
 
 ***
 
-### getEndpointWithPrefix()
+### getEndpointWithPrefix() {#getendpointwithprefix}
 
 > **getEndpointWithPrefix**(): `string`
 
@@ -248,7 +248,7 @@ The endpoint with namespace prefix attached.
 
 ***
 
-### fetch()
+### fetch() {#fetch}
 
 > **fetch**\<`T`, `U`\>(`route`, `method`, `request?`): `Promise`\<`U`\>
 

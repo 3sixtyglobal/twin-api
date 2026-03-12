@@ -14,7 +14,7 @@ Helper class for token operations.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -22,7 +22,7 @@ Runtime name for the class.
 
 ## Methods
 
-### createToken()
+### createToken() {#createtoken}
 
 > `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
 
@@ -80,7 +80,7 @@ The new token and its expiry date.
 
 ***
 
-### verify()
+### verify() {#verify}
 
 > `static` **verify**(`vaultConnector`, `signingKeyName`, `token`, `requiredScopes?`): `Promise`\<\{ `header`: `JWTHeaderParameters`; `payload`: `JWTPayload`; \}\>
 
@@ -124,7 +124,7 @@ UnauthorizedError if the token is missing, invalid or expired.
 
 ***
 
-### extractTokenFromHeaders()
+### extractTokenFromHeaders() {#extracttokenfromheaders}
 
 > `static` **extractTokenFromHeaders**(`headers?`, `cookieName?`): \{ `token`: `string`; `location`: `"authorization"` \| `"cookie"`; \} \| `undefined`
 

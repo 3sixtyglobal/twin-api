@@ -4,7 +4,7 @@ Options for the ContextIdProcessor constructor.
 
 ## Properties
 
-### config
+### config {#config}
 
 > **config**: [`IContextIdProcessorConfig`](IContextIdProcessorConfig.md)
 

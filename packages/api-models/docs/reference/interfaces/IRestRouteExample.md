@@ -9,7 +9,7 @@ Interface which defines a REST route example.
 
 ## Properties
 
-### id
+### id {#id}
 
 > **id**: `string`
 
@@ -17,7 +17,7 @@ Example objects for the request.
 
 ***
 
-### description?
+### description? {#description}
 
 > `optional` **description**: `string`
 

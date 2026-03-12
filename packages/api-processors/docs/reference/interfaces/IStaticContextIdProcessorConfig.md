@@ -4,7 +4,7 @@ Configuration for the static id processor.
 
 ## Properties
 
-### key
+### key {#key}
 
 > **key**: `string`
 
@@ -12,7 +12,7 @@ The fixed identity key for request context.
 
 ***
 
-### value
+### value {#value}
 
 > **value**: `string`
 
@@ -20,7 +20,7 @@ The fixed identity value for request context.
 
 ***
 
-### authOnly?
+### authOnly? {#authonly}
 
 > `optional` **authOnly**: `boolean`
 

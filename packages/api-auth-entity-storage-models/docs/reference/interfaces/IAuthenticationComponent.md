@@ -8,7 +8,7 @@ Contract definition for authentication component.
 
 ## Methods
 
-### login()
+### login() {#login}
 
 > **login**(`email`, `password`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
@@ -36,7 +36,7 @@ The authentication token for the user, if it uses a mechanism with public access
 
 ***
 
-### logout()
+### logout() {#logout}
 
 > **logout**(`token?`): `Promise`\<`void`\>
 
@@ -58,7 +58,7 @@ Nothing.
 
 ***
 
-### refresh()
+### refresh() {#refresh}
 
 > **refresh**(`token?`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
@@ -80,7 +80,7 @@ The refreshed token, if it uses a mechanism with public access.
 
 ***
 
-### updatePassword()
+### updatePassword() {#updatepassword}
 
 > **updatePassword**(`currentPassword`, `newPassword`): `Promise`\<`void`\>
 

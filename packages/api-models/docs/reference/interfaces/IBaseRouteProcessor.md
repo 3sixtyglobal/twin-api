@@ -23,7 +23,7 @@ The definition for a base processor for handling REST routes.
 
 ## Methods
 
-### features()?
+### features()? {#features}
 
 > `optional` **features**(): `string`[]
 
@@ -39,7 +39,7 @@ The features supported by this processor.
 
 ***
 
-### pre()?
+### pre()? {#pre}
 
 > `optional` **pre**(`request`, `response`, `route`, `contextIds`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
@@ -99,7 +99,7 @@ Promise that resolves when the request is processed.
 
 ***
 
-### post()?
+### post()? {#post}
 
 > `optional` **post**(`request`, `response`, `route`, `contextIds`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 

@@ -28,7 +28,7 @@ The options for the server.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -36,7 +36,7 @@ Runtime name for the class.
 
 ## Methods
 
-### getInstance()
+### getInstance() {#getinstance}
 
 > **getInstance**(): `FastifyInstance`
 
@@ -54,7 +54,7 @@ The web server instance.
 
 ***
 
-### build()
+### build() {#build}
 
 > **build**(`restRouteProcessors?`, `restRoutes?`, `socketRouteProcessors?`, `socketRoutes?`, `options?`): `Promise`\<`void`\>
 
@@ -104,7 +104,7 @@ Nothing.
 
 ***
 
-### start()
+### start() {#start}
 
 > **start**(): `Promise`\<`void`\>
 
@@ -122,7 +122,7 @@ Nothing.
 
 ***
 
-### stop()
+### stop() {#stop}
 
 > **stop**(): `Promise`\<`void`\>
 

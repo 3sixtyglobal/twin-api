@@ -14,7 +14,7 @@ Class to help with handling http parameters.
 
 ## Methods
 
-### arrayFromString()
+### arrayFromString() {#arrayfromstring}
 
 > `static` **arrayFromString**\<`T`\>(`values?`): `T`[] \| `undefined`
 
@@ -42,7 +42,7 @@ The array of values.
 
 ***
 
-### arrayToString()
+### arrayToString() {#arraytostring}
 
 > `static` **arrayToString**\<`T`\>(`values?`): `string` \| `undefined`
 
@@ -70,7 +70,7 @@ The combined.
 
 ***
 
-### objectFromString()
+### objectFromString() {#objectfromstring}
 
 > `static` **objectFromString**\<`T`\>(`value?`): `T` \| `undefined`
 
@@ -98,7 +98,7 @@ The object.
 
 ***
 
-### objectToString()
+### objectToString() {#objecttostring}
 
 > `static` **objectToString**\<`T`\>(`value?`): `string` \| `undefined`
 

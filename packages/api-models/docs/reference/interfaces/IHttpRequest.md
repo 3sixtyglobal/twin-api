@@ -15,7 +15,7 @@ Model for the standard parameters for an http request.
 
 ## Properties
 
-### headers?
+### headers? {#headers}
 
 > `optional` **headers**: `IHttpHeaders`
 
@@ -23,7 +23,7 @@ Incoming Http Headers.
 
 ***
 
-### pathParams?
+### pathParams? {#pathparams}
 
 > `optional` **pathParams**: [`IHttpRequestPathParams`](IHttpRequestPathParams.md)
 
@@ -31,7 +31,7 @@ The path parameters.
 
 ***
 
-### query?
+### query? {#query}
 
 > `optional` **query**: [`IHttpRequestQuery`](IHttpRequestQuery.md)
 
@@ -39,7 +39,7 @@ The query parameters.
 
 ***
 
-### body?
+### body? {#body}
 
 > `optional` **body**: `T`
 

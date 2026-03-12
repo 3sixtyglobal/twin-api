@@ -14,7 +14,7 @@ Class to help with processing http errors.
 
 ## Properties
 
-### ERROR\_TYPE\_MAP
+### ERROR\_TYPE\_MAP {#error_type_map}
 
 > `readonly` `static` **ERROR\_TYPE\_MAP**: `object`
 
@@ -26,7 +26,7 @@ Mapping of error types to status codes.
 
 ## Methods
 
-### processError()
+### processError() {#processerror}
 
 > `static` **processError**(`err`, `includeStack?`): `object`
 
@@ -62,7 +62,7 @@ The status code and additional error data.
 
 ***
 
-### buildResponse()
+### buildResponse() {#buildresponse}
 
 > `static` **buildResponse**(`response`, `error`, `statusCode`): `void`
 

@@ -36,7 +36,7 @@ The configuration for the client.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -44,7 +44,7 @@ Runtime name for the class.
 
 ## Methods
 
-### getEndpointWithPrefix()
+### getEndpointWithPrefix() {#getendpointwithprefix}
 
 > **getEndpointWithPrefix**(): `string`
 
@@ -62,7 +62,7 @@ The endpoint with namespace prefix attached.
 
 ***
 
-### fetch()
+### fetch() {#fetch}
 
 > **fetch**\<`T`, `U`\>(`route`, `method`, `request?`): `Promise`\<`U`\>
 
@@ -110,7 +110,7 @@ The response.
 
 ***
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -128,7 +128,7 @@ The class name of the component.
 
 ***
 
-### root()
+### root() {#root}
 
 > **root**(): `Promise`\<`string`\>
 
@@ -146,7 +146,7 @@ The root root.
 
 ***
 
-### info()
+### info() {#info}
 
 > **info**(): `Promise`\<`IServerInfo`\>
 
@@ -164,7 +164,7 @@ The service information.
 
 ***
 
-### favicon()
+### favicon() {#favicon}
 
 > **favicon**(): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
 
@@ -182,7 +182,7 @@ The favicon.
 
 ***
 
-### spec()
+### spec() {#spec}
 
 > **spec**(): `Promise`\<`unknown`\>
 
@@ -200,7 +200,7 @@ The OpenAPI spec.
 
 ***
 
-### livez()
+### livez() {#livez}
 
 > **livez**(): `Promise`\<`boolean`\>
 
@@ -218,7 +218,7 @@ True if the server is live.
 
 ***
 
-### health()
+### health() {#health}
 
 > **health**(): `Promise`\<`IHealthInfo`\>
 
@@ -236,7 +236,7 @@ The service health.
 
 ***
 
-### setComponentHealth()
+### setComponentHealth() {#setcomponenthealth}
 
 > **setComponentHealth**(`name`, `status`, `details?`): `Promise`\<`void`\>
 
@@ -274,7 +274,7 @@ Nothing.
 
 ***
 
-### removeComponentHealth()
+### removeComponentHealth() {#removecomponenthealth}
 
 > **removeComponentHealth**(`name`): `Promise`\<`void`\>
 

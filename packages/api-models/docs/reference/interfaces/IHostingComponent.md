@@ -8,7 +8,7 @@ The information about the hosting of the API.
 
 ## Methods
 
-### getPublicOrigin()
+### getPublicOrigin() {#getpublicorigin}
 
 > **getPublicOrigin**(`serverRequestUrl?`): `Promise`\<`string`\>
 
@@ -30,7 +30,7 @@ The public origin.
 
 ***
 
-### getTenantOrigin()
+### getTenantOrigin() {#gettenantorigin}
 
 > **getTenantOrigin**(`tenantId`): `Promise`\<`string` \| `undefined`\>
 
@@ -52,7 +52,7 @@ The public origin for the tenant.
 
 ***
 
-### buildPublicUrl()
+### buildPublicUrl() {#buildpublicurl}
 
 > **buildPublicUrl**(`url`): `Promise`\<`string`\>
 

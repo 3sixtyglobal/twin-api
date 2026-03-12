@@ -4,7 +4,7 @@ The tenant to update.
 
 ## Properties
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 
@@ -18,7 +18,7 @@ The id of the tenant to update.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `Omit`\<`ITenant`, `"id"` \| `"dateCreated"` \| `"dateModified"`\>
 

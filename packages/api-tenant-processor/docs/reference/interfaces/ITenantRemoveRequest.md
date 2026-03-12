@@ -4,7 +4,7 @@ The tenant to remove by id.
 
 ## Properties
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 

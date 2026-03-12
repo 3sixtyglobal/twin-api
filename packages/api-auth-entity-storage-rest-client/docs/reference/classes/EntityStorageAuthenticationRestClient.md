@@ -36,7 +36,7 @@ The configuration for the client.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -44,7 +44,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -62,7 +62,7 @@ The class name of the component.
 
 ***
 
-### login()
+### login() {#login}
 
 > **login**(`email`, `password`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
@@ -94,7 +94,7 @@ The authentication token for the user, if it uses a mechanism with public access
 
 ***
 
-### logout()
+### logout() {#logout}
 
 > **logout**(`token?`): `Promise`\<`void`\>
 
@@ -120,7 +120,7 @@ Nothing.
 
 ***
 
-### refresh()
+### refresh() {#refresh}
 
 > **refresh**(`token?`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
@@ -146,7 +146,7 @@ The refreshed token, if it uses a mechanism with public access.
 
 ***
 
-### updatePassword()
+### updatePassword() {#updatepassword}
 
 > **updatePassword**(`currentPassword`, `newPassword`): `Promise`\<`void`\>
 
@@ -178,7 +178,7 @@ Nothing.
 
 ***
 
-### getEndpointWithPrefix()
+### getEndpointWithPrefix() {#getendpointwithprefix}
 
 > **getEndpointWithPrefix**(): `string`
 
@@ -196,7 +196,7 @@ The endpoint with namespace prefix attached.
 
 ***
 
-### fetch()
+### fetch() {#fetch}
 
 > **fetch**\<`T`, `U`\>(`route`, `method`, `request?`): `Promise`\<`U`\>
 

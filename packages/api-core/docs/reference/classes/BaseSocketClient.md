@@ -36,7 +36,7 @@ The default prefix to use if none in configuration.
 
 ## Methods
 
-### onEvent()
+### onEvent() {#onevent}
 
 > `protected` **onEvent**\<`T`\>(`event`, `callback`): `void`
 
@@ -68,7 +68,7 @@ The method to call when the event arrives.
 
 ***
 
-### offEvent()
+### offEvent() {#offevent}
 
 > `protected` **offEvent**(`event`): `void`
 
@@ -88,7 +88,7 @@ The event to look for.
 
 ***
 
-### sendEvent()
+### sendEvent() {#sendevent}
 
 > `protected` **sendEvent**\<`T`\>(`event`, `data`): `void`
 
@@ -120,7 +120,7 @@ The data to send with the event.
 
 ***
 
-### socketConnect()
+### socketConnect() {#socketconnect}
 
 > `protected` **socketConnect**(): `boolean`
 
@@ -134,7 +134,7 @@ True if the socket is already connected.
 
 ***
 
-### socketDisconnect()
+### socketDisconnect() {#socketdisconnect}
 
 > `protected` **socketDisconnect**(): `void`
 
@@ -146,7 +146,7 @@ Disconnect the socket if its connected.
 
 ***
 
-### isConnected()
+### isConnected() {#isconnected}
 
 > `protected` **isConnected**(): `boolean`
 
@@ -160,7 +160,7 @@ True if the socket is connected.
 
 ***
 
-### handleConnected()
+### handleConnected() {#handleconnected}
 
 > `abstract` `protected` **handleConnected**(): `Promise`\<`void`\>
 
@@ -172,7 +172,7 @@ Handle the socket connection.
 
 ***
 
-### handleError()
+### handleError() {#handleerror}
 
 > `abstract` `protected` **handleError**(`err`): `Promise`\<`void`\>
 

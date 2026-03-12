@@ -4,7 +4,7 @@ Configuration for the entity storage authentication admin service.
 
 ## Properties
 
-### minPasswordLength?
+### minPasswordLength? {#minpasswordlength}
 
 > `optional` **minPasswordLength**: `number`
 

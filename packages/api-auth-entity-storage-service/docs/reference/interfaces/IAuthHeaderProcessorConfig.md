@@ -4,7 +4,7 @@ Configuration for the authentication header processor
 
 ## Properties
 
-### signingKeyName?
+### signingKeyName? {#signingkeyname}
 
 > `optional` **signingKeyName**: `string`
 
@@ -12,7 +12,7 @@ The name of the key to retrieve from the vault for signing JWT.
 
 ***
 
-### cookieName?
+### cookieName? {#cookiename}
 
 > `optional` **cookieName**: `string`
 

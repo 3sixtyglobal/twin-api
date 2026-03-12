@@ -4,7 +4,7 @@ Options for the LoggingProcessor constructor.
 
 ## Properties
 
-### loggingComponentType?
+### loggingComponentType? {#loggingcomponenttype}
 
 > `optional` **loggingComponentType**: `string`
 
@@ -12,7 +12,7 @@ The type for the logging component.
 
 ***
 
-### config?
+### config? {#config}
 
 > `optional` **config**: [`ILoggingProcessorConfig`](ILoggingProcessorConfig.md)
 

@@ -4,7 +4,7 @@ The tenant to get by public origin.
 
 ## Properties
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 

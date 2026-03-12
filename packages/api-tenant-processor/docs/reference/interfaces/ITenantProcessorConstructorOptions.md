@@ -4,7 +4,7 @@ Options for the Tenant Processor constructor.
 
 ## Properties
 
-### tenantEntityStorageType?
+### tenantEntityStorageType? {#tenantentitystoragetype}
 
 > `optional` **tenantEntityStorageType**: `string`
 
@@ -12,7 +12,7 @@ The entity storage for the tenants.
 
 ***
 
-### config?
+### config? {#config}
 
 > `optional` **config**: [`ITenantProcessorConfig`](ITenantProcessorConfig.md)
 

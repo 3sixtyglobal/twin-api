@@ -4,7 +4,7 @@ The information about the server.
 
 ## Properties
 
-### name
+### name {#name}
 
 > **name**: `string`
 
@@ -12,7 +12,7 @@ The application name.
 
 ***
 
-### version
+### version {#version}
 
 > **version**: `string`
 

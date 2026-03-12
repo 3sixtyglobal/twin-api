@@ -4,7 +4,7 @@ Options for the IHostingService constructor.
 
 ## Properties
 
-### tenantAdminComponentType?
+### tenantAdminComponentType? {#tenantadmincomponenttype}
 
 > `optional` **tenantAdminComponentType**: `string`
 
@@ -12,7 +12,7 @@ The tenant admin component type.
 
 ***
 
-### config
+### config {#config}
 
 > **config**: [`IHostingServiceConfig`](IHostingServiceConfig.md)
 

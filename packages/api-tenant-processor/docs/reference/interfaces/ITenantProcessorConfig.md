@@ -4,7 +4,7 @@ Configuration for the tenant processor
 
 ## Properties
 
-### apiKeyName?
+### apiKeyName? {#apikeyname}
 
 > `optional` **apiKeyName**: `string`
 

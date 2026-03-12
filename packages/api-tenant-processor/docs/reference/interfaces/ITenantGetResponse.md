@@ -4,7 +4,7 @@ The tenant get response.
 
 ## Properties
 
-### body
+### body {#body}
 
 > **body**: `ITenant`
 

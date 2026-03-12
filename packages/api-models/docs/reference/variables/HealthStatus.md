@@ -6,19 +6,19 @@ The health status of the component.
 
 ## Type Declaration
 
-### Ok
+### Ok {#ok}
 
 > `readonly` **Ok**: `"ok"` = `"ok"`
 
 OK.
 
-### Warning
+### Warning {#warning}
 
 > `readonly` **Warning**: `"warning"` = `"warning"`
 
 Warning.
 
-### Error
+### Error {#error}
 
 > `readonly` **Error**: `"error"` = `"error"`
 

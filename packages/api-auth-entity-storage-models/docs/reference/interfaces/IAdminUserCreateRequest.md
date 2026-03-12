@@ -4,7 +4,7 @@ Create a new user as an admin.
 
 ## Properties
 
-### body
+### body {#body}
 
 > **body**: `Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"`\>
 

@@ -4,7 +4,7 @@ Configuration for the context id processor.
 
 ## Properties
 
-### key
+### key {#key}
 
 > **key**: `string`
 
@@ -12,7 +12,7 @@ The fixed identity key for request context.
 
 ***
 
-### authOnly?
+### authOnly? {#authonly}
 
 > `optional` **authOnly**: `boolean`
 

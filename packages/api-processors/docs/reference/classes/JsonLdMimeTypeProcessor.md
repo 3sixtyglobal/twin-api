@@ -18,7 +18,7 @@ Process the JSON-LD mime type.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -26,7 +26,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -44,7 +44,7 @@ The class name of the component.
 
 ***
 
-### getTypes()
+### getTypes() {#gettypes}
 
 > **getTypes**(): `string`[]
 
@@ -62,7 +62,7 @@ The MIME types that this handler can handle.
 
 ***
 
-### handle()
+### handle() {#handle}
 
 > **handle**(`body`): `Promise`\<`unknown`\>
 

@@ -4,7 +4,7 @@ The rest request ended in accepted response.
 
 ## Properties
 
-### statusCode
+### statusCode {#statuscode}
 
 > **statusCode**: `202`
 
@@ -12,7 +12,7 @@ Response status code.
 
 ***
 
-### headers
+### headers {#headers}
 
 > **headers**: `object`
 

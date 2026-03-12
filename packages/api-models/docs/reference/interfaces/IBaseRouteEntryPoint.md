@@ -10,7 +10,7 @@ Route entry points are used for exposing the routes from a package.
 
 ## Properties
 
-### name
+### name {#name}
 
 > **name**: `string`
 
@@ -18,7 +18,7 @@ The name of the routes.
 
 ***
 
-### defaultBaseRoute
+### defaultBaseRoute {#defaultbaseroute}
 
 > **defaultBaseRoute**: `string`
 
@@ -26,7 +26,7 @@ The default base route name for the routes.
 
 ***
 
-### tags
+### tags {#tags}
 
 > **tags**: [`ITag`](ITag.md)[]
 
@@ -34,7 +34,7 @@ The tags for the routes.
 
 ***
 
-### generateRoutes()
+### generateRoutes() {#generateroutes}
 
 > **generateRoutes**: (`baseRouteName`, `componentName`) => `T`[]
 

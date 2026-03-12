@@ -4,7 +4,7 @@ The list of tenants.
 
 ## Properties
 
-### headers?
+### headers? {#headers}
 
 > `optional` **headers**: `object`
 
@@ -16,7 +16,7 @@ The headers which can be used to include the cursor.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `ITenant`[]
 

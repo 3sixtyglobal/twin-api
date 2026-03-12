@@ -8,7 +8,7 @@ Options for the Entity Storage Authentication REST client constructor.
 
 ## Properties
 
-### cookieName?
+### cookieName? {#cookiename}
 
 > `optional` **cookieName**: `string`
 
@@ -16,7 +16,7 @@ The name of the cookie to use for storing the auth token.
 
 ***
 
-### endpoint
+### endpoint {#endpoint}
 
 > **endpoint**: `string`
 
@@ -28,7 +28,7 @@ The endpoint where the api is hosted.
 
 ***
 
-### pathPrefix?
+### pathPrefix? {#pathprefix}
 
 > `optional` **pathPrefix**: `string`
 
@@ -40,7 +40,7 @@ The prefix to the routes.
 
 ***
 
-### headers?
+### headers? {#headers}
 
 > `optional` **headers**: `IHttpHeaders`
 
@@ -52,7 +52,7 @@ The headers to include in requests.
 
 ***
 
-### timeout?
+### timeout? {#timeout}
 
 > `optional` **timeout**: `number`
 
@@ -64,7 +64,7 @@ Timeout for requests in ms.
 
 ***
 
-### includeCredentials?
+### includeCredentials? {#includecredentials}
 
 > `optional` **includeCredentials**: `boolean`
 

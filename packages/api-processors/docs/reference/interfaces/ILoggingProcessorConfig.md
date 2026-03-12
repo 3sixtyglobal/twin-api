@@ -4,7 +4,7 @@ Configuration for the request logging processor.
 
 ## Properties
 
-### includeBody?
+### includeBody? {#includebody}
 
 > `optional` **includeBody**: `boolean`
 
@@ -12,7 +12,7 @@ Include the body objects when logging the information.
 
 ***
 
-### fullBase64?
+### fullBase64? {#fullbase64}
 
 > `optional` **fullBase64**: `boolean`
 
@@ -20,7 +20,7 @@ Show the full base64 content for data, default to abbreviate.
 
 ***
 
-### obfuscateProperties?
+### obfuscateProperties? {#obfuscateproperties}
 
 > `optional` **obfuscateProperties**: `string`[]
 

@@ -10,7 +10,7 @@ Interface describing a web server.
 
 ## Methods
 
-### getInstance()
+### getInstance() {#getinstance}
 
 > **getInstance**(): `T`
 
@@ -24,7 +24,7 @@ The web server instance.
 
 ***
 
-### build()
+### build() {#build}
 
 > **build**(`restRouteProcessors?`, `restRoutes?`, `socketRouteProcessors?`, `socketRoutes?`, `options?`): `Promise`\<`void`\>
 
@@ -70,7 +70,7 @@ Nothing.
 
 ***
 
-### start()
+### start() {#start}
 
 > **start**(): `Promise`\<`void`\>
 
@@ -84,7 +84,7 @@ Nothing.
 
 ***
 
-### stop()
+### stop() {#stop}
 
 > **stop**(): `Promise`\<`void`\>
 

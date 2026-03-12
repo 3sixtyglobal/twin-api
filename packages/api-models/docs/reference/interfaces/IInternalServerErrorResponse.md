@@ -4,7 +4,7 @@ The server has encountered a situation it does not know how to handle, see the c
 
 ## Properties
 
-### statusCode
+### statusCode {#statuscode}
 
 > **statusCode**: `500`
 
@@ -12,7 +12,7 @@ Response status code.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `IError`
 

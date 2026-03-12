@@ -4,7 +4,7 @@ The options for the Fastify web server constructor.
 
 ## Properties
 
-### loggingComponentType?
+### loggingComponentType? {#loggingcomponenttype}
 
 > `optional` **loggingComponentType**: `string`
 
@@ -12,7 +12,7 @@ The type of the logging component to use, if undefined, no logging will happen.
 
 ***
 
-### hostingComponentType?
+### hostingComponentType? {#hostingcomponenttype}
 
 > `optional` **hostingComponentType**: `string`
 
@@ -20,7 +20,7 @@ The type of the hosting component to use.
 
 ***
 
-### config?
+### config? {#config}
 
 > `optional` **config**: [`IFastifyWebServerConfig`](IFastifyWebServerConfig.md)
 
@@ -28,7 +28,7 @@ Additional configuration for the server.
 
 ***
 
-### mimeTypeProcessors?
+### mimeTypeProcessors? {#mimetypeprocessors}
 
 > `optional` **mimeTypeProcessors**: `IMimeTypeProcessor`[]
 

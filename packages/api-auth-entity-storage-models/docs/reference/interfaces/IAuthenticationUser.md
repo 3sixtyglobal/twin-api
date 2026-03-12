@@ -4,7 +4,7 @@ Contract definition for authentication user.
 
 ## Properties
 
-### email
+### email {#email}
 
 > **email**: `string`
 
@@ -12,7 +12,7 @@ The user e-mail address.
 
 ***
 
-### password
+### password {#password}
 
 > **password**: `string`
 
@@ -20,7 +20,7 @@ The encrypted password for the user.
 
 ***
 
-### salt
+### salt {#salt}
 
 > **salt**: `string`
 
@@ -28,7 +28,7 @@ The salt for the password.
 
 ***
 
-### userIdentity
+### userIdentity {#useridentity}
 
 > **userIdentity**: `string`
 
@@ -36,7 +36,7 @@ The user identity.
 
 ***
 
-### organizationIdentity
+### organizationIdentity {#organizationidentity}
 
 > **organizationIdentity**: `string`
 
@@ -44,7 +44,7 @@ The users organization.
 
 ***
 
-### scope
+### scope {#scope}
 
 > **scope**: `string`[]
 

@@ -4,7 +4,7 @@ The rest request ended in success with no data.
 
 ## Properties
 
-### statusCode
+### statusCode {#statuscode}
 
 > **statusCode**: `204`
 

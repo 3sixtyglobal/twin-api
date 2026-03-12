@@ -8,7 +8,7 @@ Configuration for the tenant admin component
 
 ## Methods
 
-### create()
+### create() {#create}
 
 > **create**(`tenant`): `Promise`\<`string`\>
 
@@ -30,7 +30,7 @@ The tenant id.
 
 ***
 
-### update()
+### update() {#update}
 
 > **update**(`tenant`): `Promise`\<`void`\>
 
@@ -52,7 +52,7 @@ Nothing.
 
 ***
 
-### get()
+### get() {#get}
 
 > **get**(`tenantId`): `Promise`\<[`ITenant`](ITenant.md)\>
 
@@ -78,7 +78,7 @@ Error if the tenant is not found.
 
 ***
 
-### getByApiKey()
+### getByApiKey() {#getbyapikey}
 
 > **getByApiKey**(`apiKey`): `Promise`\<[`ITenant`](ITenant.md)\>
 
@@ -104,7 +104,7 @@ Error if the tenant is not found.
 
 ***
 
-### getByPublicOrigin()
+### getByPublicOrigin() {#getbypublicorigin}
 
 > **getByPublicOrigin**(`publicOrigin`): `Promise`\<[`ITenant`](ITenant.md)\>
 
@@ -130,7 +130,7 @@ Error if the tenant is not found.
 
 ***
 
-### remove()
+### remove() {#remove}
 
 > **remove**(`tenantId`): `Promise`\<`void`\>
 
@@ -156,7 +156,7 @@ Error if the tenant is not found.
 
 ***
 
-### query()
+### query() {#query}
 
 > **query**(`options?`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: [`ITenant`](ITenant.md)[]; `cursor?`: `string`; \}\>
 

@@ -8,7 +8,7 @@ Contract definition for authentication admin component.
 
 ## Methods
 
-### create()
+### create() {#create}
 
 > **create**(`user`): `Promise`\<`void`\>
 
@@ -30,7 +30,7 @@ Nothing.
 
 ***
 
-### update()
+### update() {#update}
 
 > **update**(`user`): `Promise`\<`void`\>
 
@@ -52,7 +52,7 @@ Nothing.
 
 ***
 
-### get()
+### get() {#get}
 
 > **get**(`email`): `Promise`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"` \| `"password"`\>\>
 
@@ -74,7 +74,7 @@ The user details.
 
 ***
 
-### getByIdentity()
+### getByIdentity() {#getbyidentity}
 
 > **getByIdentity**(`identity`): `Promise`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"` \| `"password"`\>\>
 
@@ -96,7 +96,7 @@ The user details.
 
 ***
 
-### remove()
+### remove() {#remove}
 
 > **remove**(`email`): `Promise`\<`void`\>
 
@@ -118,7 +118,7 @@ Nothing.
 
 ***
 
-### updatePassword()
+### updatePassword() {#updatepassword}
 
 > **updatePassword**(`email`, `newPassword`, `currentPassword?`): `Promise`\<`void`\>
 

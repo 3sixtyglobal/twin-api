@@ -4,7 +4,7 @@ Configuration for the hosting service.
 
 ## Properties
 
-### localOrigin
+### localOrigin {#localorigin}
 
 > **localOrigin**: `string`
 
@@ -12,7 +12,7 @@ The local origin, must be provided as a fallback e.g. http://localhost:1234.
 
 ***
 
-### publicOrigin?
+### publicOrigin? {#publicorigin}
 
 > `optional` **publicOrigin**: `string`
 

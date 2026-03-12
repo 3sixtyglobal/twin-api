@@ -4,7 +4,7 @@ The tenant to get by API key.
 
 ## Properties
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 

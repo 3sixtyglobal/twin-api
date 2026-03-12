@@ -4,7 +4,7 @@ The favicon for the server.
 
 ## Properties
 
-### headers?
+### headers? {#headers}
 
 > `optional` **headers**: `object`
 
@@ -18,7 +18,7 @@ The content type for the response.
 
 ***
 
-### statusCode?
+### statusCode? {#statuscode}
 
 > `optional` **statusCode**: `HttpStatusCode`
 
@@ -26,7 +26,7 @@ Response status code.
 
 ***
 
-### body?
+### body? {#body}
 
 > `optional` **body**: `Uint8Array`\<`ArrayBufferLike`\>
 

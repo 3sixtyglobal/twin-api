@@ -28,7 +28,7 @@ Options for the processor.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -36,7 +36,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -54,7 +54,7 @@ The class name of the component.
 
 ***
 
-### connected()
+### connected() {#connected}
 
 > **connected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
 
@@ -92,7 +92,7 @@ Promise that resolves when the request is processed.
 
 ***
 
-### disconnected()
+### disconnected() {#disconnected}
 
 > **disconnected**(`request`, `route`, `loggingComponentType?`): `Promise`\<`void`\>
 
@@ -130,7 +130,7 @@ Promise that resolves when the request is processed.
 
 ***
 
-### process()
+### process() {#process}
 
 > **process**(`request`, `response`, `route`, `processorState`, `responseEmitter`, `loggingComponentType?`): `Promise`\<`void`\>
 

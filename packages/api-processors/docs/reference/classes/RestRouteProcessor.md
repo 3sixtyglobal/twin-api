@@ -28,7 +28,7 @@ Options for the processor.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -36,7 +36,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -54,7 +54,7 @@ The class name of the component.
 
 ***
 
-### process()
+### process() {#process}
 
 > **process**(`request`, `response`, `route`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 

@@ -4,7 +4,7 @@ Response from a refresh on the auth token.
 
 ## Properties
 
-### headers?
+### headers? {#headers}
 
 > `optional` **headers**: `object`
 
@@ -18,7 +18,7 @@ The cookie containing the auth token.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `object`
 

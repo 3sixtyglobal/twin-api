@@ -8,7 +8,7 @@ The information component for the server.
 
 ## Methods
 
-### root()
+### root() {#root}
 
 > **root**(): `Promise`\<`string`\>
 
@@ -22,7 +22,7 @@ The root information.
 
 ***
 
-### info()
+### info() {#info}
 
 > **info**(): `Promise`\<[`IServerInfo`](IServerInfo.md)\>
 
@@ -36,7 +36,7 @@ The service information.
 
 ***
 
-### favicon()
+### favicon() {#favicon}
 
 > **favicon**(): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
 
@@ -50,7 +50,7 @@ The favicon.
 
 ***
 
-### spec()
+### spec() {#spec}
 
 > **spec**(): `Promise`\<`unknown`\>
 
@@ -64,7 +64,7 @@ The OpenAPI spec.
 
 ***
 
-### livez()
+### livez() {#livez}
 
 > **livez**(): `Promise`\<`boolean`\>
 
@@ -78,7 +78,7 @@ True if the server is live.
 
 ***
 
-### health()
+### health() {#health}
 
 > **health**(): `Promise`\<[`IHealthInfo`](IHealthInfo.md)\>
 
@@ -92,7 +92,7 @@ The service health.
 
 ***
 
-### setComponentHealth()
+### setComponentHealth() {#setcomponenthealth}
 
 > **setComponentHealth**(`name`, `status`, `details?`, `tenantId?`): `Promise`\<`void`\>
 
@@ -132,7 +132,7 @@ Nothing.
 
 ***
 
-### removeComponentHealth()
+### removeComponentHealth() {#removecomponenthealth}
 
 > **removeComponentHealth**(`name`, `tenantId?`): `Promise`\<`void`\>
 

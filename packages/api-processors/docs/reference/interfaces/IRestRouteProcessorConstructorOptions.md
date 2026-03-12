@@ -4,7 +4,7 @@ Options for the RestRouteProcessor constructor.
 
 ## Properties
 
-### config?
+### config? {#config}
 
 > `optional` **config**: [`IRouteProcessorConfig`](IRouteProcessorConfig.md)
 

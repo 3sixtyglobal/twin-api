@@ -14,7 +14,7 @@ Class to help with handling http URLs.
 
 ## Methods
 
-### extractOrigin()
+### extractOrigin() {#extractorigin}
 
 > `static` **extractOrigin**(`url`): `string` \| `undefined`
 
@@ -40,7 +40,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/URL/origin
 
 ***
 
-### extractPath()
+### extractPath() {#extractpath}
 
 > `static` **extractPath**(`url`): `string` \| `undefined`
 
@@ -66,7 +66,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/URL/pathname
 
 ***
 
-### extractSearch()
+### extractSearch() {#extractsearch}
 
 > `static` **extractSearch**(`url`): `string` \| `undefined`
 
@@ -92,7 +92,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/URL/search
 
 ***
 
-### extractPathAndSearch()
+### extractPathAndSearch() {#extractpathandsearch}
 
 > `static` **extractPathAndSearch**(`url`): `string` \| `undefined`
 
@@ -114,7 +114,7 @@ The extracted path and search.
 
 ***
 
-### combineParts()
+### combineParts() {#combineparts}
 
 > `static` **combineParts**(`origin`, `pathAndSearch`): `string` \| `undefined`
 
@@ -142,7 +142,7 @@ The combined parts.
 
 ***
 
-### replaceOrigin()
+### replaceOrigin() {#replaceorigin}
 
 > `static` **replaceOrigin**(`url`, `newOrigin?`): `string`
 

@@ -4,7 +4,7 @@ Configuration for the entity storage authentication service.
 
 ## Properties
 
-### signingKeyName?
+### signingKeyName? {#signingkeyname}
 
 > `optional` **signingKeyName**: `string`
 
@@ -12,7 +12,7 @@ The name of the key to retrieve from the vault for signing JWT.
 
 ***
 
-### defaultTtlMinutes?
+### defaultTtlMinutes? {#defaultttlminutes}
 
 > `optional` **defaultTtlMinutes**: `number`
 

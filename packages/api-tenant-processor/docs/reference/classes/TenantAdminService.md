@@ -28,7 +28,7 @@ The options for the connector.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -36,7 +36,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -54,7 +54,7 @@ The class name of the component.
 
 ***
 
-### get()
+### get() {#get}
 
 > **get**(`tenantId`): `Promise`\<`ITenant`\>
 
@@ -84,7 +84,7 @@ Error if the tenant is not found.
 
 ***
 
-### getByApiKey()
+### getByApiKey() {#getbyapikey}
 
 > **getByApiKey**(`apiKey`): `Promise`\<`ITenant`\>
 
@@ -114,7 +114,7 @@ Error if the tenant is not found.
 
 ***
 
-### getByPublicOrigin()
+### getByPublicOrigin() {#getbypublicorigin}
 
 > **getByPublicOrigin**(`publicOrigin`): `Promise`\<`ITenant`\>
 
@@ -144,7 +144,7 @@ Error if the tenant is not found.
 
 ***
 
-### create()
+### create() {#create}
 
 > **create**(`tenant`): `Promise`\<`string`\>
 
@@ -170,7 +170,7 @@ The tenant id.
 
 ***
 
-### update()
+### update() {#update}
 
 > **update**(`tenant`): `Promise`\<`void`\>
 
@@ -196,7 +196,7 @@ The nothing.
 
 ***
 
-### remove()
+### remove() {#remove}
 
 > **remove**(`tenantId`): `Promise`\<`void`\>
 
@@ -222,7 +222,7 @@ Nothing.
 
 ***
 
-### query()
+### query() {#query}
 
 > **query**(`options?`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: `ITenant`[]; `cursor?`: `string`; \}\>
 

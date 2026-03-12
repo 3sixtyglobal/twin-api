@@ -4,7 +4,7 @@ Update a user as an admin.
 
 ## Properties
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 
@@ -18,7 +18,7 @@ The user email.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `Partial`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"email"` \| `"password"` \| `"salt"`\>\>
 

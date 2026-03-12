@@ -8,7 +8,7 @@ Context data from the HTTP request.
 
 ## Properties
 
-### serverRequest
+### serverRequest {#serverrequest}
 
 > **serverRequest**: [`IHttpServerRequest`](IHttpServerRequest.md)
 
@@ -16,7 +16,7 @@ The raw HTTP request.
 
 ***
 
-### processorState
+### processorState {#processorstate}
 
 > **processorState**: `object`
 
@@ -28,7 +28,7 @@ The state handed through the processors.
 
 ***
 
-### loggingComponentType?
+### loggingComponentType? {#loggingcomponenttype}
 
 > `optional` **loggingComponentType**: `string`
 
@@ -36,7 +36,7 @@ Logging component type for the request.
 
 ***
 
-### hostingComponentType?
+### hostingComponentType? {#hostingcomponenttype}
 
 > `optional` **hostingComponentType**: `string`
 

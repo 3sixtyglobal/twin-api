@@ -4,7 +4,7 @@ The livez of the server.
 
 ## Properties
 
-### headers
+### headers {#headers}
 
 > **headers**: `object`
 
@@ -16,7 +16,7 @@ The headers for the response.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `"ok"` \| `"failed"`
 

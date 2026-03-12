@@ -4,7 +4,7 @@ Update a users password as an admin.
 
 ## Properties
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 
@@ -18,7 +18,7 @@ The user email.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `object`
 

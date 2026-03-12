@@ -28,7 +28,7 @@ The options to create the service.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -36,7 +36,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -54,7 +54,7 @@ The class name of the component.
 
 ***
 
-### start()
+### start() {#start}
 
 > **start**(): `Promise`\<`void`\>
 
@@ -72,7 +72,7 @@ Nothing.
 
 ***
 
-### root()
+### root() {#root}
 
 > **root**(): `Promise`\<`string`\>
 
@@ -90,7 +90,7 @@ The root information.
 
 ***
 
-### info()
+### info() {#info}
 
 > **info**(): `Promise`\<`IServerInfo`\>
 
@@ -108,7 +108,7 @@ The service information.
 
 ***
 
-### favicon()
+### favicon() {#favicon}
 
 > **favicon**(): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
 
@@ -126,7 +126,7 @@ The favicon.
 
 ***
 
-### spec()
+### spec() {#spec}
 
 > **spec**(): `Promise`\<`unknown`\>
 
@@ -144,7 +144,7 @@ The OpenAPI spec.
 
 ***
 
-### livez()
+### livez() {#livez}
 
 > **livez**(): `Promise`\<`boolean`\>
 
@@ -162,7 +162,7 @@ True if the server is live.
 
 ***
 
-### health()
+### health() {#health}
 
 > **health**(): `Promise`\<`IHealthInfo`\>
 
@@ -180,7 +180,7 @@ The service health.
 
 ***
 
-### setComponentHealth()
+### setComponentHealth() {#setcomponenthealth}
 
 > **setComponentHealth**(`name`, `status`, `details?`, `tenantId?`): `Promise`\<`void`\>
 
@@ -224,7 +224,7 @@ Nothing.
 
 ***
 
-### removeComponentHealth()
+### removeComponentHealth() {#removecomponenthealth}
 
 > **removeComponentHealth**(`name`, `tenantId?`): `Promise`\<`void`\>
 
