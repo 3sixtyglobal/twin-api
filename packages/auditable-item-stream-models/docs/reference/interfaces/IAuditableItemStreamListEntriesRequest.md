@@ -4,7 +4,7 @@ Get an auditable item stream entries.
 
 ## Properties
 
-### headers?
+### headers? {#headers}
 
 > `optional` **headers**: `object`
 
@@ -16,7 +16,7 @@ The headers which can be used to determine the response data type.
 
 ***
 
-### pathParams
+### pathParams {#pathparams}
 
 > **pathParams**: `object`
 
@@ -30,7 +30,7 @@ The id of the stream to get.
 
 ***
 
-### query?
+### query? {#query}
 
 > `optional` **query**: `object`
 

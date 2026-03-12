@@ -4,7 +4,7 @@ Create an auditable item stream.
 
 ## Properties
 
-### body
+### body {#body}
 
 > **body**: `object`
 

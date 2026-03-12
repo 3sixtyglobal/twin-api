@@ -28,7 +28,7 @@ The dependencies for the auditable item stream connector.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
 > `readonly` `static` **CLASS\_NAME**: `string`
 
@@ -36,7 +36,7 @@ Runtime name for the class.
 
 ## Methods
 
-### className()
+### className() {#classname}
 
 > **className**(): `string`
 
@@ -54,7 +54,7 @@ The class name of the component.
 
 ***
 
-### create()
+### create() {#create}
 
 > **create**(`stream`, `options?`): `Promise`\<`string`\>
 
@@ -101,7 +101,7 @@ The id of the new stream item.
 
 ***
 
-### get()
+### get() {#get}
 
 > **get**(`id`, `options?`): `Promise`\<`IAuditableItemStream`\>
 
@@ -159,7 +159,7 @@ NotFoundError if the stream is not found
 
 ***
 
-### update()
+### update() {#update}
 
 > **update**(`stream`): `Promise`\<`void`\>
 
@@ -195,7 +195,7 @@ Nothing.
 
 ***
 
-### remove()
+### remove() {#remove}
 
 > **remove**(`id`): `Promise`\<`void`\>
 
@@ -221,7 +221,7 @@ Nothing.
 
 ***
 
-### query()
+### query() {#query}
 
 > **query**(`conditions?`, `orderBy?`, `orderByDirection?`, `properties?`, `cursor?`, `limit?`): `Promise`\<\{ `entries`: `IAuditableItemStreamList`; `cursor?`: `string`; \}\>
 
@@ -277,7 +277,7 @@ The entities, which can be partial if a limited keys list was provided.
 
 ***
 
-### createEntry()
+### createEntry() {#createentry}
 
 > **createEntry**(`streamId`, `entryObject`): `Promise`\<`string`\>
 
@@ -309,7 +309,7 @@ The id of the created entry, if not provided.
 
 ***
 
-### getEntry()
+### getEntry() {#getentry}
 
 > **getEntry**(`streamId`, `entryId`, `options?`): `Promise`\<`IAuditableItemStreamEntry`\>
 
@@ -355,7 +355,7 @@ NotFoundError if the stream is not found.
 
 ***
 
-### getEntryObject()
+### getEntryObject() {#getentryobject}
 
 > **getEntryObject**(`streamId`, `entryId`): `Promise`\<`IJsonLdNodeObject`\>
 
@@ -391,7 +391,7 @@ NotFoundError if the stream is not found.
 
 ***
 
-### updateEntry()
+### updateEntry() {#updateentry}
 
 > **updateEntry**(`streamId`, `entryId`, `entryObject`): `Promise`\<`void`\>
 
@@ -429,7 +429,7 @@ Nothing.
 
 ***
 
-### removeEntry()
+### removeEntry() {#removeentry}
 
 > **removeEntry**(`streamId`, `entryId`): `Promise`\<`void`\>
 
@@ -461,7 +461,7 @@ Nothing.
 
 ***
 
-### getEntries()
+### getEntries() {#getentries}
 
 > **getEntries**(`streamId?`, `options?`): `Promise`\<\{ `entries`: `IAuditableItemStreamEntryList`; `cursor?`: `string`; \}\>
 
@@ -531,7 +531,7 @@ NotFoundError if the stream is not found.
 
 ***
 
-### getEntryObjects()
+### getEntryObjects() {#getentryobjects}
 
 > **getEntryObjects**(`streamId?`, `options?`): `Promise`\<\{ `entries`: `IAuditableItemStreamEntryObjectList`; `cursor?`: `string`; \}\>
 
@@ -595,7 +595,7 @@ NotFoundError if the stream is not found.
 
 ***
 
-### removeVerifiable()
+### removeVerifiable() {#removeverifiable}
 
 > **removeVerifiable**(`streamId`): `Promise`\<`void`\>
 

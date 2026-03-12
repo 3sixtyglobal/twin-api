@@ -14,7 +14,7 @@ Class describing the auditable item stream entry.
 
 ## Properties
 
-### id
+### id {#id}
 
 > **id**: `string`
 
@@ -22,7 +22,7 @@ The id of the entry.
 
 ***
 
-### streamId
+### streamId {#streamid}
 
 > **streamId**: `string`
 
@@ -30,7 +30,7 @@ The stream that the entry belongs to.
 
 ***
 
-### dateCreated
+### dateCreated {#datecreated}
 
 > **dateCreated**: `string`
 
@@ -38,7 +38,7 @@ The date/time of when the entry was created.
 
 ***
 
-### dateModified?
+### dateModified? {#datemodified}
 
 > `optional` **dateModified**: `string`
 
@@ -46,7 +46,7 @@ The date/time of when the entry was modified.
 
 ***
 
-### dateDeleted?
+### dateDeleted? {#datedeleted}
 
 > `optional` **dateDeleted**: `string`
 
@@ -54,7 +54,7 @@ The date/time of when the entry was deleted, as we never actually remove items.
 
 ***
 
-### userIdentity?
+### userIdentity? {#useridentity}
 
 > `optional` **userIdentity**: `string`
 
@@ -62,7 +62,7 @@ The identity of the user that added the entry.
 
 ***
 
-### entryObject
+### entryObject {#entryobject}
 
 > **entryObject**: `IJsonLdNodeObject`
 
@@ -70,7 +70,7 @@ Object to associate with the entry as JSON-LD.
 
 ***
 
-### index
+### index {#index}
 
 > **index**: `number`
 
@@ -78,7 +78,7 @@ The index of the entry in the stream.
 
 ***
 
-### proofId?
+### proofId? {#proofid}
 
 > `optional` **proofId**: `string`
 

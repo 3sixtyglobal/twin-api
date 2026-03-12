@@ -4,7 +4,7 @@ Interface describing an auditable item stream.
 
 ## Properties
 
-### @context
+### @context {#context}
 
 > **@context**: \[`"https://schema.twindev.org/ais/"`, `"https://schema.twindev.org/common/"`, `...IJsonLdContextDefinitionElement[]`\]
 
@@ -12,7 +12,7 @@ JSON-LD Context.
 
 ***
 
-### type
+### type {#type}
 
 > **type**: `"AuditableItemStream"`
 
@@ -20,7 +20,7 @@ JSON-LD Type.
 
 ***
 
-### id
+### id {#id}
 
 > **id**: `string`
 
@@ -28,99 +28,88 @@ The id of the stream.
 
 ***
 
-### dateCreated
+### dateCreated {#datecreated}
 
 > **dateCreated**: `string`
 
 The date/time of when the stream was created.
-json-ld namespace:sch
 
 ***
 
-### dateModified?
+### dateModified? {#datemodified}
 
 > `optional` **dateModified**: `string`
 
 The date/time of when the stream was modified.
-json-ld namespace:sch
 
 ***
 
-### organizationIdentity?
+### organizationIdentity? {#organizationidentity}
 
 > `optional` **organizationIdentity**: `string`
 
 The identity of the organization which controls the stream.
-json-ld namespace:twin-common
 
 ***
 
-### userIdentity?
+### userIdentity? {#useridentity}
 
 > `optional` **userIdentity**: `string`
 
 The identity of the user who created the stream.
-json-ld namespace:twin-common
 
 ***
 
-### annotationObject?
+### annotationObject? {#annotationobject}
 
 > `optional` **annotationObject**: `IJsonLdNodeObject`
 
 The object to associate with the entry as JSON-LD.
-json-ld namespace:twin-common
 
 ***
 
-### proofId?
+### proofId? {#proofid}
 
 > `optional` **proofId**: `string`
 
 The id of the immutable proof for the stream.
-json-ld type:sch:identifier
 
 ***
 
-### immutableInterval
+### immutableInterval {#immutableinterval}
 
 > **immutableInterval**: `number`
 
 After how many entries do we add immutable checks.
-json-ld type:sch:Integer
 
 ***
 
-### numberOfItems
+### numberOfItems {#numberofitems}
 
 > **numberOfItems**: `number`
 
 How many entries are in the stream.
-json-ld id:sch:numberOfItems
 
 ***
 
-### entries?
+### entries? {#entries}
 
 > `optional` **entries**: [`IAuditableItemStreamEntry`](IAuditableItemStreamEntry.md)[]
 
 Entries in the stream.
-json-ld container:set
 
 ***
 
-### cursor?
+### cursor? {#cursor}
 
 > `optional` **cursor**: `string`
 
 The cursor for the stream entries.
-json-ld namespace:twin-common
 
 ***
 
-### verification?
+### verification? {#verification}
 
 > `optional` **verification**: `IImmutableProofVerification`
 
 The verification of the stream.
-json-ld id
