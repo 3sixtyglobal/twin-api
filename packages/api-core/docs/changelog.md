@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.21](https://github.com/twinfoundation/api/compare/api-core-v0.0.3-next.20...api-core-v0.0.3-next.21) (2026-03-11)
+
+
+### Bug Fixes
+
+* merge per-request headers in BaseRestClient.fetch() ([#82](https://github.com/twinfoundation/api/issues/82)) ([57d4190](https://github.com/twinfoundation/api/commit/57d419006b1e24f81863a0d33936fcf1dfb0d4d3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.20 to 0.0.3-next.21
+
 ## [0.0.3-next.20](https://github.com/twinfoundation/api/compare/api-core-v0.0.3-next.19...api-core-v0.0.3-next.20) (2026-02-09)
 
 
