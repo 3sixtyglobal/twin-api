@@ -22,6 +22,6 @@ The status of the component.
 
 ### details? {#details}
 
-> `optional` **details**: `string`
+> `optional` **details?**: `string`
 
 The details for the status.

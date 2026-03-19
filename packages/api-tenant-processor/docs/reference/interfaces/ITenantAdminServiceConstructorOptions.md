@@ -6,7 +6,7 @@ Options for the Tenant Admin Service constructor.
 
 ### tenantEntityStorageType? {#tenantentitystoragetype}
 
-> `optional` **tenantEntityStorageType**: `string`
+> `optional` **tenantEntityStorageType?**: `string`
 
 The entity storage for the tenants.
 
@@ -20,6 +20,6 @@ tenant
 
 ### config? {#config}
 
-> `optional` **config**: [`ITenantAdminServiceConfig`](ITenantAdminServiceConfig.md)
+> `optional` **config?**: [`ITenantAdminServiceConfig`](ITenantAdminServiceConfig.md)
 
 Configuration for the admin service.

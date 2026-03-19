@@ -46,7 +46,7 @@ The date the tenant was modified.
 
 ### publicOrigin? {#publicorigin}
 
-> `optional` **publicOrigin**: `string`
+> `optional` **publicOrigin?**: `string`
 
 The public origin available to the public for accessing the API.
 

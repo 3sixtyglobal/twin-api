@@ -14,6 +14,6 @@ The status.
 
 ### components? {#components}
 
-> `optional` **components**: [`IHealthComponentInfo`](IHealthComponentInfo.md)[]
+> `optional` **components?**: [`IHealthComponentInfo`](IHealthComponentInfo.md)[]
 
 The status of the components.

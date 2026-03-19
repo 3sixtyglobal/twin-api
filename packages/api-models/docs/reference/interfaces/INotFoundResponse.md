@@ -22,6 +22,6 @@ The body which contains the error.
 
 ##### notFoundId?
 
-> `optional` **notFoundId**: `string`
+> `optional` **notFoundId?**: `string`
 
 The id if the item that was not found.

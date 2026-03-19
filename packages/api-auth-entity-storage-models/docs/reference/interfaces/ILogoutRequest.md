@@ -6,12 +6,12 @@ Perform a logout on the auth token.
 
 ### query? {#query}
 
-> `optional` **query**: `object`
+> `optional` **query?**: `object`
 
 The logout token details.
 
 #### token?
 
-> `optional` **token**: `string`
+> `optional` **token?**: `string`
 
 The token to logout, if it uses a mechanism with public access.

@@ -6,7 +6,7 @@ Configuration for the request logging processor.
 
 ### includeBody? {#includebody}
 
-> `optional` **includeBody**: `boolean`
+> `optional` **includeBody?**: `boolean`
 
 Include the body objects when logging the information.
 
@@ -14,7 +14,7 @@ Include the body objects when logging the information.
 
 ### fullBase64? {#fullbase64}
 
-> `optional` **fullBase64**: `boolean`
+> `optional` **fullBase64?**: `boolean`
 
 Show the full base64 content for data, default to abbreviate.
 
@@ -22,6 +22,6 @@ Show the full base64 content for data, default to abbreviate.
 
 ### obfuscateProperties? {#obfuscateproperties}
 
-> `optional` **obfuscateProperties**: `string`[]
+> `optional` **obfuscateProperties?**: `string`[]
 
 List of property names to obfuscate, can be regex, defaults to "password".

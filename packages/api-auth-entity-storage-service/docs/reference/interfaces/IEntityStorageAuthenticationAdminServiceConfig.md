@@ -6,7 +6,7 @@ Configuration for the entity storage authentication admin service.
 
 ### minPasswordLength? {#minpasswordlength}
 
-> `optional` **minPasswordLength**: `number`
+> `optional` **minPasswordLength?**: `number`
 
 The minimum password length.
 

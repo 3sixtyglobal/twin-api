@@ -44,7 +44,7 @@ The path to use for routing.
 
 ### skipAuth? {#skipauth}
 
-> `optional` **skipAuth**: `boolean`
+> `optional` **skipAuth?**: `boolean`
 
 Skips the authentication requirement for this route.
 
@@ -56,7 +56,7 @@ Skips the authentication requirement for this route.
 
 ### skipTenant? {#skiptenant}
 
-> `optional` **skipTenant**: `boolean`
+> `optional` **skipTenant?**: `boolean`
 
 Skips the tenant requirement for this route.
 
@@ -68,7 +68,7 @@ Skips the tenant requirement for this route.
 
 ### requiredScope? {#requiredscope}
 
-> `optional` **requiredScope**: `string`[]
+> `optional` **requiredScope?**: `string`[]
 
 The user must have one of the specified scopes to access the route.
 
@@ -80,7 +80,7 @@ The user must have one of the specified scopes to access the route.
 
 ### processorFeatures? {#processorfeatures}
 
-> `optional` **processorFeatures**: `string`[]
+> `optional` **processorFeatures?**: `string`[]
 
 The features supported by additional processors to run for this route.
 
@@ -92,7 +92,7 @@ The features supported by additional processors to run for this route.
 
 ### processorData? {#processordata}
 
-> `optional` **processorData**: `object`
+> `optional` **processorData?**: `object`
 
 The data for additional processors to run for this route.
 
@@ -130,7 +130,7 @@ The http method.
 
 ***
 
-### handler() {#handler}
+### handler {#handler}
 
 > **handler**: (`httpRequestContext`, `request`) => `Promise`\<`U`\>
 
@@ -158,7 +158,7 @@ The request object, combined query param, path params and body.
 
 ### requestType? {#requesttype}
 
-> `optional` **requestType**: `object`
+> `optional` **requestType?**: `object`
 
 The type of the request object.
 
@@ -170,13 +170,13 @@ The object type for the request.
 
 #### mimeType?
 
-> `optional` **mimeType**: `string`
+> `optional` **mimeType?**: `string`
 
 The mime type of the request, defaults to "application/json" if there is a body.
 
 #### examples?
 
-> `optional` **examples**: [`IRestRouteRequestExample`](IRestRouteRequestExample.md)\<`T`\>[]
+> `optional` **examples?**: [`IRestRouteRequestExample`](IRestRouteRequestExample.md)\<`T`\>[]
 
 Example objects for the request.
 
@@ -184,7 +184,7 @@ Example objects for the request.
 
 ### responseType? {#responsetype}
 
-> `optional` **responseType**: `object`[]
+> `optional` **responseType?**: `object`[]
 
 The type of the response object.
 
@@ -196,13 +196,13 @@ The object type of the response.
 
 #### mimeType?
 
-> `optional` **mimeType**: `string`
+> `optional` **mimeType?**: `string`
 
 The mime type of the response, defaults to "application/json" if there is a body.
 
 #### examples?
 
-> `optional` **examples**: [`IRestRouteResponseExample`](IRestRouteResponseExample.md)\<`U`\>[]
+> `optional` **examples?**: [`IRestRouteResponseExample`](IRestRouteResponseExample.md)\<`U`\>[]
 
 Example objects of the response.
 
@@ -210,6 +210,6 @@ Example objects of the response.
 
 ### excludeFromSpec? {#excludefromspec}
 
-> `optional` **excludeFromSpec**: `boolean`
+> `optional` **excludeFromSpec?**: `boolean`
 
 Exclude the route from being included in the spec file.

@@ -32,6 +32,6 @@ The new password for the user.
 
 #### currentPassword?
 
-> `optional` **currentPassword**: `string`
+> `optional` **currentPassword?**: `string`
 
 The current password for the user.

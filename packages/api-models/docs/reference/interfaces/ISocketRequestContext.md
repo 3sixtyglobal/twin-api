@@ -38,7 +38,7 @@ The state handed through the processors.
 
 ### loggingComponentType? {#loggingcomponenttype}
 
-> `optional` **loggingComponentType**: `string`
+> `optional` **loggingComponentType?**: `string`
 
 Logging component type for the request.
 
@@ -50,7 +50,7 @@ Logging component type for the request.
 
 ### hostingComponentType? {#hostingcomponenttype}
 
-> `optional` **hostingComponentType**: `string`
+> `optional` **hostingComponentType?**: `string`
 
 Hosting component type for the request.
 

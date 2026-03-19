@@ -6,6 +6,6 @@ Options for the RestRouteProcessor constructor.
 
 ### config? {#config}
 
-> `optional` **config**: [`IRouteProcessorConfig`](IRouteProcessorConfig.md)
+> `optional` **config?**: [`IRouteProcessorConfig`](IRouteProcessorConfig.md)
 
 The configuration for the processor.

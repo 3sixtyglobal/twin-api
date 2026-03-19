@@ -76,9 +76,9 @@ The outgoing response.
 
 ##### route
 
-The route to process.
+`IRestRoute`\<`any`, `any`\> \| `undefined`
 
-`IRestRoute`\<`any`, `any`\> | `undefined`
+The route to process.
 
 ##### processorState
 

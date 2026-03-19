@@ -6,7 +6,7 @@ The OpenAPI spec for the endpoints.
 
 ### statusCode? {#statuscode}
 
-> `optional` **statusCode**: `HttpStatusCode`
+> `optional` **statusCode?**: `HttpStatusCode`
 
 Response status code.
 
@@ -14,6 +14,6 @@ Response status code.
 
 ### body? {#body}
 
-> `optional` **body**: `unknown`
+> `optional` **body?**: `unknown`
 
 The spec for the server.

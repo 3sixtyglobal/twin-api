@@ -6,7 +6,7 @@ Options for the LoggingProcessor constructor.
 
 ### loggingComponentType? {#loggingcomponenttype}
 
-> `optional` **loggingComponentType**: `string`
+> `optional` **loggingComponentType?**: `string`
 
 The type for the logging component.
 
@@ -14,6 +14,6 @@ The type for the logging component.
 
 ### config? {#config}
 
-> `optional` **config**: [`ILoggingProcessorConfig`](ILoggingProcessorConfig.md)
+> `optional` **config?**: [`ILoggingProcessorConfig`](ILoggingProcessorConfig.md)
 
 The configuration for the logging processor.

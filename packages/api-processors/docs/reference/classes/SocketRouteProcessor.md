@@ -70,9 +70,9 @@ The server request object containing the socket id and other parameters.
 
 ##### route
 
-The route being requested, if a matching one was found.
+`ISocketRoute`\<`any`, `any`\> \| `undefined`
 
-`ISocketRoute`\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### loggingComponentType?
 
@@ -108,9 +108,9 @@ The server request object containing the socket id and other parameters.
 
 ##### route
 
-The route being requested, if a matching one was found.
+`ISocketRoute`\<`any`, `any`\> \| `undefined`
 
-`ISocketRoute`\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### loggingComponentType?
 
@@ -152,9 +152,9 @@ The outgoing response.
 
 ##### route
 
-The route to process.
+`ISocketRoute`\<`any`, `any`\> \| `undefined`
 
-`ISocketRoute`\<`any`, `any`\> | `undefined`
+The route to process.
 
 ##### processorState
 

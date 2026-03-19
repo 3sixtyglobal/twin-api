@@ -6,13 +6,13 @@ The list of tenants.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `object`
+> `optional` **headers?**: `object`
 
 The headers which can be used to include the cursor.
 
 #### link?
 
-> `optional` **link**: `string` \| `string`[]
+> `optional` **link?**: `string` \| `string`[]
 
 ***
 

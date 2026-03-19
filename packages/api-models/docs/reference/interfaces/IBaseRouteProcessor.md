@@ -61,9 +61,9 @@ The response data to send if any.
 
 ##### route
 
-The route being requested, if a matching one was found.
+`T` \| `undefined`
 
-`T` | `undefined`
+The route being requested, if a matching one was found.
 
 ##### contextIds
 
@@ -121,9 +121,9 @@ The response data to send if any.
 
 ##### route
 
-The route being requested, if a matching one was found.
+`T` \| `undefined`
 
-`T` | `undefined`
+The route being requested, if a matching one was found.
 
 ##### contextIds
 

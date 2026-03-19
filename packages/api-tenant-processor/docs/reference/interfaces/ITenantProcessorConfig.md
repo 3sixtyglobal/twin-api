@@ -6,7 +6,7 @@ Configuration for the tenant processor
 
 ### apiKeyName? {#apikeyname}
 
-> `optional` **apiKeyName**: `string`
+> `optional` **apiKeyName?**: `string`
 
 The key to look for in the header or query params for the api key.
 

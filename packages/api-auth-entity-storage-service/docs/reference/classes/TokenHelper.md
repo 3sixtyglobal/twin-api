@@ -50,15 +50,15 @@ The subject for the token.
 
 ##### organizationIdentity
 
-The organization for the token.
+`string` \| `undefined`
 
-`string` | `undefined`
+The organization for the token.
 
 ##### tenantId
 
-The tenant id for the token.
+`string` \| `undefined`
 
-`string` | `undefined`
+The tenant id for the token.
 
 ##### ttlMinutes
 
@@ -102,9 +102,9 @@ The signing key name.
 
 ##### token
 
-The token to verify.
+`string` \| `undefined`
 
-`string` | `undefined`
+The token to verify.
 
 ##### requiredScopes?
 

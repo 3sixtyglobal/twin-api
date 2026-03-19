@@ -6,7 +6,7 @@ Definition for the configuration of a socket service.
 
 ### basePath? {#basepath}
 
-> `optional` **basePath**: `string`
+> `optional` **basePath?**: `string`
 
 Base path for the socket service, defaults to /socket.
 
@@ -22,7 +22,7 @@ The endpoint where the api is hosted.
 
 ### pathPrefix? {#pathprefix}
 
-> `optional` **pathPrefix**: `string`
+> `optional` **pathPrefix?**: `string`
 
 The prefix to the routes.
 
@@ -30,6 +30,6 @@ The prefix to the routes.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `IHttpHeaders`
+> `optional` **headers?**: `IHttpHeaders`
 
 The headers to include in requests.

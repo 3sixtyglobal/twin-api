@@ -6,7 +6,7 @@ Options for the web server.
 
 ### port? {#port}
 
-> `optional` **port**: `number`
+> `optional` **port?**: `number`
 
 The port to bind the web server to.
 
@@ -20,7 +20,7 @@ The port to bind the web server to.
 
 ### host? {#host}
 
-> `optional` **host**: `string`
+> `optional` **host?**: `string`
 
 The address to bind the web server to.
 
@@ -34,7 +34,7 @@ localhost
 
 ### methods? {#methods}
 
-> `optional` **methods**: `HttpMethod`[]
+> `optional` **methods?**: `HttpMethod`[]
 
 The methods that the server accepts.
 
@@ -48,7 +48,7 @@ The methods that the server accepts.
 
 ### allowedHeaders? {#allowedheaders}
 
-> `optional` **allowedHeaders**: `string`[]
+> `optional` **allowedHeaders?**: `string`[]
 
 Any additional allowed headers.
 
@@ -56,7 +56,7 @@ Any additional allowed headers.
 
 ### exposedHeaders? {#exposedheaders}
 
-> `optional` **exposedHeaders**: `string`[]
+> `optional` **exposedHeaders?**: `string`[]
 
 And additional exposed headers.
 
@@ -64,7 +64,7 @@ And additional exposed headers.
 
 ### corsOrigins? {#corsorigins}
 
-> `optional` **corsOrigins**: `string` \| `string`[]
+> `optional` **corsOrigins?**: `string` \| `string`[]
 
 The allowed CORS domains.
 

@@ -6,6 +6,6 @@ Interface which defines a REST route response.
 
 ### attachment? {#attachment}
 
-> `optional` **attachment**: [`IRestRouteResponseAttachmentOptions`](IRestRouteResponseAttachmentOptions.md)
+> `optional` **attachment?**: [`IRestRouteResponseAttachmentOptions`](IRestRouteResponseAttachmentOptions.md)
 
 Additional options that can be used to control the response.

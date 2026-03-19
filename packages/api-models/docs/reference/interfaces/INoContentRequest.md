@@ -10,7 +10,7 @@ A REST request with no input parameters.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `undefined`
+> `optional` **headers?**: `undefined`
 
 Incoming Http Headers.
 
@@ -22,7 +22,7 @@ Incoming Http Headers.
 
 ### pathParams? {#pathparams}
 
-> `optional` **pathParams**: `undefined`
+> `optional` **pathParams?**: `undefined`
 
 The path parameters.
 
@@ -34,7 +34,7 @@ The path parameters.
 
 ### query? {#query}
 
-> `optional` **query**: `undefined`
+> `optional` **query?**: `undefined`
 
 The query parameters.
 
@@ -46,7 +46,7 @@ The query parameters.
 
 ### body? {#body}
 
-> `optional` **body**: `undefined`
+> `optional` **body?**: `undefined`
 
 Data to return send as the body.
 

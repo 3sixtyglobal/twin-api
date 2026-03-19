@@ -102,9 +102,9 @@ The outgoing response.
 
 ##### route
 
-The route to process.
+`IBaseRoute` \| `undefined`
 
-`IBaseRoute` | `undefined`
+The route to process.
 
 ##### contextIds
 
@@ -148,9 +148,9 @@ The outgoing response.
 
 ##### route
 
-The route to process.
+`IBaseRoute` \| `undefined`
 
-`IBaseRoute` | `undefined`
+The route to process.
 
 ##### contextIds
 

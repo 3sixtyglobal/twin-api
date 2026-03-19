@@ -6,13 +6,13 @@ The favicon for the server.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `object`
+> `optional` **headers?**: `object`
 
 Additional response headers.
 
 #### content-type?
 
-> `optional` **content-type**: `string`
+> `optional` **content-type?**: `string`
 
 The content type for the response.
 
@@ -20,7 +20,7 @@ The content type for the response.
 
 ### statusCode? {#statuscode}
 
-> `optional` **statusCode**: `HttpStatusCode`
+> `optional` **statusCode?**: `HttpStatusCode`
 
 Response status code.
 
@@ -28,6 +28,6 @@ Response status code.
 
 ### body? {#body}
 
-> `optional` **body**: `Uint8Array`\<`ArrayBufferLike`\>
+> `optional` **body?**: `Uint8Array`\<`ArrayBufferLike`\>
 
 The favicon for the server.

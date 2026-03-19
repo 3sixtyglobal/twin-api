@@ -6,13 +6,13 @@ Response from a login on the server.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `object`
+> `optional` **headers?**: `object`
 
 Response headers.
 
 #### set-cookie?
 
-> `optional` **set-cookie**: `string`
+> `optional` **set-cookie?**: `string`
 
 The cookie containing the auth token.
 

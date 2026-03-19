@@ -6,7 +6,7 @@ Options for the EntityStorageAuthenticationService constructor.
 
 ### userEntityStorageType? {#userentitystoragetype}
 
-> `optional` **userEntityStorageType**: `string`
+> `optional` **userEntityStorageType?**: `string`
 
 The entity storage for the users.
 
@@ -20,7 +20,7 @@ authentication-user
 
 ### vaultConnectorType? {#vaultconnectortype}
 
-> `optional` **vaultConnectorType**: `string`
+> `optional` **vaultConnectorType?**: `string`
 
 The vault for the private keys.
 
@@ -34,7 +34,7 @@ vault
 
 ### authenticationAdminServiceType? {#authenticationadminservicetype}
 
-> `optional` **authenticationAdminServiceType**: `string`
+> `optional` **authenticationAdminServiceType?**: `string`
 
 The admin service.
 
@@ -48,6 +48,6 @@ authentication-admin
 
 ### config? {#config}
 
-> `optional` **config**: [`IEntityStorageAuthenticationServiceConfig`](IEntityStorageAuthenticationServiceConfig.md)
+> `optional` **config?**: [`IEntityStorageAuthenticationServiceConfig`](IEntityStorageAuthenticationServiceConfig.md)
 
 The configuration for the authentication.

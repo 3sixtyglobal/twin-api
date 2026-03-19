@@ -14,7 +14,7 @@ The server information.
 
 ### openApiSpecPath? {#openapispecpath}
 
-> `optional` **openApiSpecPath**: `string`
+> `optional` **openApiSpecPath?**: `string`
 
 The path to the OpenAPI Spec.
 
@@ -22,6 +22,6 @@ The path to the OpenAPI Spec.
 
 ### favIconPath? {#faviconpath}
 
-> `optional` **favIconPath**: `string`
+> `optional` **favIconPath?**: `string`
 
 The path to the favicon.

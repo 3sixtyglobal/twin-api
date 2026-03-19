@@ -44,7 +44,7 @@ The path to use for routing.
 
 ### skipAuth? {#skipauth}
 
-> `optional` **skipAuth**: `boolean`
+> `optional` **skipAuth?**: `boolean`
 
 Skips the authentication requirement for this route.
 
@@ -56,7 +56,7 @@ Skips the authentication requirement for this route.
 
 ### skipTenant? {#skiptenant}
 
-> `optional` **skipTenant**: `boolean`
+> `optional` **skipTenant?**: `boolean`
 
 Skips the tenant requirement for this route.
 
@@ -68,7 +68,7 @@ Skips the tenant requirement for this route.
 
 ### requiredScope? {#requiredscope}
 
-> `optional` **requiredScope**: `string`[]
+> `optional` **requiredScope?**: `string`[]
 
 The user must have one of the specified scopes to access the route.
 
@@ -80,7 +80,7 @@ The user must have one of the specified scopes to access the route.
 
 ### processorFeatures? {#processorfeatures}
 
-> `optional` **processorFeatures**: `string`[]
+> `optional` **processorFeatures?**: `string`[]
 
 The features supported by additional processors to run for this route.
 
@@ -92,7 +92,7 @@ The features supported by additional processors to run for this route.
 
 ### processorData? {#processordata}
 
-> `optional` **processorData**: `object`
+> `optional` **processorData?**: `object`
 
 The data for additional processors to run for this route.
 
@@ -106,7 +106,7 @@ The data for additional processors to run for this route.
 
 ***
 
-### handler() {#handler}
+### handler {#handler}
 
 > **handler**: (`socketRequestContext`, `request`, `emit`) => `void`
 
@@ -138,9 +138,9 @@ The function to emit an event.
 
 ***
 
-### connected()? {#connected}
+### connected? {#connected}
 
-> `optional` **connected**: (`socketRequestContext`) => `void`
+> `optional` **connected?**: (`socketRequestContext`) => `void`
 
 The connected handler.
 
@@ -158,9 +158,9 @@ The request context.
 
 ***
 
-### disconnected()? {#disconnected}
+### disconnected? {#disconnected}
 
-> `optional` **disconnected**: (`socketRequestContext`) => `void`
+> `optional` **disconnected?**: (`socketRequestContext`) => `void`
 
 The disconnected handler.
 

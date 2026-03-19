@@ -50,9 +50,9 @@ The response data to send if any.
 
 ##### route
 
-The route being requested, if a matching one was found.
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> \| `undefined`
 
-[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### contextIds
 
@@ -114,9 +114,9 @@ The response data to send if any.
 
 ##### route
 
-The route being requested, if a matching one was found.
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> \| `undefined`
 
-[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### contextIds
 
@@ -172,9 +172,9 @@ The server request object containing the socket id and other parameters.
 
 ##### route
 
-The route being requested, if a matching one was found.
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> \| `undefined`
 
-[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### loggingComponentType?
 
@@ -206,9 +206,9 @@ The server request object containing the socket id and other parameters.
 
 ##### route
 
-The route being requested, if a matching one was found.
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> \| `undefined`
 
-[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### loggingComponentType?
 
@@ -246,9 +246,9 @@ The response data to send if any.
 
 ##### route
 
-The route being requested, if a matching one was found.
+[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> \| `undefined`
 
-[`ISocketRoute`](ISocketRoute.md)\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### processorState
 

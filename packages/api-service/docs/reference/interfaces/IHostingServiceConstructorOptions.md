@@ -6,7 +6,7 @@ Options for the IHostingService constructor.
 
 ### tenantAdminComponentType? {#tenantadmincomponenttype}
 
-> `optional` **tenantAdminComponentType**: `string`
+> `optional` **tenantAdminComponentType?**: `string`
 
 The tenant admin component type.
 

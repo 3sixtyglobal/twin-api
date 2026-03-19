@@ -6,7 +6,7 @@ Options for the EntityStorageAuthenticationAdminService constructor.
 
 ### userEntityStorageType? {#userentitystoragetype}
 
-> `optional` **userEntityStorageType**: `string`
+> `optional` **userEntityStorageType?**: `string`
 
 The entity storage for the users.
 
@@ -20,6 +20,6 @@ authentication-user
 
 ### config? {#config}
 
-> `optional` **config**: [`IEntityStorageAuthenticationAdminServiceConfig`](IEntityStorageAuthenticationAdminServiceConfig.md)
+> `optional` **config?**: [`IEntityStorageAuthenticationAdminServiceConfig`](IEntityStorageAuthenticationAdminServiceConfig.md)
 
 The configuration for the authentication.

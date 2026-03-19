@@ -14,4 +14,4 @@ The tenant to create.
 
 ##### id?
 
-> `optional` **id**: `string`
+> `optional` **id?**: `string`

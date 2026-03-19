@@ -12,7 +12,7 @@ Model for the standard parameters for an http response.
 
 ### statusCode? {#statuscode}
 
-> `optional` **statusCode**: `HttpStatusCode`
+> `optional` **statusCode?**: `HttpStatusCode`
 
 Response status code.
 
@@ -20,7 +20,7 @@ Response status code.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `IHttpHeaders`
+> `optional` **headers?**: `IHttpHeaders`
 
 Response headers.
 
@@ -28,6 +28,6 @@ Response headers.
 
 ### body? {#body}
 
-> `optional` **body**: `T`
+> `optional` **body?**: `T`
 
 Data to return as the main payload.

@@ -6,7 +6,7 @@ The configuration for the Fastify web server.
 
 ### web? {#web}
 
-> `optional` **web**: `Partial`\<`FastifyServerOptions`\>
+> `optional` **web?**: `Partial`\<`FastifyServerOptions`\>
 
 The web server options.
 
@@ -14,7 +14,7 @@ The web server options.
 
 ### socket? {#socket}
 
-> `optional` **socket**: `Partial`\<`ServerOptions`\>
+> `optional` **socket?**: `Partial`\<`ServerOptions`\>
 
 The socket server options.
 
@@ -22,6 +22,6 @@ The socket server options.
 
 ### includeErrorStack? {#includeerrorstack}
 
-> `optional` **includeErrorStack**: `boolean`
+> `optional` **includeErrorStack?**: `boolean`
 
 Include the stack with errors.

@@ -4,4 +4,4 @@ Model used for Http request query parameters.
 
 ## Indexable
 
-\[`id`: `string`\]: `string`
+> \[`id`: `string`\]: `string`

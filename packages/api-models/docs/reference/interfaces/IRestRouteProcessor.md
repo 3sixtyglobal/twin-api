@@ -50,9 +50,9 @@ The response data to send if any.
 
 ##### route
 
-The route being requested, if a matching one was found.
+[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> \| `undefined`
 
-[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### contextIds
 
@@ -114,9 +114,9 @@ The response data to send if any.
 
 ##### route
 
-The route being requested, if a matching one was found.
+[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> \| `undefined`
 
-[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### contextIds
 
@@ -178,9 +178,9 @@ The response data to send if any.
 
 ##### route
 
-The route being requested, if a matching one was found.
+[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> \| `undefined`
 
-[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> | `undefined`
+The route being requested, if a matching one was found.
 
 ##### processorState
 

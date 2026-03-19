@@ -28,7 +28,7 @@ Example objects for the request.
 
 ### description? {#description}
 
-> `optional` **description**: `string`
+> `optional` **description?**: `string`
 
 Description of the example.
 

@@ -34,7 +34,7 @@ The tags for the routes.
 
 ***
 
-### generateRoutes() {#generateroutes}
+### generateRoutes {#generateroutes}
 
 > **generateRoutes**: (`baseRouteName`, `componentName`) => `T`[]
 

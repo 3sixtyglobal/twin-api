@@ -6,13 +6,13 @@ Response from a refresh on the auth token.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `object`
+> `optional` **headers?**: `object`
 
 Response headers.
 
 #### set-cookie?
 
-> `optional` **set-cookie**: `string`
+> `optional` **set-cookie?**: `string`
 
 The cookie containing the auth token.
 

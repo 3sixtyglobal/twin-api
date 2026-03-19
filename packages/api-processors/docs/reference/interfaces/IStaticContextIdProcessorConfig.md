@@ -22,6 +22,6 @@ The fixed identity value for request context.
 
 ### authOnly? {#authonly}
 
-> `optional` **authOnly**: `boolean`
+> `optional` **authOnly?**: `boolean`
 
 Only add the identity if the request is authenticated.
