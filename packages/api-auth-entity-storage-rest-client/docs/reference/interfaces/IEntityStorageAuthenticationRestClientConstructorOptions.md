@@ -14,6 +14,12 @@ Options for the Entity Storage Authentication REST client constructor.
 
 The name of the cookie to use for storing the auth token.
 
+#### Default
+
+```ts
+access_token
+```
+
 ***
 
 ### endpoint {#endpoint}

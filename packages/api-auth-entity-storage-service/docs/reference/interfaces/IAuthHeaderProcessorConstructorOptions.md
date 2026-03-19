@@ -10,6 +10,12 @@ Options for the AuthHeaderProcessor constructor.
 
 The vault for the private keys.
 
+#### Default
+
+```ts
+vault
+```
+
 ***
 
 ### config? {#config}

@@ -10,6 +10,12 @@ Options for the EntityStorageAuthenticationService constructor.
 
 The entity storage for the users.
 
+#### Default
+
+```ts
+authentication-user
+```
+
 ***
 
 ### vaultConnectorType? {#vaultconnectortype}
@@ -18,6 +24,12 @@ The entity storage for the users.
 
 The vault for the private keys.
 
+#### Default
+
+```ts
+vault
+```
+
 ***
 
 ### authenticationAdminServiceType? {#authenticationadminservicetype}
@@ -25,6 +37,12 @@ The vault for the private keys.
 > `optional` **authenticationAdminServiceType**: `string`
 
 The admin service.
+
+#### Default
+
+```ts
+authentication-admin
+```
 
 ***
 

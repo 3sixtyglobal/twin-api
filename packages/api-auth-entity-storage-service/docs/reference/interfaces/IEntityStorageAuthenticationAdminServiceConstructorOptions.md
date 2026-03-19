@@ -10,6 +10,12 @@ Options for the EntityStorageAuthenticationAdminService constructor.
 
 The entity storage for the users.
 
+#### Default
+
+```ts
+authentication-user
+```
+
 ***
 
 ### config? {#config}

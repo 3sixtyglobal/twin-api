@@ -10,6 +10,12 @@ Configuration for the entity storage authentication service.
 
 The name of the key to retrieve from the vault for signing JWT.
 
+#### Default
+
+```ts
+auth-signing
+```
+
 ***
 
 ### defaultTtlMinutes? {#defaultttlminutes}
@@ -17,3 +23,9 @@ The name of the key to retrieve from the vault for signing JWT.
 > `optional` **defaultTtlMinutes**: `number`
 
 The default time to live for the JWT.
+
+#### Default
+
+```ts
+1440
+```
