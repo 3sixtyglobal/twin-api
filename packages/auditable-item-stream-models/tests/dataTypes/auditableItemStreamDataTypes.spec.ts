@@ -17,7 +17,7 @@ describe("AuditableItemStreamDataTypes", () => {
 		const validationFailures: IValidationFailure[] = [];
 		const isValid = await DataTypeHelper.validate(
 			"",
-			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
+			`${AuditableItemStreamContexts.Namespace}AuditableItemStream${AuditableItemStreamTypes.Stream}`,
 			{
 				id: "foo",
 				dateCreated: new Date().toISOString(),
@@ -34,7 +34,7 @@ describe("AuditableItemStreamDataTypes", () => {
 		const validationFailures: IValidationFailure[] = [];
 		const isValid = await DataTypeHelper.validate(
 			"",
-			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
+			`${AuditableItemStreamContexts.Namespace}AuditableItemStream${AuditableItemStreamTypes.Stream}`,
 			{
 				"@context": [
 					AuditableItemStreamContexts.Namespace,

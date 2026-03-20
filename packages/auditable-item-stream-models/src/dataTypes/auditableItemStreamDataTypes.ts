@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { DataTypeHandlerFactory, type IJsonSchema } from "@twin.org/data-core";
+import { DataTypeHelper } from "@twin.org/data-core";
 import { AuditableItemStreamContexts } from "../models/auditableItemStreamContexts.js";
 import { AuditableItemStreamTypes } from "../models/auditableItemStreamTypes.js";
 import AuditableItemStreamSchema from "../schemas/AuditableItemStream.json" with { type: "json" };
@@ -17,51 +17,33 @@ export class AuditableItemStreamDataTypes {
 	 * Register all the data types.
 	 */
 	public static registerTypes(): void {
-		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
-			() => ({
-				namespace: AuditableItemStreamContexts.Namespace,
+		const types = [
+			{
 				type: AuditableItemStreamTypes.Stream,
-				defaultValue: {},
-				jsonSchema: async () => AuditableItemStreamSchema as IJsonSchema
-			})
-		);
-		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.StreamList}`,
-			() => ({
-				namespace: AuditableItemStreamContexts.Namespace,
+				schema: AuditableItemStreamSchema
+			},
+			{
 				type: AuditableItemStreamTypes.StreamList,
-				defaultValue: {},
-				jsonSchema: async () => AuditableItemStreamListSchema as IJsonSchema
-			})
-		);
-		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.StreamEntry}`,
-			() => ({
-				namespace: AuditableItemStreamContexts.Namespace,
+				schema: AuditableItemStreamListSchema
+			},
+			{
 				type: AuditableItemStreamTypes.StreamEntry,
-				defaultValue: {},
-				jsonSchema: async () => AuditableItemStreamEntrySchema as IJsonSchema
-			})
-		);
-		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.StreamEntryList}`,
-			() => ({
-				namespace: AuditableItemStreamContexts.Namespace,
+				schema: AuditableItemStreamEntrySchema
+			},
+			{
 				type: AuditableItemStreamTypes.StreamEntryList,
-				defaultValue: {},
-				jsonSchema: async () => AuditableItemStreamEntryListSchema as IJsonSchema
-			})
-		);
-
-		DataTypeHandlerFactory.register(
-			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.StreamEntryObjectList}`,
-			() => ({
-				namespace: AuditableItemStreamContexts.Namespace,
+				schema: AuditableItemStreamEntryListSchema
+			},
+			{
 				type: AuditableItemStreamTypes.StreamEntryObjectList,
-				defaultValue: {},
-				jsonSchema: async () => AuditableItemStreamEntryObjectListSchema as IJsonSchema
-			})
+				schema: AuditableItemStreamEntryObjectListSchema
+			}
+		];
+
+		DataTypeHelper.registerTypes(
+			AuditableItemStreamContexts.Namespace,
+			AuditableItemStreamContexts.JsonLdContext,
+			types.map(t => ({ type: `AuditableItemStream${t.type}`, schema: t.schema }))
 		);
 	}
 }
