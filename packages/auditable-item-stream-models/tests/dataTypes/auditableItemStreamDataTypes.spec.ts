@@ -26,7 +26,7 @@ describe("AuditableItemStreamDataTypes", () => {
 			},
 			validationFailures
 		);
-		expect(validationFailures.length).toEqual(1);
+		expect(validationFailures.length).toEqual(3);
 		expect(isValid).toEqual(false);
 	});
 
