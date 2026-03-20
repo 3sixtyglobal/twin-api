@@ -26,6 +26,6 @@ The data to be used in the stream.
 
 #### annotationObject?
 
-> `optional` **annotationObject**: `IJsonLdNodeObject`
+> `optional` **annotationObject?**: `IJsonLdNodeObject`
 
 The object to be used in the stream as JSON-LD.

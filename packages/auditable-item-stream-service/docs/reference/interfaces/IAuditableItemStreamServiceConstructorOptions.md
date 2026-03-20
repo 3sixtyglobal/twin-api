@@ -6,31 +6,49 @@ Options for the auditable item stream service constructor.
 
 ### immutableProofComponentType? {#immutableproofcomponenttype}
 
-> `optional` **immutableProofComponentType**: `string`
+> `optional` **immutableProofComponentType?**: `string`
 
 The immutable proof component type.
+
+#### Default
+
+```ts
+immutable-proof
+```
 
 ***
 
 ### streamEntityStorageType? {#streamentitystoragetype}
 
-> `optional` **streamEntityStorageType**: `string`
+> `optional` **streamEntityStorageType?**: `string`
 
 The entity storage for stream.
+
+#### Default
+
+```ts
+auditable-item-stream
+```
 
 ***
 
 ### streamEntryEntityStorageType? {#streamentryentitystoragetype}
 
-> `optional` **streamEntryEntityStorageType**: `string`
+> `optional` **streamEntryEntityStorageType?**: `string`
 
 The entity storage for stream entries.
+
+#### Default
+
+```ts
+auditable-item-stream-entry
+```
 
 ***
 
 ### eventBusComponentType? {#eventbuscomponenttype}
 
-> `optional` **eventBusComponentType**: `string`
+> `optional` **eventBusComponentType?**: `string`
 
 The event bus component type, defaults to no event bus.
 
@@ -38,6 +56,6 @@ The event bus component type, defaults to no event bus.
 
 ### config? {#config}
 
-> `optional` **config**: [`IAuditableItemStreamServiceConfig`](IAuditableItemStreamServiceConfig.md)
+> `optional` **config?**: [`IAuditableItemStreamServiceConfig`](IAuditableItemStreamServiceConfig.md)
 
 The configuration for the connector.

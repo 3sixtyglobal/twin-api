@@ -38,7 +38,7 @@ The date/time of when the stream was created.
 
 ### dateModified? {#datemodified}
 
-> `optional` **dateModified**: `string`
+> `optional` **dateModified?**: `string`
 
 The date/time of when the stream was modified.
 
@@ -46,7 +46,7 @@ The date/time of when the stream was modified.
 
 ### organizationIdentity? {#organizationidentity}
 
-> `optional` **organizationIdentity**: `string`
+> `optional` **organizationIdentity?**: `string`
 
 The identity of the organization which controls the stream.
 
@@ -54,7 +54,7 @@ The identity of the organization which controls the stream.
 
 ### userIdentity? {#useridentity}
 
-> `optional` **userIdentity**: `string`
+> `optional` **userIdentity?**: `string`
 
 The identity of the user who created the stream.
 
@@ -62,7 +62,7 @@ The identity of the user who created the stream.
 
 ### annotationObject? {#annotationobject}
 
-> `optional` **annotationObject**: `IJsonLdNodeObject`
+> `optional` **annotationObject?**: `IJsonLdNodeObject`
 
 The object to associate with the entry as JSON-LD.
 
@@ -70,7 +70,7 @@ The object to associate with the entry as JSON-LD.
 
 ### proofId? {#proofid}
 
-> `optional` **proofId**: `string`
+> `optional` **proofId?**: `string`
 
 The id of the immutable proof for the stream.
 
@@ -94,7 +94,7 @@ How many entries are in the stream.
 
 ### entries? {#entries}
 
-> `optional` **entries**: [`IAuditableItemStreamEntry`](IAuditableItemStreamEntry.md)[]
+> `optional` **entries?**: [`IAuditableItemStreamEntry`](IAuditableItemStreamEntry.md)[]
 
 Entries in the stream.
 
@@ -102,7 +102,7 @@ Entries in the stream.
 
 ### cursor? {#cursor}
 
-> `optional` **cursor**: `string`
+> `optional` **cursor?**: `string`
 
 The cursor for the stream entries.
 
@@ -110,6 +110,6 @@ The cursor for the stream entries.
 
 ### verification? {#verification}
 
-> `optional` **verification**: `IImmutableProofVerification`
+> `optional` **verification?**: `IImmutableProofVerification`
 
 The verification of the stream.

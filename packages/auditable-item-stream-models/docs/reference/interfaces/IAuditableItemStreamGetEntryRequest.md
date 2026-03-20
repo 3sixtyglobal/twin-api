@@ -6,7 +6,7 @@ Get an entry in the auditable item stream.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `object`
+> `optional` **headers?**: `object`
 
 The headers which can be used to determine the response data type.
 
@@ -38,12 +38,12 @@ The id of the entry to update.
 
 ### query? {#query}
 
-> `optional` **query**: `object`
+> `optional` **query?**: `object`
 
 The query parameters.
 
 #### verifyEntry?
 
-> `optional` **verifyEntry**: `string`
+> `optional` **verifyEntry?**: `string`
 
 Verify the entry, defaults to false.

@@ -6,7 +6,7 @@ Get an auditable item stream entries.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `object`
+> `optional` **headers?**: `object`
 
 The headers which can be used to determine the response data type.
 
@@ -32,42 +32,42 @@ The id of the stream to get.
 
 ### query? {#query}
 
-> `optional` **query**: `object`
+> `optional` **query?**: `object`
 
 The query parameters.
 
 #### conditions?
 
-> `optional` **conditions**: `string`
+> `optional` **conditions?**: `string`
 
 The conditions to filter the stream, JSON stringified IComparator[].
 
 #### includeDeleted?
 
-> `optional` **includeDeleted**: `string`
+> `optional` **includeDeleted?**: `string`
 
 Whether to include deleted entries, defaults to false.
 
 #### verifyEntries?
 
-> `optional` **verifyEntries**: `string`
+> `optional` **verifyEntries?**: `string`
 
 Should the entries be verified, defaults to false.
 
 #### order?
 
-> `optional` **order**: `SortDirection`
+> `optional` **order?**: `SortDirection`
 
 Retrieve the entries in ascending/descending time order, defaults to Ascending.
 
 #### limit?
 
-> `optional` **limit**: `string`
+> `optional` **limit?**: `string`
 
 How many entries to return.
 
 #### cursor?
 
-> `optional` **cursor**: `string`
+> `optional` **cursor?**: `string`
 
 Cursor to use for next chunk of data.

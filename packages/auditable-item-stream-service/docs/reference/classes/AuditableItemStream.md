@@ -32,7 +32,7 @@ The date/time of when the stream was created.
 
 ### dateModified? {#datemodified}
 
-> `optional` **dateModified**: `string`
+> `optional` **dateModified?**: `string`
 
 The date/time of when the stream was modified.
 
@@ -40,7 +40,7 @@ The date/time of when the stream was modified.
 
 ### organizationIdentity? {#organizationidentity}
 
-> `optional` **organizationIdentity**: `string`
+> `optional` **organizationIdentity?**: `string`
 
 The identity of the organization which controls the stream.
 
@@ -48,7 +48,7 @@ The identity of the organization which controls the stream.
 
 ### userIdentity? {#useridentity}
 
-> `optional` **userIdentity**: `string`
+> `optional` **userIdentity?**: `string`
 
 The identity of the user which created the stream.
 
@@ -56,7 +56,7 @@ The identity of the user which created the stream.
 
 ### annotationObject? {#annotationobject}
 
-> `optional` **annotationObject**: `IJsonLdNodeObject`
+> `optional` **annotationObject?**: `IJsonLdNodeObject`
 
 Object to associate with the stream as JSON-LD.
 
@@ -80,6 +80,6 @@ After how many entries do we add immutable checks.
 
 ### proofId? {#proofid}
 
-> `optional` **proofId**: `string`
+> `optional` **proofId?**: `string`
 
 The immutable proof id.

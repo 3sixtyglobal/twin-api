@@ -158,7 +158,6 @@
 						"in": "query",
 						"required": false,
 						"schema": {
-							"type": "string",
 							"enum": [
 								"dateCreated",
 								"dateModified"
@@ -414,7 +413,7 @@
 					},
 					{
 						"name": "includeEntries",
-						"description": "Whether to include the entries, defaults to false. The entries will be limited to the first page of entries in date descending order. If you want to get more entries you can use the returned cursor with the get entries method.",
+						"description": "Whether to include the entries, defaults to false.\nThe entries will be limited to the first page of entries in date descending order.\nIf you want to get more entries you can use the returned cursor with the get entries method.",
 						"in": "query",
 						"required": false,
 						"schema": {
@@ -2528,14 +2527,13 @@
 							},
 							"required": [
 								"entryObject"
-							],
-							"additionalProperties": false
+							]
 						},
 						"description": "The entries for the stream."
 					},
 					"immutableInterval": {
 						"type": "number",
-						"description": "After how many entries do we add immutable checks, defaults to service configured value. A value of 0 will disable immutable checks, 1 will be every item, or any other integer for an interval."
+						"description": "After how many entries do we add immutable checks, defaults to service configured value.\nA value of 0 will disable immutable checks, 1 will be every item, or any other integer for an interval."
 					}
 				},
 				"description": "The data to be used in the stream."
@@ -2562,6 +2560,7 @@
 				"description": "The data to be used in the stream."
 			},
 			"Error": {
+				"description": "Model to describe serialized error.",
 				"type": "object",
 				"properties": {
 					"name": {
@@ -2592,8 +2591,7 @@
 				"required": [
 					"name",
 					"message"
-				],
-				"description": "Model to describe serialized error."
+				]
 			},
 			"NotFoundResponse": {
 				"type": "object",
@@ -2601,52 +2599,27 @@
 					"notFoundId": {
 						"type": "string",
 						"description": "The id if the item that was not found."
-					},
-					"name": {
-						"type": "string",
-						"description": "The name for the error."
-					},
-					"message": {
-						"type": "string",
-						"description": "The message for the error."
-					},
-					"source": {
-						"type": "string",
-						"description": "The source of the error."
-					},
-					"properties": {
-						"type": "object",
-						"additionalProperties": {},
-						"description": "Any additional information for the error."
-					},
-					"stack": {
-						"type": "string",
-						"description": "The stack trace for the error."
-					},
-					"cause": {
-						"$ref": "#/components/schemas/Error"
 					}
 				},
-				"required": [
-					"message",
-					"name"
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Error"
+					}
 				],
 				"description": "The body which contains the error."
 			},
 			"SortDirection": {
+				"description": "The sort directions.",
 				"anyOf": [
 					{
-						"type": "string",
 						"const": "asc",
 						"description": "Ascending."
 					},
 					{
-						"type": "string",
 						"const": "desc",
 						"description": "Descending."
 					}
-				],
-				"description": "The sort directions."
+				]
 			}
 		},
 		"securitySchemes": {

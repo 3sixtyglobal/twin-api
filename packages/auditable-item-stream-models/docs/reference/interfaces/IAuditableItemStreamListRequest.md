@@ -6,7 +6,7 @@ Get the a list of the streams.
 
 ### headers? {#headers}
 
-> `optional` **headers**: `object`
+> `optional` **headers?**: `object`
 
 The headers which can be used to determine the response data type.
 
@@ -18,42 +18,42 @@ The headers which can be used to determine the response data type.
 
 ### query? {#query}
 
-> `optional` **query**: `object`
+> `optional` **query?**: `object`
 
 The query parameters.
 
 #### conditions?
 
-> `optional` **conditions**: `string`
+> `optional` **conditions?**: `string`
 
 The conditions to filter the streams, JSON stringified IComparator[].
 
 #### orderBy?
 
-> `optional` **orderBy**: `"dateCreated"` \| `"dateModified"`
+> `optional` **orderBy?**: `"dateCreated"` \| `"dateModified"`
 
 The order for the results, default to created.
 
 #### orderByDirection?
 
-> `optional` **orderByDirection**: `SortDirection`
+> `optional` **orderByDirection?**: `SortDirection`
 
 The direction for the order, defaults to desc.
 
 #### properties?
 
-> `optional` **properties**: `string`
+> `optional` **properties?**: `string`
 
 The properties to return as a comma separated list, defaults to "id,object".
 
 #### cursor?
 
-> `optional` **cursor**: `string`
+> `optional` **cursor?**: `string`
 
 The optional cursor to get next chunk.
 
 #### limit?
 
-> `optional` **limit**: `string`
+> `optional` **limit?**: `string`
 
 Limit the number of entities to return.

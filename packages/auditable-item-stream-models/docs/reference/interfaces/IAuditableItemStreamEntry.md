@@ -38,7 +38,7 @@ The date/time of when the entry was created.
 
 ### dateModified? {#datemodified}
 
-> `optional` **dateModified**: `string`
+> `optional` **dateModified?**: `string`
 
 The date/time of when the entry was modified.
 
@@ -46,7 +46,7 @@ The date/time of when the entry was modified.
 
 ### dateDeleted? {#datedeleted}
 
-> `optional` **dateDeleted**: `string`
+> `optional` **dateDeleted?**: `string`
 
 The date/time of when the entry was deleted, as we never actually remove items.
 
@@ -54,7 +54,7 @@ The date/time of when the entry was deleted, as we never actually remove items.
 
 ### userIdentity? {#useridentity}
 
-> `optional` **userIdentity**: `string`
+> `optional` **userIdentity?**: `string`
 
 The identity of the user which added the entry to the stream.
 
@@ -78,7 +78,7 @@ The index of the entry in the stream.
 
 ### proofId? {#proofid}
 
-> `optional` **proofId**: `string`
+> `optional` **proofId?**: `string`
 
 The id of the immutable proof.
 
@@ -86,6 +86,6 @@ The id of the immutable proof.
 
 ### verification? {#verification}
 
-> `optional` **verification**: `IImmutableProofVerification`
+> `optional` **verification?**: `IImmutableProofVerification`
 
 The verification of the entry.
