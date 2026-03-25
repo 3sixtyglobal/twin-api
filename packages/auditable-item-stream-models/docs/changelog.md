@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3-next.12](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.11...auditable-item-stream-models-v0.0.3-next.12) (2026-03-25)
+
+
+### Features
+
+* add validation and create structural changes ([#56](https://github.com/twinfoundation/auditable-item-stream/issues/56)) ([f7183b4](https://github.com/twinfoundation/auditable-item-stream/commit/f7183b42bf9563f8aa015476b82959fba2936bcd))
+* register types with correct namespace ([02c64e8](https://github.com/twinfoundation/auditable-item-stream/commit/02c64e887ba0e9b3a8f61e5db4e39aed8e143329))
+
 ## [0.0.3-next.11](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.10...auditable-item-stream-models-v0.0.3-next.11) (2026-02-25)
 
 

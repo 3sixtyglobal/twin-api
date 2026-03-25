@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.12](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.11...auditable-item-stream-service-v0.0.3-next.12) (2026-03-25)
+
+
+### Features
+
+* add validation and create structural changes ([#56](https://github.com/twinfoundation/auditable-item-stream/issues/56)) ([f7183b4](https://github.com/twinfoundation/auditable-item-stream/commit/f7183b42bf9563f8aa015476b82959fba2936bcd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.11 to 0.0.3-next.12
+
 ## [0.0.3-next.11](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.10...auditable-item-stream-service-v0.0.3-next.11) (2026-02-25)
 
 
