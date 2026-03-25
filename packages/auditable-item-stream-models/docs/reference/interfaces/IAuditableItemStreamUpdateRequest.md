@@ -20,12 +20,6 @@ The id of the stream to update.
 
 ### body {#body}
 
-> **body**: `object`
+> **body**: `Pick`\<[`IAuditableItemStream`](IAuditableItemStream.md), `"@context"` \| `"type"` \| `"annotationObject"`\>
 
-The data to be used in the stream.
-
-#### annotationObject?
-
-> `optional` **annotationObject?**: `IJsonLdNodeObject`
-
-The object to be used in the stream as JSON-LD.
+The data to be used in the stream, entries should be updated separately.

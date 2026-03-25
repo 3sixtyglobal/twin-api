@@ -2,21 +2,17 @@
 
 Interface describing an entry for the stream.
 
+## Extends
+
+- [`IAuditableItemStreamEntryBase`](IAuditableItemStreamEntryBase.md)
+
 ## Properties
 
-### @context {#context}
+### @context? {#context}
 
-> **@context**: \[`"https://schema.twindev.org/ais/"`, `"https://schema.twindev.org/common/"`, `...IJsonLdContextDefinitionElement[]`\]
+> `optional` **@context?**: \[`"https://schema.twindev.org/ais/"`, `"https://schema.twindev.org/common/"`, `...IJsonLdContextDefinitionElement[]`\]
 
 JSON-LD Context.
-
-***
-
-### type {#type}
-
-> **type**: `"AuditableItemStreamEntry"`
-
-JSON-LD Type.
 
 ***
 
@@ -60,14 +56,6 @@ The identity of the user which added the entry to the stream.
 
 ***
 
-### entryObject {#entryobject}
-
-> **entryObject**: `IJsonLdNodeObject`
-
-The object to associate with the entry as JSON-LD.
-
-***
-
 ### index {#index}
 
 > **index**: `number`
@@ -89,3 +77,27 @@ The id of the immutable proof.
 > `optional` **verification?**: `IImmutableProofVerification`
 
 The verification of the entry.
+
+***
+
+### type {#type}
+
+> **type**: `"AuditableItemStreamEntry"`
+
+JSON-LD Type.
+
+#### Inherited from
+
+[`IAuditableItemStreamEntryBase`](IAuditableItemStreamEntryBase.md).[`type`](IAuditableItemStreamEntryBase.md#type)
+
+***
+
+### entryObject {#entryobject}
+
+> **entryObject**: `IJsonLdNodeObject`
+
+The object to associate with the entry as JSON-LD.
+
+#### Inherited from
+
+[`IAuditableItemStreamEntryBase`](IAuditableItemStreamEntryBase.md).[`entryObject`](IAuditableItemStreamEntryBase.md#entryobject)

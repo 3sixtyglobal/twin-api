@@ -10,7 +10,7 @@ Interface describing an auditable item stream component.
 
 ### create() {#create}
 
-> **create**(`stream`, `options?`): `Promise`\<`string`\>
+> **create**(`stream`): `Promise`\<`string`\>
 
 Create a new stream.
 
@@ -18,36 +18,15 @@ Create a new stream.
 
 ##### stream
 
+[`IAuditableItemStreamBase`](IAuditableItemStreamBase.md)
+
 The stream to create.
-
-###### annotationObject?
-
-`IJsonLdNodeObject`
-
-The object for the stream as JSON-LD.
-
-###### entries?
-
-`object`[]
-
-Entries to store in the stream.
-
-##### options?
-
-Options for creating the stream.
-
-###### immutableInterval?
-
-`number`
-
-After how many entries do we add immutable checks, defaults to service configured value.
-A value of 0 will disable immutable checks, 1 will be every item, or any other integer for an interval.
 
 #### Returns
 
 `Promise`\<`string`\>
 
-The id of the new stream item.
+The id of the created stream, if not provided.
 
 ***
 
@@ -61,19 +40,9 @@ Update a stream.
 
 ##### stream
 
-The stream to update.
+`Pick`\<[`IAuditableItemStream`](IAuditableItemStream.md), `"@context"` \| `"type"` \| `"id"` \| `"annotationObject"`\>
 
-###### id
-
-`string`
-
-The id of the stream to update.
-
-###### annotationObject?
-
-`IJsonLdNodeObject`
-
-The object for the stream as JSON-LD.
+The stream to update, does not update entries.
 
 #### Returns
 
@@ -85,7 +54,7 @@ Nothing.
 
 ### get() {#get}
 
-> **get**(`id`, `options?`): `Promise`\<[`IAuditableItemStream`](IAuditableItemStream.md)\>
+> **get**(`id`, `cursor?`, `limit?`, `options?`): `Promise`\<\{ `stream`: [`IAuditableItemStream`](IAuditableItemStream.md); `cursor?`: `string`; \}\>
 
 Get a stream header without the entries.
 
@@ -96,6 +65,18 @@ Get a stream header without the entries.
 `string`
 
 The id of the stream to get.
+
+##### cursor?
+
+`string`
+
+Cursor to use for next chunk of entries.
+
+##### limit?
+
+`number`
+
+Limit the number of entries to return, only applicable if includeEntries is true.
 
 ##### options?
 
@@ -127,7 +108,7 @@ Should the entries be verified, defaults to false.
 
 #### Returns
 
-`Promise`\<[`IAuditableItemStream`](IAuditableItemStream.md)\>
+`Promise`\<\{ `stream`: [`IAuditableItemStream`](IAuditableItemStream.md); `cursor?`: `string`; \}\>
 
 The stream and entries if found.
 

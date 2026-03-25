@@ -7,8 +7,10 @@
 ## Interfaces
 
 - [IAuditableItemStream](interfaces/IAuditableItemStream.md)
+- [IAuditableItemStreamBase](interfaces/IAuditableItemStreamBase.md)
 - [IAuditableItemStreamComponent](interfaces/IAuditableItemStreamComponent.md)
 - [IAuditableItemStreamEntry](interfaces/IAuditableItemStreamEntry.md)
+- [IAuditableItemStreamEntryBase](interfaces/IAuditableItemStreamEntryBase.md)
 - [IAuditableItemStreamEntryList](interfaces/IAuditableItemStreamEntryList.md)
 - [IAuditableItemStreamEntryObjectList](interfaces/IAuditableItemStreamEntryObjectList.md)
 - [IAuditableItemStreamList](interfaces/IAuditableItemStreamList.md)

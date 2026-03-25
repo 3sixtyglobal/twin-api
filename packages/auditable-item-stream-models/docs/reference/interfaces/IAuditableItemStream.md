@@ -2,23 +2,11 @@
 
 Interface describing an auditable item stream.
 
+## Extends
+
+- [`IAuditableItemStreamBase`](IAuditableItemStreamBase.md)
+
 ## Properties
-
-### @context {#context}
-
-> **@context**: \[`"https://schema.twindev.org/ais/"`, `"https://schema.twindev.org/common/"`, `...IJsonLdContextDefinitionElement[]`\]
-
-JSON-LD Context.
-
-***
-
-### type {#type}
-
-> **type**: `"AuditableItemStream"`
-
-JSON-LD Type.
-
-***
 
 ### id {#id}
 
@@ -60,14 +48,6 @@ The identity of the user who created the stream.
 
 ***
 
-### annotationObject? {#annotationobject}
-
-> `optional` **annotationObject?**: `IJsonLdNodeObject`
-
-The object to associate with the entry as JSON-LD.
-
-***
-
 ### proofId? {#proofid}
 
 > `optional` **proofId?**: `string`
@@ -76,17 +56,9 @@ The id of the immutable proof for the stream.
 
 ***
 
-### immutableInterval {#immutableinterval}
+### numberOfItems? {#numberofitems}
 
-> **immutableInterval**: `number`
-
-After how many entries do we add immutable checks.
-
-***
-
-### numberOfItems {#numberofitems}
-
-> **numberOfItems**: `number`
+> `optional` **numberOfItems?**: `number`
 
 How many entries are in the stream.
 
@@ -94,17 +66,21 @@ How many entries are in the stream.
 
 ### entries? {#entries}
 
-> `optional` **entries?**: [`IAuditableItemStreamEntry`](IAuditableItemStreamEntry.md)[]
+> `optional` **entries?**: `object`
 
 Entries in the stream.
 
-***
+#### type
 
-### cursor? {#cursor}
+> **type**: `"ItemList"`
 
-> `optional` **cursor?**: `string`
+#### itemListElement
 
-The cursor for the stream entries.
+> **itemListElement**: [`IAuditableItemStreamEntry`](IAuditableItemStreamEntry.md)[]
+
+#### Overrides
+
+[`IAuditableItemStreamBase`](IAuditableItemStreamBase.md).[`entries`](IAuditableItemStreamBase.md#entries)
 
 ***
 
@@ -113,3 +89,52 @@ The cursor for the stream entries.
 > `optional` **verification?**: `IImmutableProofVerification`
 
 The verification of the stream.
+
+***
+
+### @context {#context}
+
+> **@context**: \[`"https://schema.org"`, `"https://schema.twindev.org/ais/"`, `"https://schema.twindev.org/common/"`, `...IJsonLdContextDefinitionElement[]`\]
+
+JSON-LD Context.
+
+#### Inherited from
+
+[`IAuditableItemStreamBase`](IAuditableItemStreamBase.md).[`@context`](IAuditableItemStreamBase.md#context)
+
+***
+
+### type {#type}
+
+> **type**: `"AuditableItemStream"`
+
+JSON-LD Type.
+
+#### Inherited from
+
+[`IAuditableItemStreamBase`](IAuditableItemStreamBase.md).[`type`](IAuditableItemStreamBase.md#type)
+
+***
+
+### annotationObject? {#annotationobject}
+
+> `optional` **annotationObject?**: `IJsonLdNodeObject`
+
+The object to associate with the entry as JSON-LD.
+
+#### Inherited from
+
+[`IAuditableItemStreamBase`](IAuditableItemStreamBase.md).[`annotationObject`](IAuditableItemStreamBase.md#annotationobject)
+
+***
+
+### immutableInterval? {#immutableinterval}
+
+> `optional` **immutableInterval?**: `number`
+
+After how many entries do we add immutable checks, defaults to service configured value.
+A value of 0 will disable immutable checks, 1 will be every item, or any other integer for an interval.
+
+#### Inherited from
+
+[`IAuditableItemStreamBase`](IAuditableItemStreamBase.md).[`immutableInterval`](IAuditableItemStreamBase.md#immutableinterval)

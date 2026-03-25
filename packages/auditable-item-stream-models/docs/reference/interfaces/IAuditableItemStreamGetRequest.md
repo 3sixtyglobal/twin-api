@@ -36,6 +36,18 @@ The id of the stream to get.
 
 The parameters from the query.
 
+#### cursor?
+
+> `optional` **cursor?**: `string`
+
+Cursor to use for next chunk of entries.
+
+#### limit?
+
+> `optional` **limit?**: `string`
+
+Limit the number of entries to return, only applicable if includeEntries is true.
+
 #### includeEntries?
 
 > `optional` **includeEntries?**: `string`

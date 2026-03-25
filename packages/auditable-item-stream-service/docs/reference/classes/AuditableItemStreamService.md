@@ -56,7 +56,7 @@ The class name of the component.
 
 ### create() {#create}
 
-> **create**(`stream`, `options?`): `Promise`\<`string`\>
+> **create**(`stream`): `Promise`\<`string`\>
 
 Create a new stream.
 
@@ -64,30 +64,9 @@ Create a new stream.
 
 ##### stream
 
+`IAuditableItemStreamBase`
+
 The stream to create.
-
-###### annotationObject?
-
-`IJsonLdNodeObject`
-
-The object for the stream as JSON-LD.
-
-###### entries?
-
-`object`[]
-
-Entries to store in the stream.
-
-##### options?
-
-Options for creating the stream.
-
-###### immutableInterval?
-
-`number`
-
-After how many entries do we add immutable checks, defaults to service configured value.
-A value of 0 will disable integrity checks, 1 will be every item, or any other integer for an interval.
 
 #### Returns
 
@@ -101,9 +80,35 @@ The id of the new stream item.
 
 ***
 
+### update() {#update}
+
+> **update**(`stream`): `Promise`\<`void`\>
+
+Update a stream.
+
+#### Parameters
+
+##### stream
+
+`Pick`\<`IAuditableItemStream`, `"@context"` \| `"type"` \| `"id"` \| `"annotationObject"`\>
+
+The stream to update, does not update entries.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IAuditableItemStreamComponent.update`
+
+***
+
 ### get() {#get}
 
-> **get**(`id`, `options?`): `Promise`\<`IAuditableItemStream`\>
+> **get**(`id`, `cursor?`, `limit?`, `options?`): `Promise`\<\{ `stream`: `IAuditableItemStream`; `cursor?`: `string`; \}\>
 
 Get a stream header without the entries.
 
@@ -114,6 +119,18 @@ Get a stream header without the entries.
 `string`
 
 The id of the stream to get.
+
+##### cursor?
+
+`string`
+
+Cursor to use for next chunk of entries.
+
+##### limit?
+
+`number`
+
+Limit the number of entries to return, only applicable if includeEntries is true.
 
 ##### options?
 
@@ -145,7 +162,7 @@ Should the entries be verified, defaults to false.
 
 #### Returns
 
-`Promise`\<`IAuditableItemStream`\>
+`Promise`\<\{ `stream`: `IAuditableItemStream`; `cursor?`: `string`; \}\>
 
 The stream and entries if found.
 
@@ -156,42 +173,6 @@ NotFoundError if the stream is not found
 #### Implementation of
 
 `IAuditableItemStreamComponent.get`
-
-***
-
-### update() {#update}
-
-> **update**(`stream`): `Promise`\<`void`\>
-
-Update a stream.
-
-#### Parameters
-
-##### stream
-
-The stream to update.
-
-###### id
-
-`string`
-
-The id of the stream to update.
-
-###### annotationObject?
-
-`IJsonLdNodeObject`
-
-The object for the stream as JSON-LD.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
-
-#### Implementation of
-
-`IAuditableItemStreamComponent.update`
 
 ***
 
