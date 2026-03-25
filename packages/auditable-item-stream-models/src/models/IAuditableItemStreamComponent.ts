@@ -4,6 +4,7 @@ import type { IComponent } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { IComparator, SortDirection } from "@twin.org/entity";
 import type { IAuditableItemStream } from "./IAuditableItemStream.js";
+import type { IAuditableItemStreamBase } from "./IAuditableItemStreamBase.js";
 import type { IAuditableItemStreamEntry } from "./IAuditableItemStreamEntry.js";
 import type { IAuditableItemStreamEntryList } from "./IAuditableItemStreamEntryList.js";
 import type { IAuditableItemStreamEntryObjectList } from "./IAuditableItemStreamEntryObjectList.js";
@@ -16,37 +17,24 @@ export interface IAuditableItemStreamComponent extends IComponent {
 	/**
 	 * Create a new stream.
 	 * @param stream The stream to create.
-	 * @param stream.annotationObject The object for the stream as JSON-LD.
-	 * @param stream.entries Entries to store in the stream.
-	 * @param options Options for creating the stream.
-	 * @param options.immutableInterval After how many entries do we add immutable checks, defaults to service configured value.
-	 * A value of 0 will disable immutable checks, 1 will be every item, or any other integer for an interval.
-	 * @returns The id of the new stream item.
+	 * @returns The id of the created stream, if not provided.
 	 */
-	create(
-		stream: {
-			annotationObject?: IJsonLdNodeObject;
-			entries?: {
-				entryObject: IJsonLdNodeObject;
-			}[];
-		},
-		options?: {
-			immutableInterval?: number;
-		}
-	): Promise<string>;
+	create(stream: IAuditableItemStreamBase): Promise<string>;
 
 	/**
 	 * Update a stream.
-	 * @param stream The stream to update.
-	 * @param stream.id The id of the stream to update.
-	 * @param stream.annotationObject The object for the stream as JSON-LD.
+	 * @param stream The stream to update, does not update entries.
 	 * @returns Nothing.
 	 */
-	update(stream: { id: string; annotationObject?: IJsonLdNodeObject }): Promise<void>;
+	update(
+		stream: Pick<IAuditableItemStream, "@context" | "type" | "id" | "annotationObject">
+	): Promise<void>;
 
 	/**
 	 * Get a stream header without the entries.
 	 * @param id The id of the stream to get.
+	 * @param cursor Cursor to use for next chunk of entries.
+	 * @param limit Limit the number of entries to return, only applicable if includeEntries is true.
 	 * @param options Additional options for the get operation.
 	 * @param options.includeEntries Whether to include the entries, defaults to false.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
@@ -57,13 +45,18 @@ export interface IAuditableItemStreamComponent extends IComponent {
 	 */
 	get(
 		id: string,
+		cursor?: string,
+		limit?: number,
 		options?: {
 			includeEntries?: boolean;
 			includeDeleted?: boolean;
 			verifyStream?: boolean;
 			verifyEntries?: boolean;
 		}
-	): Promise<IAuditableItemStream>;
+	): Promise<{
+		stream: IAuditableItemStream;
+		cursor?: string;
+	}>;
 
 	/**
 	 * Delete the stream.

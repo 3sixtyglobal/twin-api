@@ -2,6 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { TenantIdContextIdHandler } from "@twin.org/api-tenant-processor";
 import {
+	AuditableItemStreamContexts,
+	AuditableItemStreamTypes
+} from "@twin.org/auditable-item-stream-models";
+import {
 	type BackgroundTask,
 	BackgroundTaskService,
 	initSchema as initSchemaBackgroundTask
@@ -12,7 +16,7 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { ComponentFactory, Converter, ObjectHelper, RandomHelper } from "@twin.org/core";
+import { BaseError, ComponentFactory, Converter, ObjectHelper, RandomHelper } from "@twin.org/core";
 import { ComparisonOperator, SortDirection } from "@twin.org/entity";
 import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
 import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
@@ -25,6 +29,7 @@ import {
 } from "@twin.org/immutable-proof-service";
 import { ModuleHelper } from "@twin.org/modules";
 import { nameof } from "@twin.org/nameof";
+import { SchemaOrgContexts } from "@twin.org/standards-schema-org";
 import {
 	EntityStorageVerifiableStorageConnector,
 	initSchema as initSchemaVerifiableStorage,
@@ -237,17 +242,23 @@ describe("AuditableItemStreamService", () => {
 	test("Can create a stream with no data", async () => {
 		const service = new AuditableItemStreamService();
 
-		const streamId = await service.create({});
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream
+		});
 
 		expectStreamIdFormat(streamId);
 
 		const streamStore = streamStorage.getStore();
 
-		expect(streamStore).toEqual([
+		expect(streamStore).toMatchObject([
 			{
 				partitionId: TEST_TENANT_IDENTITY_SHORT,
 				id: "019179f0e5af71018101010101010101",
-				dateCreated: "2024-08-22T11:55:16.271Z",
 				dateModified: "2024-08-22T11:55:16.271Z",
 				organizationIdentity: TEST_ORGANIZATION_IDENTITY,
 				userIdentity: TEST_USER_IDENTITY,
@@ -280,27 +291,38 @@ describe("AuditableItemStreamService", () => {
 	test("Can create a stream with a single object and multiple entries", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
 		expectStreamIdFormat(streamId);
@@ -384,15 +406,23 @@ describe("AuditableItemStreamService", () => {
 
 	test("Can create a stream with a single object and multiple entries with no immutability", async () => {
 		const service = new AuditableItemStreamService();
-		const streamId = await service.create(
-			{
-				annotationObject: {
-					"@context": "https://www.w3.org/ns/activitystreams",
-					"@type": "Note",
-					content: "This is a simple note"
-				},
-				entries: [
+		const streamId = await service.create({
+			"@context": [
+				"https://schema.org",
+				"https://schema.twindev.org/ais/",
+				"https://schema.twindev.org/common/"
+			],
+			type: AuditableItemStreamTypes.Stream,
+			annotationObject: {
+				"@context": "https://www.w3.org/ns/activitystreams",
+				"@type": "Note",
+				content: "This is a simple note"
+			},
+			entries: {
+				type: "ItemList",
+				itemListElement: [
 					{
+						type: AuditableItemStreamTypes.StreamEntry,
 						entryObject: {
 							"@context": "https://www.w3.org/ns/activitystreams",
 							"@type": "Note",
@@ -400,6 +430,7 @@ describe("AuditableItemStreamService", () => {
 						}
 					},
 					{
+						type: AuditableItemStreamTypes.StreamEntry,
 						entryObject: {
 							"@context": "https://www.w3.org/ns/activitystreams",
 							"@type": "Note",
@@ -408,10 +439,8 @@ describe("AuditableItemStreamService", () => {
 					}
 				]
 			},
-			{
-				immutableInterval: 0
-			}
-		);
+			immutableInterval: 0
+		});
 
 		expectStreamIdFormat(streamId);
 		const streamEntityId = getStreamEntityId(streamId);
@@ -469,27 +498,38 @@ describe("AuditableItemStreamService", () => {
 	test("Can get a stream with a single object and multiple entries", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
 		await waitForProofGeneration(2);
@@ -497,26 +537,49 @@ describe("AuditableItemStreamService", () => {
 		const entryId0 = entryStore[0]?.id;
 		const entryId1 = entryStore[1]?.id;
 
-		const result = await service.get(streamId, {
+		const result = await service.get(streamId, undefined, undefined, {
 			includeEntries: true,
 			verifyStream: true,
 			verifyEntries: true
 		});
 
-		expect(result).toEqual({
-			"@context": [
+		expect(result.stream["@context"]).toEqual(
+			expect.arrayContaining([
 				"https://schema.twindev.org/ais/",
 				"https://schema.twindev.org/common/",
 				"https://schema.org",
 				"https://schema.twindev.org/immutable-proof/"
-			],
+			])
+		);
+		expect(result.stream).toMatchObject({
 			id: streamId,
-			type: "AuditableItemStream",
+			type: AuditableItemStreamTypes.Stream,
 			dateCreated: "2024-08-22T11:56:56.272Z",
 			dateModified: "2024-08-22T11:56:56.272Z",
-			entries: [
+			immutableInterval: 10,
+			numberOfItems: 2,
+			proofId: "immutable-proof:019179f26c5072028202020202020202",
+			annotationObject: {
+				"@context": "https://www.w3.org/ns/activitystreams",
+				"@type": "Note",
+				content: "This is a simple note"
+			},
+			verification: {
+				type: "ImmutableProofVerification",
+				verified: true
+			},
+			organizationIdentity: TEST_ORGANIZATION_IDENTITY,
+			userIdentity: TEST_USER_IDENTITY
+		});
+
+		const resultEntries = Array.isArray(result.stream.entries)
+			? result.stream.entries[0]
+			: result.stream.entries;
+		expect(resultEntries).toEqual({
+			type: "ItemList",
+			itemListElement: [
 				{
-					type: "AuditableItemStreamEntry",
+					type: AuditableItemStreamTypes.StreamEntry,
 					id: getEntryId(streamId, entryId0),
 					dateCreated: "2024-08-22T11:56:56.272Z",
 					proofId: "immutable-proof:019179f26c5075058505050505050505",
@@ -533,7 +596,7 @@ describe("AuditableItemStreamService", () => {
 					userIdentity: TEST_USER_IDENTITY
 				},
 				{
-					type: "AuditableItemStreamEntry",
+					type: AuditableItemStreamTypes.StreamEntry,
 					id: getEntryId(streamId, entryId1),
 					dateCreated: "2024-08-22T11:56:56.272Z",
 					entryObject: {
@@ -544,21 +607,7 @@ describe("AuditableItemStreamService", () => {
 					index: 1,
 					userIdentity: TEST_USER_IDENTITY
 				}
-			],
-			immutableInterval: 10,
-			numberOfItems: 2,
-			proofId: "immutable-proof:019179f26c5072028202020202020202",
-			annotationObject: {
-				"@context": "https://www.w3.org/ns/activitystreams",
-				"@type": "Note",
-				content: "This is a simple note"
-			},
-			verification: {
-				type: "ImmutableProofVerification",
-				verified: true
-			},
-			organizationIdentity: TEST_ORGANIZATION_IDENTITY,
-			userIdentity: TEST_USER_IDENTITY
+			]
 		});
 
 		const verifiableStore = verifiableStorage.getStore();
@@ -588,32 +637,43 @@ describe("AuditableItemStreamService", () => {
 	test("Can get a stream with a single object and multiple entries, including entries", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
 		await waitForProofGeneration(2);
 
-		const result = await service.get(streamId, {
+		const result = await service.get(streamId, undefined, undefined, {
 			includeEntries: true,
 			verifyStream: true,
 			verifyEntries: true
@@ -623,48 +683,19 @@ describe("AuditableItemStreamService", () => {
 		const entryId0 = entryStore[0]?.id;
 		const entryId1 = entryStore[1]?.id;
 
-		expect(result).toEqual({
-			"@context": [
+		expect(result.stream["@context"]).toEqual(
+			expect.arrayContaining([
 				"https://schema.twindev.org/ais/",
 				"https://schema.twindev.org/common/",
 				"https://schema.org",
 				"https://schema.twindev.org/immutable-proof/"
-			],
+			])
+		);
+		expect(result.stream).toMatchObject({
 			id: streamId,
-			type: "AuditableItemStream",
+			type: AuditableItemStreamTypes.Stream,
 			dateCreated: "2024-08-22T11:56:56.272Z",
 			dateModified: "2024-08-22T11:56:56.272Z",
-			entries: [
-				{
-					id: getEntryId(streamId, entryId0),
-					type: "AuditableItemStreamEntry",
-					dateCreated: "2024-08-22T11:56:56.272Z",
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
-					},
-					index: 0,
-					verification: {
-						type: "ImmutableProofVerification",
-						verified: true
-					},
-					proofId: "immutable-proof:019179f26c5075058505050505050505",
-					userIdentity: TEST_USER_IDENTITY
-				},
-				{
-					type: "AuditableItemStreamEntry",
-					id: getEntryId(streamId, entryId1),
-					dateCreated: "2024-08-22T11:56:56.272Z",
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					},
-					index: 1,
-					userIdentity: TEST_USER_IDENTITY
-				}
-			],
 			immutableInterval: 10,
 			numberOfItems: 2,
 			proofId: "immutable-proof:019179f26c5072028202020202020202",
@@ -680,36 +711,187 @@ describe("AuditableItemStreamService", () => {
 			organizationIdentity: TEST_ORGANIZATION_IDENTITY,
 			userIdentity: TEST_USER_IDENTITY
 		});
+
+		const resultEntries = Array.isArray(result.stream.entries)
+			? result.stream.entries[0]
+			: result.stream.entries;
+		expect(resultEntries).toEqual({
+			type: "ItemList",
+			itemListElement: [
+				{
+					id: getEntryId(streamId, entryId0),
+					type: AuditableItemStreamTypes.StreamEntry,
+					dateCreated: "2024-08-22T11:56:56.272Z",
+					entryObject: {
+						"@context": "https://www.w3.org/ns/activitystreams",
+						"@type": "Note",
+						content: "This is an entry note 1"
+					},
+					index: 0,
+					verification: {
+						type: "ImmutableProofVerification",
+						verified: true
+					},
+					proofId: "immutable-proof:019179f26c5075058505050505050505",
+					userIdentity: TEST_USER_IDENTITY
+				},
+				{
+					type: AuditableItemStreamTypes.StreamEntry,
+					id: getEntryId(streamId, entryId1),
+					dateCreated: "2024-08-22T11:56:56.272Z",
+					entryObject: {
+						"@context": "https://www.w3.org/ns/activitystreams",
+						"@type": "Note",
+						content: "This is an entry note 2"
+					},
+					index: 1,
+					userIdentity: TEST_USER_IDENTITY
+				}
+			]
+		});
+	});
+
+	test("Can get a stream entries page with limit and cursor in most recent first order", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream
+		});
+
+		const firstEntryId = await service.createEntry(streamId, {
+			"@context": "https://www.w3.org/ns/activitystreams",
+			"@type": "Note",
+			content: "Oldest entry"
+		});
+		const secondEntryId = await service.createEntry(streamId, {
+			"@context": "https://www.w3.org/ns/activitystreams",
+			"@type": "Note",
+			content: "Middle entry"
+		});
+		const thirdEntryId = await service.createEntry(streamId, {
+			"@context": "https://www.w3.org/ns/activitystreams",
+			"@type": "Note",
+			content: "Newest entry"
+		});
+
+		const entryStore = streamEntryStorage.getStore();
+		entryStore[0].dateCreated = new Date(FIRST_TICK).toISOString();
+		entryStore[1].dateCreated = new Date(SECOND_TICK).toISOString();
+		entryStore[2].dateCreated = new Date(SECOND_TICK + 1000).toISOString();
+
+		await waitForProofGeneration(4);
+
+		const firstPage = await service.get(streamId, undefined, 2, {
+			includeEntries: true
+		});
+
+		expect(firstPage.cursor).toBeDefined();
+
+		const firstPageEntries = Array.isArray(firstPage.stream.entries)
+			? firstPage.stream.entries[0]
+			: firstPage.stream.entries;
+
+		expect(firstPageEntries.type).toBe("ItemList");
+		expect(firstPageEntries.itemListElement).toHaveLength(2);
+		expect(firstPageEntries.itemListElement).toMatchObject([
+			{
+				id: thirdEntryId,
+				type: AuditableItemStreamTypes.StreamEntry,
+				dateCreated: new Date(SECOND_TICK + 1000).toISOString(),
+				entryObject: {
+					"@context": "https://www.w3.org/ns/activitystreams",
+					"@type": "Note",
+					content: "Newest entry"
+				},
+				index: 2,
+				userIdentity: TEST_USER_IDENTITY
+			},
+			{
+				id: secondEntryId,
+				type: AuditableItemStreamTypes.StreamEntry,
+				dateCreated: new Date(SECOND_TICK).toISOString(),
+				entryObject: {
+					"@context": "https://www.w3.org/ns/activitystreams",
+					"@type": "Note",
+					content: "Middle entry"
+				},
+				index: 1,
+				userIdentity: TEST_USER_IDENTITY
+			}
+		]);
+
+		const secondPage = await service.get(streamId, firstPage.cursor, 2, {
+			includeEntries: true
+		});
+
+		const secondPageEntries = Array.isArray(secondPage.stream.entries)
+			? secondPage.stream.entries[0]
+			: secondPage.stream.entries;
+
+		expect(secondPage.cursor).toBeUndefined();
+		expect(secondPageEntries.type).toBe("ItemList");
+		expect(secondPageEntries.itemListElement).toHaveLength(1);
+		expect(secondPageEntries.itemListElement).toMatchObject([
+			{
+				id: firstEntryId,
+				type: AuditableItemStreamTypes.StreamEntry,
+				dateCreated: new Date(FIRST_TICK).toISOString(),
+				entryObject: {
+					"@context": "https://www.w3.org/ns/activitystreams",
+					"@type": "Note",
+					content: "Oldest entry"
+				},
+				index: 0,
+				userIdentity: TEST_USER_IDENTITY
+			}
+		]);
 	});
 
 	test("Can update a stream with a single object and multiple entries", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
+		const result = await service.get(streamId);
+
 		await service.update({
-			id: streamId,
+			...result.stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
@@ -799,27 +981,38 @@ describe("AuditableItemStreamService", () => {
 	test("Can add a stream entry to an existing stream", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
 		const createdEntryId = await service.createEntry(streamId, {
@@ -928,27 +1121,38 @@ describe("AuditableItemStreamService", () => {
 	test("Can add multiple stream entries and expect more immutable checks", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
 		for (let i = 0; i < 10; i++) {
@@ -994,42 +1198,56 @@ describe("AuditableItemStreamService", () => {
 	test("Can get an entry from the stream", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
 		await new Promise(resolve => setTimeout(resolve, 1000));
 
-		const stream = await service.get(streamId, {
+		const stream = await service.get(streamId, undefined, undefined, {
 			includeEntries: true,
 			verifyStream: true,
 			verifyEntries: true
 		});
+		const streamEntries = Array.isArray(stream.stream.entries)
+			? stream.stream.entries[0]?.itemListElement
+			: stream.stream.entries?.itemListElement;
 
-		const entry = await service.getEntry(streamId, stream.entries?.[0].id ?? "", {
+		const entry = await service.getEntry(streamId, streamEntries?.[0]?.id ?? "", {
 			verifyEntry: true
 		});
 		const streamEntityId = getStreamEntityId(streamId);
-		const entryId = stream.entries?.[0].id;
+		const entryId = streamEntries?.[0]?.id;
 		expect(entryId).toBeDefined();
 		expectStreamEntryIdFormat(entryId ?? "");
 
@@ -1040,7 +1258,7 @@ describe("AuditableItemStreamService", () => {
 				"https://schema.org",
 				"https://schema.twindev.org/immutable-proof/"
 			],
-			type: "AuditableItemStreamEntry",
+			type: AuditableItemStreamTypes.StreamEntry,
 			id: entryId,
 			dateCreated: "2024-08-22T11:56:56.272Z",
 			entryObject: {
@@ -1048,7 +1266,7 @@ describe("AuditableItemStreamService", () => {
 				"@type": "Note",
 				content: "This is an entry note 1"
 			},
-			proofId: stream.entries?.[0].proofId,
+			proofId: streamEntries?.[0]?.proofId,
 			userIdentity: TEST_USER_IDENTITY,
 			index: 0,
 			verification: {
@@ -1080,38 +1298,52 @@ describe("AuditableItemStreamService", () => {
 	test("Can get an entry object from the stream", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
-		const stream = await service.get(streamId, {
+		const result = await service.get(streamId, undefined, undefined, {
 			includeEntries: true,
 			verifyStream: true,
 			verifyEntries: true
 		});
-		expect(stream.entries?.[0].id).toBeDefined();
-		expectStreamEntryIdFormat(stream.entries?.[0].id ?? "");
+		const streamEntries = Array.isArray(result.stream.entries)
+			? result.stream.entries[0]?.itemListElement
+			: result.stream.entries?.itemListElement;
+		expect(streamEntries?.[0]?.id).toBeDefined();
+		expectStreamEntryIdFormat(streamEntries?.[0]?.id ?? "");
 
-		const entry = await service.getEntryObject(streamId, stream.entries?.[0].id ?? "");
+		const entry = await service.getEntryObject(streamId, streamEntries?.[0]?.id ?? "");
 
 		expect(entry).toEqual({
 			"@context": "https://www.w3.org/ns/activitystreams",
@@ -1143,34 +1375,48 @@ describe("AuditableItemStreamService", () => {
 	test("Can delete an entry from the stream", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
-		const stream = await service.get(streamId, { includeEntries: true });
-		expect(stream.entries?.[0].id).toBeDefined();
-		expectStreamEntryIdFormat(stream.entries?.[0].id ?? "");
+		const result = await service.get(streamId, undefined, undefined, { includeEntries: true });
+		const streamEntries = Array.isArray(result.stream.entries)
+			? result.stream.entries[0]?.itemListElement
+			: result.stream.entries?.itemListElement;
+		expect(streamEntries?.[0]?.id).toBeDefined();
+		expectStreamEntryIdFormat(streamEntries?.[0]?.id ?? "");
 
-		await service.removeEntry(streamId, stream.entries?.[0].id ?? "");
+		await service.removeEntry(streamId, streamEntries?.[0]?.id ?? "");
 
 		expectStreamIdFormat(streamId);
 		const streamEntityId = getStreamEntityId(streamId);
@@ -1199,27 +1445,43 @@ describe("AuditableItemStreamService", () => {
 		expect(entryStore).toHaveLength(2);
 		expect(entryStore[0].dateDeleted).toEqual("2024-08-22T11:56:56.272Z");
 
-		const streamWithoutDeleted = await service.get(streamId, { includeEntries: true });
-		expect(streamWithoutDeleted.entries).toHaveLength(1);
+		const streamWithoutDeleted = await service.get(streamId, undefined, undefined, {
+			includeEntries: true
+		});
+		const streamWithoutDeletedEntries = Array.isArray(streamWithoutDeleted.stream.entries)
+			? streamWithoutDeleted.stream.entries[0]?.itemListElement
+			: streamWithoutDeleted.stream.entries?.itemListElement;
+		expect(streamWithoutDeletedEntries).toHaveLength(1);
 
-		const streamWithDeleted = await service.get(streamId, {
+		const streamWithDeleted = await service.get(streamId, undefined, undefined, {
 			includeEntries: true,
 			includeDeleted: true
 		});
-		expect(streamWithDeleted.entries).toHaveLength(2);
+		const streamWithDeletedEntries = Array.isArray(streamWithDeleted.stream.entries)
+			? streamWithDeleted.stream.entries[0]?.itemListElement
+			: streamWithDeleted.stream.entries?.itemListElement;
+		expect(streamWithDeletedEntries).toHaveLength(2);
 	});
 
 	test("Can delete the proof from a stream", async () => {
 		const service = new AuditableItemStreamService();
-		const streamId = await service.create(
-			{
-				annotationObject: {
-					"@context": "https://www.w3.org/ns/activitystreams",
-					"@type": "Note",
-					content: "This is a simple note"
-				},
-				entries: [
+		const streamId = await service.create({
+			"@context": [
+				"https://schema.org",
+				"https://schema.twindev.org/ais/",
+				"https://schema.twindev.org/common/"
+			],
+			type: AuditableItemStreamTypes.Stream,
+			annotationObject: {
+				"@context": "https://www.w3.org/ns/activitystreams",
+				"@type": "Note",
+				content: "This is a simple note"
+			},
+			entries: {
+				type: "ItemList",
+				itemListElement: [
 					{
+						type: AuditableItemStreamTypes.StreamEntry,
 						entryObject: {
 							"@context": "https://www.w3.org/ns/activitystreams",
 							"@type": "Note",
@@ -1227,6 +1489,7 @@ describe("AuditableItemStreamService", () => {
 						}
 					},
 					{
+						type: AuditableItemStreamTypes.StreamEntry,
 						entryObject: {
 							"@context": "https://www.w3.org/ns/activitystreams",
 							"@type": "Note",
@@ -1235,10 +1498,8 @@ describe("AuditableItemStreamService", () => {
 					}
 				]
 			},
-			{
-				immutableInterval: 1
-			}
-		);
+			immutableInterval: 1
+		});
 
 		await service.removeVerifiable(streamId);
 
@@ -1298,27 +1559,38 @@ describe("AuditableItemStreamService", () => {
 	test("Can delete a stream", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
 		await service.remove(streamId);
@@ -1333,47 +1605,58 @@ describe("AuditableItemStreamService", () => {
 	test("Can get entries from a stream", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
 		await waitForProofGeneration(2);
 
-		await service.get(streamId, { includeEntries: true });
+		await service.get(streamId, undefined, undefined, { includeEntries: true });
 
 		const entriesAndCursor = await service.getEntries(streamId, { verifyEntries: true });
 		const entryStore = streamEntryStorage.getStore();
 
 		expect(entriesAndCursor.entries).toEqual({
 			"@context": [
-				"https://schema.org",
-				"https://schema.twindev.org/ais/",
-				"https://schema.twindev.org/common/",
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon,
 				"https://schema.twindev.org/immutable-proof/"
 			],
 			type: ["ItemList", "AuditableItemStreamEntryList"],
 			itemListElement: [
 				{
-					type: "AuditableItemStreamEntry",
+					type: AuditableItemStreamTypes.StreamEntry,
 					id: getEntryId(streamId, entryStore[0].id),
 					dateCreated: "2024-08-22T11:56:56.272Z",
 					entryObject: {
@@ -1390,7 +1673,7 @@ describe("AuditableItemStreamService", () => {
 					userIdentity: TEST_USER_IDENTITY
 				},
 				{
-					type: "AuditableItemStreamEntry",
+					type: AuditableItemStreamTypes.StreamEntry,
 					dateCreated: "2024-08-22T11:56:56.272Z",
 					entryObject: {
 						"@context": "https://www.w3.org/ns/activitystreams",
@@ -1408,30 +1691,41 @@ describe("AuditableItemStreamService", () => {
 	test("Can get entries from a stream using sub object", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
 			annotationObject: {
 				"@context": "https://www.w3.org/ns/activitystreams",
 				"@type": "Note",
 				content: "This is a simple note"
 			},
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 1"
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 1"
+						}
+					},
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "This is an entry note 2"
+						}
 					}
-				},
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "This is an entry note 2"
-					}
-				}
-			]
+				]
+			}
 		});
 
-		await service.get(streamId, { includeEntries: true });
+		await service.get(streamId, undefined, undefined, { includeEntries: true });
 
 		const entriesAndCursor = await service.getEntries(streamId, {
 			verifyEntries: true,
@@ -1452,15 +1746,15 @@ describe("AuditableItemStreamService", () => {
 
 		expect(entriesAndCursor.entries).toEqual({
 			"@context": [
-				"https://schema.org",
-				"https://schema.twindev.org/ais/",
-				"https://schema.twindev.org/common/",
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon,
 				"https://schema.twindev.org/immutable-proof/"
 			],
 			type: ["ItemList", "AuditableItemStreamEntryList"],
 			itemListElement: [
 				{
-					type: "AuditableItemStreamEntry",
+					type: AuditableItemStreamTypes.StreamEntry,
 					id: getEntryId(streamId, entryStore[1].id),
 					dateCreated: "2024-08-22T11:56:56.272Z",
 					entryObject: {
@@ -1479,27 +1773,47 @@ describe("AuditableItemStreamService", () => {
 		const service = new AuditableItemStreamService();
 
 		await service.create({
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "Entry from stream 1"
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "Entry from stream 1"
+						}
 					}
-				}
-			]
+				]
+			}
 		});
 
 		await service.create({
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "Entry from stream 2"
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "Entry from stream 2"
+						}
 					}
-				}
-			]
+				]
+			}
 		});
 
 		const entriesAndCursor = await service.getEntries(undefined, {
@@ -1513,9 +1827,9 @@ describe("AuditableItemStreamService", () => {
 		});
 
 		expect(entriesAndCursor.entries["@context"]).toEqual([
-			"https://schema.org",
-			"https://schema.twindev.org/ais/",
-			"https://schema.twindev.org/common/"
+			SchemaOrgContexts.Context,
+			AuditableItemStreamContexts.Context,
+			AuditableItemStreamContexts.ContextCommon
 		]);
 		expect(entriesAndCursor.entries.type).toEqual(["ItemList", "AuditableItemStreamEntryList"]);
 		expect(entriesAndCursor.entries.itemListElement).toHaveLength(2);
@@ -1525,7 +1839,7 @@ describe("AuditableItemStreamService", () => {
 		expect(entriesAndCursor.entries.itemListElement).toEqual(
 			expect.arrayContaining([
 				expect.objectContaining({
-					type: "AuditableItemStreamEntry",
+					type: AuditableItemStreamTypes.StreamEntry,
 					entryObject: {
 						"@context": "https://www.w3.org/ns/activitystreams",
 						"@type": "Note",
@@ -1533,7 +1847,7 @@ describe("AuditableItemStreamService", () => {
 					}
 				}),
 				expect.objectContaining({
-					type: "AuditableItemStreamEntry",
+					type: AuditableItemStreamTypes.StreamEntry,
 					entryObject: {
 						"@context": "https://www.w3.org/ns/activitystreams",
 						"@type": "Note",
@@ -1548,35 +1862,55 @@ describe("AuditableItemStreamService", () => {
 		const service = new AuditableItemStreamService();
 
 		await service.create({
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "Object from stream 1"
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "Object from stream 1"
+						}
 					}
-				}
-			]
+				]
+			}
 		});
 
 		await service.create({
-			entries: [
-				{
-					entryObject: {
-						"@context": "https://www.w3.org/ns/activitystreams",
-						"@type": "Note",
-						content: "Object from stream 2"
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "Object from stream 2"
+						}
 					}
-				}
-			]
+				]
+			}
 		});
 
 		const entriesAndCursor = await service.getEntryObjects();
 
 		expect(entriesAndCursor.entries["@context"]).toEqual([
-			"https://schema.org",
-			"https://schema.twindev.org/ais/",
-			"https://schema.twindev.org/common/"
+			SchemaOrgContexts.Context,
+			AuditableItemStreamContexts.Context,
+			AuditableItemStreamContexts.ContextCommon
 		]);
 		expect(entriesAndCursor.entries.type).toEqual([
 			"ItemList",
@@ -1602,15 +1936,25 @@ describe("AuditableItemStreamService", () => {
 
 		for (let i = 1; i <= 3; i++) {
 			await service.create({
-				entries: [
-					{
-						entryObject: {
-							"@context": "https://www.w3.org/ns/activitystreams",
-							"@type": "Note",
-							content: `Paged entry ${i}`
+				"@context": [
+					"https://schema.org",
+					"https://schema.twindev.org/ais/",
+					"https://schema.twindev.org/common/"
+				],
+				type: AuditableItemStreamTypes.Stream,
+				entries: {
+					type: "ItemList",
+					itemListElement: [
+						{
+							type: AuditableItemStreamTypes.StreamEntry,
+							entryObject: {
+								"@context": "https://www.w3.org/ns/activitystreams",
+								"@type": "Note",
+								content: `Paged entry ${i}`
+							}
 						}
-					}
-				]
+					]
+				}
 			});
 		}
 
@@ -1651,15 +1995,25 @@ describe("AuditableItemStreamService", () => {
 
 		for (let i = 1; i <= 3; i++) {
 			await service.create({
-				entries: [
-					{
-						entryObject: {
-							"@context": "https://www.w3.org/ns/activitystreams",
-							"@type": "Note",
-							content: `Paged object ${i}`
+				"@context": [
+					"https://schema.org",
+					"https://schema.twindev.org/ais/",
+					"https://schema.twindev.org/common/"
+				],
+				type: AuditableItemStreamTypes.Stream,
+				entries: {
+					type: "ItemList",
+					itemListElement: [
+						{
+							type: AuditableItemStreamTypes.StreamEntry,
+							entryObject: {
+								"@context": "https://www.w3.org/ns/activitystreams",
+								"@type": "Note",
+								content: `Paged object ${i}`
+							}
 						}
-					}
-				]
+					]
+				}
 			});
 		}
 
@@ -1694,42 +2048,53 @@ describe("AuditableItemStreamService", () => {
 
 		for (let i = 0; i < 5; i++) {
 			await service.create({
+				"@context": [
+					"https://schema.org",
+					"https://schema.twindev.org/ais/",
+					"https://schema.twindev.org/common/"
+				],
+				type: AuditableItemStreamTypes.Stream,
 				annotationObject: {
 					"@context": "https://www.w3.org/ns/activitystreams",
 					"@type": "Note",
 					content: `This is a simple note ${i + 1}`
 				},
-				entries: [
-					{
-						entryObject: {
-							"@context": "https://www.w3.org/ns/activitystreams",
-							"@type": "Note",
-							content: "This is an entry note 1"
+				entries: {
+					type: "ItemList",
+					itemListElement: [
+						{
+							type: AuditableItemStreamTypes.StreamEntry,
+							entryObject: {
+								"@context": "https://www.w3.org/ns/activitystreams",
+								"@type": "Note",
+								content: "This is an entry note 1"
+							}
+						},
+						{
+							type: AuditableItemStreamTypes.StreamEntry,
+							entryObject: {
+								"@context": "https://www.w3.org/ns/activitystreams",
+								"@type": "Note",
+								content: "This is an entry note 2"
+							}
 						}
-					},
-					{
-						entryObject: {
-							"@context": "https://www.w3.org/ns/activitystreams",
-							"@type": "Note",
-							content: "This is an entry note 2"
-						}
-					}
-				]
+					]
+				}
 			});
 		}
 
 		const resultAndCursor = await service.query();
 		expect(resultAndCursor.entries["@context"]).toEqual([
-			"https://schema.org",
-			"https://schema.twindev.org/ais/",
-			"https://schema.twindev.org/common/"
+			SchemaOrgContexts.Context,
+			AuditableItemStreamContexts.Context,
+			AuditableItemStreamContexts.ContextCommon
 		]);
 		expect(resultAndCursor.entries.type).toEqual(["ItemList", "AuditableItemStreamList"]);
 		expect(resultAndCursor.entries.itemListElement).toHaveLength(5);
 
 		for (let i = 0; i < 5; i++) {
 			expect(resultAndCursor.entries.itemListElement[i]).toMatchObject({
-				type: "AuditableItemStream",
+				type: AuditableItemStreamTypes.Stream,
 				dateCreated: "2024-08-22T11:56:56.272Z",
 				dateModified: "2024-08-22T11:56:56.272Z",
 				annotationObject: {
@@ -1740,5 +2105,155 @@ describe("AuditableItemStreamService", () => {
 			});
 			expectStreamIdFormat(resultAndCursor.entries.itemListElement[i].id);
 		}
+	});
+
+	test("Returns createFailed when stream schema validation fails", async () => {
+		const service = new AuditableItemStreamService();
+
+		const createObject = {
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry
+					}
+				]
+			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} as unknown as any;
+
+		await expect(service.create(createObject)).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.createFailed"
+					}),
+					expect.objectContaining({
+						message: "common.validation",
+						properties: expect.objectContaining({
+							validationFailures: expect.arrayContaining([
+								expect.objectContaining({
+									property: "stream.entries.itemListElement.0",
+									reason: "validation.schemaFailed",
+									properties: expect.objectContaining({
+										params: expect.objectContaining({
+											missingProperty: "entryObject"
+										})
+									})
+								})
+							])
+						})
+					})
+				])
+			);
+
+			return true;
+		});
+	});
+
+	test("Returns updatingFailed when stream schema validation fails", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				"https://schema.org",
+				"https://schema.twindev.org/ais/",
+				"https://schema.twindev.org/common/"
+			],
+			type: "AuditableItemStream",
+			dateCreated: "2024-08-22T11:56:56.272Z"
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} as unknown as any);
+
+		const currentStream = await service.get(streamId);
+		const invalidStreamForUpdate = currentStream.stream;
+		invalidStreamForUpdate.entries = {
+			type: "ItemList",
+			itemListElement: [
+				{
+					type: AuditableItemStreamTypes.StreamEntry,
+					entryObject: {
+						"@context": "https://www.w3.org/ns/activitystreams",
+						"@type": "Note",
+						content: "This entry is intentionally incomplete"
+					}
+				}
+			]
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} as unknown as any;
+
+		await expect(service.update(invalidStreamForUpdate)).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.updatingFailed"
+					}),
+					expect.objectContaining({
+						message: "common.validation",
+						properties: expect.objectContaining({
+							validationFailures: expect.arrayContaining([
+								expect.objectContaining({
+									property: "stream.entries.itemListElement.0",
+									reason: "validation.schemaFailed",
+									properties: expect.objectContaining({
+										params: expect.objectContaining({
+											missingProperty: "id"
+										})
+									})
+								})
+							])
+						})
+					})
+				])
+			);
+			return true;
+		});
+	});
+
+	test("Returns creatingEntryFailed when entry object validation fails", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				"https://schema.org",
+				"https://schema.twindev.org/ais/",
+				"https://schema.twindev.org/common/"
+			],
+			type: "AuditableItemStream",
+			dateCreated: "2024-08-22T11:56:56.272Z"
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} as unknown as any);
+
+		const invalidEntryObject = {
+			"@context": 123,
+			"@type": 123,
+			content: "Invalid entry"
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} as unknown as any;
+
+		await expect(service.createEntry(streamId, invalidEntryObject)).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.creatingEntryFailed"
+					}),
+					expect.objectContaining({
+						message: "jsonLdProcessor.jsonLdError",
+						properties: expect.objectContaining({
+							code: "invalid local context",
+							context: [123]
+						})
+					})
+				])
+			);
+			return true;
+		});
 	});
 });

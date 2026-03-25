@@ -12,8 +12,10 @@
 	},
 	"types": [
 		"./src/models/IAuditableItemStream.ts",
+		"./src/models/IAuditableItemStreamBase.ts",
 		"./src/models/IAuditableItemStreamList.ts",
 		"./src/models/IAuditableItemStreamEntry.ts",
+		"./src/models/IAuditableItemStreamEntryBase.ts",
 		"./src/models/IAuditableItemStreamEntryList.ts",
 		"./src/models/IAuditableItemStreamEntryObjectList.ts"
 	]

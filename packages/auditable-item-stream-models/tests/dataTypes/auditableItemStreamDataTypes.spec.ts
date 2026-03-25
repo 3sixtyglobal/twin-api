@@ -3,6 +3,7 @@
 import type { IValidationFailure } from "@twin.org/core";
 import { DataTypeHelper } from "@twin.org/data-core";
 import { JsonLdDataTypes } from "@twin.org/data-json-ld";
+import { SchemaOrgContexts } from "@twin.org/standards-schema-org";
 import { AuditableItemStreamDataTypes } from "../../src/dataTypes/auditableItemStreamDataTypes.js";
 import { AuditableItemStreamContexts } from "../../src/models/auditableItemStreamContexts.js";
 import { AuditableItemStreamTypes } from "../../src/models/auditableItemStreamTypes.js";
@@ -17,7 +18,7 @@ describe("AuditableItemStreamDataTypes", () => {
 		const validationFailures: IValidationFailure[] = [];
 		const isValid = await DataTypeHelper.validate(
 			"",
-			`${AuditableItemStreamContexts.Namespace}AuditableItemStream${AuditableItemStreamTypes.Stream}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
 			{
 				id: "foo",
 				dateCreated: new Date().toISOString(),
@@ -26,7 +27,7 @@ describe("AuditableItemStreamDataTypes", () => {
 			},
 			validationFailures
 		);
-		expect(validationFailures.length).toEqual(3);
+		expect(validationFailures.length).toEqual(2);
 		expect(isValid).toEqual(false);
 	});
 
@@ -34,9 +35,10 @@ describe("AuditableItemStreamDataTypes", () => {
 		const validationFailures: IValidationFailure[] = [];
 		const isValid = await DataTypeHelper.validate(
 			"",
-			`${AuditableItemStreamContexts.Namespace}AuditableItemStream${AuditableItemStreamTypes.Stream}`,
+			`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
 			{
 				"@context": [
+					SchemaOrgContexts.Context,
 					AuditableItemStreamContexts.Namespace,
 					AuditableItemStreamContexts.NamespaceCommon
 				],

@@ -4,7 +4,9 @@ import { DataTypeHelper } from "@twin.org/data-core";
 import { AuditableItemStreamContexts } from "../models/auditableItemStreamContexts.js";
 import { AuditableItemStreamTypes } from "../models/auditableItemStreamTypes.js";
 import AuditableItemStreamSchema from "../schemas/AuditableItemStream.json" with { type: "json" };
+import AuditableItemStreamBaseSchema from "../schemas/AuditableItemStreamBase.json" with { type: "json" };
 import AuditableItemStreamEntrySchema from "../schemas/AuditableItemStreamEntry.json" with { type: "json" };
+import AuditableItemStreamEntryBaseSchema from "../schemas/AuditableItemStreamEntryBase.json" with { type: "json" };
 import AuditableItemStreamEntryListSchema from "../schemas/AuditableItemStreamEntryList.json" with { type: "json" };
 import AuditableItemStreamEntryObjectListSchema from "../schemas/AuditableItemStreamEntryObjectList.json" with { type: "json" };
 import AuditableItemStreamListSchema from "../schemas/AuditableItemStreamList.json" with { type: "json" };
@@ -37,13 +39,21 @@ export class AuditableItemStreamDataTypes {
 			{
 				type: AuditableItemStreamTypes.StreamEntryObjectList,
 				schema: AuditableItemStreamEntryObjectListSchema
+			},
+			{
+				type: "AuditableItemStreamBase",
+				schema: AuditableItemStreamBaseSchema
+			},
+			{
+				type: "AuditableItemStreamEntryBase",
+				schema: AuditableItemStreamEntryBaseSchema
 			}
 		];
 
 		DataTypeHelper.registerTypes(
 			AuditableItemStreamContexts.Namespace,
 			AuditableItemStreamContexts.JsonLdContext,
-			types.map(t => ({ type: `AuditableItemStream${t.type}`, schema: t.schema }))
+			types.map(t => ({ type: t.type, schema: t.schema }))
 		);
 	}
 }

@@ -1,27 +1,22 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IJsonLdContextDefinitionElement, IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { IJsonLdContextDefinitionElement } from "@twin.org/data-json-ld";
 import type { IImmutableProofVerification } from "@twin.org/immutable-proof-models";
 import type { AuditableItemStreamContexts } from "./auditableItemStreamContexts.js";
-import type { AuditableItemStreamTypes } from "./auditableItemStreamTypes.js";
+import type { IAuditableItemStreamEntryBase } from "./IAuditableItemStreamEntryBase.js";
 
 /**
  * Interface describing an entry for the stream.
  */
-export interface IAuditableItemStreamEntry {
+export interface IAuditableItemStreamEntry extends IAuditableItemStreamEntryBase {
 	/**
 	 * JSON-LD Context.
 	 */
-	"@context": [
+	"@context"?: [
 		typeof AuditableItemStreamContexts.Context,
 		typeof AuditableItemStreamContexts.ContextCommon,
 		...IJsonLdContextDefinitionElement[]
 	];
-
-	/**
-	 * JSON-LD Type.
-	 */
-	type: typeof AuditableItemStreamTypes.StreamEntry;
 
 	/**
 	 * The id of the entry.
@@ -51,12 +46,6 @@ export interface IAuditableItemStreamEntry {
 	 * @json-ld namespace:twin-common
 	 */
 	userIdentity?: string;
-
-	/**
-	 * The object to associate with the entry as JSON-LD.
-	 * @json-ld type:json
-	 */
-	entryObject: IJsonLdNodeObject;
 
 	/**
 	 * The index of the entry in the stream.

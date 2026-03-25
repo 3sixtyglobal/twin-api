@@ -31,8 +31,10 @@ export * from "./models/eventBus/IAuditableItemStreamEventBusStreamEntryDeleted.
 export * from "./models/eventBus/IAuditableItemStreamEventBusStreamEntryUpdated.js";
 export * from "./models/eventBus/IAuditableItemStreamEventBusStreamUpdated.js";
 export * from "./models/IAuditableItemStream.js";
+export * from "./models/IAuditableItemStreamBase.js";
 export * from "./models/IAuditableItemStreamComponent.js";
 export * from "./models/IAuditableItemStreamEntry.js";
+export * from "./models/IAuditableItemStreamEntryBase.js";
 export * from "./models/IAuditableItemStreamEntryList.js";
 export * from "./models/IAuditableItemStreamEntryObjectList.js";
 export * from "./models/IAuditableItemStreamList.js";

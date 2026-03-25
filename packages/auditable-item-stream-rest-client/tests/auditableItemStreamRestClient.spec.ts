@@ -1,5 +1,10 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import {
+	AuditableItemStreamContexts,
+	AuditableItemStreamTypes
+} from "@twin.org/auditable-item-stream-models";
+import { SchemaOrgContexts } from "@twin.org/standards-schema-org";
 import { HeaderTypes } from "@twin.org/web";
 import { AuditableItemStreamRestClient } from "../src/auditableItemStreamRestClient.js";
 
@@ -25,9 +30,24 @@ describe("AuditableItemStreamRestClient", () => {
 				}
 			} as never);
 
-		await client.create({});
+		await client.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream
+		});
 		await client.get("ais:stream-id");
-		await client.update({ id: "ais:stream-id" });
+		await client.update({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			id: "ais:stream-id"
+		});
 		await client.remove("ais:stream-id");
 		await client.query();
 		await client.createEntry("ais:stream-id", {

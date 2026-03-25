@@ -9,6 +9,7 @@ import {
 } from "@twin.org/api-models";
 import type {
 	IAuditableItemStream,
+	IAuditableItemStreamBase,
 	IAuditableItemStreamComponent,
 	IAuditableItemStreamCreateEntryRequest,
 	IAuditableItemStreamCreateRequest,
@@ -72,33 +73,15 @@ export class AuditableItemStreamRestClient
 	/**
 	 * Create a new stream.
 	 * @param stream The stream to create.
-	 * @param stream.annotationObject The object for the stream as JSON-LD.
-	 * @param stream.entries Entries to store in the stream.
-	 * @param options Options for creating the stream.
-	 * @param options.immutableInterval After how many entries do we add immutable checks, defaults to service configured value.
-	 * A value of 0 will disable integrity checks, 1 will be every item, or any other integer for an interval.
 	 * @returns The id of the new stream item.
 	 */
-	public async create(
-		stream: {
-			annotationObject?: IJsonLdNodeObject;
-			entries?: {
-				entryObject: IJsonLdNodeObject;
-			}[];
-		},
-		options?: {
-			immutableInterval?: number;
-		}
-	): Promise<string> {
+	public async create(stream: IAuditableItemStreamBase): Promise<string> {
 		Guards.object(AuditableItemStreamRestClient.CLASS_NAME, nameof(stream), stream);
 		const response = await this.fetch<IAuditableItemStreamCreateRequest, ICreatedResponse>(
 			"/",
 			"POST",
 			{
-				body: {
-					...stream,
-					immutableInterval: options?.immutableInterval
-				}
+				body: stream
 			}
 		);
 
@@ -108,6 +91,8 @@ export class AuditableItemStreamRestClient
 	/**
 	 * Get a stream header without the entries.
 	 * @param id The id of the stream to get.
+	 * @param cursor Cursor to use for next chunk of entries.
+	 * @param limit Limit the number of entries to return, only applicable if includeEntries is true.
 	 * @param options Additional options for the get operation.
 	 * @param options.includeEntries Whether to include the entries, defaults to false.
 	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
@@ -118,13 +103,18 @@ export class AuditableItemStreamRestClient
 	 */
 	public async get(
 		id: string,
+		cursor?: string,
+		limit?: number,
 		options?: {
 			includeEntries?: boolean;
 			includeDeleted?: boolean;
 			verifyStream?: boolean;
 			verifyEntries?: boolean;
 		}
-	): Promise<IAuditableItemStream> {
+	): Promise<{
+		stream: IAuditableItemStream;
+		cursor?: string;
+	}> {
 		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
 
 		const response = await this.fetch<
@@ -138,6 +128,8 @@ export class AuditableItemStreamRestClient
 				id
 			},
 			query: {
+				cursor,
+				limit: Coerce.string(limit),
 				includeEntries: Coerce.string(options?.includeEntries),
 				includeDeleted: Coerce.string(options?.includeDeleted),
 				verifyStream: Coerce.string(options?.verifyStream),
@@ -145,28 +137,30 @@ export class AuditableItemStreamRestClient
 			}
 		});
 
-		return response.body;
+		return {
+			stream: response.body,
+			cursor: HeaderHelper.extractLinkHeaderRelation(response.headers?.[HeaderTypes.Link], "next")
+				?.urlQueryParams?.cursor
+		};
 	}
 
 	/**
 	 * Update a stream.
-	 * @param stream The stream to update.
-	 * @param stream.id The id of the stream to update.
-	 * @param stream.annotationObject The object for the stream as JSON-LD.
+	 * @param stream The stream to update, does not update entries.
 	 * @returns Nothing.
 	 */
-	public async update(stream: { id: string; annotationObject?: IJsonLdNodeObject }): Promise<void> {
+	public async update(
+		stream: Pick<IAuditableItemStream, "@context" | "type" | "id" | "annotationObject">
+	): Promise<void> {
 		Guards.object(AuditableItemStreamRestClient.CLASS_NAME, nameof(stream), stream);
 		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(stream.id), stream.id);
 
-		const { id, annotationObject } = stream;
+		const { id, ...rest } = stream;
 		await this.fetch<IAuditableItemStreamUpdateRequest, INoContentResponse>("/:id", "PUT", {
 			pathParams: {
 				id
 			},
-			body: {
-				annotationObject
-			}
+			body: rest
 		});
 	}
 

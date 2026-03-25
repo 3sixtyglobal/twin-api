@@ -1,29 +1,14 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IJsonLdContextDefinitionElement, IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { IImmutableProofVerification } from "@twin.org/immutable-proof-models";
-import type { AuditableItemStreamContexts } from "./auditableItemStreamContexts.js";
-import type { AuditableItemStreamTypes } from "./auditableItemStreamTypes.js";
+import type { SchemaOrgTypes } from "@twin.org/standards-schema-org";
+import type { IAuditableItemStreamBase } from "./IAuditableItemStreamBase.js";
 import type { IAuditableItemStreamEntry } from "./IAuditableItemStreamEntry.js";
 
 /**
  * Interface describing an auditable item stream.
  */
-export interface IAuditableItemStream {
-	/**
-	 * JSON-LD Context.
-	 */
-	"@context": [
-		typeof AuditableItemStreamContexts.Context,
-		typeof AuditableItemStreamContexts.ContextCommon,
-		...IJsonLdContextDefinitionElement[]
-	];
-
-	/**
-	 * JSON-LD Type.
-	 */
-	type: typeof AuditableItemStreamTypes.Stream;
-
+export interface IAuditableItemStream extends IAuditableItemStreamBase {
 	/**
 	 * The id of the stream.
 	 */
@@ -54,40 +39,25 @@ export interface IAuditableItemStream {
 	userIdentity?: string;
 
 	/**
-	 * The object to associate with the entry as JSON-LD.
-	 * @json-ld namespace:twin-common
-	 */
-	annotationObject?: IJsonLdNodeObject;
-
-	/**
 	 * The id of the immutable proof for the stream.
 	 * @json-ld type:sch:identifier
 	 */
 	proofId?: string;
 
 	/**
-	 * After how many entries do we add immutable checks.
-	 * @json-ld type:sch:Integer
-	 */
-	immutableInterval: number;
-
-	/**
 	 * How many entries are in the stream.
 	 * @json-ld id:sch:numberOfItems
 	 */
-	numberOfItems: number;
+	numberOfItems?: number;
 
 	/**
 	 * Entries in the stream.
 	 * @json-ld container:set
 	 */
-	entries?: IAuditableItemStreamEntry[];
-
-	/**
-	 * The cursor for the stream entries.
-	 * @json-ld namespace:twin-common
-	 */
-	cursor?: string;
+	entries?: {
+		type: typeof SchemaOrgTypes.ItemList;
+		[SchemaOrgTypes.ItemListElement]: IAuditableItemStreamEntry[];
+	};
 
 	/**
 	 * The verification of the stream.

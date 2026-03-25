@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	AuditableItemStreamContexts,
+	AuditableItemStreamDataTypes,
 	AuditableItemStreamTopics,
 	AuditableItemStreamTypes,
 	type IAuditableItemStream,
+	type IAuditableItemStreamBase,
 	type IAuditableItemStreamComponent,
 	type IAuditableItemStreamEntry,
 	type IAuditableItemStreamEntryList,
@@ -31,7 +33,13 @@ import {
 	Validation,
 	type IValidationFailure
 } from "@twin.org/core";
-import { JsonLdHelper, JsonLdProcessor, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import { DataTypeHelper } from "@twin.org/data-core";
+import {
+	JsonLdDataTypes,
+	JsonLdHelper,
+	JsonLdProcessor,
+	type IJsonLdNodeObject
+} from "@twin.org/data-json-ld";
 import {
 	ComparisonOperator,
 	LogicalOperator,
@@ -46,6 +54,7 @@ import {
 import type { IEventBusComponent } from "@twin.org/event-bus-models";
 import {
 	ImmutableProofContexts,
+	ImmutableProofDataTypes,
 	type IImmutableProofComponent,
 	type IImmutableProofVerification
 } from "@twin.org/immutable-proof-models";
@@ -161,6 +170,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 		this._defaultImmutableInterval = this._config.defaultImmutableInterval ?? 10;
 
 		SchemaOrgDataTypes.registerRedirects();
+		AuditableItemStreamDataTypes.registerTypes();
+		JsonLdDataTypes.registerTypes();
+		ImmutableProofDataTypes.registerTypes();
 	}
 
 	/**
@@ -174,29 +186,29 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	/**
 	 * Create a new stream.
 	 * @param stream The stream to create.
-	 * @param stream.annotationObject The object for the stream as JSON-LD.
-	 * @param stream.entries Entries to store in the stream.
-	 * @param options Options for creating the stream.
-	 * @param options.immutableInterval After how many entries do we add immutable checks, defaults to service configured value.
-	 * A value of 0 will disable integrity checks, 1 will be every item, or any other integer for an interval.
 	 * @returns The id of the new stream item.
 	 */
-	public async create(
-		stream: {
-			annotationObject?: IJsonLdNodeObject;
-			entries?: {
-				entryObject: IJsonLdNodeObject;
-			}[];
-		},
-		options?: {
-			immutableInterval?: number;
-		}
-	): Promise<string> {
+	public async create(stream: IAuditableItemStreamBase): Promise<string> {
 		Guards.object(AuditableItemStreamService.CLASS_NAME, nameof(stream), stream);
 
 		const contextIds = await ContextIdStore.getContextIds();
 
 		try {
+			const id = RandomHelper.generateUuidV7("compact");
+
+			const schemaValidationFailures: IValidationFailure[] = [];
+			await DataTypeHelper.validate(
+				nameof(stream),
+				`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}Base`,
+				stream,
+				schemaValidationFailures
+			);
+			Validation.asValidationError(
+				AuditableItemStreamService.CLASS_NAME,
+				nameof(stream),
+				schemaValidationFailures
+			);
+
 			if (Is.object(stream.annotationObject)) {
 				const validationFailures: IValidationFailure[] = [];
 				await JsonLdHelper.validate(stream.annotationObject, validationFailures);
@@ -207,13 +219,11 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				);
 			}
 
-			const id = RandomHelper.generateUuidV7("compact");
-
 			const context: IAuditableItemStreamServiceContext = {
 				now: new Date(Date.now()).toISOString(),
 				contextIds,
 				indexCounter: 0,
-				immutableInterval: options?.immutableInterval ?? this._defaultImmutableInterval
+				immutableInterval: stream?.immutableInterval ?? this._defaultImmutableInterval
 			};
 
 			const streamEntity: AuditableItemStream = {
@@ -239,8 +249,8 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				streamEntity.proofId = await this._immutableProofComponent.create(streamModel);
 			}
 
-			if (Is.arrayValue(stream.entries)) {
-				for (const entry of stream.entries) {
+			if (Is.arrayValue(stream.entries?.[SchemaOrgTypes.ItemListElement])) {
+				for (const entry of stream.entries[SchemaOrgTypes.ItemListElement]) {
 					await this.setEntry(context, id, entry);
 				}
 			}
@@ -269,79 +279,13 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	}
 
 	/**
-	 * Get a stream header without the entries.
-	 * @param id The id of the stream to get.
-	 * @param options Additional options for the get operation.
-	 * @param options.includeEntries Whether to include the entries, defaults to false.
-	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
-	 * @param options.verifyStream Should the stream be verified, defaults to false.
-	 * @param options.verifyEntries Should the entries be verified, defaults to false.
-	 * @returns The stream and entries if found.
-	 * @throws NotFoundError if the stream is not found
-	 */
-	public async get(
-		id: string,
-		options?: {
-			includeEntries?: boolean;
-			includeDeleted?: boolean;
-			verifyStream?: boolean;
-			verifyEntries?: boolean;
-		}
-	): Promise<IAuditableItemStream> {
-		Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(id), id);
-
-		const urnParsed = Urn.fromValidString(id);
-
-		if (urnParsed.namespaceIdentifier() !== AuditableItemStreamService._NAMESPACE) {
-			throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "namespaceMismatch", {
-				namespace: AuditableItemStreamService._NAMESPACE,
-				id
-			});
-		}
-
-		try {
-			const streamId = urnParsed.namespaceSpecific(0);
-
-			const streamEntity = await this._streamStorage.get(streamId);
-
-			if (Is.empty(streamEntity)) {
-				throw new NotFoundError(AuditableItemStreamService.CLASS_NAME, "streamNotFound", id);
-			}
-
-			const verifyStream = options?.verifyStream ?? false;
-			const verifyEntries = options?.verifyEntries ?? false;
-
-			const streamModel = this.streamEntityToJsonLd(streamEntity);
-
-			if (options?.includeEntries) {
-				const result = await this.findEntries(streamId, options?.includeDeleted, verifyEntries);
-				streamModel.entries = result.entries;
-				streamModel.cursor = result.cursor;
-			}
-
-			if (verifyStream && Is.stringValue(streamEntity.proofId)) {
-				streamModel.verification = await this._immutableProofComponent.verify(streamEntity.proofId);
-			}
-
-			if (verifyStream || verifyEntries) {
-				streamModel["@context"].push(ImmutableProofContexts.Context);
-			}
-
-			const result = await JsonLdProcessor.compact(streamModel, streamModel["@context"]);
-			return result;
-		} catch (error) {
-			throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "getFailed", undefined, error);
-		}
-	}
-
-	/**
 	 * Update a stream.
-	 * @param stream The stream to update.
-	 * @param stream.id The id of the stream to update.
-	 * @param stream.annotationObject The object for the stream as JSON-LD.
+	 * @param stream The stream to update, does not update entries.
 	 * @returns Nothing.
 	 */
-	public async update(stream: { id: string; annotationObject?: IJsonLdNodeObject }): Promise<void> {
+	public async update(
+		stream: Pick<IAuditableItemStream, "@context" | "type" | "id" | "annotationObject">
+	): Promise<void> {
 		Guards.object(AuditableItemStreamService.CLASS_NAME, nameof(stream), stream);
 		Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(stream.id), stream.id);
 
@@ -355,6 +299,19 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 		}
 
 		try {
+			const schemaValidationFailures: IValidationFailure[] = [];
+			await DataTypeHelper.validate(
+				nameof(stream),
+				`${AuditableItemStreamContexts.Namespace}${AuditableItemStreamTypes.Stream}`,
+				stream,
+				schemaValidationFailures
+			);
+			Validation.asValidationError(
+				AuditableItemStreamService.CLASS_NAME,
+				nameof(stream),
+				schemaValidationFailures
+			);
+
 			const streamId = urnParsed.namespaceSpecific(0);
 			const streamEntity = await this._streamStorage.get(streamId);
 
@@ -390,6 +347,95 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				undefined,
 				error
 			);
+		}
+	}
+
+	/**
+	 * Get a stream header without the entries.
+	 * @param id The id of the stream to get.
+	 * @param cursor Cursor to use for next chunk of entries.
+	 * @param limit Limit the number of entries to return, only applicable if includeEntries is true.
+	 * @param options Additional options for the get operation.
+	 * @param options.includeEntries Whether to include the entries, defaults to false.
+	 * @param options.includeDeleted Whether to include deleted entries, defaults to false.
+	 * @param options.verifyStream Should the stream be verified, defaults to false.
+	 * @param options.verifyEntries Should the entries be verified, defaults to false.
+	 * @returns The stream and entries if found.
+	 * @throws NotFoundError if the stream is not found
+	 */
+	public async get(
+		id: string,
+		cursor?: string,
+		limit?: number,
+		options?: {
+			includeEntries?: boolean;
+			includeDeleted?: boolean;
+			verifyStream?: boolean;
+			verifyEntries?: boolean;
+		}
+	): Promise<{
+		stream: IAuditableItemStream;
+		cursor?: string;
+	}> {
+		Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(id), id);
+
+		const urnParsed = Urn.fromValidString(id);
+
+		if (urnParsed.namespaceIdentifier() !== AuditableItemStreamService._NAMESPACE) {
+			throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "namespaceMismatch", {
+				namespace: AuditableItemStreamService._NAMESPACE,
+				id
+			});
+		}
+
+		try {
+			const streamId = urnParsed.namespaceSpecific(0);
+
+			const streamEntity = await this._streamStorage.get(streamId);
+
+			if (Is.empty(streamEntity)) {
+				throw new NotFoundError(AuditableItemStreamService.CLASS_NAME, "streamNotFound", id);
+			}
+
+			const verifyStream = options?.verifyStream ?? false;
+			const verifyEntries = options?.verifyEntries ?? false;
+
+			const streamModel = this.streamEntityToJsonLd(streamEntity);
+			let returnCursor;
+
+			if (options?.includeEntries) {
+				const result = await this.findEntries(
+					streamId,
+					options?.includeDeleted,
+					verifyEntries,
+					undefined,
+					undefined,
+					undefined,
+					limit,
+					cursor
+				);
+				streamModel.entries = {
+					type: SchemaOrgTypes.ItemList,
+					[SchemaOrgTypes.ItemListElement]: result.entries
+				};
+				returnCursor = result.cursor;
+			}
+
+			if (verifyStream && Is.stringValue(streamEntity.proofId)) {
+				streamModel.verification = await this._immutableProofComponent.verify(streamEntity.proofId);
+			}
+
+			if (verifyStream || verifyEntries) {
+				streamModel["@context"].push(ImmutableProofContexts.Context);
+			}
+
+			const result = await JsonLdProcessor.compact(streamModel, streamModel["@context"]);
+			return {
+				stream: result,
+				cursor: returnCursor
+			};
+		} catch (error) {
+			throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "getFailed", undefined, error);
 		}
 	}
 
@@ -649,7 +695,10 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			const entry = this.streamEntryEntityToJsonLd(result.entity);
 
 			if (verifyEntry) {
-				entry["@context"].push(ImmutableProofContexts.Context);
+				entry["@context"] = JsonLdProcessor.combineContexts(
+					entry["@context"],
+					ImmutableProofContexts.Context
+				) as IAuditableItemStreamEntry["@context"];
 				entry.verification = result.verification;
 			}
 
@@ -1146,9 +1195,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	): IAuditableItemStream & IJsonLdNodeObject {
 		const model: IAuditableItemStream & IJsonLdNodeObject = {
 			"@context": [
+				SchemaOrgContexts.Context,
 				AuditableItemStreamContexts.Context,
-				AuditableItemStreamContexts.ContextCommon,
-				SchemaOrgContexts.Context
+				AuditableItemStreamContexts.ContextCommon
 			],
 			type: AuditableItemStreamTypes.Stream,
 			id: `${AuditableItemStreamService._NAMESPACE}:${streamEntity.id}`,
@@ -1173,8 +1222,8 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	 */
 	private streamEntryEntityToJsonLd(
 		streamEntryEntity: AuditableItemStreamEntry
-	): IAuditableItemStreamEntry & IJsonLdNodeObject {
-		const streamEntryModel: IAuditableItemStreamEntry & IJsonLdNodeObject = {
+	): IAuditableItemStreamEntry {
+		const streamEntryModel: IAuditableItemStreamEntry = {
 			"@context": [
 				AuditableItemStreamContexts.Context,
 				AuditableItemStreamContexts.ContextCommon,
@@ -1204,7 +1253,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 	private async setEntry(
 		context: IAuditableItemStreamServiceContext,
 		streamId: string,
-		entry: Partial<AuditableItemStreamEntry>
+		entry: Partial<IAuditableItemStreamEntry>
 	): Promise<string> {
 		Guards.object(AuditableItemStreamService.CLASS_NAME, nameof(entry), entry);
 
@@ -1246,7 +1295,9 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			);
 
 			// Create the proof for the stream object
-			entity.proofId = await this._immutableProofComponent.create(streamEntryModel);
+			entity.proofId = await this._immutableProofComponent.create(
+				JsonLdHelper.toNodeObject(streamEntryModel)
+			);
 		}
 
 		await this._streamEntryStorage.set(entity);
