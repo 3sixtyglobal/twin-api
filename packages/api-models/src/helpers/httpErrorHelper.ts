@@ -13,6 +13,8 @@ import {
 	ValidationError
 } from "@twin.org/core";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
+import { ForbiddenError } from "../errors/forbiddenError.js";
+import { TooManyRequestsError } from "../errors/tooManyRequestsError.js";
 import type { IHttpResponse } from "../models/protocol/IHttpResponse.js";
 
 /**
@@ -29,8 +31,10 @@ export class HttpErrorHelper {
 		[AlreadyExistsError.CLASS_NAME]: HttpStatusCode.conflict,
 		[NotFoundError.CLASS_NAME]: HttpStatusCode.notFound,
 		[UnauthorizedError.CLASS_NAME]: HttpStatusCode.unauthorized,
-		[NotImplementedError.CLASS_NAME]: HttpStatusCode.forbidden,
-		[UnprocessableError.CLASS_NAME]: HttpStatusCode.unprocessableEntity
+		[NotImplementedError.CLASS_NAME]: HttpStatusCode.notImplemented,
+		[UnprocessableError.CLASS_NAME]: HttpStatusCode.unprocessableEntity,
+		[TooManyRequestsError.CLASS_NAME]: HttpStatusCode.tooManyRequests,
+		[ForbiddenError.CLASS_NAME]: HttpStatusCode.forbidden
 	};
 
 	/**

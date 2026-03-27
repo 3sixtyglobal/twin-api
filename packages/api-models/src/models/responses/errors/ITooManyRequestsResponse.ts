@@ -4,13 +4,13 @@ import type { IError } from "@twin.org/core";
 import type { HttpStatusCode } from "@twin.org/web";
 
 /**
- * The request resulted in a conflicting operation, see the content for more details.
+ * The request resulted in too many requests, see the content for more details.
  */
-export interface IConflictResponse {
+export interface ITooManyRequestsResponse {
 	/**
 	 * Response status code.
 	 */
-	statusCode: typeof HttpStatusCode.conflict;
+	statusCode: typeof HttpStatusCode.tooManyRequests;
 
 	/**
 	 * The body which contains the error.

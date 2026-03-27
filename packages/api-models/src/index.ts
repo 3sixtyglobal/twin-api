@@ -1,5 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+export * from "./errors/forbiddenError.js";
+export * from "./errors/tooManyRequestsError.js";
 export * from "./factories/mimeTypeProcessorFactory.js";
 export * from "./factories/restRouteProcessorFactory.js";
 export * from "./factories/socketRouteProcessorFactory.js";
@@ -28,6 +30,8 @@ export * from "./models/responses/errors/IConflictResponse.js";
 export * from "./models/responses/errors/IForbiddenResponse.js";
 export * from "./models/responses/errors/IInternalServerErrorResponse.js";
 export * from "./models/responses/errors/INotFoundResponse.js";
+export * from "./models/responses/errors/INotImplementedResponse.js";
+export * from "./models/responses/errors/ITooManyRequestsResponse.js";
 export * from "./models/responses/errors/IUnauthorizedResponse.js";
 export * from "./models/responses/errors/IUnprocessableEntityResponse.js";
 export * from "./models/responses/success/IAcceptedResponse.js";

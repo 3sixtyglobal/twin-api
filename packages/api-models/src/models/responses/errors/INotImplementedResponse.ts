@@ -4,13 +4,13 @@ import type { IError } from "@twin.org/core";
 import type { HttpStatusCode } from "@twin.org/web";
 
 /**
- * The request resulted in a conflicting operation, see the content for more details.
+ * The operation that you tried to perform is not implemented, see the content for more details.
  */
-export interface IConflictResponse {
+export interface INotImplementedResponse {
 	/**
 	 * Response status code.
 	 */
-	statusCode: typeof HttpStatusCode.conflict;
+	statusCode: typeof HttpStatusCode.notImplemented;
 
 	/**
 	 * The body which contains the error.

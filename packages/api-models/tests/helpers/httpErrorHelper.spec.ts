@@ -11,6 +11,8 @@ import {
 	ValidationError
 } from "@twin.org/core";
 import { HttpStatusCode } from "@twin.org/web";
+import { ForbiddenError } from "../../src/errors/forbiddenError.js";
+import { TooManyRequestsError } from "../../src/errors/tooManyRequestsError.js";
 import { HttpErrorHelper } from "../../src/helpers/httpErrorHelper.js";
 import type { IHttpResponse } from "../../src/models/protocol/IHttpResponse.js";
 
@@ -58,11 +60,25 @@ describe("HttpErrorHelper", () => {
 		expect(result.error.name).toBe(UnauthorizedError.CLASS_NAME);
 	});
 
-	it("should map NotImplementedError to forbidden", () => {
+	it("should map NotImplementedError to notImplemented", () => {
 		const err = new NotImplementedError("TestClass", "testProp");
 		const result = HttpErrorHelper.processError(err);
-		expect(result.httpStatusCode).toBe(HttpStatusCode.forbidden);
+		expect(result.httpStatusCode).toBe(HttpStatusCode.notImplemented);
 		expect(result.error.name).toBe(NotImplementedError.CLASS_NAME);
+	});
+
+	it("should map ForbiddenError to forbidden", () => {
+		const err = new ForbiddenError("TestClass", "testProp");
+		const result = HttpErrorHelper.processError(err);
+		expect(result.httpStatusCode).toBe(HttpStatusCode.forbidden);
+		expect(result.error.name).toBe(ForbiddenError.CLASS_NAME);
+	});
+
+	it("should map TooManyRequestsError to tooManyRequests", () => {
+		const err = new TooManyRequestsError("TestClass", "testProp", 5, new Date().toISOString());
+		const result = HttpErrorHelper.processError(err);
+		expect(result.httpStatusCode).toBe(HttpStatusCode.tooManyRequests);
+		expect(result.error.name).toBe(TooManyRequestsError.CLASS_NAME);
 	});
 
 	it("should map UnprocessableError to unprocessableEntity", () => {
