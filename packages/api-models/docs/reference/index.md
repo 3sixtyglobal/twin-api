@@ -2,6 +2,8 @@
 
 ## Classes
 
+- [ForbiddenError](classes/ForbiddenError.md)
+- [TooManyRequestsError](classes/TooManyRequestsError.md)
 - [HttpErrorHelper](classes/HttpErrorHelper.md)
 - [HttpParameterHelper](classes/HttpParameterHelper.md)
 - [HttpUrlHelper](classes/HttpUrlHelper.md)
@@ -30,6 +32,8 @@
 - [IForbiddenResponse](interfaces/IForbiddenResponse.md)
 - [IInternalServerErrorResponse](interfaces/IInternalServerErrorResponse.md)
 - [INotFoundResponse](interfaces/INotFoundResponse.md)
+- [INotImplementedResponse](interfaces/INotImplementedResponse.md)
+- [ITooManyRequestsResponse](interfaces/ITooManyRequestsResponse.md)
 - [IUnauthorizedResponse](interfaces/IUnauthorizedResponse.md)
 - [IUnprocessableEntityResponse](interfaces/IUnprocessableEntityResponse.md)
 - [IAcceptedResponse](interfaces/IAcceptedResponse.md)

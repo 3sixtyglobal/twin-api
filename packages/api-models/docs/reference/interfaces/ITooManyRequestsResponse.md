@@ -1,12 +1,12 @@
-# Interface: IConflictResponse
+# Interface: ITooManyRequestsResponse
 
-The request resulted in a conflicting operation, see the content for more details.
+The request resulted in too many requests, see the content for more details.
 
 ## Properties
 
 ### statusCode {#statuscode}
 
-> **statusCode**: `409`
+> **statusCode**: `429`
 
 Response status code.
 
