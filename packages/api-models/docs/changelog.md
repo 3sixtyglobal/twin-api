@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.22](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.21...api-models-v0.0.3-next.22) (2026-03-27)
+
+
+### Features
+
+* add new error types ([#86](https://github.com/twinfoundation/api/issues/86)) ([71e3c07](https://github.com/twinfoundation/api/commit/71e3c07c792984af01c307943e0e09a3ae98710d))
+
 ## [0.0.3-next.21](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.20...api-models-v0.0.3-next.21) (2026-03-11)
 
 

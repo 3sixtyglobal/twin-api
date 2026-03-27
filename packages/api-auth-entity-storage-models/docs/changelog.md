@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.22](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-models-v0.0.3-next.21...api-auth-entity-storage-models-v0.0.3-next.22) (2026-03-27)
+
+
+### Miscellaneous Chores
+
+* **api-auth-entity-storage-models:** Synchronize repo versions
+
 ## [0.0.3-next.21](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-models-v0.0.3-next.20...api-auth-entity-storage-models-v0.0.3-next.21) (2026-03-11)
 
 
