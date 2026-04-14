@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-processors",
-	"version": "0.0.3-next.23",
+	"version": "0.0.3-next.24",
 	"description": "Reusable request and route processors for logging, context handling, and content negotiation.",
 	"repository": {
 		"type": "git",
@@ -28,7 +28,7 @@
 		"dist:no-test": "npm run clean && npm run build && npm run test:build"
 	},
 	"dependencies": {
-		"@twin.org/api-models": "0.0.3-next.23",
+		"@twin.org/api-models": "0.0.3-next.24",
 		"@twin.org/context": "next",
 		"@twin.org/core": "next",
 		"@twin.org/logging-models": "next",

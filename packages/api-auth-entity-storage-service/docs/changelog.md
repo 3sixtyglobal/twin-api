@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.24](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.23...api-auth-entity-storage-service-v0.0.3-next.24) (2026-04-14)
+
+
+### Features
+
+* remove auth service dependency on admin service ([4aeb211](https://github.com/twinfoundation/api/commit/4aeb211a5ffcf2eaea89a6841faea3ac3069ef89))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.23 to 0.0.3-next.24
+    * @twin.org/api-core bumped from 0.0.3-next.23 to 0.0.3-next.24
+    * @twin.org/api-models bumped from 0.0.3-next.23 to 0.0.3-next.24
+
 ## [0.0.3-next.23](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.22...api-auth-entity-storage-service-v0.0.3-next.23) (2026-04-14)
 
 
