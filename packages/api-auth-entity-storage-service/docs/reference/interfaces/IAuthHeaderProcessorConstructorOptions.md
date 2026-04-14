@@ -4,16 +4,16 @@ Options for the AuthHeaderProcessor constructor.
 
 ## Properties
 
-### authenticationAdminServiceType? {#authenticationadminservicetype}
+### userEntityStorageType? {#userentitystoragetype}
 
-> `optional` **authenticationAdminServiceType?**: `string`
+> `optional` **userEntityStorageType?**: `string`
 
-The admin service.
+The entity storage for users.
 
 #### Default
 
 ```ts
-authentication-admin
+authentication-user
 ```
 
 ***
