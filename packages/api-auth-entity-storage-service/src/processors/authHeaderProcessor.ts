@@ -1,6 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAuthenticationAdminComponent } from "@twin.org/api-auth-entity-storage-models";
 import {
 	HttpErrorHelper,
 	type IBaseRoute,
@@ -14,10 +13,15 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, Coerce, ComponentFactory, GeneralError, Is } from "@twin.org/core";
+import { BaseError, Coerce, GeneralError, Is } from "@twin.org/core";
+import {
+	EntityStorageConnectorFactory,
+	type IEntityStorageConnector
+} from "@twin.org/entity-storage-models";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import { CookieHelper, HeaderTypes, HttpStatusCode } from "@twin.org/web";
+import type { AuthenticationUser } from "../entities/authenticationUser.js";
 import type { IAuthHeaderProcessorConstructorOptions } from "../models/IAuthHeaderProcessorConstructorOptions.js";
 import { TokenHelper } from "../utils/tokenHelper.js";
 
@@ -43,10 +47,10 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	private readonly _vaultConnector: IVaultConnector;
 
 	/**
-	 * The user admin service.
+	 * The entity storage for users.
 	 * @internal
 	 */
-	private readonly _authenticationAdminService: IAuthenticationAdminComponent;
+	private readonly _userEntityStorage: IEntityStorageConnector<AuthenticationUser>;
 
 	/**
 	 * The name of the key to retrieve from the vault for signing JWT.
@@ -73,8 +77,8 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	constructor(options?: IAuthHeaderProcessorConstructorOptions) {
 		this._vaultConnector = VaultConnectorFactory.get(options?.vaultConnectorType ?? "vault");
 
-		this._authenticationAdminService = ComponentFactory.get<IAuthenticationAdminComponent>(
-			options?.authenticationAdminServiceType ?? "authentication-admin"
+		this._userEntityStorage = EntityStorageConnectorFactory.get(
+			options?.userEntityStorageType ?? "authentication-user"
 		);
 
 		this._signingKeyName = options?.config?.signingKeyName ?? "auth-signing";
@@ -129,12 +133,12 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 					route.requiredScope,
 					async (userIdentity: string, organizationIdentity: string) => {
 						const validParts = [];
-						const user = await this._authenticationAdminService.getByIdentity(userIdentity);
+						const user = await this._userEntityStorage.get(userIdentity, "identity");
 
-						if (user?.userIdentity === userIdentity) {
+						if (user?.identity === userIdentity) {
 							validParts.push("user");
 						}
-						if (user?.organizationIdentity === organizationIdentity) {
+						if (user?.organization === organizationIdentity) {
 							validParts.push("organization");
 						}
 						return validParts;
