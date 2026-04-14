@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.23](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.22...api-server-fastify-v0.0.3-next.23) (2026-04-14)
+
+
+### Features
+
+* auth enhancements ([#93](https://github.com/twinfoundation/api/issues/93)) ([921a50c](https://github.com/twinfoundation/api/commit/921a50cd89d26e530a6be6174a5a803060fa0eb6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.22 to 0.0.3-next.23
+    * @twin.org/api-models bumped from 0.0.3-next.22 to 0.0.3-next.23
+    * @twin.org/api-processors bumped from 0.0.3-next.22 to 0.0.3-next.23
+
 ## [0.0.3-next.22](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.21...api-server-fastify-v0.0.3-next.22) (2026-03-27)
 
 
