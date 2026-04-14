@@ -465,4 +465,78 @@ describe("TokenHelper", () => {
 			);
 		});
 	});
+
+	describe("verify user validation", () => {
+		const mockVaultConnector: IVaultConnector = {
+			get: vi.fn(),
+			set: vi.fn(),
+			remove: vi.fn()
+		} as unknown as IVaultConnector;
+
+		const signingKeyName = "test-key";
+
+		it("should verify token when verifyUser confirms user and organization", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "verified-user.jwt.token";
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization"]);
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(
+				mockVaultConnector,
+				signingKeyName,
+				token,
+				undefined,
+				verifyUser
+			);
+
+			expect(result.payload).toEqual(payload);
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456");
+		});
+
+		it("should throw UnauthorizedError when verifyUser does not confirm the user", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "missing-user-verification.jwt.token";
+			const verifyUser = vi.fn().mockResolvedValue(["organization"]);
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(
+				TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser)
+			).rejects.toThrow(UnauthorizedError);
+		});
+
+		it("should throw UnauthorizedError when verifyUser does not confirm the organization", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "missing-organization-verification.jwt.token";
+			const verifyUser = vi.fn().mockResolvedValue(["user"]);
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(
+				TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser)
+			).rejects.toThrow(UnauthorizedError);
+		});
+	});
 });

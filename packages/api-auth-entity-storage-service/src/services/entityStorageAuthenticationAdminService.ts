@@ -1,10 +1,20 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type {
+	IAuthenticationAuditComponent,
 	IAuthenticationAdminComponent,
 	IAuthenticationUser
 } from "@twin.org/api-auth-entity-storage-models";
-import { Converter, GeneralError, Guards, Is, NotFoundError, RandomHelper } from "@twin.org/core";
+import { AuthAuditEvent } from "@twin.org/api-auth-entity-storage-models";
+import {
+	ComponentFactory,
+	Converter,
+	GeneralError,
+	Guards,
+	Is,
+	NotFoundError,
+	RandomHelper
+} from "@twin.org/core";
 import { PasswordGenerator, PasswordValidator } from "@twin.org/crypto";
 import {
 	EntityStorageConnectorFactory,
@@ -30,6 +40,12 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	private readonly _userEntityStorage: IEntityStorageConnector<AuthenticationUser>;
 
 	/**
+	 * The audit service.
+	 * @internal
+	 */
+	private readonly _authenticationAuditService?: IAuthenticationAuditComponent;
+
+	/**
 	 * The minimum password length.
 	 * @internal
 	 */
@@ -42,6 +58,10 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	constructor(options?: IEntityStorageAuthenticationAdminServiceConstructorOptions) {
 		this._userEntityStorage = EntityStorageConnectorFactory.get(
 			options?.userEntityStorageType ?? "authentication-user"
+		);
+
+		this._authenticationAuditService = ComponentFactory.getIfExists<IAuthenticationAuditComponent>(
+			options?.authenticationAuditServiceType ?? "authentication-audit"
 		);
 
 		this._minPasswordLength = options?.config?.minPasswordLength;
@@ -117,6 +137,15 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			};
 
 			await this._userEntityStorage.set(newUser);
+			await this._authenticationAuditService?.create({
+				actorId: user.email,
+				event: AuthAuditEvent.AccountCreated,
+				data: {
+					userIdentity: user.userIdentity,
+					organizationIdentity: user.organizationIdentity,
+					scope: user.scope
+				}
+			});
 		} catch (error) {
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,
@@ -178,13 +207,39 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				);
 			}
 
+			const updatedFields: string[] = [];
+			const updatedScope = Is.array(user.scope)
+				? user.scope.map(s => s.trim().toLocaleLowerCase()).join(",")
+				: existingUser.scope;
+
+			if (user.userIdentity !== undefined && user.userIdentity !== existingUser.identity) {
+				updatedFields.push("userIdentity");
+			}
+			if (
+				user.organizationIdentity !== undefined &&
+				user.organizationIdentity !== existingUser.organization
+			) {
+				updatedFields.push("organizationIdentity");
+			}
+			if (Is.array(user.scope) && updatedScope !== existingUser.scope) {
+				updatedFields.push("scope");
+			}
+
 			existingUser.identity = user.userIdentity ?? existingUser.identity;
 			existingUser.organization = user.organizationIdentity ?? existingUser.organization;
-			existingUser.scope = Is.array(user.scope)
-				? user.scope.map(s => s.trim().toLocaleLowerCase()).join(",")
-				: user.scope;
+			existingUser.scope = Is.array(user.scope) ? updatedScope : existingUser.scope;
 
 			await this._userEntityStorage.set(existingUser);
+			await this._authenticationAuditService?.create({
+				actorId: existingUser.email,
+				event: AuthAuditEvent.AccountUpdated,
+				data: {
+					updatedFields,
+					userIdentity: existingUser.identity,
+					organizationIdentity: existingUser.organization,
+					scope: existingUser.scope.split(",")
+				}
+			});
 		} catch (error) {
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,
@@ -288,6 +343,15 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			}
 
 			await this._userEntityStorage.remove(email);
+			await this._authenticationAuditService?.create({
+				actorId: email,
+				event: AuthAuditEvent.AccountDeleted,
+				data: {
+					userIdentity: user.identity,
+					organizationIdentity: user.organization,
+					scope: user.scope.split(",")
+				}
+			});
 		} catch (error) {
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,
@@ -360,6 +424,14 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			};
 
 			await this._userEntityStorage.set(updatedUser);
+			await this._authenticationAuditService?.create({
+				actorId: email,
+				event: AuthAuditEvent.PasswordChanged,
+				data: {
+					userIdentity: updatedUser.identity,
+					organizationIdentity: updatedUser.organization
+				}
+			});
 		} catch (error) {
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,

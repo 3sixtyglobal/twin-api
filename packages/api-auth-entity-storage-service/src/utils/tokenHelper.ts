@@ -73,6 +73,7 @@ export class TokenHelper {
 	 * @param signingKeyName The signing key name.
 	 * @param token The token to verify.
 	 * @param requiredScopes The required scopes.
+	 * @param verifyUser A function to verify the user identity and organization, which can be used to check if the user is still active or not.
 	 * @returns The verified details.
 	 * @throws UnauthorizedError if the token is missing, invalid or expired.
 	 */
@@ -80,7 +81,8 @@ export class TokenHelper {
 		vaultConnector: IVaultConnector,
 		signingKeyName: string,
 		token: string | undefined,
-		requiredScopes?: string[]
+		requiredScopes?: string[],
+		verifyUser?: (userIdentity: string, organizationIdentity: string) => Promise<string[]>
 	): Promise<{
 		header: IJwtHeader;
 		payload: IJwtPayload;
@@ -103,6 +105,15 @@ export class TokenHelper {
 			decoded.payload.exp < Math.trunc(Date.now() / 1000)
 		) {
 			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "expired");
+		}
+
+		if (Is.function(verifyUser)) {
+			const userVerified = await verifyUser(decoded.payload.sub, decoded.payload.org);
+			if (!userVerified.includes("user")) {
+				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
+			} else if (!userVerified.includes("organization")) {
+				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "organizationNotVerified");
+			}
 		}
 
 		if (Is.arrayValue(requiredScopes)) {

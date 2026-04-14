@@ -3,6 +3,7 @@
 import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
+	HttpContextIdKeys,
 	HttpErrorHelper,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
@@ -32,7 +33,13 @@ import {
 } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
-import { HeaderTypes, HttpMethod, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
+import {
+	HeaderTypes,
+	HttpMethod,
+	HttpStatusCode,
+	type IHttpHeaders,
+	HeaderHelper
+} from "@twin.org/web";
 import Fastify, {
 	type FastifyInstance,
 	type FastifyReply,
@@ -506,7 +513,15 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			headers: request.headers as IHttpHeaders
 		};
 		const httpResponse: IHttpResponse = {};
-		const contextIds: IContextIds = {};
+		const contextIds: IContextIds = {
+			[HttpContextIdKeys.IpAddress]: HeaderHelper.extractClientIps(httpServerRequest.headers).join(
+				"|"
+			),
+			[HttpContextIdKeys.UserAgent]: HeaderHelper.extractUserAgent(httpServerRequest.headers),
+			[HttpContextIdKeys.CorrelationId]: HeaderHelper.extractCorrelationId(
+				httpServerRequest.headers
+			)
+		};
 		const processorState = restRoute?.processorData ?? {};
 
 		if (Is.object(httpServerRequest.pathParams)) {

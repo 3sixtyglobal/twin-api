@@ -7,6 +7,12 @@ import type { IAuthHeaderProcessorConfig } from "./IAuthHeaderProcessorConfig.js
  */
 export interface IAuthHeaderProcessorConstructorOptions {
 	/**
+	 * The admin service.
+	 * @default authentication-admin
+	 */
+	authenticationAdminServiceType?: string;
+
+	/**
 	 * The vault for the private keys.
 	 * @default vault
 	 */

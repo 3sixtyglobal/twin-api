@@ -25,6 +25,18 @@ export interface IEntityStorageAuthenticationServiceConstructorOptions {
 	authenticationAdminServiceType?: string;
 
 	/**
+	 * The audit service.
+	 * @default authentication-audit
+	 */
+	authenticationAuditServiceType?: string;
+
+	/**
+	 * The rate service.
+	 * @default authentication-rate
+	 */
+	authenticationRateServiceType?: string;
+
+	/**
 	 * The configuration for the authentication.
 	 */
 	config?: IEntityStorageAuthenticationServiceConfig;

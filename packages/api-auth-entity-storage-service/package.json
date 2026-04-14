@@ -28,6 +28,7 @@
 		"dist:no-test": "npm run clean && npm run build && npm run test:build"
 	},
 	"dependencies": {
+		"@twin.org/background-task-models": "next",
 		"@twin.org/api-auth-entity-storage-models": "0.0.3-next.22",
 		"@twin.org/api-core": "0.0.3-next.22",
 		"@twin.org/api-models": "0.0.3-next.22",

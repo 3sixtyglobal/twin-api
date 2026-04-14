@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IAuthenticationAdminComponent } from "@twin.org/api-auth-entity-storage-models";
 import {
 	HttpErrorHelper,
 	type IBaseRoute,
@@ -13,7 +14,7 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, Coerce, GeneralError, Is } from "@twin.org/core";
+import { BaseError, Coerce, ComponentFactory, GeneralError, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import { CookieHelper, HeaderTypes, HttpStatusCode } from "@twin.org/web";
@@ -42,6 +43,12 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	private readonly _vaultConnector: IVaultConnector;
 
 	/**
+	 * The user admin service.
+	 * @internal
+	 */
+	private readonly _authenticationAdminService: IAuthenticationAdminComponent;
+
+	/**
 	 * The name of the key to retrieve from the vault for signing JWT.
 	 * @internal
 	 */
@@ -65,6 +72,11 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	 */
 	constructor(options?: IAuthHeaderProcessorConstructorOptions) {
 		this._vaultConnector = VaultConnectorFactory.get(options?.vaultConnectorType ?? "vault");
+
+		this._authenticationAdminService = ComponentFactory.get<IAuthenticationAdminComponent>(
+			options?.authenticationAdminServiceType ?? "authentication-admin"
+		);
+
 		this._signingKeyName = options?.config?.signingKeyName ?? "auth-signing";
 		this._cookieName = options?.config?.cookieName ?? AuthHeaderProcessor.DEFAULT_COOKIE_NAME;
 	}
@@ -114,7 +126,19 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 					this._vaultConnector,
 					`${this._nodeId}/${this._signingKeyName}`,
 					tokenAndLocation?.token,
-					route.requiredScope
+					route.requiredScope,
+					async (userIdentity: string, organizationIdentity: string) => {
+						const validParts = [];
+						const user = await this._authenticationAdminService.getByIdentity(userIdentity);
+
+						if (user?.userIdentity === userIdentity) {
+							validParts.push("user");
+						}
+						if (user?.organizationIdentity === organizationIdentity) {
+							validParts.push("organization");
+						}
+						return validParts;
+					}
 				);
 
 				// If tenant id is defined in the context, then it must match the one in the token

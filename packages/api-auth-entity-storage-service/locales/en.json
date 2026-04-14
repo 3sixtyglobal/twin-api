@@ -15,15 +15,24 @@
 			"userNotFound": "The user with the specified e-mail could not be found \"{notFoundId}\"",
 			"currentPasswordMismatch": "The current password is incorrect"
 		},
+		"entityStorageAuthenticationRateService": {
+			"actionConfigMissing": "No rate-limit configuration exists for action \"{action}\".",
+			"rateLimitExceeded": "The rate limit for action \"{action}\" has been exceeded. Retry after {retryAfterSeconds} seconds."
+		},
 		"tokenHelper": {
 			"missing": "The JSON Web token could not be found in the authorization header",
 			"payloadMissingSubject": "The JSON Web token payload does not contain a subject",
 			"payloadMissingOrganization": "The JSON Web token payload does not contain an organization",
 			"expired": "The JSON Web token has expired",
-			"insufficientScopes": "The JSON Web token does not have the required scopes to access this resource"
+			"insufficientScopes": "The JSON Web token does not have the required scopes to access this resource",
+			"userNotVerified": "The user associated with the JSON Web token could not be verified",
+			"organizationNotVerified": "The organization associated with the JSON Web token could not be verified"
 		},
 		"authHeaderProcessor": {
 			"tenantIdMismatch": "The tenant ID in the token does not match the tenant ID in the context"
+		},
+		"validation": {
+			"saltEntropyTooLow": "Salt must have at least 8 unique characters for sufficient entropy."
 		}
 	}
 }

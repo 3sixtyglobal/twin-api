@@ -16,6 +16,7 @@ export * from "./models/api/IServerRootResponse.js";
 export * from "./models/api/IServerSpecResponse.js";
 export * from "./models/config/IBaseRestClientConfig.js";
 export * from "./models/config/IBaseSocketClientConfig.js";
+export * from "./models/httpContextIdKeys.js";
 export * from "./models/protocol/IHttpRequest.js";
 export * from "./models/protocol/IHttpRequestContext.js";
 export * from "./models/protocol/IHttpRequestPathParams.js";
