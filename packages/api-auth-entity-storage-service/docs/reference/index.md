@@ -10,6 +10,7 @@
 - [EntityStorageAuthenticationAuditService](classes/EntityStorageAuthenticationAuditService.md)
 - [EntityStorageAuthenticationRateService](classes/EntityStorageAuthenticationRateService.md)
 - [EntityStorageAuthenticationService](classes/EntityStorageAuthenticationService.md)
+- [PasswordHelper](classes/PasswordHelper.md)
 - [TokenHelper](classes/TokenHelper.md)
 
 ## Interfaces

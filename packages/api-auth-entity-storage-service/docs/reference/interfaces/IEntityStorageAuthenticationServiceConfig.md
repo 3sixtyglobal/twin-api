@@ -32,6 +32,20 @@ The default time to live for the JWT.
 
 ***
 
+### minPasswordLength? {#minpasswordlength}
+
+> `optional` **minPasswordLength?**: `number`
+
+The minimum password length for new password validation.
+
+#### Default
+
+```ts
+8
+```
+
+***
+
 ### loginRateLimit? {#loginratelimit}
 
 > `optional` **loginRateLimit?**: `IAuthenticationRateActionConfig`

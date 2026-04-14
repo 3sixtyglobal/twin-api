@@ -32,20 +32,6 @@ vault
 
 ***
 
-### authenticationAdminServiceType? {#authenticationadminservicetype}
-
-> `optional` **authenticationAdminServiceType?**: `string`
-
-The admin service.
-
-#### Default
-
-```ts
-authentication-admin
-```
-
-***
-
 ### authenticationAuditServiceType? {#authenticationauditservicetype}
 
 > `optional` **authenticationAuditServiceType?**: `string`
