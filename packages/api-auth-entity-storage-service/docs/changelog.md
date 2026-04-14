@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.25](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.24...api-auth-entity-storage-service-v0.0.3-next.25) (2026-04-14)
+
+
+### Features
+
+* auth header processor use user entity storage directly ([93084cf](https://github.com/twinfoundation/api/commit/93084cfed8f3ab16c80a1ab1bc90b1d9fc14bd25))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.24 to 0.0.3-next.25
+    * @twin.org/api-core bumped from 0.0.3-next.24 to 0.0.3-next.25
+    * @twin.org/api-models bumped from 0.0.3-next.24 to 0.0.3-next.25
+
 ## [0.0.3-next.24](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.23...api-auth-entity-storage-service-v0.0.3-next.24) (2026-04-14)
 
 

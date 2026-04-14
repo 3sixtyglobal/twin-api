@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-auth-entity-storage-service",
-	"version": "0.0.3-next.24",
+	"version": "0.0.3-next.25",
 	"description": "Authentication service implementation and REST routes backed by entity storage.",
 	"repository": {
 		"type": "git",
@@ -29,9 +29,9 @@
 	},
 	"dependencies": {
 		"@twin.org/background-task-models": "next",
-		"@twin.org/api-auth-entity-storage-models": "0.0.3-next.24",
-		"@twin.org/api-core": "0.0.3-next.24",
-		"@twin.org/api-models": "0.0.3-next.24",
+		"@twin.org/api-auth-entity-storage-models": "0.0.3-next.25",
+		"@twin.org/api-core": "0.0.3-next.25",
+		"@twin.org/api-models": "0.0.3-next.25",
 		"@twin.org/context": "next",
 		"@twin.org/core": "next",
 		"@twin.org/crypto": "next",
