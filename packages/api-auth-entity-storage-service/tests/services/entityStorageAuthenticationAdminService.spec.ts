@@ -359,7 +359,7 @@ describe("EntityStorageAuthenticationAdminService", () => {
 		});
 
 		await expect(service.updatePassword("user@example.com", "short")).rejects.toThrow(GeneralError);
-		expect(getMock).not.toHaveBeenCalled();
+		expect(getMock).toHaveBeenCalledWith("user@example.com");
 		expect(setMock).not.toHaveBeenCalled();
 	});
 });

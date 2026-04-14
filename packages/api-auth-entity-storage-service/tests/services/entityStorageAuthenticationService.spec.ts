@@ -1,7 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type {
-	IAuthenticationAdminComponent,
 	IAuthenticationAuditComponent,
 	IAuthenticationRateComponent
 } from "@twin.org/api-auth-entity-storage-models";
@@ -15,10 +14,10 @@ import {
 } from "@twin.org/entity-storage-models";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import { EntityStorageAuthenticationService } from "../../src/services/entityStorageAuthenticationService.js";
+import { PasswordHelper } from "../../src/utils/passwordHelper.js";
 import { TokenHelper } from "../../src/utils/tokenHelper.js";
 
 describe("EntityStorageAuthenticationService", () => {
-	let mockAuthenticationAdminService: IAuthenticationAdminComponent;
 	let mockAuthenticationAuditService: IAuthenticationAuditComponent;
 	let mockAuthenticationRateService: IAuthenticationRateComponent;
 	let mockUserEntityStorage: IEntityStorageConnector;
@@ -27,16 +26,6 @@ describe("EntityStorageAuthenticationService", () => {
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
-
-		mockAuthenticationAdminService = {
-			className: vi.fn().mockReturnValue("AuthenticationAdminService"),
-			create: vi.fn(),
-			update: vi.fn(),
-			get: vi.fn(),
-			getByIdentity: vi.fn(),
-			remove: vi.fn(),
-			updatePassword: vi.fn()
-		};
 
 		mockAuthenticationAuditService = {
 			className: vi.fn().mockReturnValue("AuthenticationAuditService"),
@@ -71,10 +60,6 @@ describe("EntityStorageAuthenticationService", () => {
 		);
 		vi.spyOn(VaultConnectorFactory, "get").mockReturnValue(mockVaultConnector);
 		vi.spyOn(ComponentFactory, "get").mockImplementation(componentName => {
-			if (componentName === "authentication-admin") {
-				return mockAuthenticationAdminService;
-			}
-
 			if (componentName === "authentication-rate") {
 				return mockAuthenticationRateService;
 			}
@@ -305,11 +290,13 @@ describe("EntityStorageAuthenticationService", () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
 			[ContextIdKeys.Node]: "node-1"
 		});
-		vi.mocked(mockAuthenticationAdminService.getByIdentity).mockResolvedValue({
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
 			email: "user@example.com",
-			userIdentity: "did:user:123",
-			organizationIdentity: "did:org:456",
-			scope: ["read", "write"]
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: "read,write"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (_vaultConnector, _signingKeyName, _token, _requiredScopes, verifyUser) => {
@@ -335,7 +322,7 @@ describe("EntityStorageAuthenticationService", () => {
 		const result = await service.refresh("existing-token");
 
 		expect(result).toEqual({ token: "refreshed-token", expiry: 987654321 });
-		expect(mockAuthenticationAdminService.getByIdentity).toHaveBeenCalledWith("did:user:123");
+		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
 		expect(TokenHelper.createToken).toHaveBeenCalledWith(
 			mockVaultConnector,
 			"node-1/auth-signing",
@@ -415,11 +402,13 @@ describe("EntityStorageAuthenticationService", () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
 			[ContextIdKeys.Node]: "node-1"
 		});
-		vi.mocked(mockAuthenticationAdminService.getByIdentity).mockResolvedValue({
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
 			email: "user@example.com",
-			userIdentity: "did:user:other",
-			organizationIdentity: "did:org:456",
-			scope: ["read", "write"]
+			identity: "did:user:other",
+			organization: "did:org:456",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: "read,write"
 		});
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
@@ -442,7 +431,7 @@ describe("EntityStorageAuthenticationService", () => {
 		await service.start();
 
 		await expect(service.refresh("existing-token")).rejects.toThrow(UnauthorizedError);
-		expect(mockAuthenticationAdminService.getByIdentity).toHaveBeenCalledWith("did:user:123");
+		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
 		expect(createTokenSpy).not.toHaveBeenCalled();
 	});
 
@@ -450,11 +439,13 @@ describe("EntityStorageAuthenticationService", () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
 			[ContextIdKeys.Node]: "node-1"
 		});
-		vi.mocked(mockAuthenticationAdminService.getByIdentity).mockResolvedValue({
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
 			email: "user@example.com",
-			userIdentity: "did:user:123",
-			organizationIdentity: "did:org:other",
-			scope: ["read", "write"]
+			identity: "did:user:123",
+			organization: "did:org:other",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: "read,write"
 		});
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
@@ -477,7 +468,7 @@ describe("EntityStorageAuthenticationService", () => {
 		await service.start();
 
 		await expect(service.refresh("existing-token")).rejects.toThrow(UnauthorizedError);
-		expect(mockAuthenticationAdminService.getByIdentity).toHaveBeenCalledWith("did:user:123");
+		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
 		expect(createTokenSpy).not.toHaveBeenCalled();
 	});
 
@@ -493,6 +484,7 @@ describe("EntityStorageAuthenticationService", () => {
 			salt: "c2FsdA==",
 			scope: "read"
 		});
+		vi.spyOn(PasswordHelper, "updatePassword").mockResolvedValue(undefined);
 
 		await service.updatePassword("current-password", "new-password");
 
@@ -500,10 +492,14 @@ describe("EntityStorageAuthenticationService", () => {
 			"password-change",
 			"did:user:123"
 		);
-		expect(mockAuthenticationAdminService.updatePassword).toHaveBeenCalledWith(
-			"user@example.com",
+		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
+		expect(PasswordHelper.updatePassword).toHaveBeenCalledWith(
+			mockUserEntityStorage,
+			mockAuthenticationAuditService,
+			expect.objectContaining({ email: "user@example.com", identity: "did:user:123" }),
 			"new-password",
-			"current-password"
+			"current-password",
+			undefined
 		);
 		expect(mockAuthenticationRateService.clear).toHaveBeenCalledWith(
 			"password-change",

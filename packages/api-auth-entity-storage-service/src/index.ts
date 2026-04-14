@@ -24,3 +24,4 @@ export * from "./services/entityStorageAuthenticationAuditService.js";
 export * from "./services/entityStorageAuthenticationRateService.js";
 export * from "./services/entityStorageAuthenticationService.js";
 export * from "./utils/tokenHelper.js";
+export * from "./utils/passwordHelper.js";

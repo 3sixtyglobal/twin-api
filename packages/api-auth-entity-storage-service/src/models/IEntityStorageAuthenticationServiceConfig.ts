@@ -19,6 +19,12 @@ export interface IEntityStorageAuthenticationServiceConfig {
 	defaultTtlMinutes?: number;
 
 	/**
+	 * The minimum password length for new password validation.
+	 * @default 8
+	 */
+	minPasswordLength?: number;
+
+	/**
 	 * Optional override for login failure rate limit.
 	 * @default { maxAttempts: 5, windowMinutes: 15 }
 	 */

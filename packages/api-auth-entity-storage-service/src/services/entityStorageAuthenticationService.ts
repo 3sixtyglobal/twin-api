@@ -4,7 +4,6 @@ import type {
 	IAuthenticationRateActionConfig,
 	IAuthenticationRateComponent,
 	IAuthenticationAuditComponent,
-	IAuthenticationAdminComponent,
 	IAuthenticationComponent
 } from "@twin.org/api-auth-entity-storage-models";
 import { AuthAuditEvent } from "@twin.org/api-auth-entity-storage-models";
@@ -28,6 +27,7 @@ import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import type { AuthenticationUser } from "../entities/authenticationUser.js";
 import type { IEntityStorageAuthenticationServiceConstructorOptions } from "../models/IEntityStorageAuthenticationServiceConstructorOptions.js";
+import { PasswordHelper } from "../utils/passwordHelper.js";
 import { TokenHelper } from "../utils/tokenHelper.js";
 
 /**
@@ -82,12 +82,6 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	private static readonly _DEFAULT_TOKEN_REFRESH_RATE_WINDOW_MINUTES: number = 60;
 
 	/**
-	 * The user admin service.
-	 * @internal
-	 */
-	private readonly _authenticationAdminService: IAuthenticationAdminComponent;
-
-	/**
 	 * The audit service.
 	 * @internal
 	 */
@@ -124,6 +118,12 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	private readonly _defaultTtlMinutes: number;
 
 	/**
+	 * The minimum password length for validation.
+	 * @internal
+	 */
+	private readonly _minPasswordLength?: number;
+
+	/**
 	 * Rate limit configuration for login failures.
 	 * @internal
 	 */
@@ -158,10 +158,6 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 		this._vaultConnector = VaultConnectorFactory.get(options?.vaultConnectorType ?? "vault");
 
-		this._authenticationAdminService = ComponentFactory.get<IAuthenticationAdminComponent>(
-			options?.authenticationAdminServiceType ?? "authentication-admin"
-		);
-
 		this._authenticationAuditService = ComponentFactory.getIfExists<IAuthenticationAuditComponent>(
 			options?.authenticationAuditServiceType ?? "authentication-audit"
 		);
@@ -173,6 +169,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		this._signingKeyName = options?.config?.signingKeyName ?? "auth-signing";
 		this._defaultTtlMinutes =
 			options?.config?.defaultTtlMinutes ?? EntityStorageAuthenticationService._DEFAULT_TTL_MINUTES;
+		this._minPasswordLength = options?.config?.minPasswordLength;
 		this._loginRateLimit = {
 			maxAttempts:
 				options?.config?.loginRateLimit?.maxAttempts ??
@@ -357,11 +354,11 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			undefined,
 			async (userIdentity, organizationIdentity) => {
 				const validParts = [];
-				const user = await this._authenticationAdminService.getByIdentity(userIdentity);
-				if (user?.userIdentity === userIdentity) {
+				const user = await this._userEntityStorage.get(userIdentity, "identity");
+				if (user?.identity === userIdentity) {
 					validParts.push("user");
 				}
-				if (user?.organizationIdentity === organizationIdentity) {
+				if (user?.organization === organizationIdentity) {
 					validParts.push("organization");
 				}
 				return validParts;
@@ -410,7 +407,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		const userIdentity = contextIds[ContextIdKeys.User];
 		await this._authenticationRateService.check("password-change", userIdentity);
 
-		const user = await this._userEntityStorage.get(userIdentity);
+		const user = await this._userEntityStorage.get(userIdentity, "identity");
 		if (!Is.object<AuthenticationUser>(user)) {
 			throw new NotFoundError(
 				EntityStorageAuthenticationService.CLASS_NAME,
@@ -419,7 +416,14 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			);
 		}
 
-		await this._authenticationAdminService.updatePassword(user.email, newPassword, currentPassword);
+		await PasswordHelper.updatePassword(
+			this._userEntityStorage,
+			this._authenticationAuditService,
+			user,
+			newPassword,
+			currentPassword,
+			this._minPasswordLength
+		);
 
 		await this._authenticationRateService.clear("password-change", userIdentity);
 	}

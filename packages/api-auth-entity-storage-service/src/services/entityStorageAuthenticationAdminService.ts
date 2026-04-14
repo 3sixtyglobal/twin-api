@@ -23,6 +23,7 @@ import {
 import { nameof } from "@twin.org/nameof";
 import type { AuthenticationUser } from "../entities/authenticationUser.js";
 import type { IEntityStorageAuthenticationAdminServiceConstructorOptions } from "../models/IEntityStorageAuthenticationAdminServiceConstructorOptions.js";
+import { PasswordHelper } from "../utils/passwordHelper.js";
 
 /**
  * Implementation of the authentication component using entity storage.
@@ -382,10 +383,6 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 		);
 
 		try {
-			PasswordValidator.validatePassword(newPassword, {
-				minLength: this._minPasswordLength
-			});
-
 			const user = await this._userEntityStorage.get(email);
 			if (!Is.object<AuthenticationUser>(user)) {
 				throw new NotFoundError(
@@ -395,43 +392,14 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				);
 			}
 
-			if (Is.stringValue(currentPassword)) {
-				const saltBytes = Converter.base64ToBytes(user.salt);
-				const passwordBytes = Converter.utf8ToBytes(currentPassword);
-
-				const hashedPassword = await PasswordGenerator.hashPassword(passwordBytes, saltBytes);
-
-				if (!PasswordValidator.comparePasswordHashes(hashedPassword, user.password)) {
-					throw new GeneralError(
-						EntityStorageAuthenticationAdminService.CLASS_NAME,
-						"currentPasswordMismatch"
-					);
-				}
-			}
-
-			const saltBytes = RandomHelper.generate(16);
-			const passwordBytes = Converter.utf8ToBytes(newPassword);
-
-			const hashedPassword = await PasswordGenerator.hashPassword(passwordBytes, saltBytes);
-
-			const updatedUser: AuthenticationUser = {
-				email,
-				salt: Converter.bytesToBase64(saltBytes),
-				password: hashedPassword,
-				identity: user.identity,
-				organization: user.organization,
-				scope: user.scope
-			};
-
-			await this._userEntityStorage.set(updatedUser);
-			await this._authenticationAuditService?.create({
-				actorId: email,
-				event: AuthAuditEvent.PasswordChanged,
-				data: {
-					userIdentity: updatedUser.identity,
-					organizationIdentity: updatedUser.organization
-				}
-			});
+			await PasswordHelper.updatePassword(
+				this._userEntityStorage,
+				this._authenticationAuditService,
+				user,
+				newPassword,
+				currentPassword,
+				this._minPasswordLength
+			);
 		} catch (error) {
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,

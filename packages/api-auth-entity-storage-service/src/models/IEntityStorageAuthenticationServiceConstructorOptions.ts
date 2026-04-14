@@ -19,12 +19,6 @@ export interface IEntityStorageAuthenticationServiceConstructorOptions {
 	vaultConnectorType?: string;
 
 	/**
-	 * The admin service.
-	 * @default authentication-admin
-	 */
-	authenticationAdminServiceType?: string;
-
-	/**
 	 * The audit service.
 	 * @default authentication-audit
 	 */
