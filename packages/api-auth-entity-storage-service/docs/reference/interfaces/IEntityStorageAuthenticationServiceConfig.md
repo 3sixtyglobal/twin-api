@@ -27,5 +27,47 @@ The default time to live for the JWT.
 #### Default
 
 ```ts
-1440
+60
+```
+
+***
+
+### loginRateLimit? {#loginratelimit}
+
+> `optional` **loginRateLimit?**: `IAuthenticationRateActionConfig`
+
+Optional override for login failure rate limit.
+
+#### Default
+
+```ts
+{ maxAttempts: 5, windowMinutes: 15 }
+```
+
+***
+
+### passwordChangeRateLimit? {#passwordchangeratelimit}
+
+> `optional` **passwordChangeRateLimit?**: `IAuthenticationRateActionConfig`
+
+Optional override for password change rate limit.
+
+#### Default
+
+```ts
+{ maxAttempts: 5, windowMinutes: 15 }
+```
+
+***
+
+### tokenRefreshRateLimit? {#tokenrefreshratelimit}
+
+> `optional` **tokenRefreshRateLimit?**: `IAuthenticationRateActionConfig`
+
+Optional override for token refresh rate limit.
+
+#### Default
+
+```ts
+{ maxAttempts: 30, windowMinutes: 60 }
 ```

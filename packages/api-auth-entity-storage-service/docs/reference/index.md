@@ -2,9 +2,13 @@
 
 ## Classes
 
+- [AuthenticationAuditEntry](classes/AuthenticationAuditEntry.md)
+- [AuthenticationRateEntry](classes/AuthenticationRateEntry.md)
 - [AuthenticationUser](classes/AuthenticationUser.md)
 - [AuthHeaderProcessor](classes/AuthHeaderProcessor.md)
 - [EntityStorageAuthenticationAdminService](classes/EntityStorageAuthenticationAdminService.md)
+- [EntityStorageAuthenticationAuditService](classes/EntityStorageAuthenticationAuditService.md)
+- [EntityStorageAuthenticationRateService](classes/EntityStorageAuthenticationRateService.md)
 - [EntityStorageAuthenticationService](classes/EntityStorageAuthenticationService.md)
 - [TokenHelper](classes/TokenHelper.md)
 
@@ -14,6 +18,10 @@
 - [IAuthHeaderProcessorConstructorOptions](interfaces/IAuthHeaderProcessorConstructorOptions.md)
 - [IEntityStorageAuthenticationAdminServiceConfig](interfaces/IEntityStorageAuthenticationAdminServiceConfig.md)
 - [IEntityStorageAuthenticationAdminServiceConstructorOptions](interfaces/IEntityStorageAuthenticationAdminServiceConstructorOptions.md)
+- [IEntityStorageAuthenticationAuditServiceConfig](interfaces/IEntityStorageAuthenticationAuditServiceConfig.md)
+- [IEntityStorageAuthenticationAuditServiceConstructorOptions](interfaces/IEntityStorageAuthenticationAuditServiceConstructorOptions.md)
+- [IEntityStorageAuthenticationRateServiceConfig](interfaces/IEntityStorageAuthenticationRateServiceConfig.md)
+- [IEntityStorageAuthenticationRateServiceConstructorOptions](interfaces/IEntityStorageAuthenticationRateServiceConstructorOptions.md)
 - [IEntityStorageAuthenticationServiceConfig](interfaces/IEntityStorageAuthenticationServiceConfig.md)
 - [IEntityStorageAuthenticationServiceConstructorOptions](interfaces/IEntityStorageAuthenticationServiceConstructorOptions.md)
 
@@ -21,6 +29,7 @@
 
 - [restEntryPoints](variables/restEntryPoints.md)
 - [tagsAuthenticationAdmin](variables/tagsAuthenticationAdmin.md)
+- [tagsAuthenticationAudit](variables/tagsAuthenticationAudit.md)
 - [tagsAuthentication](variables/tagsAuthentication.md)
 
 ## Functions
@@ -32,6 +41,9 @@
 - [authenticationAdminGetUser](functions/authenticationAdminGetUser.md)
 - [authenticationAdminGetUserByIdentity](functions/authenticationAdminGetUserByIdentity.md)
 - [authenticationAdminRemoveUser](functions/authenticationAdminRemoveUser.md)
+- [generateRestRoutesAuthenticationAudit](functions/generateRestRoutesAuthenticationAudit.md)
+- [authenticationAuditCreate](functions/authenticationAuditCreate.md)
+- [authenticationAuditQuery](functions/authenticationAuditQuery.md)
 - [generateRestRoutesAuthentication](functions/generateRestRoutesAuthentication.md)
 - [authenticationLogin](functions/authenticationLogin.md)
 - [authenticationLogout](functions/authenticationLogout.md)

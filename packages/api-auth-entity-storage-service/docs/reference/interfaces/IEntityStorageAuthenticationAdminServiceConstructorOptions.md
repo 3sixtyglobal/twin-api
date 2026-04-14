@@ -18,6 +18,20 @@ authentication-user
 
 ***
 
+### authenticationAuditServiceType? {#authenticationauditservicetype}
+
+> `optional` **authenticationAuditServiceType?**: `string`
+
+The audit service.
+
+#### Default
+
+```ts
+authentication-audit
+```
+
+***
+
 ### config? {#config}
 
 > `optional` **config?**: [`IEntityStorageAuthenticationAdminServiceConfig`](IEntityStorageAuthenticationAdminServiceConfig.md)

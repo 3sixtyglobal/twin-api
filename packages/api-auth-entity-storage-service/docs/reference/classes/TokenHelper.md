@@ -82,7 +82,7 @@ The new token and its expiry date.
 
 ### verify() {#verify}
 
-> `static` **verify**(`vaultConnector`, `signingKeyName`, `token`, `requiredScopes?`): `Promise`\<\{ `header`: `JWTHeaderParameters`; `payload`: `JWTPayload`; \}\>
+> `static` **verify**(`vaultConnector`, `signingKeyName`, `token`, `requiredScopes?`, `verifyUser?`): `Promise`\<\{ `header`: `JWTHeaderParameters`; `payload`: `JWTPayload`; \}\>
 
 Verify the token.
 
@@ -111,6 +111,12 @@ The token to verify.
 `string`[]
 
 The required scopes.
+
+##### verifyUser?
+
+(`userIdentity`, `organizationIdentity`) => `Promise`\<`string`[]\>
+
+A function to verify the user identity and organization, which can be used to check if the user is still active or not.
 
 #### Returns
 

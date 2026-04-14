@@ -4,6 +4,20 @@ Options for the AuthHeaderProcessor constructor.
 
 ## Properties
 
+### authenticationAdminServiceType? {#authenticationadminservicetype}
+
+> `optional` **authenticationAdminServiceType?**: `string`
+
+The admin service.
+
+#### Default
+
+```ts
+authentication-admin
+```
+
+***
+
 ### vaultConnectorType? {#vaultconnectortype}
 
 > `optional` **vaultConnectorType?**: `string`

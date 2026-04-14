@@ -80,6 +80,32 @@ Nothing.
 
 ***
 
+### stop() {#stop}
+
+> **stop**(`nodeLoggingComponentType?`): `Promise`\<`void`\>
+
+The component needs to be stopped when the node is closed.
+
+#### Parameters
+
+##### nodeLoggingComponentType?
+
+`string`
+
+The node logging component type.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IAuthenticationComponent.stop`
+
+***
+
 ### login() {#login}
 
 > **login**(`email`, `password`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>

@@ -108,7 +108,7 @@ Nothing.
 
 ### get() {#get}
 
-> **get**(`email`): `Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
+> **get**(`email`): `Promise`\<`Omit`\<`IAuthenticationUser`, `"password"` \| `"salt"`\>\>
 
 Get a user by email.
 
@@ -122,7 +122,7 @@ The email address of the user to get.
 
 #### Returns
 
-`Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
+`Promise`\<`Omit`\<`IAuthenticationUser`, `"password"` \| `"salt"`\>\>
 
 The user details.
 
@@ -134,7 +134,7 @@ The user details.
 
 ### getByIdentity() {#getbyidentity}
 
-> **getByIdentity**(`identity`): `Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
+> **getByIdentity**(`identity`): `Promise`\<`Omit`\<`IAuthenticationUser`, `"password"` \| `"salt"`\>\>
 
 Get a user by identity.
 
@@ -148,7 +148,7 @@ The identity of the user to get.
 
 #### Returns
 
-`Promise`\<`Omit`\<`IAuthenticationUser`, `"salt"` \| `"password"`\>\>
+`Promise`\<`Omit`\<`IAuthenticationUser`, `"password"` \| `"salt"`\>\>
 
 The user details.
 

@@ -3,6 +3,7 @@
 ## Classes
 
 - [EntityStorageAuthenticationAdminRestClient](classes/EntityStorageAuthenticationAdminRestClient.md)
+- [EntityStorageAuthenticationAuditRestClient](classes/EntityStorageAuthenticationAuditRestClient.md)
 - [EntityStorageAuthenticationRestClient](classes/EntityStorageAuthenticationRestClient.md)
 
 ## Interfaces

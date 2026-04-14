@@ -66,6 +66,7 @@
 
 ## Type Aliases
 
+- [HttpContextIdKeys](type-aliases/HttpContextIdKeys.md)
 - [IRestRouteEntryPoint](type-aliases/IRestRouteEntryPoint.md)
 - [ISocketRouteEntryPoint](type-aliases/ISocketRouteEntryPoint.md)
 - [HealthStatus](type-aliases/HealthStatus.md)
@@ -75,4 +76,5 @@
 - [MimeTypeProcessorFactory](variables/MimeTypeProcessorFactory.md)
 - [RestRouteProcessorFactory](variables/RestRouteProcessorFactory.md)
 - [SocketRouteProcessorFactory](variables/SocketRouteProcessorFactory.md)
+- [HttpContextIdKeys](variables/HttpContextIdKeys.md)
 - [HealthStatus](variables/HealthStatus.md)

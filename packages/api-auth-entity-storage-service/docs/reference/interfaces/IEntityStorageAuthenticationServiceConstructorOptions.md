@@ -46,6 +46,34 @@ authentication-admin
 
 ***
 
+### authenticationAuditServiceType? {#authenticationauditservicetype}
+
+> `optional` **authenticationAuditServiceType?**: `string`
+
+The audit service.
+
+#### Default
+
+```ts
+authentication-audit
+```
+
+***
+
+### authenticationRateServiceType? {#authenticationrateservicetype}
+
+> `optional` **authenticationRateServiceType?**: `string`
+
+The rate service.
+
+#### Default
+
+```ts
+authentication-rate
+```
+
+***
+
 ### config? {#config}
 
 > `optional` **config?**: [`IEntityStorageAuthenticationServiceConfig`](IEntityStorageAuthenticationServiceConfig.md)
