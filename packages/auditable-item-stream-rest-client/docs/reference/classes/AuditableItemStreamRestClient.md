@@ -184,6 +184,32 @@ Nothing.
 
 ***
 
+### close() {#close}
+
+> **close**(`id`): `Promise`\<`void`\>
+
+Close the stream.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The id of the stream to close.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IAuditableItemStreamComponent.close`
+
+***
+
 ### remove() {#remove}
 
 > **remove**(`id`): `Promise`\<`void`\>

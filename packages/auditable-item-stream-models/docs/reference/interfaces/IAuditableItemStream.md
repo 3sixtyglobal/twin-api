@@ -138,3 +138,27 @@ A value of 0 will disable immutable checks, 1 will be every item, or any other i
 #### Inherited from
 
 [`IAuditableItemStreamBase`](IAuditableItemStreamBase.md).[`immutableInterval`](IAuditableItemStreamBase.md#immutableinterval)
+
+***
+
+### closed? {#closed}
+
+> `optional` **closed?**: `boolean`
+
+Is the stream closed for entry updates.
+
+#### Inherited from
+
+[`IAuditableItemStreamBase`](IAuditableItemStreamBase.md).[`closed`](IAuditableItemStreamBase.md#closed)
+
+***
+
+### mode? {#mode}
+
+> `optional` **mode?**: [`AuditableItemStreamModes`](../type-aliases/AuditableItemStreamModes.md)
+
+The operation mode for the stream.
+
+#### Inherited from
+
+[`IAuditableItemStreamBase`](IAuditableItemStreamBase.md).[`mode`](IAuditableItemStreamBase.md#mode)

@@ -78,6 +78,22 @@ After how many entries do we add immutable checks.
 
 ***
 
+### closed? {#closed}
+
+> `optional` **closed?**: `boolean`
+
+Is the stream closed for entry updates.
+
+***
+
+### mode? {#mode}
+
+> `optional` **mode?**: `AuditableItemStreamModes`
+
+The operation mode for the stream.
+
+***
+
 ### proofId? {#proofid}
 
 > `optional` **proofId?**: `string`

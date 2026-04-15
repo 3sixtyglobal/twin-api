@@ -80,6 +80,32 @@ The id of the new stream item.
 
 ***
 
+### close() {#close}
+
+> **close**(`id`): `Promise`\<`void`\>
+
+Close a stream.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The id of the stream to close.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IAuditableItemStreamComponent.close`
+
+***
+
 ### update() {#update}
 
 > **update**(`stream`): `Promise`\<`void`\>

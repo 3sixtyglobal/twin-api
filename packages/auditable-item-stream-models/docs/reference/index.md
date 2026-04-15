@@ -14,6 +14,7 @@
 - [IAuditableItemStreamEntryList](interfaces/IAuditableItemStreamEntryList.md)
 - [IAuditableItemStreamEntryObjectList](interfaces/IAuditableItemStreamEntryObjectList.md)
 - [IAuditableItemStreamList](interfaces/IAuditableItemStreamList.md)
+- [IAuditableItemStreamCloseRequest](interfaces/IAuditableItemStreamCloseRequest.md)
 - [IAuditableItemStreamCreateEntryRequest](interfaces/IAuditableItemStreamCreateEntryRequest.md)
 - [IAuditableItemStreamCreateRequest](interfaces/IAuditableItemStreamCreateRequest.md)
 - [IAuditableItemStreamDeleteEntryRequest](interfaces/IAuditableItemStreamDeleteEntryRequest.md)
@@ -44,11 +45,13 @@
 ## Type Aliases
 
 - [AuditableItemStreamContexts](type-aliases/AuditableItemStreamContexts.md)
+- [AuditableItemStreamModes](type-aliases/AuditableItemStreamModes.md)
 - [AuditableItemStreamTopics](type-aliases/AuditableItemStreamTopics.md)
 - [AuditableItemStreamTypes](type-aliases/AuditableItemStreamTypes.md)
 
 ## Variables
 
 - [AuditableItemStreamContexts](variables/AuditableItemStreamContexts.md)
+- [AuditableItemStreamModes](variables/AuditableItemStreamModes.md)
 - [AuditableItemStreamTopics](variables/AuditableItemStreamTopics.md)
 - [AuditableItemStreamTypes](variables/AuditableItemStreamTypes.md)

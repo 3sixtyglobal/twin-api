@@ -52,6 +52,28 @@ Nothing.
 
 ***
 
+### close() {#close}
+
+> **close**(`id`): `Promise`\<`void`\>
+
+Close a stream.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The id of the stream to close.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+***
+
 ### get() {#get}
 
 > **get**(`id`, `cursor?`, `limit?`, `options?`): `Promise`\<\{ `stream`: [`IAuditableItemStream`](IAuditableItemStream.md); `cursor?`: `string`; \}\>

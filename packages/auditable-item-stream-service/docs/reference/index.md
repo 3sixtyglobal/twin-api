@@ -23,6 +23,7 @@
 - [auditableItemStreamGet](functions/auditableItemStreamGet.md)
 - [auditableItemStreamUpdate](functions/auditableItemStreamUpdate.md)
 - [auditableItemStreamDelete](functions/auditableItemStreamDelete.md)
+- [auditableItemStreamClose](functions/auditableItemStreamClose.md)
 - [auditableItemStreamList](functions/auditableItemStreamList.md)
 - [auditableItemStreamCreateEntry](functions/auditableItemStreamCreateEntry.md)
 - [auditableItemStreamDeleteEntry](functions/auditableItemStreamDeleteEntry.md)
