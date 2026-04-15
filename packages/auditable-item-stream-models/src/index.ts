@@ -23,6 +23,7 @@ export * from "./models/api/IAuditableItemStreamListResponse.js";
 export * from "./models/api/IAuditableItemStreamUpdateEntryRequest.js";
 export * from "./models/api/IAuditableItemStreamUpdateRequest.js";
 export * from "./models/auditableItemStreamContexts.js";
+export * from "./models/auditableItemStreamModes.js";
 export * from "./models/auditableItemStreamTopics.js";
 export * from "./models/auditableItemStreamTypes.js";
 export * from "./models/eventBus/IAuditableItemStreamEventBusStreamCreated.js";

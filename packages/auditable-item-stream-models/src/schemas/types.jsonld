@@ -32,6 +32,10 @@
       "@id": "twin-ais:index",
       "@type": "sch:Integer"
     },
+    "mode": {
+      "@id": "twin-ais:mode",
+      "@type": "sch:Text"
+    },
     "numberOfItems": {
       "@id": "sch:numberOfItems"
     },

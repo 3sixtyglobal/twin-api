@@ -58,6 +58,10 @@
 		"closed": {
 			"type": "boolean",
 			"description": "Is the stream closed for entry updates."
+		},
+		"mode": {
+			"$ref": "https://schema.twindev.org/ais/AuditableItemStreamModes",
+			"description": "The operation mode for the stream."
 		}
 	},
 	"required": [

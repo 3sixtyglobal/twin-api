@@ -3,6 +3,7 @@
 import type { IJsonLdContextDefinitionElement, IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { SchemaOrgContexts, SchemaOrgTypes } from "@twin.org/standards-schema-org";
 import type { AuditableItemStreamContexts } from "./auditableItemStreamContexts.js";
+import type { AuditableItemStreamModes } from "./auditableItemStreamModes.js";
 import type { AuditableItemStreamTypes } from "./auditableItemStreamTypes.js";
 import type { IAuditableItemStreamEntryBase } from "./IAuditableItemStreamEntryBase.js";
 
@@ -52,4 +53,10 @@ export interface IAuditableItemStreamBase {
 	 * @json-ld type:sch:Boolean
 	 */
 	closed?: boolean;
+
+	/**
+	 * The operation mode for the stream.
+	 * @json-ld type:sch:Text
+	 */
+	mode?: AuditableItemStreamModes;
 }

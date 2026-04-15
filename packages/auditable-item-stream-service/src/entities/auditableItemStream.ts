@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { AuditableItemStreamModes } from "@twin.org/auditable-item-stream-models";
 import { type IJsonLdNodeObject, JsonLdTypes } from "@twin.org/data-json-ld";
 import { entity, property, SortDirection } from "@twin.org/entity";
 
@@ -66,6 +67,12 @@ export class AuditableItemStream {
 	 */
 	@property({ type: "boolean", optional: true })
 	public closed?: boolean;
+
+	/**
+	 * The operation mode for the stream.
+	 */
+	@property({ type: "string", optional: true })
+	public mode?: AuditableItemStreamModes;
 
 	/**
 	 * The immutable proof id.

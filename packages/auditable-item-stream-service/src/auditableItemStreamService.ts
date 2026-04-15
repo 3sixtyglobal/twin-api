@@ -3,6 +3,7 @@
 import {
 	AuditableItemStreamContexts,
 	AuditableItemStreamDataTypes,
+	AuditableItemStreamModes,
 	AuditableItemStreamTopics,
 	AuditableItemStreamTypes,
 	type IAuditableItemStream,
@@ -237,6 +238,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				dateCreated: context.now,
 				immutableInterval: context.immutableInterval,
 				closed: stream.closed,
+				mode: stream.mode,
 				numberOfItems: 0
 			};
 
@@ -888,6 +890,12 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				});
 			}
 
+			if (streamEntity.mode === AuditableItemStreamModes.AppendOnly) {
+				throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "appendOnlyNoEntryUpdates", {
+					id: streamId
+				});
+			}
+
 			const entryNamespaceId = urnParsedEntry.namespaceSpecific(1);
 			const existing = await this.findEntry(streamEntity.id, entryNamespaceId);
 			if (Is.empty(existing)) {
@@ -973,6 +981,12 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 
 			if (Is.empty(streamEntity)) {
 				throw new NotFoundError(AuditableItemStreamService.CLASS_NAME, "streamNotFound", streamId);
+			}
+
+			if (streamEntity.mode === AuditableItemStreamModes.AppendOnly) {
+				throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "appendOnlyNoEntryRemovals", {
+					id: streamId
+				});
 			}
 
 			const entryNamespaceId = urnParsedEntry.namespaceSpecific(1);
@@ -1272,7 +1286,8 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			immutableInterval: streamEntity.immutableInterval,
 			proofId: streamEntity.proofId,
 			numberOfItems: streamEntity.numberOfItems,
-			closed: streamEntity.closed
+			closed: streamEntity.closed,
+			mode: streamEntity.mode
 		};
 
 		return model;

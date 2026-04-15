@@ -259,7 +259,7 @@ describe("AuditableItemStreamService", () => {
 			{
 				partitionId: TEST_TENANT_IDENTITY_SHORT,
 				id: "019179f0e5af71018101010101010101",
-				dateModified: "2024-08-22T11:55:16.271Z",
+				dateModified: "2024-08-22T11:56:56.272Z",
 				organizationIdentity: TEST_ORGANIZATION_IDENTITY,
 				userIdentity: TEST_USER_IDENTITY,
 				immutableInterval: 10,
@@ -1139,6 +1139,45 @@ describe("AuditableItemStreamService", () => {
 		expect(streamStore[0].closed).toBe(true);
 	});
 
+	test("Keeps mode undefined when not provided", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream
+		});
+
+		const stream = await service.get(streamId);
+		expect(stream.stream.mode).toBeUndefined();
+
+		const streamStore = streamStorage.getStore();
+		expect(streamStore).toHaveLength(1);
+		expect(streamStore[0].mode).toBeUndefined();
+	});
+
+	test("Can create a stream with mode set to default", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			mode: "default"
+		});
+
+		const stream = await service.get(streamId);
+		expect(stream.stream.mode).toBe("default");
+
+		const streamStore = streamStorage.getStore();
+		expect(streamStore).toHaveLength(1);
+		expect(streamStore[0].mode).toBe("default");
+	});
+
 	test("Returns createFailed when creating closed stream without entries", async () => {
 		const service = new AuditableItemStreamService();
 
@@ -1217,6 +1256,80 @@ describe("AuditableItemStreamService", () => {
 					}),
 					expect.objectContaining({
 						message: "auditableItemStreamService.streamClosed"
+					})
+				])
+			);
+			return true;
+		});
+	});
+
+	test("Returns updatingEntryFailed in append-only mode when updating entries", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			mode: "append-only"
+		});
+
+		const entryId = await service.createEntry(streamId, {
+			"@context": "https://www.w3.org/ns/activitystreams",
+			"@type": "Note",
+			content: "Initial"
+		});
+
+		await expect(
+			service.updateEntry(streamId, entryId, {
+				"@context": "https://www.w3.org/ns/activitystreams",
+				"@type": "Note",
+				content: "Updated"
+			})
+		).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.updatingEntryFailed"
+					}),
+					expect.objectContaining({
+						message: "auditableItemStreamService.appendOnlyNoEntryUpdates"
+					})
+				])
+			);
+			return true;
+		});
+	});
+
+	test("Returns removingEntryFailed in append-only mode when removing entries", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			mode: "append-only"
+		});
+
+		const entryId = await service.createEntry(streamId, {
+			"@context": "https://www.w3.org/ns/activitystreams",
+			"@type": "Note",
+			content: "Initial"
+		});
+
+		await expect(service.removeEntry(streamId, entryId)).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.removingEntryFailed"
+					}),
+					expect.objectContaining({
+						message: "auditableItemStreamService.appendOnlyNoEntryRemovals"
 					})
 				])
 			);
