@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.13](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.3-next.12...auditable-item-stream-rest-client-v0.0.3-next.13) (2026-04-15)
+
+
+### Features
+
+* add closable stream ([#59](https://github.com/twinfoundation/auditable-item-stream/issues/59)) ([26d3d08](https://github.com/twinfoundation/auditable-item-stream/commit/26d3d0887e1e57ca81859be5b56e853335a88d78))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.12 to 0.0.3-next.13
+
 ## [0.0.3-next.12](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.3-next.11...auditable-item-stream-rest-client-v0.0.3-next.12) (2026-03-25)
 
 

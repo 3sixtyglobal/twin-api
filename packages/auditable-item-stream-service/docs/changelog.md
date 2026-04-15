@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.0.3-next.13](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.12...auditable-item-stream-service-v0.0.3-next.13) (2026-04-15)
+
+
+### Features
+
+* add append only mode ([#60](https://github.com/twinfoundation/auditable-item-stream/issues/60)) ([377b3f5](https://github.com/twinfoundation/auditable-item-stream/commit/377b3f5daec91257950a8f0d3a9e576db806b4c1))
+* add closable stream ([#59](https://github.com/twinfoundation/auditable-item-stream/issues/59)) ([26d3d08](https://github.com/twinfoundation/auditable-item-stream/commit/26d3d0887e1e57ca81859be5b56e853335a88d78))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.12 to 0.0.3-next.13
+
 ## [0.0.3-next.12](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-service-v0.0.3-next.11...auditable-item-stream-service-v0.0.3-next.12) (2026-03-25)
 
 
