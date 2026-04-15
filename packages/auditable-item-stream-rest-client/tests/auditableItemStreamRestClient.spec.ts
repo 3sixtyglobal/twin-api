@@ -48,6 +48,7 @@ describe("AuditableItemStreamRestClient", () => {
 			type: AuditableItemStreamTypes.Stream,
 			id: "ais:stream-id"
 		});
+		await client.close("ais:stream-id");
 		await client.remove("ais:stream-id");
 		await client.query();
 		await client.createEntry("ais:stream-id", {
@@ -71,26 +72,32 @@ describe("AuditableItemStreamRestClient", () => {
 		expect(fetchSpy).toHaveBeenNthCalledWith(1, "/", "POST", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(2, "/:id", "GET", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(3, "/:id", "PUT", expect.any(Object));
-		expect(fetchSpy).toHaveBeenNthCalledWith(4, "/:id", "DELETE", expect.any(Object));
-		expect(fetchSpy).toHaveBeenNthCalledWith(5, "/", "GET", expect.any(Object));
-		expect(fetchSpy).toHaveBeenNthCalledWith(6, "/:id/entries", "POST", expect.any(Object));
-		expect(fetchSpy).toHaveBeenNthCalledWith(7, "/:id/entries/:entryId", "GET", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(4, "/:id/close", "POST", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(5, "/:id", "DELETE", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(6, "/", "GET", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(7, "/:id/entries", "POST", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(8, "/:id/entries/:entryId", "GET", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(
-			8,
+			9,
 			"/:id/entries/:entryId/object",
 			"GET",
 			expect.any(Object)
 		);
-		expect(fetchSpy).toHaveBeenNthCalledWith(9, "/:id/entries/:entryId", "PUT", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(
 			10,
+			"/:id/entries/:entryId",
+			"PUT",
+			expect.any(Object)
+		);
+		expect(fetchSpy).toHaveBeenNthCalledWith(
+			11,
 			"/:id/entries/:entryId",
 			"DELETE",
 			expect.any(Object)
 		);
-		expect(fetchSpy).toHaveBeenNthCalledWith(11, "/:id/entries", "GET", expect.any(Object));
-		expect(fetchSpy).toHaveBeenNthCalledWith(12, "/entries", "GET", expect.any(Object));
-		expect(fetchSpy).toHaveBeenNthCalledWith(13, "/:id/entries/objects", "GET", expect.any(Object));
-		expect(fetchSpy).toHaveBeenNthCalledWith(14, "/entries/objects", "GET", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(12, "/:id/entries", "GET", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(13, "/entries", "GET", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(14, "/:id/entries/objects", "GET", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(15, "/entries/objects", "GET", expect.any(Object));
 	});
 });

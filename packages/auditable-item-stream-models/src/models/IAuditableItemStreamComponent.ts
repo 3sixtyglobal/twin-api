@@ -31,6 +31,13 @@ export interface IAuditableItemStreamComponent extends IComponent {
 	): Promise<void>;
 
 	/**
+	 * Close a stream.
+	 * @param id The id of the stream to close.
+	 * @returns Nothing.
+	 */
+	close(id: string): Promise<void>;
+
+	/**
 	 * Get a stream header without the entries.
 	 * @param id The id of the stream to get.
 	 * @param cursor Cursor to use for next chunk of entries.

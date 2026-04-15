@@ -46,4 +46,10 @@ export interface IAuditableItemStreamBase {
 	 * @json-ld type:sch:Integer
 	 */
 	immutableInterval?: number;
+
+	/**
+	 * Is the stream closed for entry updates.
+	 * @json-ld type:sch:Boolean
+	 */
+	closed?: boolean;
 }

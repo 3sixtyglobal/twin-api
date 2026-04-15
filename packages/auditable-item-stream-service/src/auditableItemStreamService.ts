@@ -209,6 +209,10 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				schemaValidationFailures
 			);
 
+			if (stream.closed && !Is.arrayValue(stream.entries?.[SchemaOrgTypes.ItemListElement])) {
+				throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "closedRequiresEntries");
+			}
+
 			if (Is.object(stream.annotationObject)) {
 				const validationFailures: IValidationFailure[] = [];
 				await JsonLdHelper.validate(stream.annotationObject, validationFailures);
@@ -232,6 +236,7 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				userIdentity: contextIds?.[ContextIdKeys.User],
 				dateCreated: context.now,
 				immutableInterval: context.immutableInterval,
+				closed: stream.closed,
 				numberOfItems: 0
 			};
 
@@ -272,6 +277,52 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			throw new GeneralError(
 				AuditableItemStreamService.CLASS_NAME,
 				"createFailed",
+				undefined,
+				error
+			);
+		}
+	}
+
+	/**
+	 * Close a stream.
+	 * @param id The id of the stream to close.
+	 * @returns Nothing.
+	 */
+	public async close(id: string): Promise<void> {
+		Guards.stringValue(AuditableItemStreamService.CLASS_NAME, nameof(id), id);
+
+		const urnParsed = Urn.fromValidString(id);
+
+		if (urnParsed.namespaceIdentifier() !== AuditableItemStreamService._NAMESPACE) {
+			throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "namespaceMismatch", {
+				namespace: AuditableItemStreamService._NAMESPACE,
+				id
+			});
+		}
+
+		try {
+			const streamId = urnParsed.namespaceSpecific(0);
+			const streamEntity = await this._streamStorage.get(streamId);
+
+			if (Is.empty(streamEntity)) {
+				throw new NotFoundError(AuditableItemStreamService.CLASS_NAME, "streamNotFound", id);
+			}
+
+			if (!streamEntity.closed) {
+				streamEntity.closed = true;
+				streamEntity.dateModified = new Date(Date.now()).toISOString();
+
+				await this._streamStorage.set(streamEntity);
+
+				await this._eventBusComponent?.publish<IAuditableItemStreamEventBusStreamUpdated>(
+					AuditableItemStreamTopics.StreamUpdated,
+					{ id }
+				);
+			}
+		} catch (error) {
+			throw new GeneralError(
+				AuditableItemStreamService.CLASS_NAME,
+				"closeFailed",
 				undefined,
 				error
 			);
@@ -599,6 +650,12 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 				);
 			}
 
+			if (streamEntity.closed) {
+				throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "streamClosed", {
+					id: streamId
+				});
+			}
+
 			const context: IAuditableItemStreamServiceContext = {
 				now: new Date(Date.now()).toISOString(),
 				contextIds,
@@ -823,6 +880,12 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 
 			if (Is.empty(streamEntity)) {
 				throw new NotFoundError(AuditableItemStreamService.CLASS_NAME, "streamNotFound", streamId);
+			}
+
+			if (streamEntity.closed) {
+				throw new GeneralError(AuditableItemStreamService.CLASS_NAME, "streamClosed", {
+					id: streamId
+				});
 			}
 
 			const entryNamespaceId = urnParsedEntry.namespaceSpecific(1);
@@ -1208,7 +1271,8 @@ export class AuditableItemStreamService implements IAuditableItemStreamComponent
 			annotationObject: streamEntity.annotationObject,
 			immutableInterval: streamEntity.immutableInterval,
 			proofId: streamEntity.proofId,
-			numberOfItems: streamEntity.numberOfItems
+			numberOfItems: streamEntity.numberOfItems,
+			closed: streamEntity.closed
 		};
 
 		return model;

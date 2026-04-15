@@ -1118,6 +1118,188 @@ describe("AuditableItemStreamService", () => {
 		);
 	});
 
+	test("Can close a stream", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream
+		});
+
+		await service.close(streamId);
+
+		const stream = await service.get(streamId);
+		expect(stream.stream.closed).toBe(true);
+
+		const streamStore = streamStorage.getStore();
+		expect(streamStore).toHaveLength(1);
+		expect(streamStore[0].closed).toBe(true);
+	});
+
+	test("Returns createFailed when creating closed stream without entries", async () => {
+		const service = new AuditableItemStreamService();
+
+		await expect(
+			service.create({
+				"@context": [
+					SchemaOrgContexts.Context,
+					AuditableItemStreamContexts.Context,
+					AuditableItemStreamContexts.ContextCommon
+				],
+				type: AuditableItemStreamTypes.Stream,
+				closed: true
+			})
+		).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.createFailed"
+					}),
+					expect.objectContaining({
+						message: "auditableItemStreamService.closedRequiresEntries"
+					})
+				])
+			);
+
+			return true;
+		});
+	});
+
+	test("Can create a closed stream when entries are provided", async () => {
+		const service = new AuditableItemStreamService();
+
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream,
+			closed: true,
+			entries: {
+				type: "ItemList",
+				itemListElement: [
+					{
+						type: AuditableItemStreamTypes.StreamEntry,
+						entryObject: {
+							"@context": "https://www.w3.org/ns/activitystreams",
+							"@type": "Note",
+							content: "Closed from create"
+						}
+					}
+				]
+			}
+		});
+
+		const stream = await service.get(streamId);
+		expect(stream.stream.closed).toBe(true);
+
+		const streamStore = streamStorage.getStore();
+		expect(streamStore).toHaveLength(1);
+		expect(streamStore[0].closed).toBe(true);
+
+		await expect(
+			service.createEntry(streamId, {
+				"@context": "https://www.w3.org/ns/activitystreams",
+				"@type": "Note",
+				content: "Should fail for closed stream"
+			})
+		).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.creatingEntryFailed"
+					}),
+					expect.objectContaining({
+						message: "auditableItemStreamService.streamClosed"
+					})
+				])
+			);
+			return true;
+		});
+	});
+
+	test("Returns creatingEntryFailed when adding entry to closed stream", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream
+		});
+
+		await service.close(streamId);
+
+		await expect(
+			service.createEntry(streamId, {
+				"@context": "https://www.w3.org/ns/activitystreams",
+				"@type": "Note",
+				content: "Should fail"
+			})
+		).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.creatingEntryFailed"
+					}),
+					expect.objectContaining({
+						message: "auditableItemStreamService.streamClosed"
+					})
+				])
+			);
+			return true;
+		});
+	});
+
+	test("Returns updatingEntryFailed when updating entry in closed stream", async () => {
+		const service = new AuditableItemStreamService();
+		const streamId = await service.create({
+			"@context": [
+				SchemaOrgContexts.Context,
+				AuditableItemStreamContexts.Context,
+				AuditableItemStreamContexts.ContextCommon
+			],
+			type: AuditableItemStreamTypes.Stream
+		});
+
+		const entryId = await service.createEntry(streamId, {
+			"@context": "https://www.w3.org/ns/activitystreams",
+			"@type": "Note",
+			content: "Before close"
+		});
+
+		await service.close(streamId);
+
+		await expect(
+			service.updateEntry(streamId, entryId, {
+				"@context": "https://www.w3.org/ns/activitystreams",
+				"@type": "Note",
+				content: "After close"
+			})
+		).rejects.toSatisfy(error => {
+			const flattened = BaseError.flatten(error);
+			expect(flattened).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						message: "auditableItemStreamService.updatingEntryFailed"
+					}),
+					expect.objectContaining({
+						message: "auditableItemStreamService.streamClosed"
+					})
+				])
+			);
+			return true;
+		});
+	});
+
 	test("Can add multiple stream entries and expect more immutable checks", async () => {
 		const service = new AuditableItemStreamService();
 		const streamId = await service.create({

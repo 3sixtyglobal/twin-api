@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 export * from "./dataTypes/auditableItemStreamDataTypes.js";
 export * from "./models/api/IAuditableItemStreamCreateEntryRequest.js";
+export * from "./models/api/IAuditableItemStreamCloseRequest.js";
 export * from "./models/api/IAuditableItemStreamCreateRequest.js";
 export * from "./models/api/IAuditableItemStreamDeleteEntryRequest.js";
 export * from "./models/api/IAuditableItemStreamDeleteRequest.js";

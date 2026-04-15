@@ -62,6 +62,12 @@ export class AuditableItemStream {
 	public immutableInterval!: number;
 
 	/**
+	 * Is the stream closed for entry updates.
+	 */
+	@property({ type: "boolean", optional: true })
+	public closed?: boolean;
+
+	/**
 	 * The immutable proof id.
 	 */
 	@property({ type: "string", optional: true })

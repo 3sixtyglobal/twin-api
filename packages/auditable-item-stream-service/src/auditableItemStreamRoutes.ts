@@ -16,6 +16,7 @@ import {
 	type IAuditableItemStreamListEntriesNoStreamRequest,
 	type IAuditableItemStreamListEntryObjectsNoStreamRequest,
 	type IAuditableItemStreamComponent,
+	type IAuditableItemStreamCloseRequest,
 	type IAuditableItemStreamCreateEntryRequest,
 	type IAuditableItemStreamCreateRequest,
 	type IAuditableItemStreamDeleteEntryRequest,
@@ -325,6 +326,37 @@ export function generateRestRoutesAuditableItemStream(
 			examples: [
 				{
 					id: "auditableItemStreamDeleteRequestExample",
+					request: {
+						pathParams: {
+							id: "ais:1234567890"
+						}
+					}
+				}
+			]
+		},
+		responseType: [
+			{
+				type: nameof<INoContentResponse>()
+			},
+			{
+				type: nameof<INotFoundResponse>()
+			}
+		]
+	};
+
+	const closeRoute: IRestRoute<IAuditableItemStreamCloseRequest, INoContentResponse> = {
+		operationId: "auditableItemStreamClose",
+		summary: "Close a stream",
+		tag: tagsAuditableItemStream[0].name,
+		method: "POST",
+		path: `${baseRouteName}/:id/close`,
+		handler: async (httpRequestContext, request) =>
+			auditableItemStreamClose(httpRequestContext, componentName, request),
+		requestType: {
+			type: nameof<IAuditableItemStreamCloseRequest>(),
+			examples: [
+				{
+					id: "auditableItemStreamCloseRequestExample",
 					request: {
 						pathParams: {
 							id: "ais:1234567890"
@@ -1037,6 +1069,7 @@ export function generateRestRoutesAuditableItemStream(
 		getRoute,
 		updateRoute,
 		deleteRoute,
+		closeRoute,
 		listRoute,
 		createEntryRoute,
 		getEntryRoute,
@@ -1192,6 +1225,34 @@ export async function auditableItemStreamDelete(
 
 	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
 	await component.remove(request.pathParams.id);
+	return {
+		statusCode: HttpStatusCode.noContent
+	};
+}
+
+/**
+ * Close the stream.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function auditableItemStreamClose(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: IAuditableItemStreamCloseRequest
+): Promise<INoContentResponse> {
+	Guards.object<IAuditableItemStreamCloseRequest>(ROUTES_SOURCE, nameof(request), request);
+	Guards.object<IAuditableItemStreamCloseRequest["pathParams"]>(
+		ROUTES_SOURCE,
+		nameof(request.pathParams),
+		request.pathParams
+	);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
+
+	const component = ComponentFactory.get<IAuditableItemStreamComponent>(componentName);
+	await component.close(request.pathParams.id);
+
 	return {
 		statusCode: HttpStatusCode.noContent
 	};

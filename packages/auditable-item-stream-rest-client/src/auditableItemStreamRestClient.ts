@@ -10,6 +10,7 @@ import {
 import type {
 	IAuditableItemStream,
 	IAuditableItemStreamBase,
+	IAuditableItemStreamCloseRequest,
 	IAuditableItemStreamComponent,
 	IAuditableItemStreamCreateEntryRequest,
 	IAuditableItemStreamCreateRequest,
@@ -161,6 +162,21 @@ export class AuditableItemStreamRestClient
 				id
 			},
 			body: rest
+		});
+	}
+
+	/**
+	 * Close the stream.
+	 * @param id The id of the stream to close.
+	 * @returns Nothing.
+	 */
+	public async close(id: string): Promise<void> {
+		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
+
+		await this.fetch<IAuditableItemStreamCloseRequest, INoContentResponse>("/:id/close", "POST", {
+			pathParams: {
+				id
+			}
 		});
 	}
 
