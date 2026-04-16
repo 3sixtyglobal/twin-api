@@ -348,7 +348,7 @@ export function generateRestRoutesAuditableItemStream(
 		operationId: "auditableItemStreamClose",
 		summary: "Close a stream",
 		tag: tagsAuditableItemStream[0].name,
-		method: "POST",
+		method: "PUT",
 		path: `${baseRouteName}/:id/close`,
 		handler: async (httpRequestContext, request) =>
 			auditableItemStreamClose(httpRequestContext, componentName, request),

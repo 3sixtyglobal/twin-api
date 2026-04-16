@@ -72,7 +72,7 @@ describe("AuditableItemStreamRestClient", () => {
 		expect(fetchSpy).toHaveBeenNthCalledWith(1, "/", "POST", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(2, "/:id", "GET", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(3, "/:id", "PUT", expect.any(Object));
-		expect(fetchSpy).toHaveBeenNthCalledWith(4, "/:id/close", "POST", expect.any(Object));
+		expect(fetchSpy).toHaveBeenNthCalledWith(4, "/:id/close", "PUT", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(5, "/:id", "DELETE", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(6, "/", "GET", expect.any(Object));
 		expect(fetchSpy).toHaveBeenNthCalledWith(7, "/:id/entries", "POST", expect.any(Object));

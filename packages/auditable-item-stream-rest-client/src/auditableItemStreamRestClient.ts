@@ -173,7 +173,7 @@ export class AuditableItemStreamRestClient
 	public async close(id: string): Promise<void> {
 		Guards.stringValue(AuditableItemStreamRestClient.CLASS_NAME, nameof(id), id);
 
-		await this.fetch<IAuditableItemStreamCloseRequest, INoContentResponse>("/:id/close", "POST", {
+		await this.fetch<IAuditableItemStreamCloseRequest, INoContentResponse>("/:id/close", "PUT", {
 			pathParams: {
 				id
 			}
