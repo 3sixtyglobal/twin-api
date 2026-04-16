@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.14](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.3-next.13...auditable-item-stream-rest-client-v0.0.3-next.14) (2026-04-16)
+
+
+### Features
+
+* change close REST route from POST to PUT ([047eb4f](https://github.com/twinfoundation/auditable-item-stream/commit/047eb4ff63f5cd4a29fdca006799b8c5fee08ec9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/auditable-item-stream-models bumped from 0.0.3-next.13 to 0.0.3-next.14
+
 ## [0.0.3-next.13](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-rest-client-v0.0.3-next.12...auditable-item-stream-rest-client-v0.0.3-next.13) (2026-04-15)
 
 

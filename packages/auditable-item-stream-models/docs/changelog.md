@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.14](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.13...auditable-item-stream-models-v0.0.3-next.14) (2026-04-16)
+
+
+### Miscellaneous Chores
+
+* **auditable-item-stream-models:** Synchronize repo versions
+
 ## [0.0.3-next.13](https://github.com/twinfoundation/auditable-item-stream/compare/auditable-item-stream-models-v0.0.3-next.12...auditable-item-stream-models-v0.0.3-next.13) (2026-04-15)
 
 
