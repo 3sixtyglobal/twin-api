@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.26](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.25...api-models-v0.0.3-next.26) (2026-04-22)
+
+
+### Bug Fixes
+
+* prevent error body masking 4xx as 500, run pre-processors in context scope ([#102](https://github.com/twinfoundation/api/issues/102)) ([5fbe14c](https://github.com/twinfoundation/api/commit/5fbe14c98e11e77a30e16704dcb8bfba7705926b))
+
 ## [0.0.3-next.25](https://github.com/twinfoundation/api/compare/api-models-v0.0.3-next.24...api-models-v0.0.3-next.25) (2026-04-14)
 
 

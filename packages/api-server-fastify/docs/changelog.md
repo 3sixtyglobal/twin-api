@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.26](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.25...api-server-fastify-v0.0.3-next.26) (2026-04-22)
+
+
+### Bug Fixes
+
+* prevent error body masking 4xx as 500, run pre-processors in context scope ([#102](https://github.com/twinfoundation/api/issues/102)) ([5fbe14c](https://github.com/twinfoundation/api/commit/5fbe14c98e11e77a30e16704dcb8bfba7705926b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.25 to 0.0.3-next.26
+    * @twin.org/api-models bumped from 0.0.3-next.25 to 0.0.3-next.26
+    * @twin.org/api-processors bumped from 0.0.3-next.25 to 0.0.3-next.26
+
 ## [0.0.3-next.25](https://github.com/twinfoundation/api/compare/api-server-fastify-v0.0.3-next.24...api-server-fastify-v0.0.3-next.25) (2026-04-14)
 
 

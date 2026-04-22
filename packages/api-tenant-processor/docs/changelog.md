@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.26](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.25...api-tenant-processor-v0.0.3-next.26) (2026-04-22)
+
+
+### Miscellaneous Chores
+
+* **api-tenant-processor:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.25 to 0.0.3-next.26
+
 ## [0.0.3-next.25](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.24...api-tenant-processor-v0.0.3-next.25) (2026-04-14)
 
 
