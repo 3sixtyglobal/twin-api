@@ -577,18 +577,30 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		const filteredProcessors = this.filterRouteProcessors(restRoute, restRouteProcessors);
 
 		try {
-			for (const routeProcessor of filteredProcessors) {
-				const pre = routeProcessor.pre?.bind(routeProcessor);
-				if (Is.function(pre)) {
-					await pre(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
-						loggingComponentType: this._loggingComponentType,
-						hostingComponentType: this._hostingComponentType
-					});
+			// Run inside ContextIdStore.run so pre-processors can do tenant-scoped storage lookups.
+			await ContextIdStore.run(contextIds, async () => {
+				for (const routeProcessor of filteredProcessors) {
+					const pre = routeProcessor.pre?.bind(routeProcessor);
+					if (Is.function(pre)) {
+						await pre(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
+							loggingComponentType: this._loggingComponentType,
+							hostingComponentType: this._hostingComponentType
+						});
+					}
 				}
-			}
+			});
 		} catch (err) {
 			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
 			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			hasPreError = true;
+		}
+
+		// A pre-processor may set an error response without throwing; treat that as halt.
+		if (
+			!hasPreError &&
+			Is.integer(httpResponse.statusCode) &&
+			httpResponse.statusCode >= HttpStatusCode.badRequest
+		) {
 			hasPreError = true;
 		}
 
@@ -622,15 +634,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		try {
 			// Always run the post processors, even if there was an error earlier
 			// as they may perform cleanup tasks, or logging etc
-			for (const routeProcessor of filteredProcessors) {
-				const post = routeProcessor.post?.bind(routeProcessor);
-				if (Is.function(post)) {
-					await post(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
-						loggingComponentType: this._loggingComponentType,
-						hostingComponentType: this._hostingComponentType
-					});
+			await ContextIdStore.run(contextIds, async () => {
+				for (const routeProcessor of filteredProcessors) {
+					const post = routeProcessor.post?.bind(routeProcessor);
+					if (Is.function(post)) {
+						await post(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
+							loggingComponentType: this._loggingComponentType,
+							hostingComponentType: this._hostingComponentType
+						});
+					}
 				}
-			}
+			});
 		} catch (err) {
 			// Just log post processor errors
 			await this._logging?.log({

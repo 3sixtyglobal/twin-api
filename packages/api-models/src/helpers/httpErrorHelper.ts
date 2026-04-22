@@ -97,7 +97,8 @@ export class HttpErrorHelper {
 	): void {
 		response.headers ??= {};
 		response.headers[HeaderTypes.ContentType] = `${MimeTypes.Json}; charset=utf-8`;
-		response.body = error;
+		// Fastify treats an Error-typed body as a framework error and overrides the status with 500.
+		response.body = BaseError.fromError(error).toJsonObject();
 		response.statusCode = statusCode;
 	}
 }
