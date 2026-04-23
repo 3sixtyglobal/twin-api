@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.27](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.26...api-auth-entity-storage-service-v0.0.3-next.27) (2026-04-23)
+
+
+### Bug Fixes
+
+* handling the tid as undefined at refresh when empty ([#104](https://github.com/twinfoundation/api/issues/104)) ([d874a4a](https://github.com/twinfoundation/api/commit/d874a4a542c5fd45bb1bd56650247f844d056643))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.26 to 0.0.3-next.27
+    * @twin.org/api-core bumped from 0.0.3-next.26 to 0.0.3-next.27
+    * @twin.org/api-models bumped from 0.0.3-next.26 to 0.0.3-next.27
+
 ## [0.0.3-next.26](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.25...api-auth-entity-storage-service-v0.0.3-next.26) (2026-04-22)
 
 

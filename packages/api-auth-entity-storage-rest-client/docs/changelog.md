@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.27](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-rest-client-v0.0.3-next.26...api-auth-entity-storage-rest-client-v0.0.3-next.27) (2026-04-23)
+
+
+### Miscellaneous Chores
+
+* **api-auth-entity-storage-rest-client:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.26 to 0.0.3-next.27
+    * @twin.org/api-core bumped from 0.0.3-next.26 to 0.0.3-next.27
+    * @twin.org/api-models bumped from 0.0.3-next.26 to 0.0.3-next.27
+
 ## [0.0.3-next.26](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-rest-client-v0.0.3-next.25...api-auth-entity-storage-rest-client-v0.0.3-next.26) (2026-04-22)
 
 
