@@ -373,7 +373,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			`${this._nodeId}/${this._signingKeyName}`,
 			refreshSub,
 			Is.stringValue(headerAndPayload.payload.org) ? headerAndPayload.payload.org : "",
-			Is.stringValue(headerAndPayload.payload.tid) ? headerAndPayload.payload.tid : "",
+			Is.string(headerAndPayload.payload.tid) ? headerAndPayload.payload.tid : undefined,
 			this._defaultTtlMinutes,
 			Coerce.string(headerAndPayload.payload?.scope)
 		);
@@ -386,7 +386,9 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				organizationIdentity: Is.stringValue(headerAndPayload.payload.org)
 					? headerAndPayload.payload.org
 					: "",
-				tenantId: Is.stringValue(headerAndPayload.payload.tid) ? headerAndPayload.payload.tid : "",
+				tenantId: Is.string(headerAndPayload.payload.tid)
+					? headerAndPayload.payload.tid
+					: undefined,
 				scope: refreshScope.split(",").filter(scope => scope.length > 0)
 			}
 		});
