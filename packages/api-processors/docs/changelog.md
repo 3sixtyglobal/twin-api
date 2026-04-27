@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.0.3-next.27](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.26...api-processors-v0.0.3-next.27) (2026-04-23)
+## [0.0.3-next.27](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.26...api-processors-v0.0.3-next.27) (2026-04-23)
 
 
 ### Miscellaneous Chores
@@ -14,7 +14,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.26 to 0.0.3-next.27
 
-## [0.0.3-next.26](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.25...api-processors-v0.0.3-next.26) (2026-04-22)
+## [0.0.3-next.26](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.25...api-processors-v0.0.3-next.26) (2026-04-22)
 
 
 ### Miscellaneous Chores
@@ -28,7 +28,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.25 to 0.0.3-next.26
 
-## [0.0.3-next.25](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.24...api-processors-v0.0.3-next.25) (2026-04-14)
+## [0.0.3-next.25](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.24...api-processors-v0.0.3-next.25) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -42,7 +42,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.24 to 0.0.3-next.25
 
-## [0.0.3-next.24](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.23...api-processors-v0.0.3-next.24) (2026-04-14)
+## [0.0.3-next.24](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.23...api-processors-v0.0.3-next.24) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -56,7 +56,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.23 to 0.0.3-next.24
 
-## [0.0.3-next.23](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.22...api-processors-v0.0.3-next.23) (2026-04-14)
+## [0.0.3-next.23](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.22...api-processors-v0.0.3-next.23) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -70,7 +70,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.22 to 0.0.3-next.23
 
-## [0.0.3-next.22](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.21...api-processors-v0.0.3-next.22) (2026-03-27)
+## [0.0.3-next.22](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.21...api-processors-v0.0.3-next.22) (2026-03-27)
 
 
 ### Miscellaneous Chores
@@ -84,7 +84,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.21 to 0.0.3-next.22
 
-## [0.0.3-next.21](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.20...api-processors-v0.0.3-next.21) (2026-03-11)
+## [0.0.3-next.21](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.20...api-processors-v0.0.3-next.21) (2026-03-11)
 
 
 ### Miscellaneous Chores
@@ -98,12 +98,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.20 to 0.0.3-next.21
 
-## [0.0.3-next.20](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.19...api-processors-v0.0.3-next.20) (2026-02-09)
+## [0.0.3-next.20](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.19...api-processors-v0.0.3-next.20) (2026-02-09)
 
 
 ### Features
 
-* location encoding ([#79](https://github.com/twinfoundation/api/issues/79)) ([c684465](https://github.com/twinfoundation/api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
+* location encoding ([#79](https://github.com/iotaledger/twin-api/issues/79)) ([c684465](https://github.com/iotaledger/twin-api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
 
 
 ### Dependencies
@@ -112,7 +112,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.19 to 0.0.3-next.20
 
-## [0.0.3-next.19](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.18...api-processors-v0.0.3-next.19) (2026-02-06)
+## [0.0.3-next.19](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.18...api-processors-v0.0.3-next.19) (2026-02-06)
 
 
 ### Miscellaneous Chores
@@ -126,7 +126,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.18 to 0.0.3-next.19
 
-## [0.0.3-next.18](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.17...api-processors-v0.0.3-next.18) (2026-02-04)
+## [0.0.3-next.18](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.17...api-processors-v0.0.3-next.18) (2026-02-04)
 
 
 ### Miscellaneous Chores
@@ -140,7 +140,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.17 to 0.0.3-next.18
 
-## [0.0.3-next.17](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.16...api-processors-v0.0.3-next.17) (2026-01-26)
+## [0.0.3-next.17](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.16...api-processors-v0.0.3-next.17) (2026-01-26)
 
 
 ### Miscellaneous Chores
@@ -154,12 +154,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.16 to 0.0.3-next.17
 
-## [0.0.3-next.16](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.15...api-processors-v0.0.3-next.16) (2026-01-26)
+## [0.0.3-next.16](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.15...api-processors-v0.0.3-next.16) (2026-01-26)
 
 
 ### Features
 
-* public base url ([#70](https://github.com/twinfoundation/api/issues/70)) ([5b958cd](https://github.com/twinfoundation/api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
 
 
 ### Dependencies
@@ -168,7 +168,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.15 to 0.0.3-next.16
 
-## [0.0.3-next.15](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.14...api-processors-v0.0.3-next.15) (2026-01-22)
+## [0.0.3-next.15](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.14...api-processors-v0.0.3-next.15) (2026-01-22)
 
 
 ### Miscellaneous Chores
@@ -182,7 +182,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.14 to 0.0.3-next.15
 
-## [0.0.3-next.14](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.13...api-processors-v0.0.3-next.14) (2026-01-20)
+## [0.0.3-next.14](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.13...api-processors-v0.0.3-next.14) (2026-01-20)
 
 
 ### Miscellaneous Chores
@@ -196,7 +196,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.13 to 0.0.3-next.14
 
-## [0.0.3-next.13](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.12...api-processors-v0.0.3-next.13) (2026-01-19)
+## [0.0.3-next.13](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.12...api-processors-v0.0.3-next.13) (2026-01-19)
 
 
 ### Miscellaneous Chores
@@ -210,12 +210,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.12 to 0.0.3-next.13
 
-## [0.0.3-next.12](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.11...api-processors-v0.0.3-next.12) (2026-01-12)
+## [0.0.3-next.12](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.11...api-processors-v0.0.3-next.12) (2026-01-12)
 
 
 ### Bug Fixes
 
-* add http headers to rest requests ([#64](https://github.com/twinfoundation/api/issues/64)) ([d4a46b9](https://github.com/twinfoundation/api/commit/d4a46b97b59c116a703f136f99aa4aba0cbbf545))
+* add http headers to rest requests ([#64](https://github.com/iotaledger/twin-api/issues/64)) ([d4a46b9](https://github.com/iotaledger/twin-api/commit/d4a46b97b59c116a703f136f99aa4aba0cbbf545))
 
 
 ### Dependencies
@@ -224,7 +224,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.11 to 0.0.3-next.12
 
-## [0.0.3-next.11](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.10...api-processors-v0.0.3-next.11) (2026-01-08)
+## [0.0.3-next.11](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.10...api-processors-v0.0.3-next.11) (2026-01-08)
 
 
 ### Miscellaneous Chores
@@ -238,7 +238,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.10 to 0.0.3-next.11
 
-## [0.0.3-next.10](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.9...api-processors-v0.0.3-next.10) (2026-01-05)
+## [0.0.3-next.10](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.9...api-processors-v0.0.3-next.10) (2026-01-05)
 
 
 ### Miscellaneous Chores
@@ -252,30 +252,30 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.9 to 0.0.3-next.10
 
-## [0.0.3-next.9](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.8...api-processors-v0.0.3-next.9) (2026-01-05)
+## [0.0.3-next.9](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.8...api-processors-v0.0.3-next.9) (2026-01-05)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* add logging component type to request contexts ([210de1b](https://github.com/twinfoundation/api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
-* add root, favicon routes ([71da1c3](https://github.com/twinfoundation/api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add socket id, connect and disconnect ([20b0d0e](https://github.com/twinfoundation/api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
-* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* logging naming consistency ([a4a6ef2](https://github.com/twinfoundation/api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* add logging component type to request contexts ([210de1b](https://github.com/iotaledger/twin-api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
+* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add socket id, connect and disconnect ([20b0d0e](https://github.com/iotaledger/twin-api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* logging naming consistency ([a4a6ef2](https://github.com/iotaledger/twin-api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Bug Fixes
 
-* error handling make sure primary error takes precedence ([84b61f2](https://github.com/twinfoundation/api/commit/84b61f27fe5e4919c0c9f9a1edc8ff46dc45c1f7))
-* locales ([1b84d8e](https://github.com/twinfoundation/api/commit/1b84d8eb4dbe2302897e184e6389892b7ba12608))
+* error handling make sure primary error takes precedence ([84b61f2](https://github.com/iotaledger/twin-api/commit/84b61f27fe5e4919c0c9f9a1edc8ff46dc45c1f7))
+* locales ([1b84d8e](https://github.com/iotaledger/twin-api/commit/1b84d8eb4dbe2302897e184e6389892b7ba12608))
 
 
 ### Dependencies
@@ -284,7 +284,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.8 to 0.0.3-next.9
 
-## [0.0.3-next.8](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.7...api-processors-v0.0.3-next.8) (2025-12-17)
+## [0.0.3-next.8](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.7...api-processors-v0.0.3-next.8) (2025-12-17)
 
 
 ### Miscellaneous Chores
@@ -298,12 +298,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.7 to 0.0.3-next.8
 
-## [0.0.3-next.7](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.6...api-processors-v0.0.3-next.7) (2025-11-26)
+## [0.0.3-next.7](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.6...api-processors-v0.0.3-next.7) (2025-11-26)
 
 
 ### Bug Fixes
 
-* error handling make sure primary error takes precedence ([84b61f2](https://github.com/twinfoundation/api/commit/84b61f27fe5e4919c0c9f9a1edc8ff46dc45c1f7))
+* error handling make sure primary error takes precedence ([84b61f2](https://github.com/iotaledger/twin-api/commit/84b61f27fe5e4919c0c9f9a1edc8ff46dc45c1f7))
 
 
 ### Dependencies
@@ -312,7 +312,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.6 to 0.0.3-next.7
 
-## [0.0.3-next.6](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.5...api-processors-v0.0.3-next.6) (2025-11-20)
+## [0.0.3-next.6](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.5...api-processors-v0.0.3-next.6) (2025-11-20)
 
 
 ### Miscellaneous Chores
@@ -326,7 +326,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.5 to 0.0.3-next.6
 
-## [0.0.3-next.5](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.4...api-processors-v0.0.3-next.5) (2025-11-14)
+## [0.0.3-next.5](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.4...api-processors-v0.0.3-next.5) (2025-11-14)
 
 
 ### Miscellaneous Chores
@@ -340,29 +340,29 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.4 to 0.0.3-next.5
 
-## [0.0.3-next.4](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.3...api-processors-v0.0.3-next.4) (2025-11-14)
+## [0.0.3-next.4](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.3...api-processors-v0.0.3-next.4) (2025-11-14)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* add logging component type to request contexts ([210de1b](https://github.com/twinfoundation/api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
-* add root, favicon routes ([71da1c3](https://github.com/twinfoundation/api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add socket id, connect and disconnect ([20b0d0e](https://github.com/twinfoundation/api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
-* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* logging naming consistency ([a4a6ef2](https://github.com/twinfoundation/api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* add logging component type to request contexts ([210de1b](https://github.com/iotaledger/twin-api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
+* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add socket id, connect and disconnect ([20b0d0e](https://github.com/iotaledger/twin-api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* logging naming consistency ([a4a6ef2](https://github.com/iotaledger/twin-api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Bug Fixes
 
-* locales ([1b84d8e](https://github.com/twinfoundation/api/commit/1b84d8eb4dbe2302897e184e6389892b7ba12608))
+* locales ([1b84d8e](https://github.com/iotaledger/twin-api/commit/1b84d8eb4dbe2302897e184e6389892b7ba12608))
 
 
 ### Dependencies
@@ -371,7 +371,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.3 to 0.0.3-next.4
 
-## [0.0.3-next.3](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.2...api-processors-v0.0.3-next.3) (2025-11-14)
+## [0.0.3-next.3](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.2...api-processors-v0.0.3-next.3) (2025-11-14)
 
 
 ### Miscellaneous Chores
@@ -385,7 +385,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.2 to 0.0.3-next.3
 
-## [0.0.3-next.2](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.1...api-processors-v0.0.3-next.2) (2025-11-12)
+## [0.0.3-next.2](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.1...api-processors-v0.0.3-next.2) (2025-11-12)
 
 
 ### Miscellaneous Chores
@@ -399,24 +399,24 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.1 to 0.0.3-next.2
 
-## [0.0.3-next.1](https://github.com/twinfoundation/api/compare/api-processors-v0.0.3-next.0...api-processors-v0.0.3-next.1) (2025-11-10)
+## [0.0.3-next.1](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.0...api-processors-v0.0.3-next.1) (2025-11-10)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* add logging component type to request contexts ([210de1b](https://github.com/twinfoundation/api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
-* add root, favicon routes ([71da1c3](https://github.com/twinfoundation/api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add socket id, connect and disconnect ([20b0d0e](https://github.com/twinfoundation/api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
-* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* logging naming consistency ([a4a6ef2](https://github.com/twinfoundation/api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* add logging component type to request contexts ([210de1b](https://github.com/iotaledger/twin-api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
+* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add socket id, connect and disconnect ([20b0d0e](https://github.com/iotaledger/twin-api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* logging naming consistency ([a4a6ef2](https://github.com/iotaledger/twin-api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -425,7 +425,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.0 to 0.0.3-next.1
 
-## [0.0.2-next.13](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.12...api-processors-v0.0.2-next.13) (2025-10-09)
+## [0.0.2-next.13](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.12...api-processors-v0.0.2-next.13) (2025-10-09)
 
 
 ### Miscellaneous Chores
@@ -439,12 +439,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.12 to 0.0.2-next.13
 
-## [0.0.2-next.12](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.11...api-processors-v0.0.2-next.12) (2025-10-09)
+## [0.0.2-next.12](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.11...api-processors-v0.0.2-next.12) (2025-10-09)
 
 
 ### Features
 
-* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
 
 
 ### Dependencies
@@ -453,12 +453,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.11 to 0.0.2-next.12
 
-## [0.0.2-next.11](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.10...api-processors-v0.0.2-next.11) (2025-09-29)
+## [0.0.2-next.11](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.10...api-processors-v0.0.2-next.11) (2025-09-29)
 
 
 ### Features
 
-* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
 
 
 ### Dependencies
@@ -467,7 +467,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.10 to 0.0.2-next.11
 
-## [0.0.2-next.10](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.9...api-processors-v0.0.2-next.10) (2025-09-23)
+## [0.0.2-next.10](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.9...api-processors-v0.0.2-next.10) (2025-09-23)
 
 
 ### Miscellaneous Chores
@@ -481,12 +481,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.9 to 0.0.2-next.10
 
-## [0.0.2-next.9](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.8...api-processors-v0.0.2-next.9) (2025-08-29)
+## [0.0.2-next.9](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.8...api-processors-v0.0.2-next.9) (2025-08-29)
 
 
 ### Features
 
-* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
 
 
 ### Dependencies
@@ -495,12 +495,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.8 to 0.0.2-next.9
 
-## [0.0.2-next.8](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.7...api-processors-v0.0.2-next.8) (2025-08-21)
+## [0.0.2-next.8](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.7...api-processors-v0.0.2-next.8) (2025-08-21)
 
 
 ### Features
 
-* add root, favicon routes ([71da1c3](https://github.com/twinfoundation/api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
 
 
 ### Dependencies
@@ -509,12 +509,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.7 to 0.0.2-next.8
 
-## [0.0.2-next.7](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.6...api-processors-v0.0.2-next.7) (2025-08-20)
+## [0.0.2-next.7](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.6...api-processors-v0.0.2-next.7) (2025-08-20)
 
 
 ### Features
 
-* logging naming consistency ([a4a6ef2](https://github.com/twinfoundation/api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
+* logging naming consistency ([a4a6ef2](https://github.com/iotaledger/twin-api/commit/a4a6ef2de5049045589eb78b177ff62e744bde9d))
 
 
 ### Dependencies
@@ -523,12 +523,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.6 to 0.0.2-next.7
 
-## [0.0.2-next.6](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.5...api-processors-v0.0.2-next.6) (2025-08-19)
+## [0.0.2-next.6](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.5...api-processors-v0.0.2-next.6) (2025-08-19)
 
 
 ### Features
 
-* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
 
 
 ### Dependencies
@@ -537,17 +537,17 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.5 to 0.0.2-next.6
 
-## [0.0.2-next.5](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.4...api-processors-v0.0.2-next.5) (2025-07-25)
+## [0.0.2-next.5](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.4...api-processors-v0.0.2-next.5) (2025-07-25)
 
 
 ### Features
 
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* add logging component type to request contexts ([210de1b](https://github.com/twinfoundation/api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
-* add socket id, connect and disconnect ([20b0d0e](https://github.com/twinfoundation/api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* add logging component type to request contexts ([210de1b](https://github.com/iotaledger/twin-api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
+* add socket id, connect and disconnect ([20b0d0e](https://github.com/iotaledger/twin-api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -556,12 +556,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.4 to 0.0.2-next.5
 
-## [0.0.2-next.4](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.3...api-processors-v0.0.2-next.4) (2025-07-25)
+## [0.0.2-next.4](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.3...api-processors-v0.0.2-next.4) (2025-07-25)
 
 
 ### Features
 
-* add logging component type to request contexts ([210de1b](https://github.com/twinfoundation/api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
+* add logging component type to request contexts ([210de1b](https://github.com/iotaledger/twin-api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
 
 
 ### Dependencies
@@ -570,13 +570,13 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.3 to 0.0.2-next.4
 
-## [0.0.2-next.3](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.2...api-processors-v0.0.2-next.3) (2025-07-24)
+## [0.0.2-next.3](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.2...api-processors-v0.0.2-next.3) (2025-07-24)
 
 
 ### Features
 
-* add socket id, connect and disconnect ([20b0d0e](https://github.com/twinfoundation/api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* add socket id, connect and disconnect ([20b0d0e](https://github.com/iotaledger/twin-api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
 
 
 ### Dependencies
@@ -585,7 +585,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.2 to 0.0.2-next.3
 
-## [0.0.2-next.2](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.1...api-processors-v0.0.2-next.2) (2025-07-17)
+## [0.0.2-next.2](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.1...api-processors-v0.0.2-next.2) (2025-07-17)
 
 
 ### Miscellaneous Chores
@@ -599,14 +599,14 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.1 to 0.0.2-next.2
 
-## [0.0.2-next.1](https://github.com/twinfoundation/api/compare/api-processors-v0.0.2-next.0...api-processors-v0.0.2-next.1) (2025-07-08)
+## [0.0.2-next.1](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.2-next.0...api-processors-v0.0.2-next.1) (2025-07-08)
 
 
 ### Features
 
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -620,7 +620,7 @@
 
 ### Features
 
-* release to production ([70ee2d5](https://github.com/twinfoundation/api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
 
 
 ### Dependencies
@@ -629,7 +629,7 @@
   * dependencies
     * @twin.org/api-models bumped from ^0.0.0 to ^0.0.1
 
-## [0.0.1-next.36](https://github.com/twinfoundation/api/compare/api-processors-v0.0.1-next.35...api-processors-v0.0.1-next.36) (2025-06-17)
+## [0.0.1-next.36](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.1-next.35...api-processors-v0.0.1-next.36) (2025-06-17)
 
 
 ### Miscellaneous Chores
@@ -643,12 +643,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.1-next.35 to 0.0.1-next.36
 
-## [0.0.1-next.35](https://github.com/twinfoundation/api/compare/api-processors-v0.0.1-next.34...api-processors-v0.0.1-next.35) (2025-06-11)
+## [0.0.1-next.35](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.1-next.34...api-processors-v0.0.1-next.35) (2025-06-11)
 
 
 ### Features
 
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
 
 
 ### Dependencies
@@ -657,7 +657,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.1-next.34 to 0.0.1-next.35
 
-## [0.0.1-next.34](https://github.com/twinfoundation/api/compare/api-processors-v0.0.1-next.33...api-processors-v0.0.1-next.34) (2025-05-27)
+## [0.0.1-next.34](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.1-next.33...api-processors-v0.0.1-next.34) (2025-05-27)
 
 
 ### Miscellaneous Chores
@@ -671,12 +671,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.1-next.33 to 0.0.1-next.34
 
-## [0.0.1-next.33](https://github.com/twinfoundation/api/compare/api-processors-v0.0.1-next.32...api-processors-v0.0.1-next.33) (2025-04-17)
+## [0.0.1-next.33](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.1-next.32...api-processors-v0.0.1-next.33) (2025-04-17)
 
 
 ### Features
 
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -685,7 +685,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.1-next.32 to 0.0.1-next.33
 
-## [0.0.1-next.32](https://github.com/twinfoundation/api/compare/api-processors-v0.0.1-next.31...api-processors-v0.0.1-next.32) (2025-03-28)
+## [0.0.1-next.32](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.1-next.31...api-processors-v0.0.1-next.32) (2025-03-28)
 
 
 ### Miscellaneous Chores

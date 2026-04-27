@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.0.3-next.27](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.26...api-tenant-processor-v0.0.3-next.27) (2026-04-23)
+## [0.0.3-next.27](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.26...api-tenant-processor-v0.0.3-next.27) (2026-04-23)
 
 
 ### Miscellaneous Chores
@@ -14,7 +14,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.26 to 0.0.3-next.27
 
-## [0.0.3-next.26](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.25...api-tenant-processor-v0.0.3-next.26) (2026-04-22)
+## [0.0.3-next.26](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.25...api-tenant-processor-v0.0.3-next.26) (2026-04-22)
 
 
 ### Miscellaneous Chores
@@ -28,7 +28,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.25 to 0.0.3-next.26
 
-## [0.0.3-next.25](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.24...api-tenant-processor-v0.0.3-next.25) (2026-04-14)
+## [0.0.3-next.25](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.24...api-tenant-processor-v0.0.3-next.25) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -42,7 +42,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.24 to 0.0.3-next.25
 
-## [0.0.3-next.24](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.23...api-tenant-processor-v0.0.3-next.24) (2026-04-14)
+## [0.0.3-next.24](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.23...api-tenant-processor-v0.0.3-next.24) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -56,7 +56,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.23 to 0.0.3-next.24
 
-## [0.0.3-next.23](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.22...api-tenant-processor-v0.0.3-next.23) (2026-04-14)
+## [0.0.3-next.23](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.22...api-tenant-processor-v0.0.3-next.23) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -70,7 +70,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.22 to 0.0.3-next.23
 
-## [0.0.3-next.22](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.21...api-tenant-processor-v0.0.3-next.22) (2026-03-27)
+## [0.0.3-next.22](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.21...api-tenant-processor-v0.0.3-next.22) (2026-03-27)
 
 
 ### Miscellaneous Chores
@@ -84,7 +84,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.21 to 0.0.3-next.22
 
-## [0.0.3-next.21](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.20...api-tenant-processor-v0.0.3-next.21) (2026-03-11)
+## [0.0.3-next.21](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.20...api-tenant-processor-v0.0.3-next.21) (2026-03-11)
 
 
 ### Miscellaneous Chores
@@ -98,12 +98,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.20 to 0.0.3-next.21
 
-## [0.0.3-next.20](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.19...api-tenant-processor-v0.0.3-next.20) (2026-02-09)
+## [0.0.3-next.20](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.19...api-tenant-processor-v0.0.3-next.20) (2026-02-09)
 
 
 ### Features
 
-* location encoding ([#79](https://github.com/twinfoundation/api/issues/79)) ([c684465](https://github.com/twinfoundation/api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
+* location encoding ([#79](https://github.com/iotaledger/twin-api/issues/79)) ([c684465](https://github.com/iotaledger/twin-api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
 
 
 ### Dependencies
@@ -112,7 +112,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.19 to 0.0.3-next.20
 
-## [0.0.3-next.19](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.18...api-tenant-processor-v0.0.3-next.19) (2026-02-06)
+## [0.0.3-next.19](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.18...api-tenant-processor-v0.0.3-next.19) (2026-02-06)
 
 
 ### Miscellaneous Chores
@@ -126,12 +126,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.18 to 0.0.3-next.19
 
-## [0.0.3-next.18](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.17...api-tenant-processor-v0.0.3-next.18) (2026-02-04)
+## [0.0.3-next.18](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.17...api-tenant-processor-v0.0.3-next.18) (2026-02-04)
 
 
 ### Features
 
-* tenant api and scopes ([#75](https://github.com/twinfoundation/api/issues/75)) ([c663141](https://github.com/twinfoundation/api/commit/c663141091e8974d769f8f9904ecdab009ebd083))
+* tenant api and scopes ([#75](https://github.com/iotaledger/twin-api/issues/75)) ([c663141](https://github.com/iotaledger/twin-api/commit/c663141091e8974d769f8f9904ecdab009ebd083))
 
 
 ### Dependencies
@@ -140,7 +140,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.17 to 0.0.3-next.18
 
-## [0.0.3-next.17](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.16...api-tenant-processor-v0.0.3-next.17) (2026-01-26)
+## [0.0.3-next.17](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.16...api-tenant-processor-v0.0.3-next.17) (2026-01-26)
 
 
 ### Miscellaneous Chores
@@ -154,12 +154,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.16 to 0.0.3-next.17
 
-## [0.0.3-next.16](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.15...api-tenant-processor-v0.0.3-next.16) (2026-01-26)
+## [0.0.3-next.16](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.15...api-tenant-processor-v0.0.3-next.16) (2026-01-26)
 
 
 ### Features
 
-* public base url ([#70](https://github.com/twinfoundation/api/issues/70)) ([5b958cd](https://github.com/twinfoundation/api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
 
 
 ### Dependencies
@@ -168,7 +168,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.15 to 0.0.3-next.16
 
-## [0.0.3-next.15](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.14...api-tenant-processor-v0.0.3-next.15) (2026-01-22)
+## [0.0.3-next.15](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.14...api-tenant-processor-v0.0.3-next.15) (2026-01-22)
 
 
 ### Miscellaneous Chores
@@ -182,7 +182,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.14 to 0.0.3-next.15
 
-## [0.0.3-next.14](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.13...api-tenant-processor-v0.0.3-next.14) (2026-01-20)
+## [0.0.3-next.14](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.13...api-tenant-processor-v0.0.3-next.14) (2026-01-20)
 
 
 ### Miscellaneous Chores
@@ -196,7 +196,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.13 to 0.0.3-next.14
 
-## [0.0.3-next.13](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.12...api-tenant-processor-v0.0.3-next.13) (2026-01-19)
+## [0.0.3-next.13](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.12...api-tenant-processor-v0.0.3-next.13) (2026-01-19)
 
 
 ### Miscellaneous Chores
@@ -210,7 +210,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.12 to 0.0.3-next.13
 
-## [0.0.3-next.12](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.11...api-tenant-processor-v0.0.3-next.12) (2026-01-12)
+## [0.0.3-next.12](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.11...api-tenant-processor-v0.0.3-next.12) (2026-01-12)
 
 
 ### Miscellaneous Chores
@@ -224,12 +224,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.11 to 0.0.3-next.12
 
-## [0.0.3-next.11](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.10...api-tenant-processor-v0.0.3-next.11) (2026-01-08)
+## [0.0.3-next.11](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.10...api-tenant-processor-v0.0.3-next.11) (2026-01-08)
 
 
 ### Bug Fixes
 
-* duplicate api keys ([#61](https://github.com/twinfoundation/api/issues/61)) ([5519c2d](https://github.com/twinfoundation/api/commit/5519c2d077d9b3d4b5fc7d5f073ef67cd000a367))
+* duplicate api keys ([#61](https://github.com/iotaledger/twin-api/issues/61)) ([5519c2d](https://github.com/iotaledger/twin-api/commit/5519c2d077d9b3d4b5fc7d5f073ef67cd000a367))
 
 
 ### Dependencies
@@ -238,7 +238,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.10 to 0.0.3-next.11
 
-## [0.0.3-next.10](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.9...api-tenant-processor-v0.0.3-next.10) (2026-01-05)
+## [0.0.3-next.10](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.9...api-tenant-processor-v0.0.3-next.10) (2026-01-05)
 
 
 ### Miscellaneous Chores
@@ -252,24 +252,24 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.9 to 0.0.3-next.10
 
-## [0.0.3-next.9](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.8...api-tenant-processor-v0.0.3-next.9) (2026-01-05)
+## [0.0.3-next.9](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.8...api-tenant-processor-v0.0.3-next.9) (2026-01-05)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add livez endpoint ([#57](https://github.com/twinfoundation/api/issues/57)) ([ef007db](https://github.com/twinfoundation/api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
-* add tests for tenant id handler ([c868e7e](https://github.com/twinfoundation/api/commit/c868e7e5831e13df39b8994c40834e51f69fa0b9))
-* check tenant id in auth if set ([937ba0c](https://github.com/twinfoundation/api/commit/937ba0cd790038556a7b2af251e52b43cb059df4))
-* check tenant id in auth if set ([66f7337](https://github.com/twinfoundation/api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
-* reduce short form tenant id length ([bcda377](https://github.com/twinfoundation/api/commit/bcda377daed03b21fd1c6ffe47bad4a45d96602b))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add tests for tenant id handler ([c868e7e](https://github.com/iotaledger/twin-api/commit/c868e7e5831e13df39b8994c40834e51f69fa0b9))
+* check tenant id in auth if set ([937ba0c](https://github.com/iotaledger/twin-api/commit/937ba0cd790038556a7b2af251e52b43cb059df4))
+* check tenant id in auth if set ([66f7337](https://github.com/iotaledger/twin-api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
+* reduce short form tenant id length ([bcda377](https://github.com/iotaledger/twin-api/commit/bcda377daed03b21fd1c6ffe47bad4a45d96602b))
 
 
 ### Bug Fixes
 
-* do not check x-api-key for health resourcr ([#54](https://github.com/twinfoundation/api/issues/54)) ([897a747](https://github.com/twinfoundation/api/commit/897a747a57ed76ee37035f7ea3d40953df3f5fb0))
-* remove extraneous type ([f85c52c](https://github.com/twinfoundation/api/commit/f85c52c55caa3a7a64f6f675842f0ea59289a5d9))
-* use base64Url for tenant id short form so it doesn't include slash ([7210771](https://github.com/twinfoundation/api/commit/72107718650acd05440ce9d9bf10905e6052281c))
+* do not check x-api-key for health resourcr ([#54](https://github.com/iotaledger/twin-api/issues/54)) ([897a747](https://github.com/iotaledger/twin-api/commit/897a747a57ed76ee37035f7ea3d40953df3f5fb0))
+* remove extraneous type ([f85c52c](https://github.com/iotaledger/twin-api/commit/f85c52c55caa3a7a64f6f675842f0ea59289a5d9))
+* use base64Url for tenant id short form so it doesn't include slash ([7210771](https://github.com/iotaledger/twin-api/commit/72107718650acd05440ce9d9bf10905e6052281c))
 
 
 ### Dependencies
@@ -278,12 +278,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.8 to 0.0.3-next.9
 
-## [0.0.3-next.8](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.7...api-tenant-processor-v0.0.3-next.8) (2025-12-17)
+## [0.0.3-next.8](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.7...api-tenant-processor-v0.0.3-next.8) (2025-12-17)
 
 
 ### Bug Fixes
 
-* do not check x-api-key for health resourcr ([#54](https://github.com/twinfoundation/api/issues/54)) ([897a747](https://github.com/twinfoundation/api/commit/897a747a57ed76ee37035f7ea3d40953df3f5fb0))
+* do not check x-api-key for health resourcr ([#54](https://github.com/iotaledger/twin-api/issues/54)) ([897a747](https://github.com/iotaledger/twin-api/commit/897a747a57ed76ee37035f7ea3d40953df3f5fb0))
 
 
 ### Dependencies
@@ -292,7 +292,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.7 to 0.0.3-next.8
 
-## [0.0.3-next.7](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.6...api-tenant-processor-v0.0.3-next.7) (2025-11-26)
+## [0.0.3-next.7](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.6...api-tenant-processor-v0.0.3-next.7) (2025-11-26)
 
 
 ### Miscellaneous Chores
@@ -306,13 +306,13 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.6 to 0.0.3-next.7
 
-## [0.0.3-next.6](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.5...api-tenant-processor-v0.0.3-next.6) (2025-11-20)
+## [0.0.3-next.6](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.5...api-tenant-processor-v0.0.3-next.6) (2025-11-20)
 
 
 ### Features
 
-* check tenant id in auth if set ([937ba0c](https://github.com/twinfoundation/api/commit/937ba0cd790038556a7b2af251e52b43cb059df4))
-* check tenant id in auth if set ([66f7337](https://github.com/twinfoundation/api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
+* check tenant id in auth if set ([937ba0c](https://github.com/iotaledger/twin-api/commit/937ba0cd790038556a7b2af251e52b43cb059df4))
+* check tenant id in auth if set ([66f7337](https://github.com/iotaledger/twin-api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
 
 
 ### Dependencies
@@ -321,7 +321,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.5 to 0.0.3-next.6
 
-## [0.0.3-next.5](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.4...api-tenant-processor-v0.0.3-next.5) (2025-11-14)
+## [0.0.3-next.5](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.4...api-tenant-processor-v0.0.3-next.5) (2025-11-14)
 
 
 ### Miscellaneous Chores
@@ -335,20 +335,20 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.4 to 0.0.3-next.5
 
-## [0.0.3-next.4](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.3...api-tenant-processor-v0.0.3-next.4) (2025-11-14)
+## [0.0.3-next.4](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.3...api-tenant-processor-v0.0.3-next.4) (2025-11-14)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add tests for tenant id handler ([c868e7e](https://github.com/twinfoundation/api/commit/c868e7e5831e13df39b8994c40834e51f69fa0b9))
-* reduce short form tenant id length ([bcda377](https://github.com/twinfoundation/api/commit/bcda377daed03b21fd1c6ffe47bad4a45d96602b))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add tests for tenant id handler ([c868e7e](https://github.com/iotaledger/twin-api/commit/c868e7e5831e13df39b8994c40834e51f69fa0b9))
+* reduce short form tenant id length ([bcda377](https://github.com/iotaledger/twin-api/commit/bcda377daed03b21fd1c6ffe47bad4a45d96602b))
 
 
 ### Bug Fixes
 
-* remove extraneous type ([f85c52c](https://github.com/twinfoundation/api/commit/f85c52c55caa3a7a64f6f675842f0ea59289a5d9))
-* use base64Url for tenant id short form so it doesn't include slash ([7210771](https://github.com/twinfoundation/api/commit/72107718650acd05440ce9d9bf10905e6052281c))
+* remove extraneous type ([f85c52c](https://github.com/iotaledger/twin-api/commit/f85c52c55caa3a7a64f6f675842f0ea59289a5d9))
+* use base64Url for tenant id short form so it doesn't include slash ([7210771](https://github.com/iotaledger/twin-api/commit/72107718650acd05440ce9d9bf10905e6052281c))
 
 
 ### Dependencies
@@ -357,17 +357,17 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.3 to 0.0.3-next.4
 
-## [0.0.3-next.3](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.2...api-tenant-processor-v0.0.3-next.3) (2025-11-14)
+## [0.0.3-next.3](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.2...api-tenant-processor-v0.0.3-next.3) (2025-11-14)
 
 
 ### Features
 
-* add tests for tenant id handler ([c868e7e](https://github.com/twinfoundation/api/commit/c868e7e5831e13df39b8994c40834e51f69fa0b9))
+* add tests for tenant id handler ([c868e7e](https://github.com/iotaledger/twin-api/commit/c868e7e5831e13df39b8994c40834e51f69fa0b9))
 
 
 ### Bug Fixes
 
-* use base64Url for tenant id short form so it doesn't include slash ([7210771](https://github.com/twinfoundation/api/commit/72107718650acd05440ce9d9bf10905e6052281c))
+* use base64Url for tenant id short form so it doesn't include slash ([7210771](https://github.com/iotaledger/twin-api/commit/72107718650acd05440ce9d9bf10905e6052281c))
 
 
 ### Dependencies
@@ -376,17 +376,17 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.2 to 0.0.3-next.3
 
-## [0.0.3-next.2](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.1...api-tenant-processor-v0.0.3-next.2) (2025-11-12)
+## [0.0.3-next.2](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.1...api-tenant-processor-v0.0.3-next.2) (2025-11-12)
 
 
 ### Features
 
-* reduce short form tenant id length ([bcda377](https://github.com/twinfoundation/api/commit/bcda377daed03b21fd1c6ffe47bad4a45d96602b))
+* reduce short form tenant id length ([bcda377](https://github.com/iotaledger/twin-api/commit/bcda377daed03b21fd1c6ffe47bad4a45d96602b))
 
 
 ### Bug Fixes
 
-* remove extraneous type ([f85c52c](https://github.com/twinfoundation/api/commit/f85c52c55caa3a7a64f6f675842f0ea59289a5d9))
+* remove extraneous type ([f85c52c](https://github.com/iotaledger/twin-api/commit/f85c52c55caa3a7a64f6f675842f0ea59289a5d9))
 
 
 ### Dependencies
@@ -395,12 +395,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.1 to 0.0.3-next.2
 
-## [0.0.3-next.1](https://github.com/twinfoundation/api/compare/api-tenant-processor-v0.0.3-next.0...api-tenant-processor-v0.0.3-next.1) (2025-11-10)
+## [0.0.3-next.1](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.0...api-tenant-processor-v0.0.3-next.1) (2025-11-10)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
 
 
 ### Dependencies

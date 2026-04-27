@@ -1,11 +1,11 @@
 # Changelog
 
-## [0.0.3-next.27](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.26...api-auth-entity-storage-service-v0.0.3-next.27) (2026-04-23)
+## [0.0.3-next.27](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.26...api-auth-entity-storage-service-v0.0.3-next.27) (2026-04-23)
 
 
 ### Bug Fixes
 
-* handling the tid as undefined at refresh when empty ([#104](https://github.com/twinfoundation/api/issues/104)) ([d874a4a](https://github.com/twinfoundation/api/commit/d874a4a542c5fd45bb1bd56650247f844d056643))
+* handling the tid as undefined at refresh when empty ([#104](https://github.com/iotaledger/twin-api/issues/104)) ([d874a4a](https://github.com/iotaledger/twin-api/commit/d874a4a542c5fd45bb1bd56650247f844d056643))
 
 
 ### Dependencies
@@ -16,7 +16,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.26 to 0.0.3-next.27
     * @twin.org/api-models bumped from 0.0.3-next.26 to 0.0.3-next.27
 
-## [0.0.3-next.26](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.25...api-auth-entity-storage-service-v0.0.3-next.26) (2026-04-22)
+## [0.0.3-next.26](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.25...api-auth-entity-storage-service-v0.0.3-next.26) (2026-04-22)
 
 
 ### Miscellaneous Chores
@@ -32,12 +32,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.25 to 0.0.3-next.26
     * @twin.org/api-models bumped from 0.0.3-next.25 to 0.0.3-next.26
 
-## [0.0.3-next.25](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.24...api-auth-entity-storage-service-v0.0.3-next.25) (2026-04-14)
+## [0.0.3-next.25](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.24...api-auth-entity-storage-service-v0.0.3-next.25) (2026-04-14)
 
 
 ### Features
 
-* auth header processor use user entity storage directly ([93084cf](https://github.com/twinfoundation/api/commit/93084cfed8f3ab16c80a1ab1bc90b1d9fc14bd25))
+* auth header processor use user entity storage directly ([93084cf](https://github.com/iotaledger/twin-api/commit/93084cfed8f3ab16c80a1ab1bc90b1d9fc14bd25))
 
 
 ### Dependencies
@@ -48,12 +48,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.24 to 0.0.3-next.25
     * @twin.org/api-models bumped from 0.0.3-next.24 to 0.0.3-next.25
 
-## [0.0.3-next.24](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.23...api-auth-entity-storage-service-v0.0.3-next.24) (2026-04-14)
+## [0.0.3-next.24](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.23...api-auth-entity-storage-service-v0.0.3-next.24) (2026-04-14)
 
 
 ### Features
 
-* remove auth service dependency on admin service ([4aeb211](https://github.com/twinfoundation/api/commit/4aeb211a5ffcf2eaea89a6841faea3ac3069ef89))
+* remove auth service dependency on admin service ([4aeb211](https://github.com/iotaledger/twin-api/commit/4aeb211a5ffcf2eaea89a6841faea3ac3069ef89))
 
 
 ### Dependencies
@@ -64,12 +64,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.23 to 0.0.3-next.24
     * @twin.org/api-models bumped from 0.0.3-next.23 to 0.0.3-next.24
 
-## [0.0.3-next.23](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.22...api-auth-entity-storage-service-v0.0.3-next.23) (2026-04-14)
+## [0.0.3-next.23](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.22...api-auth-entity-storage-service-v0.0.3-next.23) (2026-04-14)
 
 
 ### Features
 
-* auth enhancements ([#93](https://github.com/twinfoundation/api/issues/93)) ([921a50c](https://github.com/twinfoundation/api/commit/921a50cd89d26e530a6be6174a5a803060fa0eb6))
+* auth enhancements ([#93](https://github.com/iotaledger/twin-api/issues/93)) ([921a50c](https://github.com/iotaledger/twin-api/commit/921a50cd89d26e530a6be6174a5a803060fa0eb6))
 
 
 ### Dependencies
@@ -80,7 +80,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.22 to 0.0.3-next.23
     * @twin.org/api-models bumped from 0.0.3-next.22 to 0.0.3-next.23
 
-## [0.0.3-next.22](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.21...api-auth-entity-storage-service-v0.0.3-next.22) (2026-03-27)
+## [0.0.3-next.22](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.21...api-auth-entity-storage-service-v0.0.3-next.22) (2026-03-27)
 
 
 ### Miscellaneous Chores
@@ -96,7 +96,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.21 to 0.0.3-next.22
     * @twin.org/api-models bumped from 0.0.3-next.21 to 0.0.3-next.22
 
-## [0.0.3-next.21](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.20...api-auth-entity-storage-service-v0.0.3-next.21) (2026-03-11)
+## [0.0.3-next.21](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.20...api-auth-entity-storage-service-v0.0.3-next.21) (2026-03-11)
 
 
 ### Miscellaneous Chores
@@ -112,12 +112,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.20 to 0.0.3-next.21
     * @twin.org/api-models bumped from 0.0.3-next.20 to 0.0.3-next.21
 
-## [0.0.3-next.20](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.19...api-auth-entity-storage-service-v0.0.3-next.20) (2026-02-09)
+## [0.0.3-next.20](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.19...api-auth-entity-storage-service-v0.0.3-next.20) (2026-02-09)
 
 
 ### Features
 
-* location encoding ([#79](https://github.com/twinfoundation/api/issues/79)) ([c684465](https://github.com/twinfoundation/api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
+* location encoding ([#79](https://github.com/iotaledger/twin-api/issues/79)) ([c684465](https://github.com/iotaledger/twin-api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
 
 
 ### Dependencies
@@ -128,12 +128,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.19 to 0.0.3-next.20
     * @twin.org/api-models bumped from 0.0.3-next.19 to 0.0.3-next.20
 
-## [0.0.3-next.19](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.18...api-auth-entity-storage-service-v0.0.3-next.19) (2026-02-06)
+## [0.0.3-next.19](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.18...api-auth-entity-storage-service-v0.0.3-next.19) (2026-02-06)
 
 
 ### Features
 
-* user admin service ([#77](https://github.com/twinfoundation/api/issues/77)) ([c8491df](https://github.com/twinfoundation/api/commit/c8491df7b07c1f45560c8a78c6adc806d0ececbb))
+* user admin service ([#77](https://github.com/iotaledger/twin-api/issues/77)) ([c8491df](https://github.com/iotaledger/twin-api/commit/c8491df7b07c1f45560c8a78c6adc806d0ececbb))
 
 
 ### Dependencies
@@ -144,12 +144,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.18 to 0.0.3-next.19
     * @twin.org/api-models bumped from 0.0.3-next.18 to 0.0.3-next.19
 
-## [0.0.3-next.18](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.17...api-auth-entity-storage-service-v0.0.3-next.18) (2026-02-04)
+## [0.0.3-next.18](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.17...api-auth-entity-storage-service-v0.0.3-next.18) (2026-02-04)
 
 
 ### Features
 
-* tenant api and scopes ([#75](https://github.com/twinfoundation/api/issues/75)) ([c663141](https://github.com/twinfoundation/api/commit/c663141091e8974d769f8f9904ecdab009ebd083))
+* tenant api and scopes ([#75](https://github.com/iotaledger/twin-api/issues/75)) ([c663141](https://github.com/iotaledger/twin-api/commit/c663141091e8974d769f8f9904ecdab009ebd083))
 
 
 ### Dependencies
@@ -160,7 +160,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.17 to 0.0.3-next.18
     * @twin.org/api-models bumped from 0.0.3-next.17 to 0.0.3-next.18
 
-## [0.0.3-next.17](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.16...api-auth-entity-storage-service-v0.0.3-next.17) (2026-01-26)
+## [0.0.3-next.17](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.16...api-auth-entity-storage-service-v0.0.3-next.17) (2026-01-26)
 
 
 ### Miscellaneous Chores
@@ -176,7 +176,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.16 to 0.0.3-next.17
     * @twin.org/api-models bumped from 0.0.3-next.16 to 0.0.3-next.17
 
-## [0.0.3-next.16](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.15...api-auth-entity-storage-service-v0.0.3-next.16) (2026-01-26)
+## [0.0.3-next.16](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.15...api-auth-entity-storage-service-v0.0.3-next.16) (2026-01-26)
 
 
 ### Miscellaneous Chores
@@ -192,7 +192,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.15 to 0.0.3-next.16
     * @twin.org/api-models bumped from 0.0.3-next.15 to 0.0.3-next.16
 
-## [0.0.3-next.15](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.14...api-auth-entity-storage-service-v0.0.3-next.15) (2026-01-22)
+## [0.0.3-next.15](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.14...api-auth-entity-storage-service-v0.0.3-next.15) (2026-01-22)
 
 
 ### Miscellaneous Chores
@@ -208,7 +208,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.14 to 0.0.3-next.15
     * @twin.org/api-models bumped from 0.0.3-next.14 to 0.0.3-next.15
 
-## [0.0.3-next.14](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.13...api-auth-entity-storage-service-v0.0.3-next.14) (2026-01-20)
+## [0.0.3-next.14](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.13...api-auth-entity-storage-service-v0.0.3-next.14) (2026-01-20)
 
 
 ### Miscellaneous Chores
@@ -224,7 +224,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.13 to 0.0.3-next.14
     * @twin.org/api-models bumped from 0.0.3-next.13 to 0.0.3-next.14
 
-## [0.0.3-next.13](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.12...api-auth-entity-storage-service-v0.0.3-next.13) (2026-01-19)
+## [0.0.3-next.13](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.12...api-auth-entity-storage-service-v0.0.3-next.13) (2026-01-19)
 
 
 ### Miscellaneous Chores
@@ -240,7 +240,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.12 to 0.0.3-next.13
     * @twin.org/api-models bumped from 0.0.3-next.12 to 0.0.3-next.13
 
-## [0.0.3-next.12](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.11...api-auth-entity-storage-service-v0.0.3-next.12) (2026-01-12)
+## [0.0.3-next.12](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.11...api-auth-entity-storage-service-v0.0.3-next.12) (2026-01-12)
 
 
 ### Miscellaneous Chores
@@ -256,7 +256,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.11 to 0.0.3-next.12
     * @twin.org/api-models bumped from 0.0.3-next.11 to 0.0.3-next.12
 
-## [0.0.3-next.11](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.10...api-auth-entity-storage-service-v0.0.3-next.11) (2026-01-08)
+## [0.0.3-next.11](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.10...api-auth-entity-storage-service-v0.0.3-next.11) (2026-01-08)
 
 
 ### Miscellaneous Chores
@@ -272,12 +272,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.10 to 0.0.3-next.11
     * @twin.org/api-models bumped from 0.0.3-next.10 to 0.0.3-next.11
 
-## [0.0.3-next.10](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.9...api-auth-entity-storage-service-v0.0.3-next.10) (2026-01-05)
+## [0.0.3-next.10](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.9...api-auth-entity-storage-service-v0.0.3-next.10) (2026-01-05)
 
 
 ### Bug Fixes
 
-* remove token from return payload ([eaa4266](https://github.com/twinfoundation/api/commit/eaa42661b8540881b0751f5d2513258b3413f3ef))
+* remove token from return payload ([eaa4266](https://github.com/iotaledger/twin-api/commit/eaa42661b8540881b0751f5d2513258b3413f3ef))
 
 
 ### Dependencies
@@ -288,30 +288,30 @@
     * @twin.org/api-core bumped from 0.0.3-next.9 to 0.0.3-next.10
     * @twin.org/api-models bumped from 0.0.3-next.9 to 0.0.3-next.10
 
-## [0.0.3-next.9](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.8...api-auth-entity-storage-service-v0.0.3-next.9) (2026-01-05)
+## [0.0.3-next.9](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.8...api-auth-entity-storage-service-v0.0.3-next.9) (2026-01-05)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* add livez endpoint ([#57](https://github.com/twinfoundation/api/issues/57)) ([ef007db](https://github.com/twinfoundation/api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
-* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* check tenant id in auth if set ([66f7337](https://github.com/twinfoundation/api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
-* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* modify authHeaderProcessor to retain token in response body ([#53](https://github.com/twinfoundation/api/issues/53)) ([5d9ae76](https://github.com/twinfoundation/api/commit/5d9ae76b5b52a8e10dac391b2d5784638a186583))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use new extractBearer method ([3e0cc54](https://github.com/twinfoundation/api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
-* use new extractBearerToken method ([df654e9](https://github.com/twinfoundation/api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* check tenant id in auth if set ([66f7337](https://github.com/iotaledger/twin-api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* modify authHeaderProcessor to retain token in response body ([#53](https://github.com/iotaledger/twin-api/issues/53)) ([5d9ae76](https://github.com/iotaledger/twin-api/commit/5d9ae76b5b52a8e10dac391b2d5784638a186583))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use new extractBearer method ([3e0cc54](https://github.com/iotaledger/twin-api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
+* use new extractBearerToken method ([df654e9](https://github.com/iotaledger/twin-api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Bug Fixes
 
-* include org in context ids from jwt ([a12cfdd](https://github.com/twinfoundation/api/commit/a12cfdddb05e2ed0300b26f3d7c0cfc033e59bd3))
+* include org in context ids from jwt ([a12cfdd](https://github.com/iotaledger/twin-api/commit/a12cfdddb05e2ed0300b26f3d7c0cfc033e59bd3))
 
 
 ### Dependencies
@@ -322,7 +322,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.8 to 0.0.3-next.9
     * @twin.org/api-models bumped from 0.0.3-next.8 to 0.0.3-next.9
 
-## [0.0.3-next.8](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.7...api-auth-entity-storage-service-v0.0.3-next.8) (2025-12-17)
+## [0.0.3-next.8](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.7...api-auth-entity-storage-service-v0.0.3-next.8) (2025-12-17)
 
 
 ### Miscellaneous Chores
@@ -338,7 +338,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.7 to 0.0.3-next.8
     * @twin.org/api-models bumped from 0.0.3-next.7 to 0.0.3-next.8
 
-## [0.0.3-next.7](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.6...api-auth-entity-storage-service-v0.0.3-next.7) (2025-11-26)
+## [0.0.3-next.7](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.6...api-auth-entity-storage-service-v0.0.3-next.7) (2025-11-26)
 
 
 ### Miscellaneous Chores
@@ -354,12 +354,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.6 to 0.0.3-next.7
     * @twin.org/api-models bumped from 0.0.3-next.6 to 0.0.3-next.7
 
-## [0.0.3-next.6](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.5...api-auth-entity-storage-service-v0.0.3-next.6) (2025-11-20)
+## [0.0.3-next.6](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.5...api-auth-entity-storage-service-v0.0.3-next.6) (2025-11-20)
 
 
 ### Features
 
-* check tenant id in auth if set ([66f7337](https://github.com/twinfoundation/api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
+* check tenant id in auth if set ([66f7337](https://github.com/iotaledger/twin-api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
 
 
 ### Dependencies
@@ -370,7 +370,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.5 to 0.0.3-next.6
     * @twin.org/api-models bumped from 0.0.3-next.5 to 0.0.3-next.6
 
-## [0.0.3-next.5](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.4...api-auth-entity-storage-service-v0.0.3-next.5) (2025-11-14)
+## [0.0.3-next.5](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.4...api-auth-entity-storage-service-v0.0.3-next.5) (2025-11-14)
 
 
 ### Miscellaneous Chores
@@ -386,27 +386,27 @@
     * @twin.org/api-core bumped from 0.0.3-next.4 to 0.0.3-next.5
     * @twin.org/api-models bumped from 0.0.3-next.4 to 0.0.3-next.5
 
-## [0.0.3-next.4](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.3...api-auth-entity-storage-service-v0.0.3-next.4) (2025-11-14)
+## [0.0.3-next.4](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.3...api-auth-entity-storage-service-v0.0.3-next.4) (2025-11-14)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use new extractBearer method ([3e0cc54](https://github.com/twinfoundation/api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
-* use new extractBearerToken method ([df654e9](https://github.com/twinfoundation/api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use new extractBearer method ([3e0cc54](https://github.com/iotaledger/twin-api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
+* use new extractBearerToken method ([df654e9](https://github.com/iotaledger/twin-api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Bug Fixes
 
-* include org in context ids from jwt ([a12cfdd](https://github.com/twinfoundation/api/commit/a12cfdddb05e2ed0300b26f3d7c0cfc033e59bd3))
+* include org in context ids from jwt ([a12cfdd](https://github.com/iotaledger/twin-api/commit/a12cfdddb05e2ed0300b26f3d7c0cfc033e59bd3))
 
 
 ### Dependencies
@@ -417,12 +417,12 @@
     * @twin.org/api-core bumped from 0.0.3-next.3 to 0.0.3-next.4
     * @twin.org/api-models bumped from 0.0.3-next.3 to 0.0.3-next.4
 
-## [0.0.3-next.3](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.2...api-auth-entity-storage-service-v0.0.3-next.3) (2025-11-14)
+## [0.0.3-next.3](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.2...api-auth-entity-storage-service-v0.0.3-next.3) (2025-11-14)
 
 
 ### Bug Fixes
 
-* include org in context ids from jwt ([a12cfdd](https://github.com/twinfoundation/api/commit/a12cfdddb05e2ed0300b26f3d7c0cfc033e59bd3))
+* include org in context ids from jwt ([a12cfdd](https://github.com/iotaledger/twin-api/commit/a12cfdddb05e2ed0300b26f3d7c0cfc033e59bd3))
 
 
 ### Dependencies
@@ -433,7 +433,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.2 to 0.0.3-next.3
     * @twin.org/api-models bumped from 0.0.3-next.2 to 0.0.3-next.3
 
-## [0.0.3-next.2](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.1...api-auth-entity-storage-service-v0.0.3-next.2) (2025-11-12)
+## [0.0.3-next.2](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.1...api-auth-entity-storage-service-v0.0.3-next.2) (2025-11-12)
 
 
 ### Miscellaneous Chores
@@ -449,22 +449,22 @@
     * @twin.org/api-core bumped from 0.0.3-next.1 to 0.0.3-next.2
     * @twin.org/api-models bumped from 0.0.3-next.1 to 0.0.3-next.2
 
-## [0.0.3-next.1](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.3-next.0...api-auth-entity-storage-service-v0.0.3-next.1) (2025-11-10)
+## [0.0.3-next.1](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.0...api-auth-entity-storage-service-v0.0.3-next.1) (2025-11-10)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/twinfoundation/api/issues/42)) ([0186055](https://github.com/twinfoundation/api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use new extractBearer method ([3e0cc54](https://github.com/twinfoundation/api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
-* use new extractBearerToken method ([df654e9](https://github.com/twinfoundation/api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use new extractBearer method ([3e0cc54](https://github.com/iotaledger/twin-api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
+* use new extractBearerToken method ([df654e9](https://github.com/iotaledger/twin-api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -475,7 +475,7 @@
     * @twin.org/api-core bumped from 0.0.3-next.0 to 0.0.3-next.1
     * @twin.org/api-models bumped from 0.0.3-next.0 to 0.0.3-next.1
 
-## [0.0.2-next.13](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.12...api-auth-entity-storage-service-v0.0.2-next.13) (2025-10-09)
+## [0.0.2-next.13](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.12...api-auth-entity-storage-service-v0.0.2-next.13) (2025-10-09)
 
 
 ### Miscellaneous Chores
@@ -491,12 +491,12 @@
     * @twin.org/api-core bumped from 0.0.2-next.12 to 0.0.2-next.13
     * @twin.org/api-models bumped from 0.0.2-next.12 to 0.0.2-next.13
 
-## [0.0.2-next.12](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.11...api-auth-entity-storage-service-v0.0.2-next.12) (2025-10-09)
+## [0.0.2-next.12](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.11...api-auth-entity-storage-service-v0.0.2-next.12) (2025-10-09)
 
 
 ### Features
 
-* add validate-locales ([cdba610](https://github.com/twinfoundation/api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
 
 
 ### Dependencies
@@ -507,12 +507,12 @@
     * @twin.org/api-core bumped from 0.0.2-next.11 to 0.0.2-next.12
     * @twin.org/api-models bumped from 0.0.2-next.11 to 0.0.2-next.12
 
-## [0.0.2-next.11](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.10...api-auth-entity-storage-service-v0.0.2-next.11) (2025-09-29)
+## [0.0.2-next.11](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.10...api-auth-entity-storage-service-v0.0.2-next.11) (2025-09-29)
 
 
 ### Features
 
-* update IComponent signatures ([915ce37](https://github.com/twinfoundation/api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
 
 
 ### Dependencies
@@ -523,13 +523,13 @@
     * @twin.org/api-core bumped from 0.0.2-next.10 to 0.0.2-next.11
     * @twin.org/api-models bumped from 0.0.2-next.10 to 0.0.2-next.11
 
-## [0.0.2-next.10](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.9...api-auth-entity-storage-service-v0.0.2-next.10) (2025-09-23)
+## [0.0.2-next.10](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.9...api-auth-entity-storage-service-v0.0.2-next.10) (2025-09-23)
 
 
 ### Features
 
-* use new extractBearer method ([3e0cc54](https://github.com/twinfoundation/api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
-* use new extractBearerToken method ([df654e9](https://github.com/twinfoundation/api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
+* use new extractBearer method ([3e0cc54](https://github.com/iotaledger/twin-api/commit/3e0cc5462c06f59a6b744386eeff8326e5abbc95))
+* use new extractBearerToken method ([df654e9](https://github.com/iotaledger/twin-api/commit/df654e9caee5bd62f0be36f7be9902c8fab6ead6))
 
 
 ### Dependencies
@@ -540,12 +540,12 @@
     * @twin.org/api-core bumped from 0.0.2-next.9 to 0.0.2-next.10
     * @twin.org/api-models bumped from 0.0.2-next.9 to 0.0.2-next.10
 
-## [0.0.2-next.9](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.8...api-auth-entity-storage-service-v0.0.2-next.9) (2025-08-29)
+## [0.0.2-next.9](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.8...api-auth-entity-storage-service-v0.0.2-next.9) (2025-08-29)
 
 
 ### Features
 
-* eslint migration to flat config ([0dd5820](https://github.com/twinfoundation/api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
 
 
 ### Dependencies
@@ -556,7 +556,7 @@
     * @twin.org/api-core bumped from 0.0.2-next.8 to 0.0.2-next.9
     * @twin.org/api-models bumped from 0.0.2-next.8 to 0.0.2-next.9
 
-## [0.0.2-next.8](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.7...api-auth-entity-storage-service-v0.0.2-next.8) (2025-08-21)
+## [0.0.2-next.8](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.7...api-auth-entity-storage-service-v0.0.2-next.8) (2025-08-21)
 
 
 ### Miscellaneous Chores
@@ -572,7 +572,7 @@
     * @twin.org/api-core bumped from 0.0.2-next.7 to 0.0.2-next.8
     * @twin.org/api-models bumped from 0.0.2-next.7 to 0.0.2-next.8
 
-## [0.0.2-next.7](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.6...api-auth-entity-storage-service-v0.0.2-next.7) (2025-08-20)
+## [0.0.2-next.7](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.6...api-auth-entity-storage-service-v0.0.2-next.7) (2025-08-20)
 
 
 ### Miscellaneous Chores
@@ -588,12 +588,12 @@
     * @twin.org/api-core bumped from 0.0.2-next.6 to 0.0.2-next.7
     * @twin.org/api-models bumped from 0.0.2-next.6 to 0.0.2-next.7
 
-## [0.0.2-next.6](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.5...api-auth-entity-storage-service-v0.0.2-next.6) (2025-08-19)
+## [0.0.2-next.6](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.5...api-auth-entity-storage-service-v0.0.2-next.6) (2025-08-19)
 
 
 ### Features
 
-* update framework core ([d8eebf2](https://github.com/twinfoundation/api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
 
 
 ### Dependencies
@@ -604,15 +604,15 @@
     * @twin.org/api-core bumped from 0.0.2-next.5 to 0.0.2-next.6
     * @twin.org/api-models bumped from 0.0.2-next.5 to 0.0.2-next.6
 
-## [0.0.2-next.5](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.4...api-auth-entity-storage-service-v0.0.2-next.5) (2025-07-25)
+## [0.0.2-next.5](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.4...api-auth-entity-storage-service-v0.0.2-next.5) (2025-07-25)
 
 
 ### Features
 
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -623,7 +623,7 @@
     * @twin.org/api-core bumped from 0.0.2-next.4 to 0.0.2-next.5
     * @twin.org/api-models bumped from 0.0.2-next.4 to 0.0.2-next.5
 
-## [0.0.2-next.4](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.3...api-auth-entity-storage-service-v0.0.2-next.4) (2025-07-25)
+## [0.0.2-next.4](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.3...api-auth-entity-storage-service-v0.0.2-next.4) (2025-07-25)
 
 
 ### Miscellaneous Chores
@@ -639,12 +639,12 @@
     * @twin.org/api-core bumped from 0.0.2-next.3 to 0.0.2-next.4
     * @twin.org/api-models bumped from 0.0.2-next.3 to 0.0.2-next.4
 
-## [0.0.2-next.3](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.2...api-auth-entity-storage-service-v0.0.2-next.3) (2025-07-24)
+## [0.0.2-next.3](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.2...api-auth-entity-storage-service-v0.0.2-next.3) (2025-07-24)
 
 
 ### Features
 
-* remove unused namespace ([08478f2](https://github.com/twinfoundation/api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
 
 
 ### Dependencies
@@ -655,7 +655,7 @@
     * @twin.org/api-core bumped from 0.0.2-next.2 to 0.0.2-next.3
     * @twin.org/api-models bumped from 0.0.2-next.2 to 0.0.2-next.3
 
-## [0.0.2-next.2](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.1...api-auth-entity-storage-service-v0.0.2-next.2) (2025-07-17)
+## [0.0.2-next.2](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.1...api-auth-entity-storage-service-v0.0.2-next.2) (2025-07-17)
 
 
 ### Miscellaneous Chores
@@ -671,14 +671,14 @@
     * @twin.org/api-core bumped from 0.0.2-next.1 to 0.0.2-next.2
     * @twin.org/api-models bumped from 0.0.2-next.1 to 0.0.2-next.2
 
-## [0.0.2-next.1](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.2-next.0...api-auth-entity-storage-service-v0.0.2-next.1) (2025-07-08)
+## [0.0.2-next.1](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.2-next.0...api-auth-entity-storage-service-v0.0.2-next.1) (2025-07-08)
 
 
 ### Features
 
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/twinfoundation/api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -694,7 +694,7 @@
 
 ### Features
 
-* release to production ([70ee2d5](https://github.com/twinfoundation/api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
 
 
 ### Dependencies
@@ -705,7 +705,7 @@
     * @twin.org/api-core bumped from ^0.0.0 to ^0.0.1
     * @twin.org/api-models bumped from ^0.0.0 to ^0.0.1
 
-## [0.0.1-next.36](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.1-next.35...api-auth-entity-storage-service-v0.0.1-next.36) (2025-06-17)
+## [0.0.1-next.36](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.1-next.35...api-auth-entity-storage-service-v0.0.1-next.36) (2025-06-17)
 
 
 ### Miscellaneous Chores
@@ -721,12 +721,12 @@
     * @twin.org/api-core bumped from 0.0.1-next.35 to 0.0.1-next.36
     * @twin.org/api-models bumped from 0.0.1-next.35 to 0.0.1-next.36
 
-## [0.0.1-next.35](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.1-next.34...api-auth-entity-storage-service-v0.0.1-next.35) (2025-06-11)
+## [0.0.1-next.35](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.1-next.34...api-auth-entity-storage-service-v0.0.1-next.35) (2025-06-11)
 
 
 ### Features
 
-* update dependencies ([1171dc4](https://github.com/twinfoundation/api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
 
 
 ### Dependencies
@@ -737,7 +737,7 @@
     * @twin.org/api-core bumped from 0.0.1-next.34 to 0.0.1-next.35
     * @twin.org/api-models bumped from 0.0.1-next.34 to 0.0.1-next.35
 
-## [0.0.1-next.34](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.1-next.33...api-auth-entity-storage-service-v0.0.1-next.34) (2025-05-27)
+## [0.0.1-next.34](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.1-next.33...api-auth-entity-storage-service-v0.0.1-next.34) (2025-05-27)
 
 
 ### Miscellaneous Chores
@@ -753,12 +753,12 @@
     * @twin.org/api-core bumped from 0.0.1-next.33 to 0.0.1-next.34
     * @twin.org/api-models bumped from 0.0.1-next.33 to 0.0.1-next.34
 
-## [0.0.1-next.33](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.1-next.32...api-auth-entity-storage-service-v0.0.1-next.33) (2025-04-17)
+## [0.0.1-next.33](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.1-next.32...api-auth-entity-storage-service-v0.0.1-next.33) (2025-04-17)
 
 
 ### Features
 
-* use shared store mechanism ([#19](https://github.com/twinfoundation/api/issues/19)) ([32116df](https://github.com/twinfoundation/api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -769,7 +769,7 @@
     * @twin.org/api-core bumped from 0.0.1-next.32 to 0.0.1-next.33
     * @twin.org/api-models bumped from 0.0.1-next.32 to 0.0.1-next.33
 
-## [0.0.1-next.32](https://github.com/twinfoundation/api/compare/api-auth-entity-storage-service-v0.0.1-next.31...api-auth-entity-storage-service-v0.0.1-next.32) (2025-03-28)
+## [0.0.1-next.32](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.1-next.31...api-auth-entity-storage-service-v0.0.1-next.32) (2025-03-28)
 
 
 ### Miscellaneous Chores
