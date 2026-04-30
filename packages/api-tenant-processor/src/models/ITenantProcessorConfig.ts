@@ -10,4 +10,16 @@ export interface ITenantProcessorConfig {
 	 * @default x-api-key
 	 */
 	apiKeyName?: string;
+
+	/**
+	 * The name of the symmetric key in the vault used to encrypt/decrypt tenant tokens.
+	 * @default tenant-token-encryption
+	 */
+	signingKeyName?: string;
+
+	/**
+	 * The query param name to look for the encrypted tenant token.
+	 * @default tenantToken
+	 */
+	tenantTokenName?: string;
 }

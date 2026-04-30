@@ -30,6 +30,16 @@ export abstract class BaseRestClient {
 	private readonly _endpointWithPrefix: string;
 
 	/**
+	 * Query parameters parsed from the configured endpoint URL. Preserved on every
+	 * outbound request so that callers using endpoints like
+	 * `https://host?tenantToken=…` (e.g. multi-tenant DSP/PNP callbacks built via
+	 * `TenantUrlHelper.encrypt`) don't lose routing data when the route+query are
+	 * appended to the base URL.
+	 * @internal
+	 */
+	private readonly _endpointQuery: IKeyValue<string>[];
+
+	/**
 	 * The headers to include in requests.
 	 * @internal
 	 */
@@ -63,7 +73,24 @@ export abstract class BaseRestClient {
 		this._includeCredentials = config.includeCredentials ?? true;
 
 		this._implementationName = implementationName;
-		this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
+
+		// Parse the endpoint as a URL so any query string the caller embedded is preserved
+		// rather than concatenated as part of the path.
+		this._endpointQuery = [];
+		let parsedEndpoint: URL | undefined;
+		try {
+			parsedEndpoint = new URL(config.endpoint);
+		} catch {}
+
+		if (Is.empty(parsedEndpoint)) {
+			this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
+		} else {
+			for (const [key, value] of parsedEndpoint.searchParams.entries()) {
+				this._endpointQuery.push({ key, value });
+			}
+			parsedEndpoint.search = "";
+			this._endpointWithPrefix = StringHelper.trimTrailingSlashes(parsedEndpoint.toString());
+		}
 
 		const finalPathPrefix = config.pathPrefix ?? pathPrefix;
 		if (Is.stringValue(finalPathPrefix)) {
@@ -114,7 +141,9 @@ export abstract class BaseRestClient {
 			}
 		}
 
-		const queryKeyPairs: IKeyValue<string>[] = [];
+		// Preserve endpoint-level query params (parsed once in the constructor)
+		// alongside any per-request query params.
+		const queryKeyPairs: IKeyValue<string>[] = [...this._endpointQuery];
 
 		const isHttpRequest = Is.notEmpty(request);
 
