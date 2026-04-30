@@ -18,6 +18,21 @@ tenant
 
 ***
 
+### vaultConnectorType? {#vaultconnectortype}
+
+> `optional` **vaultConnectorType?**: `string`
+
+The vault connector used to decrypt tenant tokens. Only resolved when
+`config.signingKeyName` is set.
+
+#### Default
+
+```ts
+vault
+```
+
+***
+
 ### config? {#config}
 
 > `optional` **config?**: [`ITenantProcessorConfig`](ITenantProcessorConfig.md)

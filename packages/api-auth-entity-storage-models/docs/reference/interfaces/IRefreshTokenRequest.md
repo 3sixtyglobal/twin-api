@@ -4,9 +4,9 @@ Perform a refresh of the auth token.
 
 ## Properties
 
-### query? {#query}
+### body? {#body}
 
-> `optional` **query?**: `object`
+> `optional` **body?**: `object`
 
 The refresh token details.
 
