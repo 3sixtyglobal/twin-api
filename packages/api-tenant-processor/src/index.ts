@@ -20,3 +20,4 @@ export * from "./tenantIdContextIdHandler.js";
 export * from "./tenantProcessor.js";
 export * from "./tenantRoutes.js";
 export * from "./utils/tenantIdHelper.js";
+export * from "./utils/tenantUrlHelper.js";

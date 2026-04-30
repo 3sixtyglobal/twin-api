@@ -2,7 +2,13 @@
 	"error": {
 		"tenantProcessor": {
 			"missingApiKey": "API key header or query param \"{keyName}\" is missing or invalid.",
-			"apiKeyNotFound": "No node tenant found for API key \"{key}\"."
+			"apiKeyNotFound": "No node tenant found for API key \"{key}\".",
+			"tenantTokenInvalid": "The tenant token \"{token}\" could not be decrypted or is malformed.",
+			"tenantTokenNotFound": "No node tenant found for the decrypted tenant token \"{tenantId}\"."
+		},
+		"tenantUrlHelper": {
+			"encryptFailed": "Encryption of tenant URL token failed.",
+			"decryptFailed": "Decryption of tenant URL token failed."
 		},
 		"tenantAdminService": {
 			"apiKeyAlreadyInUse": "The provided API key is already in use by another tenant.",

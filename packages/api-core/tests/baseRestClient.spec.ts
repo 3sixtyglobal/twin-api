@@ -103,4 +103,50 @@ describe("BaseRestClient", () => {
 		const [, fetchOptions] = fetchMock.mock.calls[0];
 		expect(fetchOptions.headers[HeaderTypes.Accept]).toBe(MimeTypes.Json);
 	});
+
+	test("query string in endpoint URL is preserved on every outgoing request", async () => {
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.ok,
+			headers: new Headers({
+				[HeaderTypes.ContentType]: MimeTypes.Json
+			}),
+			json: async () => ({ success: true })
+		});
+
+		const client = new TestRestClient({
+			endpoint: "http://localhost:8080?tenantToken=abc123"
+		});
+
+		await client.fetch<IHttpRequest, IHttpResponse>("/resource", "GET");
+
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+		const [outgoingUrl] = fetchMock.mock.calls[0];
+		expect(outgoingUrl).toBe("http://localhost:8080/test-prefix/resource?tenantToken=abc123");
+	});
+
+	test("endpoint query params are merged with per-request query params", async () => {
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.ok,
+			headers: new Headers({
+				[HeaderTypes.ContentType]: MimeTypes.Json
+			}),
+			json: async () => ({ success: true })
+		});
+
+		const client = new TestRestClient({
+			endpoint: "http://localhost:8080?tenantToken=abc123"
+		});
+
+		await client.fetch<IHttpRequest, IHttpResponse>("/resource", "GET", {
+			query: { page: "2" }
+		});
+
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+		const [outgoingUrl] = fetchMock.mock.calls[0];
+		expect(outgoingUrl).toBe(
+			"http://localhost:8080/test-prefix/resource?tenantToken=abc123&page=2"
+		);
+	});
 });
