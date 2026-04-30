@@ -100,8 +100,8 @@ export class EntityStorageAuthenticationRestClient
 	 * @returns Nothing.
 	 */
 	public async logout(token?: string): Promise<void> {
-		await this.fetch<ILogoutRequest, INoContentResponse>("/logout", "GET", {
-			query: {
+		await this.fetch<ILogoutRequest, INoContentResponse>("/logout", "POST", {
+			body: {
 				token
 			}
 		});
@@ -118,9 +118,9 @@ export class EntityStorageAuthenticationRestClient
 	}> {
 		const response = await this.fetch<IRefreshTokenRequest, IRefreshTokenResponse>(
 			"/refresh",
-			"GET",
+			"POST",
 			{
-				query: {
+				body: {
 					token
 				}
 			}

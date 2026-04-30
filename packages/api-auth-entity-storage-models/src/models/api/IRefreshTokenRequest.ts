@@ -8,7 +8,7 @@ export interface IRefreshTokenRequest {
 	/**
 	 * The refresh token details.
 	 */
-	query?: {
+	body?: {
 		/**
 		 * The token to refresh, if it uses a mechanism with public access.
 		 */
