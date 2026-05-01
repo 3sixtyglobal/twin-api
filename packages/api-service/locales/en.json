@@ -1,1 +1,10 @@
-{}
+{
+	"error": {
+		"hostingService": {
+			"encryptionUnavailable": "Encryption is unavailable because no vault connector is configured",
+			"decryptionUnavailable": "Decryption is unavailable because no vault connector is configured",
+			"encryptionFailed": "An error occurred during encryption",
+			"decryptionFailed": "An error occurred during decryption"
+		}
+	}
+}

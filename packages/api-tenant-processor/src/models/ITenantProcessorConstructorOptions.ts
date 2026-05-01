@@ -13,11 +13,10 @@ export interface ITenantProcessorConstructorOptions {
 	tenantEntityStorageType?: string;
 
 	/**
-	 * The vault connector used to decrypt tenant tokens. Only resolved when
-	 * `config.signingKeyName` is set.
-	 * @default vault
+	 * The hosting component for the tenants.
+	 * @default hosting
 	 */
-	vaultConnectorType?: string;
+	hostingComponentType?: string;
 
 	/**
 	 * Configuration for the processor.

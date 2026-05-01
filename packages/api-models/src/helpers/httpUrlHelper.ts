@@ -70,6 +70,20 @@ export class HttpUrlHelper {
 	}
 
 	/**
+	 * Encode a single URL path segment per RFC 3986 §3.3.
+	 * Unlike encodeURIComponent, sub-delimiters ($ & + , ; =) and the colon and
+	 * at-sign characters that are valid unencoded in path segments are preserved.
+	 * @see https://datatracker.ietf.org/doc/html/rfc3986#section-3.3
+	 * @param segment The raw path segment value to encode.
+	 * @returns The percent-encoded path segment.
+	 */
+	public static encodeUriPathSegment(segment: string): string {
+		// RFC 3986 §3.3: only encode characters outside the allowed path segment set.
+		// Allowed: unreserved (A-Za-z0-9 - . _ ~), sub-delimiters (! $ & ' ( ) * + , ; =), and : @
+		return segment.replace(/[^\w!$&'()*+,.:;=@~-]/g, ch => encodeURIComponent(ch));
+	}
+
+	/**
 	 * Replace the origin in the url.
 	 * @param url The url to replace the origin in.
 	 * @param newOrigin The new origin to use.

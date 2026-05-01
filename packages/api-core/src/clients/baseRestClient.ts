@@ -1,7 +1,16 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IBaseRestClientConfig, IHttpRequest, IHttpResponse } from "@twin.org/api-models";
-import { BaseError, Coerce, Guards, Is, StringHelper, type IKeyValue } from "@twin.org/core";
+import { HttpUrlHelper } from "@twin.org/api-models";
+import {
+	BaseError,
+	Coerce,
+	Guards,
+	type IError,
+	Is,
+	StringHelper,
+	type IKeyValue
+} from "@twin.org/core";
 import { nameof, nameofCamelCase } from "@twin.org/nameof";
 import {
 	FetchError,
@@ -32,8 +41,7 @@ export abstract class BaseRestClient {
 	/**
 	 * Query parameters parsed from the configured endpoint URL. Preserved on every
 	 * outbound request so that callers using endpoints like
-	 * `https://host?tenantToken=…` (e.g. multi-tenant DSP/PNP callbacks built via
-	 * `TenantUrlHelper.encrypt`) don't lose routing data when the route+query are
+	 * `https://host?tenant-token=…` don't lose routing data when the route+query are
 	 * appended to the base URL.
 	 * @internal
 	 */
@@ -56,6 +64,24 @@ export abstract class BaseRestClient {
 	 * @internal
 	 */
 	private readonly _includeCredentials: boolean;
+
+	/**
+	 * Hook to provide headers asynchronously.
+	 * @internal
+	 */
+	private readonly _customHeaders?: () => Promise<IHttpHeaders>;
+
+	/**
+	 * Hook to provide auth header asynchronously.
+	 * @internal
+	 */
+	private readonly _customAuthHeader?: () => Promise<string>;
+
+	/**
+	 * Hook to handle authorization failures asynchronously.
+	 * @internal
+	 */
+	private readonly _onAuthFailure?: (error: IError) => Promise<void>;
 
 	/**
 	 * Create a new instance of BaseRestClient.
@@ -96,6 +122,10 @@ export abstract class BaseRestClient {
 		if (Is.stringValue(finalPathPrefix)) {
 			this._endpointWithPrefix += `/${finalPathPrefix}`;
 		}
+
+		this._customAuthHeader = config.customAuthHeader;
+		this._customHeaders = config.customHeaders;
+		this._onAuthFailure = config.onAuthFailure;
 	}
 
 	/**
@@ -153,6 +183,10 @@ export abstract class BaseRestClient {
 				for (const qp in query) {
 					const propValue = query[qp];
 					if (Is.stringValue(propValue) || Is.number(propValue) || Is.boolean(propValue)) {
+						const ids = queryKeyPairs.findIndex(q => q.key === qp);
+						if (ids !== -1) {
+							queryKeyPairs.splice(ids, 1);
+						}
 						queryKeyPairs.push({
 							key: qp,
 							value: propValue.toString()
@@ -163,7 +197,7 @@ export abstract class BaseRestClient {
 			}
 		}
 
-		let finalRoute = routeParts.map(rp => encodeURIComponent(rp)).join("/");
+		let finalRoute = routeParts.map(rp => HttpUrlHelper.encodeUriPathSegment(rp)).join("/");
 		if (finalRoute === "/") {
 			finalRoute = "";
 		}
@@ -187,6 +221,20 @@ export abstract class BaseRestClient {
 
 		if (Is.object(request?.headers)) {
 			requestHeaders = { ...requestHeaders, ...request.headers };
+		}
+
+		if (Is.function(this._customHeaders)) {
+			const customHeaders = await this._customHeaders();
+			if (Is.object(customHeaders)) {
+				requestHeaders = { ...requestHeaders, ...customHeaders };
+			}
+		}
+
+		if (Is.function(this._customAuthHeader)) {
+			const authHeader = await this._customAuthHeader();
+			if (Is.stringValue(authHeader)) {
+				requestHeaders[HeaderTypes.Authorization] = authHeader;
+			}
 		}
 
 		const response = await FetchHelper.fetch(
@@ -283,6 +331,15 @@ export abstract class BaseRestClient {
 				response: errResponse
 			}
 		);
+
+		if (response.status === HttpStatusCode.unauthorized && Is.function(this._onAuthFailure)) {
+			try {
+				await this._onAuthFailure(err);
+			} catch {
+				// Silently ignore errors from the auth failure handler as we want to throw the original error
+				// in this case to preserve the original failure context for logging and handling by callers
+			}
+		}
 
 		throw err;
 	}

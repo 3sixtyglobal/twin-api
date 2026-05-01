@@ -14,4 +14,16 @@ export interface IHostingServiceConfig {
 	 * The APIs public base URL e.g. "https://api.example.com:1234".
 	 */
 	publicOrigin?: string;
+
+	/**
+	 * The name of the key to retrieve from the vault for encryption/decryption of parameters.
+	 * @default param-encryption
+	 */
+	paramEncryptionKeyName?: string;
+
+	/**
+	 * The query param name to look for the encrypted tenant token.
+	 * @default tenant-token
+	 */
+	tenantTokenName?: string;
 }

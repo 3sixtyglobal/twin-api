@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IError } from "@twin.org/core";
 import type { IHttpHeaders } from "@twin.org/web";
 
 /**
@@ -30,4 +31,22 @@ export interface IBaseRestClientConfig {
 	 * Include credentials in the request, defaults to true.
 	 */
 	includeCredentials?: boolean;
+
+	/**
+	 * Hook to provide headers asynchronously.
+	 * @returns A promise that resolves to the headers.
+	 */
+	customHeaders?: () => Promise<IHttpHeaders>;
+
+	/**
+	 * Hook to provide an authorization header value asynchronously.
+	 * @returns A promise that resolves to the authorization header value.
+	 */
+	customAuthHeader?: () => Promise<string>;
+
+	/**
+	 * Hook to handle authorization failures asynchronously.
+	 * @returns A promise that resolves when the auth failure handling is complete.
+	 */
+	onAuthFailure?: (err: IError) => Promise<void>;
 }

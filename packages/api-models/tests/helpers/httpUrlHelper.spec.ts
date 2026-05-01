@@ -77,6 +77,36 @@ describe("HttpUrlHelper", () => {
 		});
 	});
 
+	describe("encodeUriPathSegment", () => {
+		it("should not encode colon", () => {
+			expect(HttpUrlHelper.encodeUriPathSegment("urn:example:123")).toBe("urn:example:123");
+		});
+
+		it("should not encode at-sign", () => {
+			expect(HttpUrlHelper.encodeUriPathSegment("user@domain")).toBe("user@domain");
+		});
+
+		it("should not encode sub-delimiters", () => {
+			expect(HttpUrlHelper.encodeUriPathSegment("a$b&c+d,e;f=g")).toBe("a$b&c+d,e;f=g");
+		});
+
+		it("should percent-encode space", () => {
+			expect(HttpUrlHelper.encodeUriPathSegment("hello world")).toBe("hello%20world");
+		});
+
+		it("should percent-encode question mark", () => {
+			expect(HttpUrlHelper.encodeUriPathSegment("foo?bar")).toBe("foo%3Fbar");
+		});
+
+		it("should percent-encode hash", () => {
+			expect(HttpUrlHelper.encodeUriPathSegment("foo#bar")).toBe("foo%23bar");
+		});
+
+		it("should leave unreserved characters unchanged", () => {
+			expect(HttpUrlHelper.encodeUriPathSegment("abc-._~123")).toBe("abc-._~123");
+		});
+	});
+
 	describe("replaceOrigin", () => {
 		it("should return the original url when inputs are not valid", () => {
 			expect(

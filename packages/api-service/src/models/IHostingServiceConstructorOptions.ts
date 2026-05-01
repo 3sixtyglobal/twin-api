@@ -13,6 +13,12 @@ export interface IHostingServiceConstructorOptions {
 	tenantAdminComponentType?: string;
 
 	/**
+	 * The vault connector type.
+	 * @default vault
+	 */
+	vaultConnectorType?: string;
+
+	/**
 	 * The configuration for the service.
 	 */
 	config: IHostingServiceConfig;

@@ -9,7 +9,7 @@ import { io } from "socket.io-client";
 import { FastifyWebServer } from "../src/fastifyWebServer.js";
 
 const basePort = Math.floor(Math.random() * 1000);
-let port = 3000 + basePort;
+let port = 13000 + basePort;
 
 describe("api-server-fastify", () => {
 	beforeEach(async () => {
