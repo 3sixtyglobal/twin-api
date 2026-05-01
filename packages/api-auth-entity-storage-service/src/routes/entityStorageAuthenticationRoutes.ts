@@ -95,7 +95,7 @@ export function generateRestRoutesAuthentication(
 		operationId: "authenticationLogout",
 		summary: "Logout from the server",
 		tag: tagsAuthentication[0].name,
-		method: "GET",
+		method: "POST",
 		path: `${baseRouteName}/logout`,
 		handler: async (httpRequestContext, request) =>
 			authenticationLogout(httpRequestContext, componentName, request),
@@ -106,7 +106,7 @@ export function generateRestRoutesAuthentication(
 					id: "logoutRequestExample",
 					description: "The request to logout from the server.",
 					request: {
-						query: {
+						body: {
 							token: "eyJhbGciOiJIU...sw5c"
 						}
 					}
@@ -125,7 +125,7 @@ export function generateRestRoutesAuthentication(
 		operationId: "authenticationRefreshToken",
 		summary: "Refresh an authentication token",
 		tag: tagsAuthentication[0].name,
-		method: "GET",
+		method: "POST",
 		path: `${baseRouteName}/refresh`,
 		handler: async (httpRequestContext, request) =>
 			authenticationRefreshToken(httpRequestContext, componentName, request),
@@ -136,7 +136,7 @@ export function generateRestRoutesAuthentication(
 					id: "refreshTokenRequestExample",
 					description: "The request to refresh an auth token.",
 					request: {
-						query: {
+						body: {
 							token: "eyJhbGciOiJIU...sw5c"
 						}
 					}
@@ -245,7 +245,7 @@ export async function authenticationLogout(
 	Guards.object<ILogoutRequest>(ROUTES_SOURCE, nameof(request), request);
 
 	const component = ComponentFactory.get<IAuthenticationComponent>(componentName);
-	await component.logout(request.query?.token);
+	await component.logout(request.body?.token);
 
 	// Need to give a hint to any auth processors about the operation
 	// in case they need to manipulate the response
@@ -272,9 +272,9 @@ export async function authenticationRefreshToken(
 
 	const component = ComponentFactory.get<IAuthenticationComponent>(componentName);
 
-	// If the token is not in the query, then maybe an auth processor has extracted it
+	// If the token is not in the body, then maybe an auth processor has extracted it
 	// and stored it in the processor state
-	const token = request.query?.token ?? (httpRequestContext.processorState.authToken as string);
+	const token = request.body?.token ?? (httpRequestContext.processorState.authToken as string);
 	const result = await component.refresh(token);
 
 	// Need to give a hint to any auth processors about the operation

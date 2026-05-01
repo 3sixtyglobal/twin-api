@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.28](https://github.com/twinfoundation/twin-api/compare/api-core-v0.0.3-next.27...api-core-v0.0.3-next.28) (2026-04-30)
+
+
+### Features
+
+* tenantToken decoder on skipTenant routes + BaseRestClient query-string preservation ([#108](https://github.com/twinfoundation/twin-api/issues/108)) ([1435357](https://github.com/twinfoundation/twin-api/commit/1435357034b41130fc97238c728265e48f746f1e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.27 to 0.0.3-next.28
+
 ## [0.0.3-next.27](https://github.com/iotaledger/twin-api/compare/api-core-v0.0.3-next.26...api-core-v0.0.3-next.27) (2026-04-23)
 
 

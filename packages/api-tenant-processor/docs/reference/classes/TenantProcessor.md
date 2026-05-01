@@ -54,6 +54,34 @@ The class name of the component.
 
 ***
 
+### start() {#start}
+
+> **start**(`nodeLoggingComponentType?`): `Promise`\<`void`\>
+
+The processor needs to be started when the application is initialized so that
+the node identity is available for vault key resolution. Only required when
+the encrypted-token path is wired (i.e. `signingKeyName` is configured).
+
+#### Parameters
+
+##### nodeLoggingComponentType?
+
+`string`
+
+The node logging component type.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IBaseRouteProcessor.start`
+
+***
+
 ### pre() {#pre}
 
 > **pre**(`request`, `response`, `route`, `contextIds`, `processorState`): `Promise`\<`void`\>

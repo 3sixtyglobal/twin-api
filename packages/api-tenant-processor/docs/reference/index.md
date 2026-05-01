@@ -7,6 +7,7 @@
 - [TenantIdContextIdHandler](classes/TenantIdContextIdHandler.md)
 - [TenantProcessor](classes/TenantProcessor.md)
 - [TenantIdHelper](classes/TenantIdHelper.md)
+- [TenantUrlHelper](classes/TenantUrlHelper.md)
 
 ## Interfaces
 

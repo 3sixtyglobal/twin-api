@@ -19,7 +19,7 @@ const loginRequest: ILoginRequest = {
 };
 
 const refreshRequest: IRefreshTokenRequest = {
-  query: {
+  body: {
     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh'
   }
 };
