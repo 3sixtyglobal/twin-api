@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.29](https://github.com/twinfoundation/twin-api/compare/api-models-v0.0.3-next.28...api-models-v0.0.3-next.29) (2026-05-01)
+
+
+### Features
+
+* hosting service ([#109](https://github.com/twinfoundation/twin-api/issues/109)) ([985bf1f](https://github.com/twinfoundation/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+
 ## [0.0.3-next.28](https://github.com/twinfoundation/twin-api/compare/api-models-v0.0.3-next.27...api-models-v0.0.3-next.28) (2026-04-30)
 
 
