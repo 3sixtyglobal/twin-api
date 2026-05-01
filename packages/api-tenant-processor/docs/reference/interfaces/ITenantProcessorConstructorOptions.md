@@ -18,17 +18,16 @@ tenant
 
 ***
 
-### vaultConnectorType? {#vaultconnectortype}
+### hostingComponentType? {#hostingcomponenttype}
 
-> `optional` **vaultConnectorType?**: `string`
+> `optional` **hostingComponentType?**: `string`
 
-The vault connector used to decrypt tenant tokens. Only resolved when
-`config.signingKeyName` is set.
+The hosting component for the tenants.
 
 #### Default
 
 ```ts
-vault
+hosting
 ```
 
 ***

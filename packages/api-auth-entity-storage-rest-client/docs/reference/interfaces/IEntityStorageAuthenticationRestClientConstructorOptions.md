@@ -79,3 +79,63 @@ Include credentials in the request, defaults to true.
 #### Inherited from
 
 `IBaseRestClientConfig.includeCredentials`
+
+***
+
+### customHeaders? {#customheaders}
+
+> `optional` **customHeaders?**: () => `Promise`\<`IHttpHeaders`\>
+
+Hook to provide headers asynchronously.
+
+#### Returns
+
+`Promise`\<`IHttpHeaders`\>
+
+A promise that resolves to the headers.
+
+#### Inherited from
+
+`IBaseRestClientConfig.customHeaders`
+
+***
+
+### customAuthHeader? {#customauthheader}
+
+> `optional` **customAuthHeader?**: () => `Promise`\<`string`\>
+
+Hook to provide an authorization header value asynchronously.
+
+#### Returns
+
+`Promise`\<`string`\>
+
+A promise that resolves to the authorization header value.
+
+#### Inherited from
+
+`IBaseRestClientConfig.customAuthHeader`
+
+***
+
+### onAuthFailure? {#onauthfailure}
+
+> `optional` **onAuthFailure?**: (`err`) => `Promise`\<`void`\>
+
+Hook to handle authorization failures asynchronously.
+
+#### Parameters
+
+##### err
+
+`IError`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the auth failure handling is complete.
+
+#### Inherited from
+
+`IBaseRestClientConfig.onAuthFailure`

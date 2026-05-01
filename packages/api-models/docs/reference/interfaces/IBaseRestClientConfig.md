@@ -41,3 +41,51 @@ Timeout for requests in ms.
 > `optional` **includeCredentials?**: `boolean`
 
 Include credentials in the request, defaults to true.
+
+***
+
+### customHeaders? {#customheaders}
+
+> `optional` **customHeaders?**: () => `Promise`\<`IHttpHeaders`\>
+
+Hook to provide headers asynchronously.
+
+#### Returns
+
+`Promise`\<`IHttpHeaders`\>
+
+A promise that resolves to the headers.
+
+***
+
+### customAuthHeader? {#customauthheader}
+
+> `optional` **customAuthHeader?**: () => `Promise`\<`string`\>
+
+Hook to provide an authorization header value asynchronously.
+
+#### Returns
+
+`Promise`\<`string`\>
+
+A promise that resolves to the authorization header value.
+
+***
+
+### onAuthFailure? {#onauthfailure}
+
+> `optional` **onAuthFailure?**: (`err`) => `Promise`\<`void`\>
+
+Hook to handle authorization failures asynchronously.
+
+#### Parameters
+
+##### err
+
+`IError`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the auth failure handling is complete.

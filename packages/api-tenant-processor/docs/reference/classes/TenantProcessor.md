@@ -12,7 +12,7 @@ Handles incoming api keys and maps them to tenant ids.
 
 > **new TenantProcessor**(`options?`): `TenantProcessor`
 
-Create a new instance of NodeTenantProcessor.
+Create a new instance of TenantProcessor.
 
 #### Parameters
 
@@ -51,34 +51,6 @@ The class name of the component.
 #### Implementation of
 
 `IBaseRouteProcessor.className`
-
-***
-
-### start() {#start}
-
-> **start**(`nodeLoggingComponentType?`): `Promise`\<`void`\>
-
-The processor needs to be started when the application is initialized so that
-the node identity is available for vault key resolution. Only required when
-the encrypted-token path is wired (i.e. `signingKeyName` is configured).
-
-#### Parameters
-
-##### nodeLoggingComponentType?
-
-`string`
-
-The node logging component type.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
-
-#### Implementation of
-
-`IBaseRouteProcessor.start`
 
 ***
 

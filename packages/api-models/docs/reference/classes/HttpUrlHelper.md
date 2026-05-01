@@ -142,6 +142,34 @@ The combined parts.
 
 ***
 
+### encodeUriPathSegment() {#encodeuripathsegment}
+
+> `static` **encodeUriPathSegment**(`segment`): `string`
+
+Encode a single URL path segment per RFC 3986 §3.3.
+Unlike encodeURIComponent, sub-delimiters ($ & + , ; =) and the colon and
+at-sign characters that are valid unencoded in path segments are preserved.
+
+#### Parameters
+
+##### segment
+
+`string`
+
+The raw path segment value to encode.
+
+#### Returns
+
+`string`
+
+The percent-encoded path segment.
+
+#### See
+
+https://datatracker.ietf.org/doc/html/rfc3986#section-3.3
+
+***
+
 ### replaceOrigin() {#replaceorigin}
 
 > `static` **replaceOrigin**(`url`, `newOrigin?`): `string`

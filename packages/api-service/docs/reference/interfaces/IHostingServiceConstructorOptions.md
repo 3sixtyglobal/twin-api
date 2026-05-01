@@ -18,6 +18,20 @@ tenant-admin
 
 ***
 
+### vaultConnectorType? {#vaultconnectortype}
+
+> `optional` **vaultConnectorType?**: `string`
+
+The vault connector type.
+
+#### Default
+
+```ts
+vault
+```
+
+***
+
 ### config {#config}
 
 > **config**: [`IHostingServiceConfig`](IHostingServiceConfig.md)
