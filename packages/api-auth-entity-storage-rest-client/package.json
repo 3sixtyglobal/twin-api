@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-auth-entity-storage-rest-client",
-	"version": "0.0.3-next.29",
+	"version": "0.0.3-next.30",
 	"description": "REST clients for authentication and admin operations against entity storage endpoints.",
 	"repository": {
 		"type": "git",
@@ -28,9 +28,9 @@
 		"dist:no-test": "npm run clean && npm run build && npm run test:build"
 	},
 	"dependencies": {
-		"@twin.org/api-auth-entity-storage-models": "0.0.3-next.29",
-		"@twin.org/api-core": "0.0.3-next.29",
-		"@twin.org/api-models": "0.0.3-next.29",
+		"@twin.org/api-auth-entity-storage-models": "0.0.3-next.30",
+		"@twin.org/api-core": "0.0.3-next.30",
+		"@twin.org/api-models": "0.0.3-next.30",
 		"@twin.org/core": "next",
 		"@twin.org/nameof": "next",
 		"@twin.org/web": "next"
