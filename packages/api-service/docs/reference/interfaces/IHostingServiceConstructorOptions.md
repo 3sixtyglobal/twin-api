@@ -1,6 +1,6 @@
 # Interface: IHostingServiceConstructorOptions
 
-Options for the IHostingService constructor.
+Options for the HostingService constructor.
 
 ## Properties
 
@@ -14,20 +14,6 @@ The tenant admin component type.
 
 ```ts
 tenant-admin
-```
-
-***
-
-### vaultConnectorType? {#vaultconnectortype}
-
-> `optional` **vaultConnectorType?**: `string`
-
-The vault connector type.
-
-#### Default
-
-```ts
-vault
 ```
 
 ***

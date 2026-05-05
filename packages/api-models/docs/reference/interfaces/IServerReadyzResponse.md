@@ -1,6 +1,6 @@
-# Interface: IServerLivezResponse
+# Interface: IServerReadyzResponse
 
-The livez of the server.
+The readyz of the server.
 
 ## Properties
 
@@ -18,6 +18,6 @@ The headers for the response.
 
 ### body {#body}
 
-> **body**: `"alive"` \| `"dead"`
+> **body**: `"ready"` \| `"not ready"`
 
-The livez information for the server.
+The readyz information for the server.

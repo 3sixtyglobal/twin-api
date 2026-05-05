@@ -2,27 +2,36 @@
 
 ## Classes
 
+- [HealthService](classes/HealthService.md)
 - [HostingService](classes/HostingService.md)
 - [InformationService](classes/InformationService.md)
+- [UrlTransformerService](classes/UrlTransformerService.md)
 
 ## Interfaces
 
+- [IHealthServiceConfig](interfaces/IHealthServiceConfig.md)
+- [IHealthServiceConstructorOptions](interfaces/IHealthServiceConstructorOptions.md)
 - [IHostingServiceConfig](interfaces/IHostingServiceConfig.md)
 - [IHostingServiceConstructorOptions](interfaces/IHostingServiceConstructorOptions.md)
 - [IInformationServiceConfig](interfaces/IInformationServiceConfig.md)
 - [IInformationServiceConstructorOptions](interfaces/IInformationServiceConstructorOptions.md)
+- [IUrlTransformerServiceConfig](interfaces/IUrlTransformerServiceConfig.md)
+- [IUrlTransformerServiceConstructorOptions](interfaces/IUrlTransformerServiceConstructorOptions.md)
 
 ## Variables
 
+- [tagsHealth](variables/tagsHealth.md)
 - [tagsInformation](variables/tagsInformation.md)
 - [restEntryPoints](variables/restEntryPoints.md)
 
 ## Functions
 
+- [generateRestRoutesHealth](functions/generateRestRoutesHealth.md)
+- [serverHealth](functions/serverHealth.md)
 - [generateRestRoutesInformation](functions/generateRestRoutesInformation.md)
 - [serverRoot](functions/serverRoot.md)
 - [serverInfo](functions/serverInfo.md)
 - [serverLivez](functions/serverLivez.md)
-- [serverHealth](functions/serverHealth.md)
+- [serverReadyz](functions/serverReadyz.md)
 - [serverFavIcon](functions/serverFavIcon.md)
 - [serverSpec](functions/serverSpec.md)

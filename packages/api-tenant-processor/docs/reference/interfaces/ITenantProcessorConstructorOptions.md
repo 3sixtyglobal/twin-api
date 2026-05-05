@@ -18,16 +18,16 @@ tenant
 
 ***
 
-### hostingComponentType? {#hostingcomponenttype}
+### urlTransformerComponentType? {#urltransformercomponenttype}
 
-> `optional` **hostingComponentType?**: `string`
+> `optional` **urlTransformerComponentType?**: `string`
 
-The hosting component for the tenants.
+The URL transformer component for the tenants.
 
 #### Default
 
 ```ts
-hosting
+url-transformer
 ```
 
 ***

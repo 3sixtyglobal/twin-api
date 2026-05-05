@@ -6,6 +6,14 @@ The health of the server.
 
 ### body {#body}
 
-> **body**: [`IHealthInfo`](IHealthInfo.md)
+> **body**: `object`
 
-The information for the server.
+The health for the server.
+
+#### status
+
+> **status**: `HealthStatus`
+
+#### components
+
+> **components**: `IHealth`[]

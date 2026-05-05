@@ -36,6 +36,24 @@ Runtime name for the class.
 
 ## Methods
 
+### className() {#classname}
+
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`IWebServer.className`
+
+***
+
 ### getInstance() {#getinstance}
 
 > **getInstance**(): `FastifyInstance`
@@ -137,3 +155,21 @@ Nothing.
 #### Implementation of
 
 `IWebServer.stop`
+
+***
+
+### health() {#health}
+
+> **health**(): `Promise`\<`IHealth`[]\>
+
+Perform a health check on the server by fetching its own root endpoint.
+
+#### Returns
+
+`Promise`\<`IHealth`[]\>
+
+The health status of the server.
+
+#### Implementation of
+
+`IWebServer.health`

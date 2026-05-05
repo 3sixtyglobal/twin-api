@@ -2,6 +2,10 @@
 
 Interface describing a web server.
 
+## Extends
+
+- `IComponent`
+
 ## Type Parameters
 
 ### T
@@ -82,6 +86,10 @@ Start the server.
 
 Nothing.
 
+#### Overrides
+
+`IComponent.start`
+
 ***
 
 ### stop() {#stop}
@@ -95,3 +103,25 @@ Stop the server.
 `Promise`\<`void`\>
 
 Nothing.
+
+#### Overrides
+
+`IComponent.stop`
+
+***
+
+### health() {#health}
+
+> **health**(): `Promise`\<`IHealth`[]\>
+
+Returns the health status of the component.
+
+#### Returns
+
+`Promise`\<`IHealth`[]\>
+
+The health status of the component, can return multiple entries for elements within the component.
+
+#### Overrides
+
+`IComponent.health`

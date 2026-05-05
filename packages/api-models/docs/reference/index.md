@@ -14,6 +14,7 @@
 - [IServerHealthResponse](interfaces/IServerHealthResponse.md)
 - [IServerInfoResponse](interfaces/IServerInfoResponse.md)
 - [IServerLivezResponse](interfaces/IServerLivezResponse.md)
+- [IServerReadyzResponse](interfaces/IServerReadyzResponse.md)
 - [IServerRootResponse](interfaces/IServerRootResponse.md)
 - [IServerSpecResponse](interfaces/IServerSpecResponse.md)
 - [IBaseRestClientConfig](interfaces/IBaseRestClientConfig.md)
@@ -56,20 +57,19 @@
 - [ISocketRouteProcessor](interfaces/ISocketRouteProcessor.md)
 - [IWebServer](interfaces/IWebServer.md)
 - [IWebServerOptions](interfaces/IWebServerOptions.md)
-- [IHealthComponentInfo](interfaces/IHealthComponentInfo.md)
-- [IHealthInfo](interfaces/IHealthInfo.md)
+- [IHealthComponent](interfaces/IHealthComponent.md)
 - [IHostingComponent](interfaces/IHostingComponent.md)
 - [IInformationComponent](interfaces/IInformationComponent.md)
 - [IServerInfo](interfaces/IServerInfo.md)
 - [ITenant](interfaces/ITenant.md)
 - [ITenantAdminComponent](interfaces/ITenantAdminComponent.md)
+- [IUrlTransformerComponent](interfaces/IUrlTransformerComponent.md)
 
 ## Type Aliases
 
 - [HttpContextIdKeys](type-aliases/HttpContextIdKeys.md)
 - [IRestRouteEntryPoint](type-aliases/IRestRouteEntryPoint.md)
 - [ISocketRouteEntryPoint](type-aliases/ISocketRouteEntryPoint.md)
-- [HealthStatus](type-aliases/HealthStatus.md)
 
 ## Variables
 
@@ -77,4 +77,3 @@
 - [RestRouteProcessorFactory](variables/RestRouteProcessorFactory.md)
 - [SocketRouteProcessorFactory](variables/SocketRouteProcessorFactory.md)
 - [HttpContextIdKeys](variables/HttpContextIdKeys.md)
-- [HealthStatus](variables/HealthStatus.md)

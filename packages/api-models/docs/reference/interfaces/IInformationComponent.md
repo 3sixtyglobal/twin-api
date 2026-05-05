@@ -66,94 +66,26 @@ The OpenAPI spec.
 
 ### livez() {#livez}
 
-> **livez**(): `Promise`\<`boolean`\>
+> **livez**(): `Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
 Is the server live.
 
 #### Returns
 
-`Promise`\<`boolean`\>
+`Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
-True if the server is live.
-
-***
-
-### health() {#health}
-
-> **health**(): `Promise`\<[`IHealthInfo`](IHealthInfo.md)\>
-
-Get the server health.
-
-#### Returns
-
-`Promise`\<[`IHealthInfo`](IHealthInfo.md)\>
-
-The service health.
+The livez status of the server.
 
 ***
 
-### setComponentHealth() {#setcomponenthealth}
+### readyz() {#readyz}
 
-> **setComponentHealth**(`name`, `status`, `details?`, `tenantId?`): `Promise`\<`void`\>
+> **readyz**(): `Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-Set the status of a component.
-
-#### Parameters
-
-##### name
-
-`string`
-
-The component name.
-
-##### status
-
-[`HealthStatus`](../type-aliases/HealthStatus.md)
-
-The status of the component.
-
-##### details?
-
-`string`
-
-The details for the status.
-
-##### tenantId?
-
-`string`
-
-The tenant id, optional if the health status is not tenant specific.
+Is the server ready.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-Nothing.
-
-***
-
-### removeComponentHealth() {#removecomponenthealth}
-
-> **removeComponentHealth**(`name`, `tenantId?`): `Promise`\<`void`\>
-
-Remove the status of a component.
-
-#### Parameters
-
-##### name
-
-`string`
-
-The component name.
-
-##### tenantId?
-
-`string`
-
-The tenant id, optional if the health status is not tenant specific.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
+The readyz status of the server.

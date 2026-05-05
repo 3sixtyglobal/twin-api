@@ -202,13 +202,13 @@ The OpenAPI spec.
 
 ### livez() {#livez}
 
-> **livez**(): `Promise`\<`boolean`\>
+> **livez**(): `Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
 Is the server live.
 
 #### Returns
 
-`Promise`\<`boolean`\>
+`Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
 True if the server is live.
 
@@ -218,82 +218,18 @@ True if the server is live.
 
 ***
 
-### health() {#health}
+### readyz() {#readyz}
 
-> **health**(): `Promise`\<`IHealthInfo`\>
+> **readyz**(): `Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-Get the server health.
-
-#### Returns
-
-`Promise`\<`IHealthInfo`\>
-
-The service health.
-
-#### Implementation of
-
-`IInformationComponent.health`
-
-***
-
-### setComponentHealth() {#setcomponenthealth}
-
-> **setComponentHealth**(`name`, `status`, `details?`): `Promise`\<`void`\>
-
-Set the status of a component.
-
-#### Parameters
-
-##### name
-
-`string`
-
-The component name.
-
-##### status
-
-`HealthStatus`
-
-The status of the component.
-
-##### details?
-
-`string`
-
-The details for the status.
+Is the server ready.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-Nothing.
-
-#### Implementation of
-
-`IInformationComponent.setComponentHealth`
-
-***
-
-### removeComponentHealth() {#removecomponenthealth}
-
-> **removeComponentHealth**(`name`): `Promise`\<`void`\>
-
-Remove the status of a component.
-
-#### Parameters
-
-##### name
-
-`string`
-
-The component name.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
+True if the server is ready.
 
 #### Implementation of
 
-`IInformationComponent.removeComponentHealth`
+`IInformationComponent.readyz`
