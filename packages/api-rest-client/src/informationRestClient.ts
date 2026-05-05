@@ -2,20 +2,17 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@twin.org/api-core";
 import type {
-	HealthStatus,
 	IBaseRestClientConfig,
-	IHealthInfo,
 	IInformationComponent,
 	INoContentRequest,
 	IServerFavIconResponse,
-	IServerHealthResponse,
 	IServerInfo,
 	IServerInfoResponse,
 	IServerLivezResponse,
+	IServerReadyzResponse,
 	IServerRootResponse,
 	IServerSpecResponse
 } from "@twin.org/api-models";
-import { NotSupportedError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 
 /**
@@ -86,45 +83,17 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 	 * Is the server live.
 	 * @returns True if the server is live.
 	 */
-	public async livez(): Promise<boolean> {
+	public async livez(): Promise<{ status: "alive" | "dead" }> {
 		const response = await this.fetch<INoContentRequest, IServerLivezResponse>("/livez", "GET");
-		return response.body === "ok";
+		return { status: response.body };
 	}
 
 	/**
-	 * Get the server health.
-	 * @returns The service health.
+	 * Is the server ready.
+	 * @returns True if the server is ready.
 	 */
-	public async health(): Promise<IHealthInfo> {
-		const response = await this.fetch<INoContentRequest, IServerHealthResponse>("/health", "GET");
-		return response.body;
-	}
-
-	/**
-	 * Set the status of a component.
-	 * @param name The component name.
-	 * @param status The status of the component.
-	 * @param details The details for the status.
-	 * @returns Nothing.
-	 */
-	public async setComponentHealth(
-		name: string,
-		status: HealthStatus,
-		details?: string
-	): Promise<void> {
-		throw new NotSupportedError(InformationRestClient.CLASS_NAME, "notSupportedOnClient", {
-			methodName: "setComponentHealth"
-		});
-	}
-
-	/**
-	 * Remove the status of a component.
-	 * @param name The component name.
-	 * @returns Nothing.
-	 */
-	public async removeComponentHealth(name: string): Promise<void> {
-		throw new NotSupportedError(InformationRestClient.CLASS_NAME, "notSupportedOnClient", {
-			methodName: "removeComponentHealth"
-		});
+	public async readyz(): Promise<{ status: "ready" | "not ready" }> {
+		const response = await this.fetch<INoContentRequest, IServerReadyzResponse>("/readyz", "GET");
+		return { status: response.body };
 	}
 }

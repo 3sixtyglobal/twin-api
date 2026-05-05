@@ -6,9 +6,9 @@ import type {
 	INoContentRequest,
 	IRestRoute,
 	IServerFavIconResponse,
-	IServerHealthResponse,
 	IServerInfoResponse,
 	IServerLivezResponse,
+	IServerReadyzResponse,
 	IServerRootResponse,
 	IServerSpecResponse,
 	ITag
@@ -133,7 +133,7 @@ export function generateRestRoutesInformation(
 							headers: {
 								[HeaderTypes.ContentType]: MimeTypes.PlainText
 							},
-							body: "ok"
+							body: "alive"
 						}
 					},
 					{
@@ -143,7 +143,7 @@ export function generateRestRoutesInformation(
 							headers: {
 								[HeaderTypes.ContentType]: MimeTypes.PlainText
 							},
-							body: "failed"
+							body: "dead"
 						}
 					}
 				]
@@ -153,81 +153,44 @@ export function generateRestRoutesInformation(
 		skipTenant: true
 	};
 
-	const healthRoute: IRestRoute<INoContentRequest, IServerHealthResponse> = {
-		operationId: "serverHealth",
-		summary: "Get the health for the server",
+	const readyzRoute: IRestRoute<INoContentRequest, IServerReadyzResponse> = {
+		operationId: "serverReadyz",
+		summary: "Get the readyz status for the server",
 		tag: tagsInformation[0].name,
 		method: "GET",
-		path: `${baseRouteName}/health`,
+		path: `${baseRouteName}/readyz`,
 		handler: async (httpRequestContext, request) =>
-			serverHealth(httpRequestContext, componentName, request),
+			serverReadyz(httpRequestContext, componentName, request),
 		responseType: [
 			{
-				type: nameof<IServerHealthResponse>(),
+				type: nameof<IServerReadyzResponse>(),
+				mimeType: MimeTypes.PlainText,
 				examples: [
 					{
-						id: "healthResponseOK",
-						description: "The response for the health request.",
+						id: "readyzResponseOK",
+						description: "The response for the readiness request.",
 						response: {
-							body: {
-								status: "ok",
-								components: [
-									{
-										name: "Database",
-										status: "ok"
-									},
-									{
-										name: "Storage",
-										status: "ok"
-									}
-								]
-							}
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "ready"
 						}
 					},
 					{
-						id: "healthResponseWarning",
-						description: "The response for the health request with warnings.",
+						id: "readyzResponseFailure",
+						description: "The response for the readiness request with errors.",
 						response: {
-							body: {
-								status: "warning",
-								components: [
-									{
-										name: "Database",
-										status: "warning",
-										details: "The database is running slow."
-									},
-									{
-										name: "Storage",
-										status: "ok"
-									}
-								]
-							}
-						}
-					},
-					{
-						id: "healthResponseError",
-						description: "The response for the health request with errors.",
-						response: {
-							body: {
-								status: "error",
-								components: [
-									{
-										name: "Database",
-										status: "ok"
-									},
-									{
-										name: "Storage",
-										status: "error",
-										details: "The storage is full."
-									}
-								]
-							}
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "not ready"
 						}
 					}
 				]
 			}
 		],
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
 	};
 
 	const specRoute: IRestRoute<INoContentRequest, IServerSpecResponse> = {
@@ -259,7 +222,7 @@ export function generateRestRoutesInformation(
 		skipAuth: true
 	};
 
-	return [rootRoute, favIconRoute, informationRoute, livezRoute, healthRoute, specRoute];
+	return [rootRoute, favIconRoute, informationRoute, livezRoute, readyzRoute, specRoute];
 }
 
 /**
@@ -318,25 +281,28 @@ export async function serverLivez(
 		headers: {
 			[HeaderTypes.ContentType]: MimeTypes.PlainText
 		},
-		body: (await component.livez()) ? "ok" : "failed"
+		body: (await component.livez()).status
 	};
 }
 
 /**
- * Get the health for the server.
+ * Get the readyz for the server.
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
-export async function serverHealth(
+export async function serverReadyz(
 	httpRequestContext: IHttpRequestContext,
 	componentName: string,
 	request: INoContentRequest
-): Promise<IServerHealthResponse> {
+): Promise<IServerReadyzResponse> {
 	const component = ComponentFactory.get<IInformationComponent>(componentName);
 	return {
-		body: await component.health()
+		headers: {
+			[HeaderTypes.ContentType]: MimeTypes.PlainText
+		},
+		body: (await component.readyz()).status
 	};
 }
 

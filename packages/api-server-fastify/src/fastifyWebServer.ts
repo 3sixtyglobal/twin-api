@@ -27,7 +27,9 @@ import {
 	BaseError,
 	ComponentFactory,
 	GeneralError,
+	HealthStatus,
 	type IError,
+	type IHealth,
 	Is,
 	StringHelper
 } from "@twin.org/core";
@@ -157,6 +159,14 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		}
 
 		this._includeErrorStack = options?.config?.includeErrorStack ?? false;
+	}
+
+	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return FastifyWebServer.CLASS_NAME;
 	}
 
 	/**
@@ -342,6 +352,29 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				message: "stopped"
 			});
 		}
+	}
+
+	/**
+	 * Perform a health check on the server by fetching its own root endpoint.
+	 * @returns The health status of the server.
+	 */
+	public async health(): Promise<IHealth[]> {
+		if (this._fastify?.server?.listening) {
+			return [
+				{
+					name: FastifyWebServer.CLASS_NAME,
+					status: HealthStatus.Ok,
+					details: "health.fastifyWebServer.reachable"
+				}
+			];
+		}
+		return [
+			{
+				name: FastifyWebServer.CLASS_NAME,
+				status: HealthStatus.Error,
+				details: "health.fastifyWebServer.unreachable"
+			}
+		];
 	}
 
 	/**

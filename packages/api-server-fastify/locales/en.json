@@ -17,5 +17,11 @@
 			"restRouteAdded": "Added REST route \"{route}\" \"{method}\"",
 			"socketRouteAdded": "Added socket route: handshake path \"{handshakePath}\", namespace \"{namespace}\", event name \"{eventName}\""
 		}
+	},
+	"health": {
+		"fastifyWebServer": {
+			"reachable": "The Web Server is reachable",
+			"unreachable": "The Web Server is unreachable"
+		}
 	}
 }

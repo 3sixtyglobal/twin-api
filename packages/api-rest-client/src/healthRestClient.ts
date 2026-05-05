@@ -1,0 +1,49 @@
+// Copyright 2024 IOTA Stiftung.
+// SPDX-License-Identifier: Apache-2.0.
+import { BaseRestClient } from "@twin.org/api-core";
+import type {
+	IBaseRestClientConfig,
+	IHealthComponent,
+	INoContentRequest,
+	IServerHealthResponse
+} from "@twin.org/api-models";
+import type { HealthStatus, IHealth } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
+
+/**
+ * The client to connect to the health service.
+ */
+export class HealthRestClient extends BaseRestClient implements IHealthComponent {
+	/**
+	 * Runtime name for the class.
+	 */
+	public static readonly CLASS_NAME: string = nameof<HealthRestClient>();
+
+	/**
+	 * Create a new instance of HealthRestClient.
+	 * @param config The configuration for the client.
+	 */
+	constructor(config: IBaseRestClientConfig) {
+		super(nameof<HealthRestClient>(), config, "");
+	}
+
+	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return HealthRestClient.CLASS_NAME;
+	}
+
+	/**
+	 * Get the server health.
+	 * @returns The service health.
+	 */
+	public async healthStatus(): Promise<{
+		status: HealthStatus;
+		components: IHealth[];
+	}> {
+		const response = await this.fetch<INoContentRequest, IServerHealthResponse>("/health", "GET");
+		return response.body;
+	}
+}

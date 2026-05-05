@@ -31,6 +31,8 @@
 		"@twin.org/api-models": "0.0.3-next.29",
 		"@twin.org/core": "next",
 		"@twin.org/context": "next",
+		"@twin.org/engine-models": "next",
+		"@twin.org/logging-models": "next",
 		"@twin.org/nameof": "next",
 		"@twin.org/vault-models": "next",
 		"@twin.org/web": "next"

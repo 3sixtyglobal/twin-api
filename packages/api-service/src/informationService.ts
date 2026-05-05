@@ -1,15 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { readFile } from "node:fs/promises";
-import type {
-	HealthStatus,
-	IHealthComponentInfo,
-	IHealthInfo,
-	IInformationComponent,
-	IServerInfo
-} from "@twin.org/api-models";
-import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
+import type { IInformationComponent, IServerInfo } from "@twin.org/api-models";
 import { Guards, Is } from "@twin.org/core";
+import { EngineCoreFactory } from "@twin.org/engine-models";
 import { nameof } from "@twin.org/nameof";
 import type { IInformationServiceConstructorOptions } from "./models/IInformationServiceConstructorOptions.js";
 
@@ -27,15 +21,6 @@ export class InformationService implements IInformationComponent {
 	 * @internal
 	 */
 	private readonly _serverInfo: IServerInfo;
-
-	/**
-	 * The server health.
-	 * @internal
-	 */
-	private readonly _healthInfo: {
-		status: HealthStatus;
-		components?: (IHealthComponentInfo & { tenantId?: string })[];
-	};
 
 	/**
 	 * The path to the favicon Spec.
@@ -75,9 +60,6 @@ export class InformationService implements IInformationComponent {
 		);
 
 		this._serverInfo = options.config.serverInfo;
-		this._healthInfo = {
-			status: "ok"
-		};
 		this._faviconPath = options.config.favIconPath;
 		this._openApiSpecPath = options.config.openApiSpecPath;
 	}
@@ -143,102 +125,25 @@ export class InformationService implements IInformationComponent {
 	 * Is the server live.
 	 * @returns True if the server is live.
 	 */
-	public async livez(): Promise<boolean> {
-		let errorCount = 0;
-
-		if (Is.arrayValue(this._healthInfo.components)) {
-			errorCount = this._healthInfo.components.filter(c => c.status === "error").length;
-		}
-
-		return errorCount === 0;
+	public async livez(): Promise<{
+		status: "alive" | "dead";
+	}> {
+		return { status: "alive" };
 	}
 
 	/**
-	 * Get the server health.
-	 * @returns The service health.
+	 * Is the server ready.
+	 * @returns The readyz status of the server.
 	 */
-	public async health(): Promise<IHealthInfo> {
-		let errorCount = 0;
-		let warningCount = 0;
+	public async readyz(): Promise<{
+		status: "ready" | "not ready";
+	}> {
+		const engine = EngineCoreFactory.getIfExists("engine");
 
-		const contextIds = await ContextIdStore.getContextIds();
-		const tenantId = contextIds?.[ContextIdKeys.Tenant];
-
-		// Filter so we only get components that are not tenant specific or match the tenant id
-		const components = this._healthInfo.components?.filter(
-			c => Is.empty(c.tenantId) || c.tenantId === tenantId
-		);
-
-		if (Is.arrayValue(components)) {
-			errorCount = components.filter(c => c.status === "error").length;
-			warningCount = components.filter(c => c.status === "warning").length;
+		if (engine?.isStarted()) {
+			return { status: "ready" };
 		}
 
-		if (errorCount > 0) {
-			this._healthInfo.status = "error";
-		} else if (warningCount > 0) {
-			this._healthInfo.status = "warning";
-		} else {
-			this._healthInfo.status = "ok";
-		}
-
-		return {
-			status: this._healthInfo.status,
-			components: components?.map(c => ({
-				name: c.name,
-				status: c.status,
-				details: c.details
-			}))
-		};
-	}
-
-	/**
-	 * Set the status of a component.
-	 * @param name The component name.
-	 * @param status The status of the component.
-	 * @param details The details for the status.
-	 * @param tenantId The tenant id, optional if the health status is not tenant specific.
-	 * @returns Nothing.
-	 */
-	public async setComponentHealth(
-		name: string,
-		status: HealthStatus,
-		details?: string,
-		tenantId?: string
-	): Promise<void> {
-		const component = Is.empty(tenantId)
-			? this._healthInfo.components?.find(c => c.name === name && Is.empty(c.tenantId))
-			: this._healthInfo.components?.find(c => c.name === name && c.tenantId === tenantId);
-
-		if (Is.undefined(component)) {
-			this._healthInfo.components ??= [];
-			this._healthInfo.components.push({
-				name,
-				status,
-				details,
-				tenantId
-			});
-		} else {
-			component.status = status;
-			component.details = details;
-		}
-	}
-
-	/**
-	 * Remove the status of a component.
-	 * @param name The component name.
-	 * @param tenantId The tenant id, optional if the health status is not tenant specific.
-	 * @returns Nothing.
-	 */
-	public async removeComponentHealth(name: string, tenantId?: string): Promise<void> {
-		if (Is.arrayValue(this._healthInfo.components)) {
-			const componentIndex = Is.empty(tenantId)
-				? this._healthInfo.components?.findIndex(c => c.name === name && Is.empty(c.tenantId))
-				: this._healthInfo.components?.findIndex(c => c.name === name && c.tenantId === tenantId);
-
-			if (componentIndex !== -1) {
-				this._healthInfo.components.splice(componentIndex, 1);
-			}
-		}
+		return { status: "not ready" };
 	}
 }

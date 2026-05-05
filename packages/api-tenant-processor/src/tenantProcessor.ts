@@ -4,9 +4,9 @@ import {
 	HttpErrorHelper,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
-	type IHostingComponent,
 	type IHttpResponse,
-	type IHttpServerRequest
+	type IHttpServerRequest,
+	type IUrlTransformerComponent
 } from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
 import { BaseError, ComponentFactory, Is, UnauthorizedError } from "@twin.org/core";
@@ -44,7 +44,7 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	 * The hosting component, used to resolve public origins for tenants and encrypt/decrypt tenant tokens.
 	 * @internal
 	 */
-	private readonly _hostingComponent: IHostingComponent;
+	private readonly _urlTransformerService: IUrlTransformerComponent;
 
 	/**
 	 * The key in the header to look for the api key.
@@ -60,7 +60,9 @@ export class TenantProcessor implements IBaseRouteProcessor {
 		this._entityStorageConnector = EntityStorageConnectorFactory.get(
 			options?.tenantEntityStorageType ?? "tenant"
 		);
-		this._hostingComponent = ComponentFactory.get(options?.hostingComponentType ?? "hosting");
+		this._urlTransformerService = ComponentFactory.get(
+			options?.urlTransformerComponentType ?? "url-transformer"
+		);
 		this._apiKeyName = options?.config?.apiKeyName ?? TenantProcessor.DEFAULT_API_KEY_NAME;
 	}
 
@@ -98,8 +100,9 @@ export class TenantProcessor implements IBaseRouteProcessor {
 				if (Is.stringValue(apiKey)) {
 					tenant = await this.resolveByApiKey(apiKey);
 				} else {
-					const tenantToken = await this._hostingComponent.getTenantTokenFromQueryParams(
-						request.query
+					const tenantToken = await this._urlTransformerService.getEncryptedQueryParam(
+						request.query,
+						"tenant"
 					);
 
 					if (Is.stringValue(tenantToken)) {

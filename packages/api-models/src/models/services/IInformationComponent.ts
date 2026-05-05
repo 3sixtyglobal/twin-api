@@ -1,8 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IComponent } from "@twin.org/core";
-import type { HealthStatus } from "./healthStatus.js";
-import type { IHealthInfo } from "./IHealthInfo.js";
 import type { IServerInfo } from "./IServerInfo.js";
 
 /**
@@ -35,36 +33,13 @@ export interface IInformationComponent extends IComponent {
 
 	/**
 	 * Is the server live.
-	 * @returns True if the server is live.
+	 * @returns The livez status of the server.
 	 */
-	livez(): Promise<boolean>;
+	livez(): Promise<{ status: "alive" | "dead" }>;
 
 	/**
-	 * Get the server health.
-	 * @returns The service health.
+	 * Is the server ready.
+	 * @returns The readyz status of the server.
 	 */
-	health(): Promise<IHealthInfo>;
-
-	/**
-	 * Set the status of a component.
-	 * @param name The component name.
-	 * @param status The status of the component.
-	 * @param details The details for the status.
-	 * @param tenantId The tenant id, optional if the health status is not tenant specific.
-	 * @returns Nothing.
-	 */
-	setComponentHealth(
-		name: string,
-		status: HealthStatus,
-		details?: string,
-		tenantId?: string
-	): Promise<void>;
-
-	/**
-	 * Remove the status of a component.
-	 * @param name The component name.
-	 * @param tenantId The tenant id, optional if the health status is not tenant specific.
-	 * @returns Nothing.
-	 */
-	removeComponentHealth(name: string, tenantId?: string): Promise<void>;
+	readyz(): Promise<{ status: "ready" | "not ready" }>;
 }

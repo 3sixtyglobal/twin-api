@@ -3,9 +3,9 @@
 import type { HeaderTypes, MimeTypes } from "@twin.org/web";
 
 /**
- * The livez of the server.
+ * The readyz of the server.
  */
-export interface IServerLivezResponse {
+export interface IServerReadyzResponse {
 	/**
 	 * The headers for the response.
 	 */
@@ -14,7 +14,7 @@ export interface IServerLivezResponse {
 	};
 
 	/**
-	 * The livez information for the server.
+	 * The readyz information for the server.
 	 */
-	body: "alive" | "dead";
+	body: "ready" | "not ready";
 }

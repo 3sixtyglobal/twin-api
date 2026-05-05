@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { JwtMimeTypeProcessor, LoggingProcessor } from "@twin.org/api-processors";
-import { ComponentFactory, NotImplementedError } from "@twin.org/core";
+import { ComponentFactory, HealthStatus, NotImplementedError } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode } from "@twin.org/web";
 import { io } from "socket.io-client";
@@ -478,6 +478,39 @@ describe("api-server-fastify", () => {
 		expect(pongResult).toBeTruthy();
 
 		await server.stop();
+	});
+
+	test("Can return healthy status when server is running", async () => {
+		const server = new FastifyWebServer();
+		await server.build(undefined, undefined, undefined, undefined, { port });
+		await server.start();
+
+		const result = await server.health();
+
+		await server.stop();
+
+		expect(result).toEqual([
+			{
+				name: "FastifyWebServer",
+				status: HealthStatus.Ok,
+				details: "health.fastifyWebServer.reachable"
+			}
+		]);
+	});
+
+	test("Can return error status when server is not running", async () => {
+		const server = new FastifyWebServer();
+		await server.build(undefined, undefined, undefined, undefined, { port });
+
+		const result = await server.health();
+
+		expect(result).toEqual([
+			{
+				name: "FastifyWebServer",
+				status: HealthStatus.Error,
+				details: "health.fastifyWebServer.unreachable"
+			}
+		]);
 	});
 
 	test("Can add a custom content type processor", async () => {

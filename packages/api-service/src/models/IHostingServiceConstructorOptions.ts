@@ -3,7 +3,7 @@
 import type { IHostingServiceConfig } from "./IHostingServiceConfig.js";
 
 /**
- * Options for the IHostingService constructor.
+ * Options for the HostingService constructor.
  */
 export interface IHostingServiceConstructorOptions {
 	/**
@@ -11,12 +11,6 @@ export interface IHostingServiceConstructorOptions {
 	 * @default tenant-admin
 	 */
 	tenantAdminComponentType?: string;
-
-	/**
-	 * The vault connector type.
-	 * @default vault
-	 */
-	vaultConnectorType?: string;
 
 	/**
 	 * The configuration for the service.

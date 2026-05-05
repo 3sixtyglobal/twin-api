@@ -1,6 +1,10 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HttpErrorHelper, type IHostingComponent, type IHttpResponse } from "@twin.org/api-models";
+import {
+	HttpErrorHelper,
+	type IHttpResponse,
+	type IUrlTransformerComponent
+} from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
 import { ComponentFactory } from "@twin.org/core";
 import {
@@ -13,7 +17,7 @@ import { TenantProcessor } from "../../src/tenantProcessor.js";
 
 describe("TenantProcessor", () => {
 	let mockTenantStorage: IEntityStorageConnector<Tenant>;
-	let mockHostingComponent: IHostingComponent;
+	let mockUrlTransformerComponent: IUrlTransformerComponent;
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
@@ -26,23 +30,20 @@ describe("TenantProcessor", () => {
 			query: vi.fn()
 		} as unknown as IEntityStorageConnector<Tenant>;
 
-		mockHostingComponent = {
+		mockUrlTransformerComponent = {
 			className: vi.fn(),
-			start: vi.fn(),
-			stop: vi.fn(),
-			getPublicOrigin: vi.fn(),
-			getTenantOrigin: vi.fn(),
-			buildPublicUrl: vi.fn(),
-			addTenantTokenToUrl: vi.fn(),
-			getTenantTokenFromQueryParams: vi.fn().mockResolvedValue(undefined),
+			getEncryptedQueryParam: vi.fn().mockResolvedValue(undefined),
+			addEncryptedQueryParamToUrl: vi.fn(),
+			addEncryptedParamsToUrl: vi.fn(),
+			getDecryptedParamsFromQueryParams: vi.fn(),
 			encryptQueryParams: vi.fn(),
 			decryptQueryParams: vi.fn(),
 			encryptParam: vi.fn(),
 			decryptParam: vi.fn()
-		} as unknown as IHostingComponent;
+		} as unknown as IUrlTransformerComponent;
 
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockTenantStorage);
-		vi.spyOn(ComponentFactory, "get").mockReturnValue(mockHostingComponent);
+		vi.spyOn(ComponentFactory, "get").mockReturnValue(mockUrlTransformerComponent);
 	});
 
 	describe("api-key path (back-compat)", () => {
@@ -128,12 +129,12 @@ describe("TenantProcessor", () => {
 
 			expect(response.statusCode).toBeUndefined();
 			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-from-key");
-			expect(mockHostingComponent.getTenantTokenFromQueryParams).not.toHaveBeenCalled();
+			expect(mockUrlTransformerComponent.getEncryptedQueryParam).not.toHaveBeenCalled();
 			expect(mockTenantStorage.get).toHaveBeenCalledWith("key-A", "apiKey");
 		});
 
 		it("falls back to tenant-token when no api-key present", async () => {
-			vi.mocked(mockHostingComponent.getTenantTokenFromQueryParams).mockResolvedValue(
+			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(
 				"tenant-from-token"
 			);
 			vi.mocked(mockTenantStorage.get).mockResolvedValue({
@@ -157,14 +158,15 @@ describe("TenantProcessor", () => {
 			expect(response.statusCode).toBeUndefined();
 			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-from-token");
 			expect(processorState.publicOrigin).toBe("https://token.example.com");
-			expect(mockHostingComponent.getTenantTokenFromQueryParams).toHaveBeenCalledWith({
-				"tenant-token": "opaque-token"
-			});
+			expect(mockUrlTransformerComponent.getEncryptedQueryParam).toHaveBeenCalledWith(
+				{ "tenant-token": "opaque-token" },
+				"tenant"
+			);
 			expect(mockTenantStorage.get).toHaveBeenCalledWith("tenant-from-token");
 		});
 
 		it("returns 401 tenantNotFound when hosting component resolves a token but the tenant is unknown", async () => {
-			vi.mocked(mockHostingComponent.getTenantTokenFromQueryParams).mockResolvedValue(
+			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(
 				"unknown-tenant"
 			);
 			vi.mocked(mockTenantStorage.get).mockResolvedValue(undefined);
@@ -189,7 +191,7 @@ describe("TenantProcessor", () => {
 		});
 
 		it("returns 401 missingApiKeyOrTenantToken when hosting component returns no tenant token", async () => {
-			vi.mocked(mockHostingComponent.getTenantTokenFromQueryParams).mockResolvedValue(undefined);
+			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(undefined);
 
 			const processor = new TenantProcessor();
 			const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
@@ -211,7 +213,7 @@ describe("TenantProcessor", () => {
 		});
 
 		it("returns 401 when hosting component throws resolving tenant token", async () => {
-			vi.mocked(mockHostingComponent.getTenantTokenFromQueryParams).mockRejectedValue(
+			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockRejectedValue(
 				new Error("decryption failed")
 			);
 

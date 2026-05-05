@@ -1,10 +1,13 @@
 {
 	"error": {
-		"hostingService": {
-			"encryptionUnavailable": "Encryption is unavailable because no vault connector is configured",
-			"decryptionUnavailable": "Decryption is unavailable because no vault connector is configured",
+		"urlTransformerService": {
+			"encryptionUnavailable": "Encryption is unavailable because no nodeId is configured",
+			"decryptionUnavailable": "Decryption is unavailable because no nodeId is configured",
 			"encryptionFailed": "An error occurred during encryption",
 			"decryptionFailed": "An error occurred during decryption"
+		},
+		"healthService": {
+			"componentHealthCheckFailed": "Health check failed for component \"{className}\""
 		}
 	}
 }

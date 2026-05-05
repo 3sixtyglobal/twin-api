@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IComponent, IHealth } from "@twin.org/core";
 import type { IRestRouteProcessor } from "./IRestRouteProcessor.js";
 import type { ISocketRouteProcessor } from "./ISocketRouteProcessor.js";
 import type { IWebServerOptions } from "./IWebServerOptions.js";
@@ -9,7 +10,7 @@ import type { ISocketRoute } from "../routes/ISocketRoute.js";
 /**
  * Interface describing a web server.
  */
-export interface IWebServer<T> {
+export interface IWebServer<T> extends IComponent {
 	/**
 	 * Get the web server instance.
 	 * @returns The web server instance.
@@ -44,4 +45,10 @@ export interface IWebServer<T> {
 	 * @returns Nothing.
 	 */
 	stop(): Promise<void>;
+
+	/**
+	 * Returns the health status of the component.
+	 * @returns The health status of the component, can return multiple entries for elements within the component.
+	 */
+	health(): Promise<IHealth[]>;
 }
