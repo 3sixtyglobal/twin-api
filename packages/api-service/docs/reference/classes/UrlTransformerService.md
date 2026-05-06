@@ -142,9 +142,9 @@ The decrypted token value if it exists.
 
 ***
 
-### addEncryptedParamsToUrl() {#addencryptedparamstourl}
+### addEncryptedToUrl() {#addencryptedtourl}
 
-> **addEncryptedParamsToUrl**(`url`, `params`): `Promise`\<`string`\>
+> **addEncryptedToUrl**(`url`, `params`): `Promise`\<`string`\>
 
 Add encrypted key/value pairs to a URL's query string.
 
@@ -170,13 +170,13 @@ The URL with the encrypted parameters added.
 
 #### Implementation of
 
-`IUrlTransformerComponent.addEncryptedParamsToUrl`
+`IUrlTransformerComponent.addEncryptedToUrl`
 
 ***
 
-### getDecryptedParamsFromQueryParams() {#getdecryptedparamsfromqueryparams}
+### getDecryptedFromQueryParams() {#getdecryptedfromqueryparams}
 
-> **getDecryptedParamsFromQueryParams**(`queryParams`, `keys`): `Promise`\<`IHttpRequestQuery`\>
+> **getDecryptedFromQueryParams**(`queryParams`, `keys`): `Promise`\<`IHttpRequestQuery`\>
 
 Decrypt specified keys from a query parameter object and return their plain-text values.
 
@@ -202,7 +202,7 @@ A map of the decrypted key/value pairs that were present.
 
 #### Implementation of
 
-`IUrlTransformerComponent.getDecryptedParamsFromQueryParams`
+`IUrlTransformerComponent.getDecryptedFromQueryParams`
 
 ***
 

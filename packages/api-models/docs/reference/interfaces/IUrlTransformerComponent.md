@@ -72,9 +72,9 @@ The decrypted token value if it exists.
 
 ***
 
-### addEncryptedParamsToUrl() {#addencryptedparamstourl}
+### addEncryptedToUrl() {#addencryptedtourl}
 
-> **addEncryptedParamsToUrl**(`url`, `params`): `Promise`\<`string`\>
+> **addEncryptedToUrl**(`url`, `params`): `Promise`\<`string`\>
 
 Add encrypted key/value pairs to a URL's query string.
 Existing query parameters on the URL are preserved; the provided params are
@@ -102,9 +102,9 @@ The URL with the encrypted parameters added.
 
 ***
 
-### getDecryptedParamsFromQueryParams() {#getdecryptedparamsfromqueryparams}
+### getDecryptedFromQueryParams() {#getdecryptedfromqueryparams}
 
-> **getDecryptedParamsFromQueryParams**(`queryParams`, `keys`): `Promise`\<[`IHttpRequestQuery`](IHttpRequestQuery.md)\>
+> **getDecryptedFromQueryParams**(`queryParams`, `keys`): `Promise`\<[`IHttpRequestQuery`](IHttpRequestQuery.md)\>
 
 Decrypt specified keys from a query parameter object and return their plain-text values.
 
