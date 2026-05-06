@@ -1,11 +1,11 @@
 # Changelog
 
-## [0.0.3-next.31](https://github.com/twinfoundation/twin-api/compare/api-tenant-processor-v0.0.3-next.30...api-tenant-processor-v0.0.3-next.31) (2026-05-06)
+## [0.0.3-next.31](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.30...api-tenant-processor-v0.0.3-next.31) (2026-05-06)
 
 
 ### Features
 
-* update health format ([cfbfbbb](https://github.com/twinfoundation/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
 
 
 ### Dependencies
@@ -14,12 +14,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.30 to 0.0.3-next.31
 
-## [0.0.3-next.30](https://github.com/twinfoundation/twin-api/compare/api-tenant-processor-v0.0.3-next.29...api-tenant-processor-v0.0.3-next.30) (2026-05-05)
+## [0.0.3-next.30](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.29...api-tenant-processor-v0.0.3-next.30) (2026-05-05)
 
 
 ### Features
 
-* separate service responsibilities ([#116](https://github.com/twinfoundation/twin-api/issues/116)) ([2234648](https://github.com/twinfoundation/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
 
 
 ### Dependencies
@@ -28,12 +28,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.29 to 0.0.3-next.30
 
-## [0.0.3-next.29](https://github.com/twinfoundation/twin-api/compare/api-tenant-processor-v0.0.3-next.28...api-tenant-processor-v0.0.3-next.29) (2026-05-01)
+## [0.0.3-next.29](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.28...api-tenant-processor-v0.0.3-next.29) (2026-05-01)
 
 
 ### Features
 
-* hosting service ([#109](https://github.com/twinfoundation/twin-api/issues/109)) ([985bf1f](https://github.com/twinfoundation/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
 
 
 ### Dependencies
@@ -42,12 +42,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.28 to 0.0.3-next.29
 
-## [0.0.3-next.28](https://github.com/twinfoundation/twin-api/compare/api-tenant-processor-v0.0.3-next.27...api-tenant-processor-v0.0.3-next.28) (2026-04-30)
+## [0.0.3-next.28](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.27...api-tenant-processor-v0.0.3-next.28) (2026-04-30)
 
 
 ### Features
 
-* tenantToken decoder on skipTenant routes + BaseRestClient query-string preservation ([#108](https://github.com/twinfoundation/twin-api/issues/108)) ([1435357](https://github.com/twinfoundation/twin-api/commit/1435357034b41130fc97238c728265e48f746f1e))
+* tenantToken decoder on skipTenant routes + BaseRestClient query-string preservation ([#108](https://github.com/iotaledger/twin-api/issues/108)) ([1435357](https://github.com/iotaledger/twin-api/commit/1435357034b41130fc97238c728265e48f746f1e))
 
 
 ### Dependencies

@@ -1,32 +1,32 @@
 # Changelog
 
-## [0.0.3-next.31](https://github.com/twinfoundation/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.30...api-auth-entity-storage-models-v0.0.3-next.31) (2026-05-06)
+## [0.0.3-next.31](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.30...api-auth-entity-storage-models-v0.0.3-next.31) (2026-05-06)
 
 
 ### Miscellaneous Chores
 
 * **api-auth-entity-storage-models:** Synchronize repo versions
 
-## [0.0.3-next.30](https://github.com/twinfoundation/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.29...api-auth-entity-storage-models-v0.0.3-next.30) (2026-05-05)
+## [0.0.3-next.30](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.29...api-auth-entity-storage-models-v0.0.3-next.30) (2026-05-05)
 
 
 ### Miscellaneous Chores
 
 * **api-auth-entity-storage-models:** Synchronize repo versions
 
-## [0.0.3-next.29](https://github.com/twinfoundation/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.28...api-auth-entity-storage-models-v0.0.3-next.29) (2026-05-01)
+## [0.0.3-next.29](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.28...api-auth-entity-storage-models-v0.0.3-next.29) (2026-05-01)
 
 
 ### Miscellaneous Chores
 
 * **api-auth-entity-storage-models:** Synchronize repo versions
 
-## [0.0.3-next.28](https://github.com/twinfoundation/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.27...api-auth-entity-storage-models-v0.0.3-next.28) (2026-04-30)
+## [0.0.3-next.28](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.27...api-auth-entity-storage-models-v0.0.3-next.28) (2026-04-30)
 
 
 ### Bug Fixes
 
-* change logout and refresh routes from GET to POST ([#111](https://github.com/twinfoundation/twin-api/issues/111)) ([cb8b64b](https://github.com/twinfoundation/twin-api/commit/cb8b64b6507f9991baa78a663de2e84269695c82))
+* change logout and refresh routes from GET to POST ([#111](https://github.com/iotaledger/twin-api/issues/111)) ([cb8b64b](https://github.com/iotaledger/twin-api/commit/cb8b64b6507f9991baa78a663de2e84269695c82))
 
 ## [0.0.3-next.27](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-models-v0.0.3-next.26...api-auth-entity-storage-models-v0.0.3-next.27) (2026-04-23)
 

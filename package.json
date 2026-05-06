@@ -4,7 +4,7 @@
 	"description": "API",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/twinfoundation/api.git"
+		"url": "git+https://github.com/iotaledger/api.git"
 	},
 	"author": "martyn.janes@iota.org",
 	"license": "Apache-2.0",
@@ -67,7 +67,7 @@
 	],
 	"type": "module",
 	"bugs": {
-		"url": "git+https://github.com/twinfoundation/api/issues"
+		"url": "git+https://github.com/iotaledger/api/issues"
 	},
 	"homepage": "https://twindev.org"
 }
