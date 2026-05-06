@@ -66,7 +66,7 @@ describe("UrlTransformerService", () => {
 		});
 	});
 
-	describe("addEncryptedParamsToUrl", () => {
+	describe("addEncryptedToUrl", () => {
 		test("encrypts all provided params and adds them with x-enc- prefix", async () => {
 			const fakeEncrypted = new Uint8Array([10, 20, 30]);
 			vi.mocked(mockVaultConnector.encrypt).mockResolvedValue(fakeEncrypted);
@@ -74,7 +74,7 @@ describe("UrlTransformerService", () => {
 			const service = new UrlTransformerService();
 			await service.start();
 
-			const result = await service.addEncryptedParamsToUrl(`${LOCAL_ORIGIN}/api`, {
+			const result = await service.addEncryptedToUrl(`${LOCAL_ORIGIN}/api`, {
 				token: "abc",
 				secret: "xyz"
 			});
@@ -97,7 +97,7 @@ describe("UrlTransformerService", () => {
 			const service = new UrlTransformerService();
 			await service.start();
 
-			const result = await service.addEncryptedParamsToUrl(`${LOCAL_ORIGIN}/api?foo=bar&baz=qux`, {
+			const result = await service.addEncryptedToUrl(`${LOCAL_ORIGIN}/api?foo=bar&baz=qux`, {
 				token: "abc"
 			});
 			const resultUrl = new URL(result);
@@ -111,7 +111,7 @@ describe("UrlTransformerService", () => {
 			const service = new UrlTransformerService();
 
 			await expect(
-				service.addEncryptedParamsToUrl(`${LOCAL_ORIGIN}/api`, { token: "abc" })
+				service.addEncryptedToUrl(`${LOCAL_ORIGIN}/api`, { token: "abc" })
 			).rejects.toMatchObject({ message: "urlTransformerService.encryptionUnavailable" });
 		});
 
@@ -119,11 +119,62 @@ describe("UrlTransformerService", () => {
 			const service = new UrlTransformerService();
 			await service.start();
 
-			const result = await service.addEncryptedParamsToUrl(`${LOCAL_ORIGIN}/api?foo=bar`, {});
+			const result = await service.addEncryptedToUrl(`${LOCAL_ORIGIN}/api?foo=bar`, {});
 			const resultUrl = new URL(result);
 
 			expect(resultUrl.searchParams.get("foo")).toBe("bar");
 			expect(mockVaultConnector.encrypt).not.toHaveBeenCalled();
+		});
+
+		test("overwrites an existing plain-text param with its encrypted form", async () => {
+			const fakeEncrypted = new Uint8Array([7, 8, 9]);
+			vi.mocked(mockVaultConnector.encrypt).mockResolvedValue(fakeEncrypted);
+
+			const service = new UrlTransformerService();
+			await service.start();
+
+			const result = await service.addEncryptedToUrl(`${LOCAL_ORIGIN}/api?token=old`, {
+				token: "new"
+			});
+			const resultUrl = new URL(result);
+
+			expect(resultUrl.searchParams.get("token")).toBeNull();
+			expect(resultUrl.searchParams.get("x-enc-token")).toBe(
+				Converter.bytesToBase64Url(fakeEncrypted)
+			);
+		});
+
+		test("overwrites an existing encrypted param when the same key is re-encrypted", async () => {
+			const fakeEncrypted = new Uint8Array([4, 5, 6]);
+			vi.mocked(mockVaultConnector.encrypt).mockResolvedValue(fakeEncrypted);
+
+			const service = new UrlTransformerService();
+			await service.start();
+
+			const result = await service.addEncryptedToUrl(
+				`${LOCAL_ORIGIN}/api?x-enc-token=staleEncrypted`,
+				{ token: "new" }
+			);
+			const resultUrl = new URL(result);
+
+			expect(resultUrl.searchParams.get("x-enc-token")).toBe(
+				Converter.bytesToBase64Url(fakeEncrypted)
+			);
+		});
+
+		test("returns the original string unchanged when the url is invalid", async () => {
+			const service = new UrlTransformerService();
+			await service.start();
+
+			const invalid = "not a valid url";
+			await expect(service.addEncryptedToUrl(invalid, { token: "abc" })).resolves.toBe(invalid);
+		});
+
+		test("returns the original string unchanged when the url is empty", async () => {
+			const service = new UrlTransformerService();
+			await service.start();
+
+			await expect(service.addEncryptedToUrl("", { token: "abc" })).resolves.toBe("");
 		});
 	});
 
@@ -221,13 +272,11 @@ describe("UrlTransformerService", () => {
 		});
 	});
 
-	describe("getDecryptedParamsFromQueryParams", () => {
+	describe("getDecryptedFromQueryParams", () => {
 		test("returns empty object when queryParams is undefined", async () => {
 			const service = new UrlTransformerService();
 			await service.start();
-			await expect(
-				service.getDecryptedParamsFromQueryParams(undefined, ["token"])
-			).resolves.toEqual({});
+			await expect(service.getDecryptedFromQueryParams(undefined, ["token"])).resolves.toEqual({});
 		});
 
 		test("decrypts requested keys and returns only those keys", async () => {
@@ -241,7 +290,7 @@ describe("UrlTransformerService", () => {
 			await service.start();
 
 			const encryptedValue = Converter.bytesToBase64Url(new Uint8Array([1, 2, 3]));
-			const result = await service.getDecryptedParamsFromQueryParams(
+			const result = await service.getDecryptedFromQueryParams(
 				{ "x-enc-token": encryptedValue, other: "plain" },
 				["token"]
 			);
@@ -254,7 +303,7 @@ describe("UrlTransformerService", () => {
 			const service = new UrlTransformerService();
 			await service.start();
 
-			const result = await service.getDecryptedParamsFromQueryParams({ "x-enc-other": "value" }, [
+			const result = await service.getDecryptedFromQueryParams({ "x-enc-other": "value" }, [
 				"token",
 				"secret"
 			]);
@@ -278,7 +327,7 @@ describe("UrlTransformerService", () => {
 			await service.start();
 
 			const enc = Converter.bytesToBase64Url(new Uint8Array([1]));
-			const result = await service.getDecryptedParamsFromQueryParams(
+			const result = await service.getDecryptedFromQueryParams(
 				{ "x-enc-alpha": enc, "x-enc-beta": enc },
 				["alpha", "beta"]
 			);

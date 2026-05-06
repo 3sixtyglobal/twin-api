@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IHealthComponent } from "@twin.org/api-models";
-import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
-import { BaseError, ComponentFactory, type HealthStatus, type IHealth, Is } from "@twin.org/core";
+import { ContextIdStore } from "@twin.org/context";
+import { BaseError, ComponentFactory, HealthStatus, type IHealth, Is } from "@twin.org/core";
 import { EngineCoreFactory } from "@twin.org/engine-models";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
@@ -21,7 +21,10 @@ export class HealthService implements IHealthComponent {
 	 * The server health.
 	 * @internal
 	 */
-	private _healthInfo: IHealth[];
+	private _healthInfo: {
+		status: HealthStatus;
+		components: IHealth[];
+	};
 
 	/**
 	 * The interval for checking the health of the components and setting it in the health service.
@@ -40,7 +43,7 @@ export class HealthService implements IHealthComponent {
 	 * @param options The constructor options.
 	 */
 	constructor(options?: IHealthServiceConstructorOptions) {
-		this._healthInfo = [];
+		this._healthInfo = { status: HealthStatus.Ok, components: [] };
 		this._healthCheckInterval = options?.config?.healthCheckInterval ?? 30000;
 	}
 
@@ -60,7 +63,7 @@ export class HealthService implements IHealthComponent {
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		const engineCore = EngineCoreFactory.getIfExists("engine");
 
-		if (!Is.empty(engineCore)) {
+		if (!Is.empty(engineCore) && Is.empty(this._healthInterval)) {
 			this._healthInterval = globalThis.setInterval(async () => {
 				await ContextIdStore.run(engineCore.getContextIds() ?? {}, async () => {
 					const allHealth: IHealth[] = [];
@@ -89,9 +92,7 @@ export class HealthService implements IHealthComponent {
 						}
 					}
 
-					for (const componentHealth of allHealth) {
-						await this.setComponentHealth(componentHealth);
-					}
+					this.groupHealthByName(allHealth);
 				});
 			}, this._healthCheckInterval);
 		}
@@ -114,48 +115,47 @@ export class HealthService implements IHealthComponent {
 	 * @returns The service health.
 	 */
 	public async healthStatus(): Promise<{ status: HealthStatus; components: IHealth[] }> {
-		const contextIds = await ContextIdStore.getContextIds();
-		const tenantId = contextIds?.[ContextIdKeys.Tenant];
-
-		const components = this._healthInfo.filter(c => {
-			const componentTenantId = c.properties?.tenantId;
-			return Is.empty(componentTenantId) || componentTenantId === tenantId;
-		});
-
-		const errorCount = components.filter(c => c.status === "error").length;
-		const warningCount = components.filter(c => c.status === "warning").length;
-
-		let finalStatus: HealthStatus = "ok";
-		if (errorCount > 0) {
-			finalStatus = "error";
-		} else if (warningCount > 0) {
-			finalStatus = "warning";
-		}
-
-		return {
-			status: finalStatus,
-			components
-		};
+		return this._healthInfo;
 	}
 
 	/**
-	 * Set the health status for a component.
-	 * @param health The health of the component.
-	 * @returns Nothing.
+	 * Group raw health entries by name, collapsing duplicates into a parent with a grouped array.
+	 * @param entries The flat list of health entries from all components.
+	 * @returns The grouped list.
 	 * @internal
 	 */
-	private async setComponentHealth(health: IHealth): Promise<void> {
-		const componentTenantId = health.properties?.tenantId;
-		const componentIndex = Is.empty(componentTenantId)
-			? this._healthInfo?.findIndex(c => c.name === health.name && Is.empty(c.properties?.tenantId))
-			: this._healthInfo?.findIndex(
-					c => c.name === health.name && c.properties?.tenantId === componentTenantId
-				);
-
-		if (componentIndex === -1) {
-			this._healthInfo.push(health);
-		} else {
-			this._healthInfo[componentIndex] = health;
+	private groupHealthByName(entries: IHealth[]): void {
+		const bySource = new Map<string, IHealth[]>();
+		for (const entry of entries) {
+			const existing = bySource.get(entry.source) ?? [];
+			existing.push(entry);
+			bySource.set(entry.source, existing);
 		}
+
+		const result: IHealth[] = [];
+		for (const [source, group] of bySource) {
+			if (group.length > 1) {
+				let parentStatus: HealthStatus = HealthStatus.Ok;
+
+				if (group.some(e => e.status === HealthStatus.Error)) {
+					parentStatus = HealthStatus.Error;
+				} else if (group.some(e => e.status === HealthStatus.Warning)) {
+					parentStatus = HealthStatus.Warning;
+				}
+
+				result.push({ source, status: parentStatus, grouped: group });
+			} else {
+				result.push(group[0]);
+			}
+		}
+
+		let finalStatus: HealthStatus = HealthStatus.Ok;
+		if (result.some(e => e.status === HealthStatus.Error)) {
+			finalStatus = HealthStatus.Error;
+		} else if (result.some(e => e.status === HealthStatus.Warning)) {
+			finalStatus = HealthStatus.Warning;
+		}
+
+		this._healthInfo = { status: finalStatus, components: result };
 	}
 }

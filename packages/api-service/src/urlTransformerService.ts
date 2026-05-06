@@ -107,7 +107,7 @@ export class UrlTransformerService implements IUrlTransformerComponent {
 		value: string
 	): Promise<string> {
 		const paramName = this._queryParamNames[id] ?? id;
-		return this.addEncryptedParamsToUrl(url, { [paramName]: value });
+		return this.addEncryptedToUrl(url, { [paramName]: value });
 	}
 
 	/**
@@ -121,7 +121,7 @@ export class UrlTransformerService implements IUrlTransformerComponent {
 		id: string
 	): Promise<string | undefined> {
 		const paramName = this._queryParamNames[id] ?? id;
-		const decrypted = await this.getDecryptedParamsFromQueryParams(queryParams, [paramName]);
+		const decrypted = await this.getDecryptedFromQueryParams(queryParams, [paramName]);
 		return decrypted[paramName];
 	}
 
@@ -131,8 +131,14 @@ export class UrlTransformerService implements IUrlTransformerComponent {
 	 * @param params The key/value pairs to encrypt and append.
 	 * @returns The URL with the encrypted parameters added.
 	 */
-	public async addEncryptedParamsToUrl(url: string, params: IHttpRequestQuery): Promise<string> {
-		const urlObj = new URL(url);
+	public async addEncryptedToUrl(url: string, params: IHttpRequestQuery): Promise<string> {
+		let urlObj: URL;
+		try {
+			urlObj = new URL(url);
+		} catch {
+			return url;
+		}
+
 		const query: IHttpRequestQuery = {};
 		for (const [key, value] of urlObj.searchParams.entries()) {
 			query[key] = value;
@@ -155,7 +161,7 @@ export class UrlTransformerService implements IUrlTransformerComponent {
 	 * @param keys The keys to decrypt.
 	 * @returns A map of the decrypted key/value pairs that were present.
 	 */
-	public async getDecryptedParamsFromQueryParams(
+	public async getDecryptedFromQueryParams(
 		queryParams: IHttpRequestQuery | undefined,
 		keys: string[]
 	): Promise<IHttpRequestQuery> {

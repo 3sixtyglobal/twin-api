@@ -20,6 +20,7 @@
 	},
 	"health": {
 		"fastifyWebServer": {
+			"description": "Checks if the Web Server is reachable",
 			"reachable": "The Web Server is reachable",
 			"unreachable": "The Web Server is unreachable"
 		}

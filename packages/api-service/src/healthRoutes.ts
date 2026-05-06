@@ -8,7 +8,7 @@ import type {
 	IServerHealthResponse,
 	ITag
 } from "@twin.org/api-models";
-import { ComponentFactory } from "@twin.org/core";
+import { ComponentFactory, HealthStatus } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 
 /**
@@ -48,15 +48,15 @@ export function generateRestRoutesHealth(
 						description: "The response for the health request.",
 						response: {
 							body: {
-								status: "ok",
+								status: HealthStatus.Ok,
 								components: [
 									{
-										name: "Database",
-										status: "ok"
+										source: "Database",
+										status: HealthStatus.Ok
 									},
 									{
-										name: "Storage",
-										status: "ok"
+										source: "Storage",
+										status: HealthStatus.Ok
 									}
 								]
 							}
@@ -67,16 +67,16 @@ export function generateRestRoutesHealth(
 						description: "The response for the health request with warnings.",
 						response: {
 							body: {
-								status: "warning",
+								status: HealthStatus.Warning,
 								components: [
 									{
-										name: "Database",
-										status: "warning",
+										source: "Database",
+										status: HealthStatus.Warning,
 										description: "slowRunning"
 									},
 									{
-										name: "Storage",
-										status: "ok"
+										source: "Storage",
+										status: HealthStatus.Ok
 									}
 								]
 							}
@@ -90,11 +90,11 @@ export function generateRestRoutesHealth(
 								status: "error",
 								components: [
 									{
-										name: "Database",
+										source: "Database",
 										status: "ok"
 									},
 									{
-										name: "Storage",
+										source: "Storage",
 										status: "error",
 										description: "storageFull"
 									}

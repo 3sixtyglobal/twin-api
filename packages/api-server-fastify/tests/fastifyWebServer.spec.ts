@@ -491,9 +491,10 @@ describe("api-server-fastify", () => {
 
 		expect(result).toEqual([
 			{
-				name: "FastifyWebServer",
+				source: "FastifyWebServer",
+				description: "description",
 				status: HealthStatus.Ok,
-				details: "health.fastifyWebServer.reachable"
+				message: "reachable"
 			}
 		]);
 	});
@@ -506,9 +507,10 @@ describe("api-server-fastify", () => {
 
 		expect(result).toEqual([
 			{
-				name: "FastifyWebServer",
-				status: HealthStatus.Error,
-				details: "health.fastifyWebServer.unreachable"
+				source: "FastifyWebServer",
+				description: "description",
+				message: "unreachable",
+				status: HealthStatus.Error
 			}
 		]);
 	});

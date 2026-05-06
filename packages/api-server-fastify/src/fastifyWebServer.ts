@@ -359,22 +359,24 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @returns The health status of the server.
 	 */
 	public async health(): Promise<IHealth[]> {
+		let healthCheck: IHealth | undefined;
 		if (this._fastify?.server?.listening) {
-			return [
-				{
-					name: FastifyWebServer.CLASS_NAME,
-					status: HealthStatus.Ok,
-					details: "health.fastifyWebServer.reachable"
-				}
-			];
-		}
-		return [
-			{
-				name: FastifyWebServer.CLASS_NAME,
+			healthCheck = {
+				source: FastifyWebServer.CLASS_NAME,
+				status: HealthStatus.Ok,
+				description: "description",
+				message: "reachable"
+			};
+		} else {
+			healthCheck = {
+				source: FastifyWebServer.CLASS_NAME,
 				status: HealthStatus.Error,
-				details: "health.fastifyWebServer.unreachable"
-			}
-		];
+				description: "description",
+				message: "unreachable"
+			};
+		}
+
+		return [healthCheck];
 	}
 
 	/**
