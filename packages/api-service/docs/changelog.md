@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.31](https://github.com/twinfoundation/twin-api/compare/api-service-v0.0.3-next.30...api-service-v0.0.3-next.31) (2026-05-06)
+
+
+### Features
+
+* update health format ([cfbfbbb](https://github.com/twinfoundation/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.30 to 0.0.3-next.31
+
 ## [0.0.3-next.30](https://github.com/twinfoundation/twin-api/compare/api-service-v0.0.3-next.29...api-service-v0.0.3-next.30) (2026-05-05)
 
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.31](https://github.com/twinfoundation/twin-api/compare/api-core-v0.0.3-next.30...api-core-v0.0.3-next.31) (2026-05-06)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.30 to 0.0.3-next.31
+
 ## [0.0.3-next.30](https://github.com/twinfoundation/twin-api/compare/api-core-v0.0.3-next.29...api-core-v0.0.3-next.30) (2026-05-05)
 
 

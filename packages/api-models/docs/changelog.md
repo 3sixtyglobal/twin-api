@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.31](https://github.com/twinfoundation/twin-api/compare/api-models-v0.0.3-next.30...api-models-v0.0.3-next.31) (2026-05-06)
+
+
+### Features
+
+* update health format ([cfbfbbb](https://github.com/twinfoundation/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+
 ## [0.0.3-next.30](https://github.com/twinfoundation/twin-api/compare/api-models-v0.0.3-next.29...api-models-v0.0.3-next.30) (2026-05-05)
 
 
