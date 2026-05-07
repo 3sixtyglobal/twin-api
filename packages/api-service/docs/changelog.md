@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.0.3-next.32](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.31...api-service-v0.0.3-next.32) (2026-05-07)
+
+
+### Features
+
+* avoid overlapping health checks ([35150b8](https://github.com/iotaledger/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
+* update health service interval defaults ([2c66ae1](https://github.com/iotaledger/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.31 to 0.0.3-next.32
+
 ## [0.0.3-next.31](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.30...api-service-v0.0.3-next.31) (2026-05-06)
 
 
