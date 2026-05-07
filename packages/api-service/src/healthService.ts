@@ -3,7 +3,7 @@
 import type { IHealthComponent } from "@twin.org/api-models";
 import { ContextIdStore } from "@twin.org/context";
 import { BaseError, ComponentFactory, HealthStatus, type IHealth, Is } from "@twin.org/core";
-import { EngineCoreFactory } from "@twin.org/engine-models";
+import { EngineCoreFactory, type IEngineCore } from "@twin.org/engine-models";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { IHealthServiceConstructorOptions } from "./models/IHealthServiceConstructorOptions.js";
@@ -36,7 +36,7 @@ export class HealthService implements IHealthComponent {
 	 * Interval for checking the health of the components and setting it in the health service.
 	 * @internal
 	 */
-	private _healthInterval: NodeJS.Timeout | undefined;
+	private _healthTimer: NodeJS.Timeout | undefined;
 
 	/**
 	 * Create a new instance of HealthService.
@@ -63,38 +63,14 @@ export class HealthService implements IHealthComponent {
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		const engineCore = EngineCoreFactory.getIfExists("engine");
 
-		if (!Is.empty(engineCore) && Is.empty(this._healthInterval)) {
-			this._healthInterval = globalThis.setInterval(async () => {
-				await ContextIdStore.run(engineCore.getContextIds() ?? {}, async () => {
-					const allHealth: IHealth[] = [];
-
-					const registeredInstances = await engineCore.getRegisteredComponents();
-					for (const registeredInstance of registeredInstances) {
-						const healthMethod = registeredInstance.component.health?.bind(
-							registeredInstance.component
-						);
-						if (Is.function(healthMethod)) {
-							try {
-								allHealth.push(...(await healthMethod()));
-							} catch (error) {
-								const nodeLogging =
-									ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
-								await nodeLogging?.log({
-									level: "error",
-									source: HealthService.CLASS_NAME,
-									message: "componentHealthCheckFailed",
-									data: {
-										className: registeredInstance.component.className()
-									},
-									error: BaseError.fromError(error)
-								});
-							}
-						}
-					}
-
-					this.groupHealthByName(allHealth);
-				});
-			}, this._healthCheckInterval);
+		if (!Is.empty(engineCore) && Is.empty(this._healthTimer)) {
+			// Immediately check health after a startup settling period
+			// the interval for the next checks are trigger on success of the current
+			// check to prevent overlapping checks in case of long running health checks
+			this._healthTimer = globalThis.setTimeout(
+				async () => this.checkHealth(engineCore, nodeLoggingComponentType),
+				5000
+			);
 		}
 	}
 
@@ -104,9 +80,9 @@ export class HealthService implements IHealthComponent {
 	 * @returns Nothing.
 	 */
 	public async stop(nodeLoggingComponentType?: string): Promise<void> {
-		if (this._healthInterval) {
-			clearInterval(this._healthInterval);
-			this._healthInterval = undefined;
+		if (this._healthTimer) {
+			clearTimeout(this._healthTimer);
+			this._healthTimer = undefined;
 		}
 	}
 
@@ -116,6 +92,54 @@ export class HealthService implements IHealthComponent {
 	 */
 	public async healthStatus(): Promise<{ status: HealthStatus; components: IHealth[] }> {
 		return this._healthInfo;
+	}
+
+	/**
+	 * Check the health of all registered components and set the health info in the service.
+	 * @param engineCore The engine core to get the registered components from.
+	 * @param nodeLoggingComponentType The node logging component type to log any errors that occur during health checks.
+	 * @returns Nothing.
+	 * @internal
+	 */
+	private async checkHealth(
+		engineCore: IEngineCore,
+		nodeLoggingComponentType?: string
+	): Promise<void> {
+		await ContextIdStore.run(engineCore.getContextIds() ?? {}, async () => {
+			const allHealth: IHealth[] = [];
+
+			const registeredInstances = await engineCore.getRegisteredComponents();
+			for (const registeredInstance of registeredInstances) {
+				const healthMethod = registeredInstance.component.health?.bind(
+					registeredInstance.component
+				);
+				if (Is.function(healthMethod)) {
+					try {
+						allHealth.push(...(await healthMethod()));
+					} catch (error) {
+						const nodeLogging =
+							ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
+						await nodeLogging?.log({
+							level: "error",
+							source: HealthService.CLASS_NAME,
+							message: "componentHealthCheckFailed",
+							data: {
+								className: registeredInstance.component.className()
+							},
+							error: BaseError.fromError(error)
+						});
+					}
+				}
+			}
+
+			this.groupHealthByName(allHealth);
+		});
+
+		// Queue the next health check.
+		this._healthTimer = globalThis.setTimeout(
+			async () => this.checkHealth(engineCore, nodeLoggingComponentType),
+			this._healthCheckInterval
+		);
 	}
 
 	/**
