@@ -44,7 +44,7 @@ export class HealthService implements IHealthComponent {
 	 */
 	constructor(options?: IHealthServiceConstructorOptions) {
 		this._healthInfo = { status: HealthStatus.Ok, components: [] };
-		this._healthCheckInterval = options?.config?.healthCheckInterval ?? 30000;
+		this._healthCheckInterval = options?.config?.healthCheckInterval ?? 60000;
 	}
 
 	/**
