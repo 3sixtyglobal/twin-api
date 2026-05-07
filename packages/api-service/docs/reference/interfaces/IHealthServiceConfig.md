@@ -13,5 +13,5 @@ The interval for checking the health of the components and setting it in the hea
 #### Default
 
 ```ts
-30000
+60000
 ```
