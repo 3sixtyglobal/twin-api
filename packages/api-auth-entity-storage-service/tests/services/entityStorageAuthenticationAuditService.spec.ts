@@ -28,9 +28,7 @@ describe("EntityStorageAuthenticationAuditService", () => {
 			set: setMock
 		} as unknown as IEntityStorageConnector;
 
-		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(
-			mockAuditEntryEntityStorage as IEntityStorageConnector<never>
-		);
+		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockAuditEntryEntityStorage);
 
 		service = new EntityStorageAuthenticationAuditService();
 	});

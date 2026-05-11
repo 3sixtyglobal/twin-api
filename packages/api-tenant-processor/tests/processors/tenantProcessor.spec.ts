@@ -40,7 +40,7 @@ describe("TenantProcessor", () => {
 			decryptQueryParams: vi.fn(),
 			encryptParam: vi.fn(),
 			decryptParam: vi.fn()
-		} as unknown as IUrlTransformerComponent;
+		};
 
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockTenantStorage);
 		vi.spyOn(ComponentFactory, "get").mockReturnValue(mockUrlTransformerComponent);
@@ -51,8 +51,12 @@ describe("TenantProcessor", () => {
 			vi.mocked(mockTenantStorage.get).mockResolvedValue({
 				id: "tenant-A",
 				apiKey: "key-A",
-				publicOrigin: "https://a.example.com"
-			} as Tenant);
+				publicOrigin: "https://a.example.com",
+				dateCreated: new Date().toISOString(),
+				dateModified: new Date().toISOString(),
+				isNodeTenant: false,
+				label: "Token Tenant"
+			});
 
 			const processor = new TenantProcessor();
 			const contextIds: IContextIds = {};
@@ -110,8 +114,12 @@ describe("TenantProcessor", () => {
 			vi.mocked(mockTenantStorage.get).mockResolvedValue({
 				id: "tenant-from-key",
 				apiKey: "key-A",
-				publicOrigin: "https://key.example.com"
-			} as Tenant);
+				publicOrigin: "https://key.example.com",
+				dateCreated: new Date().toISOString(),
+				dateModified: new Date().toISOString(),
+				isNodeTenant: false,
+				label: "Token Tenant"
+			});
 
 			const processor = new TenantProcessor();
 			const contextIds: IContextIds = {};
@@ -140,8 +148,12 @@ describe("TenantProcessor", () => {
 			vi.mocked(mockTenantStorage.get).mockResolvedValue({
 				id: "tenant-from-token",
 				apiKey: "key-T",
-				publicOrigin: "https://token.example.com"
-			} as Tenant);
+				publicOrigin: "https://token.example.com",
+				dateCreated: new Date().toISOString(),
+				dateModified: new Date().toISOString(),
+				isNodeTenant: false,
+				label: "Token Tenant"
+			});
 
 			const processor = new TenantProcessor();
 			const contextIds: IContextIds = {};

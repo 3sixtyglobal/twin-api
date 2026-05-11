@@ -584,9 +584,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				reply.header(header, httpResponse.headers[header]);
 			}
 		}
-		return reply
-			.status((httpResponse.statusCode ?? HttpStatusCode.ok) as number)
-			.send(httpResponse.body);
+		return reply.status(httpResponse.statusCode ?? HttpStatusCode.ok).send(httpResponse.body);
 	}
 
 	/**
@@ -662,7 +660,6 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					this._includeErrorStack
 				);
 				HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
-				hasPreError = true;
 			}
 		}
 

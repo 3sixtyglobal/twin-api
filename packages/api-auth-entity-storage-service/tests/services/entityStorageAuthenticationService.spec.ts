@@ -55,9 +55,7 @@ describe("EntityStorageAuthenticationService", () => {
 			remove: vi.fn()
 		} as unknown as IVaultConnector;
 
-		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(
-			mockUserEntityStorage as IEntityStorageConnector<never>
-		);
+		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockUserEntityStorage);
 		vi.spyOn(VaultConnectorFactory, "get").mockReturnValue(mockVaultConnector);
 		vi.spyOn(ComponentFactory, "get").mockImplementation(componentName => {
 			if (componentName === "authentication-rate") {

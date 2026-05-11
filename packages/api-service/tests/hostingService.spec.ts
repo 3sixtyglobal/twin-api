@@ -1,6 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HttpUrlHelper, type ITenantAdminComponent } from "@twin.org/api-models";
+import { HttpUrlHelper, type ITenant, type ITenantAdminComponent } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import { ComponentFactory } from "@twin.org/core";
 import { HostingService } from "../src/hostingService.js";
@@ -8,6 +8,14 @@ import { HostingService } from "../src/hostingService.js";
 const LOCAL_ORIGIN = "http://localhost:3000";
 const PUBLIC_ORIGIN = "https://api.example.com";
 const TENANT_ID = "a".repeat(32);
+const MOCK_TENANT_BASE: ITenant = {
+	id: TENANT_ID,
+	apiKey: "test-api-key",
+	dateCreated: "2026-01-01T00:00:00.000Z",
+	dateModified: "2026-01-01T00:00:00.000Z",
+	isNodeTenant: false,
+	label: "test-tenant"
+};
 
 describe("HostingService", () => {
 	let mockTenantAdminComponent: ITenantAdminComponent;
@@ -68,8 +76,9 @@ describe("HostingService", () => {
 			});
 			vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(mockTenantAdminComponent);
 			vi.mocked(mockTenantAdminComponent.get).mockResolvedValue({
+				...MOCK_TENANT_BASE,
 				publicOrigin: "https://tenant.example.com"
-			} as never);
+			});
 
 			const service = new HostingService({
 				config: { localOrigin: LOCAL_ORIGIN, publicOrigin: PUBLIC_ORIGIN }
@@ -107,9 +116,7 @@ describe("HostingService", () => {
 				[ContextIdKeys.Tenant]: TENANT_ID
 			});
 			vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(mockTenantAdminComponent);
-			vi.mocked(mockTenantAdminComponent.get).mockResolvedValue({
-				publicOrigin: undefined
-			} as never);
+			vi.mocked(mockTenantAdminComponent.get).mockResolvedValue({ ...MOCK_TENANT_BASE });
 
 			const service = new HostingService({
 				config: { localOrigin: LOCAL_ORIGIN, publicOrigin: PUBLIC_ORIGIN }
@@ -133,8 +140,9 @@ describe("HostingService", () => {
 		test("returns the tenant public origin when the component and tenant exist", async () => {
 			vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(mockTenantAdminComponent);
 			vi.mocked(mockTenantAdminComponent.get).mockResolvedValue({
+				...MOCK_TENANT_BASE,
 				publicOrigin: "https://tenant.example.com"
-			} as never);
+			});
 
 			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
 			await expect(service.getTenantOrigin(TENANT_ID)).resolves.toBe("https://tenant.example.com");
@@ -143,9 +151,7 @@ describe("HostingService", () => {
 
 		test("returns undefined when tenant has no public origin", async () => {
 			vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(mockTenantAdminComponent);
-			vi.mocked(mockTenantAdminComponent.get).mockResolvedValue({
-				publicOrigin: undefined
-			} as never);
+			vi.mocked(mockTenantAdminComponent.get).mockResolvedValue({ ...MOCK_TENANT_BASE });
 
 			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
 			await expect(service.getTenantOrigin(TENANT_ID)).resolves.toBeUndefined();

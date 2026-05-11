@@ -14,6 +14,7 @@ import { EntityStorageAuthenticationRateService } from "../../src/services/entit
 describe("EntityStorageAuthenticationRateService", () => {
 	let addTaskMock: ReturnType<typeof vi.fn>;
 	let getMock: ReturnType<typeof vi.fn>;
+	let mockTaskScheduler: ITaskSchedulerComponent;
 	let removeTaskMock: ReturnType<typeof vi.fn>;
 	let setMock: ReturnType<typeof vi.fn>;
 	let removeMock: ReturnType<typeof vi.fn>;
@@ -42,13 +43,13 @@ describe("EntityStorageAuthenticationRateService", () => {
 			query: queryMock
 		} as unknown as IEntityStorageConnector;
 
-		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(
-			mockRateEntryStorage as IEntityStorageConnector<never>
-		);
-		vi.spyOn(ComponentFactory, "get").mockReturnValue({
+		mockTaskScheduler = {
 			addTask: addTaskMock,
 			removeTask: removeTaskMock
-		} as unknown as ITaskSchedulerComponent);
+		} as unknown as ITaskSchedulerComponent;
+
+		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockRateEntryStorage);
+		vi.spyOn(ComponentFactory, "get").mockReturnValue(mockTaskScheduler);
 
 		service = new EntityStorageAuthenticationRateService({
 			config: {

@@ -17,21 +17,22 @@ function makeComponent(...healthEntries: IHealth[]): {
 }
 
 describe("HealthService", () => {
-	let mockEngineCore: {
-		getContextIds: () => { [id: string]: string };
-		getRegisteredComponents: () => Promise<unknown[]>;
-	};
+	let mockGetContextIds: ReturnType<typeof vi.fn>;
+	let mockGetRegisteredComponents: ReturnType<typeof vi.fn>;
+	let mockEngineCore: NonNullable<ReturnType<typeof EngineCoreFactory.getIfExists>>;
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
 		vi.useFakeTimers();
 
+		mockGetContextIds = vi.fn().mockReturnValue({});
+		mockGetRegisteredComponents = vi.fn().mockResolvedValue([]);
 		mockEngineCore = {
-			getContextIds: vi.fn().mockReturnValue({}),
-			getRegisteredComponents: vi.fn().mockResolvedValue([])
-		};
+			getContextIds: mockGetContextIds,
+			getRegisteredComponents: mockGetRegisteredComponents
+		} as unknown as NonNullable<ReturnType<typeof EngineCoreFactory.getIfExists>>;
 
-		vi.spyOn(EngineCoreFactory, "getIfExists").mockReturnValue(mockEngineCore as never);
+		vi.spyOn(EngineCoreFactory, "getIfExists").mockReturnValue(mockEngineCore);
 		vi.spyOn(ContextIdStore, "run").mockImplementation(async (_, fn) => fn());
 	});
 
@@ -78,7 +79,7 @@ describe("HealthService", () => {
 		});
 
 		test("collects health from registered components", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent({ source: "db", status: HealthStatus.Ok })
 			]);
 
@@ -97,7 +98,7 @@ describe("HealthService", () => {
 				status: HealthStatus.Ok,
 				description: "Cache health"
 			};
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([makeComponent(entry)]);
+			mockGetRegisteredComponents.mockResolvedValue([makeComponent(entry)]);
 
 			const service = new HealthService();
 			await startAndTick(service);
@@ -108,7 +109,7 @@ describe("HealthService", () => {
 		});
 
 		test("groups entries with the same name under a single parent", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent(
 					{ source: "storage", status: HealthStatus.Ok, description: "Primary" },
 					{ source: "storage", status: HealthStatus.Ok, description: "Replica" }
@@ -125,7 +126,7 @@ describe("HealthService", () => {
 		});
 
 		test("grouped parent status is error when any child has error", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent(
 					{ source: "storage", status: HealthStatus.Ok },
 					{ source: "storage", status: HealthStatus.Error }
@@ -141,7 +142,7 @@ describe("HealthService", () => {
 		});
 
 		test("grouped parent status is warning when any child has warning and none have error", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent(
 					{ source: "storage", status: HealthStatus.Ok },
 					{ source: "storage", status: HealthStatus.Warning }
@@ -157,7 +158,7 @@ describe("HealthService", () => {
 		});
 
 		test("grouped parent status is ok when all children are ok", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent(
 					{ source: "storage", status: HealthStatus.Ok },
 					{ source: "storage", status: HealthStatus.Ok }
@@ -173,7 +174,7 @@ describe("HealthService", () => {
 		});
 
 		test("error takes priority over warning in grouped parent status", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent(
 					{ source: "storage", status: HealthStatus.Warning },
 					{ source: "storage", status: HealthStatus.Error }
@@ -188,7 +189,7 @@ describe("HealthService", () => {
 		});
 
 		test("entries with distinct names are not grouped", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent(
 					{ source: "db", status: HealthStatus.Ok },
 					{ source: "cache", status: HealthStatus.Ok }
@@ -204,7 +205,7 @@ describe("HealthService", () => {
 		});
 
 		test("overall status is error when any top-level component is errored", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent({ source: "db", status: HealthStatus.Error })
 			]);
 
@@ -215,7 +216,7 @@ describe("HealthService", () => {
 		});
 
 		test("overall status is warning when a component has warning and none have error", async () => {
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent({ source: "db", status: HealthStatus.Warning })
 			]);
 
@@ -232,7 +233,7 @@ describe("HealthService", () => {
 			await service.start();
 			await service.stop();
 
-			vi.mocked(mockEngineCore.getRegisteredComponents).mockResolvedValue([
+			mockGetRegisteredComponents.mockResolvedValue([
 				makeComponent({ source: "db", status: HealthStatus.Error })
 			]);
 			await vi.advanceTimersByTimeAsync(30000);
