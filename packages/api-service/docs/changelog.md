@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.0.3-next.33](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.32...api-service-v0.0.3-next.33) (2026-05-11)
+
+
+### Features
+
+* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+
+
+### Bug Fixes
+
+* docs ([4d7e1d2](https://github.com/iotaledger/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.32 to 0.0.3-next.33
+
 ## [0.0.3-next.32](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.31...api-service-v0.0.3-next.32) (2026-05-07)
 
 
