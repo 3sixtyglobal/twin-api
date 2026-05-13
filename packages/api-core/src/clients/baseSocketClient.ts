@@ -14,6 +14,7 @@ export abstract class BaseSocketClient {
 	 * The name of the class implementation socket calls.
 	 * @internal
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-unused-private-class-members
 	private readonly _implementationName: string;
 
 	/**
