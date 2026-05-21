@@ -2,6 +2,10 @@
 
 Contract definition for authentication user.
 
+## Extended by
+
+- [`IAuthenticationUserSecure`](IAuthenticationUserSecure.md)
+
 ## Properties
 
 ### email {#email}
@@ -9,22 +13,6 @@ Contract definition for authentication user.
 > **email**: `string`
 
 The user e-mail address.
-
-***
-
-### password {#password}
-
-> **password**: `string`
-
-The encrypted password for the user.
-
-***
-
-### salt {#salt}
-
-> **salt**: `string`
-
-The salt for the password.
 
 ***
 

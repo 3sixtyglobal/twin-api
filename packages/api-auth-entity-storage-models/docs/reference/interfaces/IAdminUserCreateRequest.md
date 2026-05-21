@@ -6,6 +6,12 @@ Create a new user as an admin.
 
 ### body {#body}
 
-> **body**: `Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"`\>
+> **body**: [`IAuthenticationUser`](IAuthenticationUser.md) & `object`
 
 The body of the request.
+
+#### Type Declaration
+
+##### password
+
+> **password**: `string`

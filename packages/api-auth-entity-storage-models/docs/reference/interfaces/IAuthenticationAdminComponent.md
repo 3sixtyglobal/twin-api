@@ -18,7 +18,7 @@ Create a login for the user.
 
 ##### user
 
-`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"`\>
+[`IAuthenticationUser`](IAuthenticationUser.md) & `object`
 
 The user to create.
 
@@ -40,7 +40,7 @@ Update a login for the user.
 
 ##### user
 
-`Partial`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"password"` \| `"salt"`\>\>
+`Partial`\<[`IAuthenticationUser`](IAuthenticationUser.md)\>
 
 The user to update.
 
@@ -54,7 +54,7 @@ Nothing.
 
 ### get() {#get}
 
-> **get**(`email`): `Promise`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"` \| `"password"`\>\>
+> **get**(`email`): `Promise`\<[`IAuthenticationUser`](IAuthenticationUser.md)\>
 
 Get a user by email.
 
@@ -68,7 +68,7 @@ The email address of the user to get.
 
 #### Returns
 
-`Promise`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"` \| `"password"`\>\>
+`Promise`\<[`IAuthenticationUser`](IAuthenticationUser.md)\>
 
 The user details.
 
@@ -76,7 +76,7 @@ The user details.
 
 ### getByIdentity() {#getbyidentity}
 
-> **getByIdentity**(`identity`): `Promise`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"` \| `"password"`\>\>
+> **getByIdentity**(`identity`): `Promise`\<[`IAuthenticationUser`](IAuthenticationUser.md)\>
 
 Get a user by identity.
 
@@ -90,7 +90,7 @@ The identity of the user to get.
 
 #### Returns
 
-`Promise`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"salt"` \| `"password"`\>\>
+`Promise`\<[`IAuthenticationUser`](IAuthenticationUser.md)\>
 
 The user details.
 

@@ -9,6 +9,7 @@
 - [IAuthenticationRateActionConfig](interfaces/IAuthenticationRateActionConfig.md)
 - [IAuthenticationRateComponent](interfaces/IAuthenticationRateComponent.md)
 - [IAuthenticationUser](interfaces/IAuthenticationUser.md)
+- [IAuthenticationUserSecure](interfaces/IAuthenticationUserSecure.md)
 - [IAdminUserCreateRequest](interfaces/IAdminUserCreateRequest.md)
 - [IAdminUserGetByIdentityRequest](interfaces/IAdminUserGetByIdentityRequest.md)
 - [IAdminUserGetRequest](interfaces/IAdminUserGetRequest.md)

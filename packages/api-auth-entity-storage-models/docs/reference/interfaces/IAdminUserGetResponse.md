@@ -6,6 +6,6 @@ Get a user as an admin.
 
 ### body {#body}
 
-> **body**: `Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"password"` \| `"salt"`\>
+> **body**: [`IAuthenticationUser`](IAuthenticationUser.md)
 
 The body of the request.

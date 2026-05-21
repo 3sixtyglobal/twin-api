@@ -20,6 +20,6 @@ The user email.
 
 ### body {#body}
 
-> **body**: `Partial`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"email"` \| `"password"` \| `"salt"`\>\>
+> **body**: `Partial`\<`Omit`\<[`IAuthenticationUser`](IAuthenticationUser.md), `"email"`\>\>
 
 The body of the request.
