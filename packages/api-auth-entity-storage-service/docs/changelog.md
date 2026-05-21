@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.35](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.34...api-auth-entity-storage-service-v0.0.3-next.35) (2026-05-21)
+
+
+### Features
+
+* user partitioning ([#126](https://github.com/iotaledger/twin-api/issues/126)) ([6bf0da3](https://github.com/iotaledger/twin-api/commit/6bf0da3c42406c9838e80e0ddd6b21f5c64aac90))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.34 to 0.0.3-next.35
+    * @twin.org/api-core bumped from 0.0.3-next.34 to 0.0.3-next.35
+    * @twin.org/api-models bumped from 0.0.3-next.34 to 0.0.3-next.35
+
 ## [0.0.3-next.34](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.33...api-auth-entity-storage-service-v0.0.3-next.34) (2026-05-19)
 
 

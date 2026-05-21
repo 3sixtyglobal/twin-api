@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.35](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.34...api-processors-v0.0.3-next.35) (2026-05-21)
+
+
+### Miscellaneous Chores
+
+* **api-processors:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.34 to 0.0.3-next.35
+
 ## [0.0.3-next.34](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.33...api-processors-v0.0.3-next.34) (2026-05-19)
 
 
