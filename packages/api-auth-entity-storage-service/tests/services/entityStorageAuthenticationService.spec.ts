@@ -297,7 +297,7 @@ describe("EntityStorageAuthenticationService", () => {
 			scope: "read,write"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (_vaultConnector, _signingKeyName, _token, _requiredScopes, verifyUser) => {
+			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456");
 				expect(verified).toEqual(["user", "organization"]);
 				return {
@@ -351,7 +351,7 @@ describe("EntityStorageAuthenticationService", () => {
 			[ContextIdKeys.Node]: "node-1"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (_vaultConnector, _signingKeyName, _token, _requiredScopes, verifyUser) => {
+			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
 				await verifyUser?.("did:user:123", "did:org:456");
 				return {
 					header: { alg: "EdDSA" },
@@ -410,7 +410,7 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (_vaultConnector, _signingKeyName, _token, _requiredScopes, verifyUser) => {
+			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456");
 				if (!verified?.includes("user")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
@@ -447,7 +447,7 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (_vaultConnector, _signingKeyName, _token, _requiredScopes, verifyUser) => {
+			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456");
 				if (!verified?.includes("organization")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "organizationNotVerified");

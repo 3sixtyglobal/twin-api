@@ -59,7 +59,7 @@ describe("AuthHeaderProcessor", () => {
 			location: "authorization"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (_vault, _key, _token, _requiredScope, verifyUser) => {
+			async (vault, key, token, requiredScope, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456");
 				expect(verified).toEqual(["user", "organization"]);
 				return {
@@ -103,7 +103,7 @@ describe("AuthHeaderProcessor", () => {
 			location: "authorization"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (_vault, _key, _token, _requiredScope, verifyUser) => {
+			async (vault, key, token, requiredScope, verifyUser) => {
 				await verifyUser?.("did:user:123", "did:org:456");
 				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 			}

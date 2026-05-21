@@ -27,7 +27,7 @@ describe("EntityStorageAuthenticationRateService", () => {
 		vi.restoreAllMocks();
 		vi.setSystemTime(new Date("2026-04-13T10:00:00.000Z"));
 
-		addTaskMock = vi.fn().mockImplementation(async (_taskId, _times, taskCallback) => {
+		addTaskMock = vi.fn().mockImplementation(async (taskId, times, taskCallback) => {
 			scheduledCleanup = taskCallback;
 		});
 		getMock = vi.fn();

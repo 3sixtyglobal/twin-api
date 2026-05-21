@@ -33,7 +33,7 @@ describe("HealthService", () => {
 		} as unknown as NonNullable<ReturnType<typeof EngineCoreFactory.getIfExists>>;
 
 		vi.spyOn(EngineCoreFactory, "getIfExists").mockReturnValue(mockEngineCore);
-		vi.spyOn(ContextIdStore, "run").mockImplementation(async (_, fn) => fn());
+		vi.spyOn(ContextIdStore, "run").mockImplementation(async (contextIds, fn) => fn());
 	});
 
 	afterEach(() => {
