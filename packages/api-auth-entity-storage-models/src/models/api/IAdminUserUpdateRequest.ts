@@ -19,5 +19,5 @@ export interface IAdminUserUpdateRequest {
 	/**
 	 * The body of the request.
 	 */
-	body: Partial<Omit<IAuthenticationUser, "email" | "password" | "salt">>;
+	body: Partial<Omit<IAuthenticationUser, "email">>;
 }

@@ -9,5 +9,5 @@ export interface IAdminUserCreateRequest {
 	/**
 	 * The body of the request.
 	 */
-	body: Omit<IAuthenticationUser, "salt">;
+	body: IAuthenticationUser & { password: string };
 }

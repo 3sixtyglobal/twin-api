@@ -49,7 +49,7 @@ export class EntityStorageAuthenticationAdminRestClient
 	 * @param user The user to create.
 	 * @returns Nothing.
 	 */
-	public async create(user: Omit<IAuthenticationUser, "salt">): Promise<void> {
+	public async create(user: IAuthenticationUser & { password: string }): Promise<void> {
 		Guards.object(EntityStorageAuthenticationAdminRestClient.CLASS_NAME, nameof(user), user);
 		Guards.stringValue(
 			EntityStorageAuthenticationAdminRestClient.CLASS_NAME,
@@ -67,9 +67,7 @@ export class EntityStorageAuthenticationAdminRestClient
 	 * @param user The user to update.
 	 * @returns Nothing.
 	 */
-	public async update(
-		user: Partial<Omit<IAuthenticationUser, "password" | "salt">>
-	): Promise<void> {
+	public async update(user: Partial<IAuthenticationUser>): Promise<void> {
 		Guards.object(EntityStorageAuthenticationAdminRestClient.CLASS_NAME, nameof(user), user);
 		Guards.stringValue(
 			EntityStorageAuthenticationAdminRestClient.CLASS_NAME,
@@ -90,7 +88,7 @@ export class EntityStorageAuthenticationAdminRestClient
 	 * @param email The email address of the user to get.
 	 * @returns The user details.
 	 */
-	public async get(email: string): Promise<Omit<IAuthenticationUser, "password" | "salt">> {
+	public async get(email: string): Promise<IAuthenticationUser> {
 		Guards.stringValue(EntityStorageAuthenticationAdminRestClient.CLASS_NAME, nameof(email), email);
 
 		const response = await this.fetch<IAdminUserGetRequest, IAdminUserGetResponse>(
@@ -111,9 +109,7 @@ export class EntityStorageAuthenticationAdminRestClient
 	 * @param identity The identity of the user to get.
 	 * @returns The user details.
 	 */
-	public async getByIdentity(
-		identity: string
-	): Promise<Omit<IAuthenticationUser, "password" | "salt">> {
+	public async getByIdentity(identity: string): Promise<IAuthenticationUser> {
 		Guards.stringValue(
 			EntityStorageAuthenticationAdminRestClient.CLASS_NAME,
 			nameof(identity),

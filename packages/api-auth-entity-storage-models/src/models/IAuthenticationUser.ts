@@ -11,16 +11,6 @@ export interface IAuthenticationUser {
 	email: string;
 
 	/**
-	 * The encrypted password for the user.
-	 */
-	password: string;
-
-	/**
-	 * The salt for the password.
-	 */
-	salt: string;
-
-	/**
 	 * The user identity.
 	 */
 	userIdentity: string;

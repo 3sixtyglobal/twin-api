@@ -12,28 +12,28 @@ export interface IAuthenticationAdminComponent extends IComponent {
 	 * @param user The user to create.
 	 * @returns Nothing.
 	 */
-	create(user: Omit<IAuthenticationUser, "salt">): Promise<void>;
+	create(user: IAuthenticationUser & { password: string }): Promise<void>;
 
 	/**
 	 * Update a login for the user.
 	 * @param user The user to update.
 	 * @returns Nothing.
 	 */
-	update(user: Partial<Omit<IAuthenticationUser, "password" | "salt">>): Promise<void>;
+	update(user: Partial<IAuthenticationUser>): Promise<void>;
 
 	/**
 	 * Get a user by email.
 	 * @param email The email address of the user to get.
 	 * @returns The user details.
 	 */
-	get(email: string): Promise<Omit<IAuthenticationUser, "password" | "salt">>;
+	get(email: string): Promise<IAuthenticationUser>;
 
 	/**
 	 * Get a user by identity.
 	 * @param identity The identity of the user to get.
 	 * @returns The user details.
 	 */
-	getByIdentity(identity: string): Promise<Omit<IAuthenticationUser, "password" | "salt">>;
+	getByIdentity(identity: string): Promise<IAuthenticationUser>;
 
 	/**
 	 * Remove a user.

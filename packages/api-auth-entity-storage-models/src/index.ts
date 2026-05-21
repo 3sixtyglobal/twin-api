@@ -24,3 +24,4 @@ export * from "./models/IAuthenticationComponent.js";
 export * from "./models/IAuthenticationRateActionConfig.js";
 export * from "./models/IAuthenticationRateComponent.js";
 export * from "./models/IAuthenticationUser.js";
+export * from "./models/IAuthenticationUserSecure.js";

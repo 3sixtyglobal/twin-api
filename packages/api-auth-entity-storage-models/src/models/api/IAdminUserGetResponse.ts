@@ -9,5 +9,5 @@ export interface IAdminUserGetResponse {
 	/**
 	 * The body of the request.
 	 */
-	body: Omit<IAuthenticationUser, "password" | "salt">;
+	body: IAuthenticationUser;
 }

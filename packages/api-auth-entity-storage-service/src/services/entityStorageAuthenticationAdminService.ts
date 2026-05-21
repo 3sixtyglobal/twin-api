@@ -1,11 +1,12 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type {
-	IAuthenticationAuditComponent,
 	IAuthenticationAdminComponent,
+	IAuthenticationAuditComponent,
 	IAuthenticationUser
 } from "@twin.org/api-auth-entity-storage-models";
 import { AuthAuditEvent } from "@twin.org/api-auth-entity-storage-models";
+import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
 	ComponentFactory,
 	Converter,
@@ -81,7 +82,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	 * @param user The user to create.
 	 * @returns Nothing.
 	 */
-	public async create(user: Omit<IAuthenticationUser, "salt">): Promise<void> {
+	public async create(user: IAuthenticationUser & { password: string }): Promise<void> {
 		Guards.object<IAuthenticationUser>(
 			EntityStorageAuthenticationAdminService.CLASS_NAME,
 			nameof(user),
@@ -138,12 +139,16 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			};
 
 			await this._userEntityStorage.set(newUser);
+
+			const contextIds = await ContextIdStore.getContextIds();
+			const requestorTenantId = contextIds?.[ContextIdKeys.Tenant];
 			await this._authenticationAuditService?.create({
 				actorId: user.email,
 				event: AuthAuditEvent.AccountCreated,
 				data: {
 					userIdentity: user.userIdentity,
 					organizationIdentity: user.organizationIdentity,
+					tenantId: requestorTenantId,
 					scope: user.scope
 				}
 			});
@@ -162,9 +167,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	 * @param user The user to update.
 	 * @returns Nothing.
 	 */
-	public async update(
-		user: Partial<Omit<IAuthenticationUser, "password" | "salt">>
-	): Promise<void> {
+	public async update(user: Partial<IAuthenticationUser>): Promise<void> {
 		Guards.object<IAuthenticationUser>(
 			EntityStorageAuthenticationAdminService.CLASS_NAME,
 			nameof(user),
@@ -231,6 +234,9 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			existingUser.scope = Is.array(user.scope) ? updatedScope : existingUser.scope;
 
 			await this._userEntityStorage.set(existingUser);
+
+			const contextIds = await ContextIdStore.getContextIds();
+			const requestorTenantId = contextIds?.[ContextIdKeys.Tenant];
 			await this._authenticationAuditService?.create({
 				actorId: existingUser.email,
 				event: AuthAuditEvent.AccountUpdated,
@@ -238,6 +244,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 					updatedFields,
 					userIdentity: existingUser.identity,
 					organizationIdentity: existingUser.organization,
+					tenantId: requestorTenantId,
 					scope: existingUser.scope.split(",")
 				}
 			});
@@ -256,7 +263,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	 * @param email The email address of the user to get.
 	 * @returns The user details.
 	 */
-	public async get(email: string): Promise<Omit<IAuthenticationUser, "password" | "salt">> {
+	public async get(email: string): Promise<IAuthenticationUser> {
 		Guards.stringValue(EntityStorageAuthenticationAdminService.CLASS_NAME, nameof(email), email);
 
 		try {
@@ -290,9 +297,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	 * @param identity The identity of the user to get.
 	 * @returns The user details.
 	 */
-	public async getByIdentity(
-		identity: string
-	): Promise<Omit<IAuthenticationUser, "password" | "salt">> {
+	public async getByIdentity(identity: string): Promise<IAuthenticationUser> {
 		Guards.stringValue(
 			EntityStorageAuthenticationAdminService.CLASS_NAME,
 			nameof(identity),
@@ -344,12 +349,16 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			}
 
 			await this._userEntityStorage.remove(email);
+
+			const contextIds = await ContextIdStore.getContextIds();
+			const requestorTenantId = contextIds?.[ContextIdKeys.Tenant];
 			await this._authenticationAuditService?.create({
 				actorId: email,
 				event: AuthAuditEvent.AccountDeleted,
 				data: {
 					userIdentity: user.identity,
 					organizationIdentity: user.organization,
+					tenantId: requestorTenantId,
 					scope: user.scope.split(",")
 				}
 			});

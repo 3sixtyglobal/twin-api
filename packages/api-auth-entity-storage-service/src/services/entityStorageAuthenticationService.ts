@@ -274,7 +274,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			}
 
 			// This might be undefined if the login is performed in a single tenant context
-			// if is verified during the token processing, tenant id will be matched against
+			// it is verified during the token processing, tenant id will be matched against
 			// the context
 			const contextIds = await ContextIdStore.getContextIds();
 			loginTenantId = contextIds?.[ContextIdKeys.Tenant];
