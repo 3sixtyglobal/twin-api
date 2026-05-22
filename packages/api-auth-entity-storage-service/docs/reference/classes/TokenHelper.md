@@ -24,7 +24,7 @@ Runtime name for the class.
 
 ### createToken() {#createtoken}
 
-> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`, `passwordVersion?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
 
 Create a new token.
 
@@ -72,6 +72,12 @@ The time to live for the token in minutes.
 
 The scopes for the token.
 
+##### passwordVersion?
+
+`number`
+
+The user's current password version counter, embedded in the token so that a password change invalidates existing tokens.
+
 #### Returns
 
 `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
@@ -114,9 +120,9 @@ The required scopes.
 
 ##### verifyUser?
 
-(`userIdentity`, `organizationIdentity`) => `Promise`\<`string`[]\>
+(`userIdentity`, `organizationIdentity`, `passwordVersion`) => `Promise`\<`string`[]\>
 
-A function to verify the user identity and organization, which can be used to check if the user is still active or not.
+A function to verify the user identity and organization. The password version counter embedded in the token (pver claim) is passed so callers can detect if the password has changed since the token was issued.
 
 #### Returns
 

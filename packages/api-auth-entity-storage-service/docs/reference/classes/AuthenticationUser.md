@@ -59,3 +59,11 @@ The users organization.
 > **scope**: `string`
 
 The scope assigned to the user, comma separated.
+
+***
+
+### passwordVersion? {#passwordversion}
+
+> `optional` **passwordVersion?**: `number`
+
+The password version counter, incremented on every password change to invalidate existing tokens.
