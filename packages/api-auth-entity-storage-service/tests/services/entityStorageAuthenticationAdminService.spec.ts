@@ -67,7 +67,8 @@ describe("EntityStorageAuthenticationAdminService", () => {
 			password: "hashed-password",
 			identity: "did:user:123",
 			organization: "did:org:456",
-			scope: "read,write"
+			scope: "read,write",
+			passwordVersion: 0
 		});
 		expect(mockAuthenticationAuditService.create).toHaveBeenCalledWith({
 			actorId: "user@example.com",
@@ -271,7 +272,8 @@ describe("EntityStorageAuthenticationAdminService", () => {
 			password: "new-password-hash",
 			identity: "did:user:123",
 			organization: "did:org:456",
-			scope: "read,write"
+			scope: "read,write",
+			passwordVersion: 1
 		});
 		expect(mockAuthenticationAuditService.create).toHaveBeenCalledWith({
 			actorId: "user@example.com",
@@ -306,7 +308,8 @@ describe("EntityStorageAuthenticationAdminService", () => {
 			password: "new-password-hash",
 			identity: "did:user:123",
 			organization: "did:org:456",
-			scope: "read,write"
+			scope: "read,write",
+			passwordVersion: 1
 		});
 	});
 
@@ -389,7 +392,8 @@ describe("EntityStorageAuthenticationAdminService", () => {
 					password: "hashed-password",
 					identity: "did:user:123",
 					organization: "did:org:456",
-					scope: "read"
+					scope: "read",
+					passwordVersion: 0
 				});
 			});
 		});

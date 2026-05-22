@@ -498,7 +498,53 @@ describe("TokenHelper", () => {
 			);
 
 			expect(result.payload).toEqual(payload);
-			expect(verifyUser).toHaveBeenCalledWith("user123", "org456");
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", undefined);
+		});
+
+		it("should pass pver as a number to verifyUser when present in token payload", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				pver: 3,
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "token-with-pver.jwt.token";
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization"]);
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			const result = await TokenHelper.verify(
+				mockVaultConnector,
+				signingKeyName,
+				token,
+				undefined,
+				verifyUser
+			);
+
+			expect(result.payload).toEqual(payload);
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", 3);
+		});
+
+		it("should pass undefined to verifyUser when pver is absent from token payload", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "token-without-pver.jwt.token";
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization"]);
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser);
+
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", undefined);
 		});
 
 		it("should throw UnauthorizedError when verifyUser does not confirm the user", async () => {

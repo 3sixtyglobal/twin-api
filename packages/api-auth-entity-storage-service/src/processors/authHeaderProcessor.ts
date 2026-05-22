@@ -131,11 +131,18 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 					`${this._nodeId}/${this._signingKeyName}`,
 					tokenAndLocation?.token,
 					route.requiredScope,
-					async (userIdentity: string, organizationIdentity: string) => {
+					async (
+						userIdentity: string,
+						organizationIdentity: string,
+						passwordVersion: number | undefined
+					) => {
 						const validParts = [];
 						const user = await this._userEntityStorage.get(userIdentity, "identity");
 
-						if (user?.identity === userIdentity) {
+						if (
+							user?.identity === userIdentity &&
+							(passwordVersion ?? 0) === (user.passwordVersion ?? 0)
+						) {
 							validParts.push("user");
 						}
 						if (user?.organization === organizationIdentity) {

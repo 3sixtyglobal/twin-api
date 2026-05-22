@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Is, UnauthorizedError } from "@twin.org/core";
+import { Coerce, Is, UnauthorizedError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { type IVaultConnector, VaultConnectorHelper } from "@twin.org/vault-models";
 import {
@@ -31,6 +31,7 @@ export class TokenHelper {
 	 * @param tenantId The tenant id for the token.
 	 * @param ttlMinutes The time to live for the token in minutes.
 	 * @param scope The scopes for the token.
+	 * @param passwordVersion The user's current password version counter, embedded in the token so that a password change invalidates existing tokens.
 	 * @returns The new token and its expiry date.
 	 */
 	public static async createToken(
@@ -40,7 +41,8 @@ export class TokenHelper {
 		organizationIdentity: string | undefined,
 		tenantId: string | undefined,
 		ttlMinutes: number,
-		scope?: string
+		scope?: string,
+		passwordVersion?: number
 	): Promise<{
 		token: string;
 		expiry: number;
@@ -55,7 +57,8 @@ export class TokenHelper {
 				org: organizationIdentity,
 				tid: tenantId,
 				exp: nowSeconds + ttlSeconds,
-				scope
+				scope,
+				pver: passwordVersion
 			},
 			async (header, payload) =>
 				VaultConnectorHelper.jwtSigner(vaultConnector, signingKeyName, header, payload)
@@ -73,7 +76,7 @@ export class TokenHelper {
 	 * @param signingKeyName The signing key name.
 	 * @param token The token to verify.
 	 * @param requiredScopes The required scopes.
-	 * @param verifyUser A function to verify the user identity and organization, which can be used to check if the user is still active or not.
+	 * @param verifyUser A function to verify the user identity and organization. The password version counter embedded in the token (pver claim) is passed so callers can detect if the password has changed since the token was issued.
 	 * @returns The verified details.
 	 * @throws UnauthorizedError if the token is missing, invalid or expired.
 	 */
@@ -82,7 +85,11 @@ export class TokenHelper {
 		signingKeyName: string,
 		token: string | undefined,
 		requiredScopes?: string[],
-		verifyUser?: (userIdentity: string, organizationIdentity: string) => Promise<string[]>
+		verifyUser?: (
+			userIdentity: string,
+			organizationIdentity: string,
+			passwordVersion: number | undefined
+		) => Promise<string[]>
 	): Promise<{
 		header: IJwtHeader;
 		payload: IJwtPayload;
@@ -108,7 +115,11 @@ export class TokenHelper {
 		}
 
 		if (Is.function(verifyUser)) {
-			const userVerified = await verifyUser(decoded.payload.sub, decoded.payload.org);
+			const userVerified = await verifyUser(
+				decoded.payload.sub,
+				decoded.payload.org,
+				Coerce.integer(decoded.payload.pver)
+			);
 			if (!userVerified.includes("user")) {
 				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 			} else if (!userVerified.includes("organization")) {

@@ -42,4 +42,10 @@ export class AuthenticationUser {
 	 */
 	@property({ type: "string" })
 	public scope!: string;
+
+	/**
+	 * The password version counter, incremented on every password change to invalidate existing tokens.
+	 */
+	@property({ type: "integer", optional: true })
+	public passwordVersion?: number;
 }

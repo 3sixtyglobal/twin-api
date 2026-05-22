@@ -135,7 +135,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				password: hashedPassword,
 				identity: user.userIdentity,
 				organization: user.organizationIdentity,
-				scope: user.scope.map(s => s.trim().toLocaleLowerCase()).join(",")
+				scope: user.scope.map(s => s.trim().toLocaleLowerCase()).join(","),
+				passwordVersion: 0
 			};
 
 			await this._userEntityStorage.set(newUser);

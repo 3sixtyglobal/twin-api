@@ -28,7 +28,8 @@
 		"openapi",
 		"readyz",
 		"requestor",
-		"Stiftung"
+		"Stiftung",
+		"pver"
 	],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",

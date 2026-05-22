@@ -59,7 +59,8 @@ export class PasswordHelper {
 			password: hashedPassword,
 			identity: user.identity,
 			organization: user.organization,
-			scope: user.scope
+			scope: user.scope,
+			passwordVersion: (user.passwordVersion ?? 0) + 1
 		};
 
 		await userEntityStorage.set(updatedUser);

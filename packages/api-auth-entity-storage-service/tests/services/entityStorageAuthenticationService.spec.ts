@@ -117,7 +117,8 @@ describe("EntityStorageAuthenticationService", () => {
 			"did:org:456",
 			"tenant-1",
 			60,
-			"read,write"
+			"read,write",
+			0
 		);
 		expect(mockAuthenticationRateService.clear).toHaveBeenCalledWith("login", "user@example.com");
 		expect(mockAuthenticationAuditService.create).toHaveBeenCalledWith({
@@ -304,7 +305,7 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456");
+				const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
 				expect(verified).toEqual(["user", "organization"]);
 				return {
 					header: { alg: "EdDSA" },
@@ -334,7 +335,8 @@ describe("EntityStorageAuthenticationService", () => {
 			"did:org:456",
 			"tenant-1",
 			60,
-			"read,write"
+			"read,write",
+			0
 		);
 		expect(mockAuthenticationRateService.check).toHaveBeenCalledWith(
 			"token-refresh",
@@ -358,7 +360,7 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				await verifyUser?.("did:user:123", "did:org:456");
+				await verifyUser?.("did:user:123", "did:org:456", undefined);
 				return {
 					header: { alg: "EdDSA" },
 					payload: {
@@ -417,7 +419,7 @@ describe("EntityStorageAuthenticationService", () => {
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456");
+				const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
 				if (!verified?.includes("user")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 				}
@@ -454,7 +456,7 @@ describe("EntityStorageAuthenticationService", () => {
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456");
+				const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
 				if (!verified?.includes("organization")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "organizationNotVerified");
 				}
@@ -465,6 +467,40 @@ describe("EntityStorageAuthenticationService", () => {
 						sub: "did:user:123",
 						org: "did:org:456"
 					}
+				};
+			}
+		);
+
+		await service.start();
+
+		await expect(service.refresh("existing-token")).rejects.toThrow(UnauthorizedError);
+		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
+		expect(createTokenSpy).not.toHaveBeenCalled();
+	});
+
+	it("should throw UnauthorizedError when refresh token passwordVersion is stale after a password change", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: "read,write",
+			passwordVersion: 2
+		});
+		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+				const verified = await verifyUser?.("did:user:123", "did:org:456", 1);
+				if (!verified?.includes("user")) {
+					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
+				}
+				return {
+					header: { alg: "EdDSA" },
+					payload: { sub: "did:user:123", org: "did:org:456" }
 				};
 			}
 		);
@@ -737,7 +773,7 @@ describe("EntityStorageAuthenticationService", () => {
 
 			vi.spyOn(TokenHelper, "verify").mockImplementation(
 				async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-					const verified = await verifyUser?.("did:user:123", "did:org:456");
+					const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
 					if (!verified?.includes("user")) {
 						throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 					}

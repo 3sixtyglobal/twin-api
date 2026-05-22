@@ -286,7 +286,8 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				user.organization,
 				loginTenantId,
 				this._defaultTtlMinutes,
-				user.scope
+				user.scope,
+				user.passwordVersion ?? 0
 			);
 			loginUser = user;
 		} catch (error) {
@@ -346,16 +347,22 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		token?: string;
 		expiry: number;
 	}> {
+		let refreshPasswordVersion: number | undefined;
+
 		// If the verify fails on the current token then it will throw an exception.
 		const headerAndPayload = await TokenHelper.verify(
 			this._vaultConnector,
 			`${this._nodeId}/${this._signingKeyName}`,
 			token,
 			undefined,
-			async (userIdentity, organizationIdentity) => {
+			async (userIdentity, organizationIdentity, passwordVersion) => {
 				const validParts = [];
 				const user = await this._userEntityStorage.get(userIdentity, "identity");
-				if (user?.identity === userIdentity) {
+				refreshPasswordVersion = user?.passwordVersion;
+				if (
+					user?.identity === userIdentity &&
+					(passwordVersion ?? 0) === (refreshPasswordVersion ?? 0)
+				) {
 					validParts.push("user");
 				}
 				if (user?.organization === organizationIdentity) {
@@ -375,7 +382,8 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			Is.stringValue(headerAndPayload.payload.org) ? headerAndPayload.payload.org : "",
 			Is.string(headerAndPayload.payload.tid) ? headerAndPayload.payload.tid : undefined,
 			this._defaultTtlMinutes,
-			Coerce.string(headerAndPayload.payload?.scope)
+			Coerce.string(headerAndPayload.payload?.scope),
+			refreshPasswordVersion ?? 0
 		);
 		const refreshScope = Coerce.string(headerAndPayload.payload?.scope) ?? "";
 
