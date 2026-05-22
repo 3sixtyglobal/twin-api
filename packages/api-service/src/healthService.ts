@@ -33,6 +33,13 @@ export class HealthService implements IHealthComponent {
 	private readonly _healthCheckInterval: number;
 
 	/**
+	 * The initial interval for checking the health of the components and setting it in the health service.
+	 * This is used to check the health of the components immediately after the service is started.
+	 * @internal
+	 */
+	private readonly _initialInterval: number;
+
+	/**
 	 * Interval for checking the health of the components and setting it in the health service.
 	 * @internal
 	 */
@@ -45,6 +52,7 @@ export class HealthService implements IHealthComponent {
 	constructor(options?: IHealthServiceConstructorOptions) {
 		this._healthInfo = { status: HealthStatus.Ok, components: [] };
 		this._healthCheckInterval = options?.config?.healthCheckInterval ?? 60000;
+		this._initialInterval = options?.config?.initialInterval ?? 2000;
 	}
 
 	/**
@@ -69,7 +77,7 @@ export class HealthService implements IHealthComponent {
 			// check to prevent overlapping checks in case of long running health checks
 			this._healthTimer = globalThis.setTimeout(
 				async () => this.checkHealth(engineCore, nodeLoggingComponentType),
-				5000
+				this._initialInterval
 			);
 		}
 	}
