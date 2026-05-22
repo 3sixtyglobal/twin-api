@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.36](https://github.com/iotaledger/twin-api/compare/api-core-v0.0.3-next.35...api-core-v0.0.3-next.36) (2026-05-22)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.35 to 0.0.3-next.36
+
 ## [0.0.3-next.35](https://github.com/iotaledger/twin-api/compare/api-core-v0.0.3-next.34...api-core-v0.0.3-next.35) (2026-05-21)
 
 

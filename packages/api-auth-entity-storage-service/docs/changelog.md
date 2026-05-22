@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.36](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.35...api-auth-entity-storage-service-v0.0.3-next.36) (2026-05-22)
+
+
+### Features
+
+* jwt password version claim ([#129](https://github.com/iotaledger/twin-api/issues/129)) ([e15487b](https://github.com/iotaledger/twin-api/commit/e15487baafd3b1f3fd58f138db531d58053ce049))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.35 to 0.0.3-next.36
+    * @twin.org/api-core bumped from 0.0.3-next.35 to 0.0.3-next.36
+    * @twin.org/api-models bumped from 0.0.3-next.35 to 0.0.3-next.36
+
 ## [0.0.3-next.35](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.34...api-auth-entity-storage-service-v0.0.3-next.35) (2026-05-21)
 
 
