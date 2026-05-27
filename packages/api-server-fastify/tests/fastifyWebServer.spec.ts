@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { JwtMimeTypeProcessor, LoggingProcessor } from "@twin.org/api-processors";
-import { ComponentFactory, HealthStatus, NotImplementedError } from "@twin.org/core";
+import { ComponentFactory, HealthStatus, Mutex, NotImplementedError } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode } from "@twin.org/web";
 import { io } from "socket.io-client";
@@ -513,6 +513,109 @@ describe("api-server-fastify", () => {
 				status: HealthStatus.Error
 			}
 		]);
+	});
+
+	test("Can serialize same-id requests with Mutex while different ids proceed in parallel", async () => {
+		const server = new FastifyWebServer();
+		const handlerDelayMs = 100;
+		const requestCount = 25;
+
+		// Concurrency counters — incremented only while the lock is held, so any
+		// value above 1 for the same key is direct proof the mutex was bypassed.
+		const activeConcurrentPerKey: { [key: string]: number } = {};
+		const peakConcurrentPerKey: { [key: string]: number } = {};
+		let globalActive = 0;
+		let peakGlobalActive = 0;
+
+		await server.build(
+			[
+				{
+					className: () => "RouteProcessor",
+					process: async (request, response, route, processorState) => {
+						const res = await route?.handler(
+							{ serverRequest: request, processorState },
+							{ pathParams: request.pathParams, query: request.query, body: request.body }
+						);
+						response.statusCode = res?.statusCode ?? HttpStatusCode.ok;
+						response.body = res?.body;
+					}
+				}
+			],
+			[
+				{
+					operationId: "test",
+					path: "/:id",
+					method: HttpMethod.GET,
+					tag: "test",
+					summary: "",
+					handler: async (httpRequestContext, request) => {
+						const id = request.pathParams?.id;
+						const acquired = await Mutex.lock(id);
+						if (!acquired) {
+							return { statusCode: HttpStatusCode.conflict, body: { data: "timeout" } };
+						}
+
+						activeConcurrentPerKey[id] = (activeConcurrentPerKey[id] ?? 0) + 1;
+						peakConcurrentPerKey[id] = Math.max(
+							peakConcurrentPerKey[id] ?? 0,
+							activeConcurrentPerKey[id]
+						);
+						globalActive++;
+						peakGlobalActive = Math.max(peakGlobalActive, globalActive);
+
+						try {
+							await new Promise(resolve => setTimeout(resolve, handlerDelayMs));
+							return { body: { data: "ok" } };
+						} finally {
+							activeConcurrentPerKey[id]--;
+							globalActive--;
+							Mutex.unlock(id);
+						}
+					}
+				}
+			],
+			undefined,
+			undefined,
+			{ port }
+		);
+
+		await server.start();
+
+		// requestCount requests with the same id — serialized by the mutex.
+		const sameIdStart = Date.now();
+		const sameIdResponses = await Promise.all(
+			Array.from({ length: requestCount }, async () => fetch(`http://localhost:${port}/abc`))
+		);
+		const sameIdDuration = Date.now() - sameIdStart;
+
+		for (const r of sameIdResponses) {
+			expect(r.status).toEqual(HttpStatusCode.ok);
+		}
+		// Direct proof the lock was never bypassed: no two handlers held it simultaneously.
+		expect(peakConcurrentPerKey.abc).toEqual(1);
+		// Timing confirms serialization.
+		expect(sameIdDuration).toBeGreaterThanOrEqual((requestCount - 1) * handlerDelayMs);
+
+		// Reset global tracking before the parallel batch.
+		globalActive = 0;
+		peakGlobalActive = 0;
+
+		// requestCount requests each with a unique id — independent locks, run in parallel.
+		const differentIdStart = Date.now();
+		const differentIdResponses = await Promise.all(
+			[...new Array(requestCount).keys()].map(async i => fetch(`http://localhost:${port}/${i}`))
+		);
+		const differentIdDuration = Date.now() - differentIdStart;
+
+		for (const r of differentIdResponses) {
+			expect(r.status).toEqual(HttpStatusCode.ok);
+		}
+		// Direct proof that different-id requests overlapped in the critical section.
+		expect(peakGlobalActive).toBeGreaterThan(1);
+		// Timing confirms parallelism.
+		expect(differentIdDuration).toBeLessThan((requestCount - 1) * handlerDelayMs);
+
+		await server.stop();
 	});
 
 	test("Can add a custom content type processor", async () => {
