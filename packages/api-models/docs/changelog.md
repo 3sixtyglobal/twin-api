@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.38](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.37...api-models-v0.0.3-next.38) (2026-05-28)
+
+
+### Miscellaneous Chores
+
+* **api-models:** Synchronize repo versions
+
 ## [0.0.3-next.37](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.36...api-models-v0.0.3-next.37) (2026-05-22)
 
 

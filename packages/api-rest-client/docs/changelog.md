@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.0.3-next.38](https://github.com/iotaledger/twin-api/compare/api-rest-client-v0.0.3-next.37...api-rest-client-v0.0.3-next.38) (2026-05-28)
+
+
+### Miscellaneous Chores
+
+* **api-rest-client:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.0.3-next.37 to 0.0.3-next.38
+    * @twin.org/api-models bumped from 0.0.3-next.37 to 0.0.3-next.38
+
 ## [0.0.3-next.37](https://github.com/iotaledger/twin-api/compare/api-rest-client-v0.0.3-next.36...api-rest-client-v0.0.3-next.37) (2026-05-22)
 
 
