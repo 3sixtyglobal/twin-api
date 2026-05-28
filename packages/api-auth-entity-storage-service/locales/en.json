@@ -28,10 +28,8 @@
 			"expired": "The JSON Web token has expired",
 			"insufficientScopes": "The JSON Web token does not have the required scopes to access this resource",
 			"userNotVerified": "The user associated with the JSON Web token could not be verified",
-			"organizationNotVerified": "The organization associated with the JSON Web token could not be verified"
-		},
-		"authHeaderProcessor": {
-			"tenantIdMismatch": "The tenant ID in the token does not match the tenant ID in the context"
+			"organizationNotVerified": "The organization associated with the JSON Web token could not be verified",
+			"tenantNotVerified": "The tenant associated with the JSON Web token could not be verified"
 		},
 		"validation": {
 			"saltEntropyTooLow": "Salt must have at least 8 unique characters for sufficient entropy."

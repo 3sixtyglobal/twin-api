@@ -5,6 +5,91 @@ import type { IVaultConnector } from "@twin.org/vault-models";
 import { HeaderTypes, type IHttpHeaders, Jwt } from "@twin.org/web";
 import { TokenHelper } from "../../src/utils/tokenHelper.js";
 
+describe("TokenHelper.hashTenantId", () => {
+	it("should return undefined for undefined input", () => {
+		expect(TokenHelper.hashTenantId(undefined)).toBeUndefined();
+	});
+
+	it("should return undefined for empty string", () => {
+		expect(TokenHelper.hashTenantId("")).toBeUndefined();
+	});
+
+	it("should return a non-empty string for a valid tenant ID", () => {
+		const hash = TokenHelper.hashTenantId("my-tenant");
+		expect(hash).toBeDefined();
+		expect(hash).not.toBe("");
+	});
+
+	it("should produce the same hash for the same input (deterministic)", () => {
+		expect(TokenHelper.hashTenantId("my-tenant")).toBe(TokenHelper.hashTenantId("my-tenant"));
+	});
+
+	it("should produce different hashes for different tenant IDs", () => {
+		expect(TokenHelper.hashTenantId("tenant-a")).not.toBe(TokenHelper.hashTenantId("tenant-b"));
+	});
+
+	it("should return a Base64URL-encoded string with no padding or non-URL-safe characters", () => {
+		const hash = TokenHelper.hashTenantId("my-tenant");
+		expect(hash).toMatch(/^[\w-]+$/);
+	});
+});
+
+describe("TokenHelper.createToken", () => {
+	it("should store the hashed tenant ID in the jwt tid claim, not the raw value", async () => {
+		const tenantId = "my-tenant";
+		const expectedHash = TokenHelper.hashTenantId(tenantId);
+
+		const mockVaultConnector = {
+			get: vi.fn(),
+			set: vi.fn(),
+			remove: vi.fn()
+		} as unknown as IVaultConnector;
+
+		let capturedPayload: { [key: string]: unknown } | undefined;
+		vi.spyOn(Jwt, "encodeWithSigner").mockImplementation(async (header, payload) => {
+			capturedPayload = payload as { [key: string]: unknown };
+			return "mock.jwt.token";
+		});
+
+		await TokenHelper.createToken(
+			mockVaultConnector,
+			"signing-key",
+			"did:user:123",
+			"did:org:456",
+			tenantId,
+			60
+		);
+
+		expect(capturedPayload?.tid).toBe(expectedHash);
+		expect(capturedPayload?.tid).not.toBe(tenantId);
+	});
+
+	it("should set tid to undefined when no tenant ID is provided", async () => {
+		const mockVaultConnector = {
+			get: vi.fn(),
+			set: vi.fn(),
+			remove: vi.fn()
+		} as unknown as IVaultConnector;
+
+		let capturedPayload: { [key: string]: unknown } | undefined;
+		vi.spyOn(Jwt, "encodeWithSigner").mockImplementation(async (header, payload) => {
+			capturedPayload = payload as { [key: string]: unknown };
+			return "mock.jwt.token";
+		});
+
+		await TokenHelper.createToken(
+			mockVaultConnector,
+			"signing-key",
+			"did:user:123",
+			"did:org:456",
+			undefined,
+			60
+		);
+
+		expect(capturedPayload?.tid).toBeUndefined();
+	});
+});
+
 describe("TokenHelper", () => {
 	it("should extract token from valid Authorization header", () => {
 		const headers = { [HeaderTypes.Authorization]: "Bearer mytoken123" };
@@ -475,7 +560,7 @@ describe("TokenHelper", () => {
 
 		const signingKeyName = "test-key";
 
-		it("should verify token when verifyUser confirms user and organization", async () => {
+		it("should verify token when verifyUser confirms user, organization and tenant", async () => {
 			const payload = {
 				sub: "user123",
 				org: "org456",
@@ -483,7 +568,7 @@ describe("TokenHelper", () => {
 			};
 
 			const token = "verified-user.jwt.token";
-			const verifyUser = vi.fn().mockResolvedValue(["user", "organization"]);
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization", "tenant"]);
 			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
 				header: { alg: "EdDSA" },
 				payload
@@ -498,7 +583,7 @@ describe("TokenHelper", () => {
 			);
 
 			expect(result.payload).toEqual(payload);
-			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", undefined);
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", undefined, undefined);
 		});
 
 		it("should pass pver as a number to verifyUser when present in token payload", async () => {
@@ -510,7 +595,7 @@ describe("TokenHelper", () => {
 			};
 
 			const token = "token-with-pver.jwt.token";
-			const verifyUser = vi.fn().mockResolvedValue(["user", "organization"]);
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization", "tenant"]);
 			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
 				header: { alg: "EdDSA" },
 				payload
@@ -525,7 +610,7 @@ describe("TokenHelper", () => {
 			);
 
 			expect(result.payload).toEqual(payload);
-			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", 3);
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", undefined, 3);
 		});
 
 		it("should pass undefined to verifyUser when pver is absent from token payload", async () => {
@@ -536,7 +621,7 @@ describe("TokenHelper", () => {
 			};
 
 			const token = "token-without-pver.jwt.token";
-			const verifyUser = vi.fn().mockResolvedValue(["user", "organization"]);
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization", "tenant"]);
 			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
 				header: { alg: "EdDSA" },
 				payload
@@ -544,7 +629,7 @@ describe("TokenHelper", () => {
 
 			await TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser);
 
-			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", undefined);
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", undefined, undefined);
 		});
 
 		it("should throw UnauthorizedError when verifyUser does not confirm the user", async () => {
@@ -583,6 +668,65 @@ describe("TokenHelper", () => {
 			await expect(
 				TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser)
 			).rejects.toThrow(UnauthorizedError);
+		});
+
+		it("should throw UnauthorizedError when verifyUser does not confirm the tenant", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "missing-tenant-verification.jwt.token";
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization"]);
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await expect(
+				TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser)
+			).rejects.toThrow(UnauthorizedError);
+		});
+
+		it("should pass the tid claim from the token payload as hashedTenantId to verifyUser", async () => {
+			const hashedTenantId = "some-hashed-tenant-value";
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				tid: hashedTenantId,
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "with-hashed-tenant.jwt.token";
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization", "tenant"]);
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser);
+
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", hashedTenantId, undefined);
+		});
+
+		it("should pass undefined hashedTenantId to verifyUser when tid is absent from token payload", async () => {
+			const payload = {
+				sub: "user123",
+				org: "org456",
+				exp: Math.trunc(Date.now() / 1000) + 3600
+			};
+
+			const token = "without-tenant.jwt.token";
+			const verifyUser = vi.fn().mockResolvedValue(["user", "organization", "tenant"]);
+			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
+				header: { alg: "EdDSA" },
+				payload
+			});
+
+			await TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser);
+
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", undefined, undefined);
 		});
 	});
 });

@@ -303,16 +303,17 @@ describe("EntityStorageAuthenticationService", () => {
 			salt: "c2FsdA==",
 			scope: "read,write"
 		});
+		const hashedTenantId = TokenHelper.hashTenantId("tenant-1");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
-				expect(verified).toEqual(["user", "organization"]);
+				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+				expect(verified).toEqual(["user", "organization", "tenant"]);
 				return {
 					header: { alg: "EdDSA" },
 					payload: {
 						sub: "did:user:123",
 						org: "did:org:456",
-						tid: "tenant-1",
+						tid: hashedTenantId,
 						scope: "read,write"
 					}
 				};
@@ -333,7 +334,7 @@ describe("EntityStorageAuthenticationService", () => {
 			"node-1/auth-signing",
 			"did:user:123",
 			"did:org:456",
-			"tenant-1",
+			hashedTenantId,
 			60,
 			"read,write",
 			0
@@ -348,7 +349,7 @@ describe("EntityStorageAuthenticationService", () => {
 			event: "token-refreshed",
 			data: {
 				organizationIdentity: "did:org:456",
-				tenantId: "tenant-1",
+				tenantId: hashedTenantId,
 				scope: ["read", "write"]
 			}
 		});
@@ -360,7 +361,7 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				await verifyUser?.("did:user:123", "did:org:456", undefined);
+				await verifyUser?.("did:user:123", "did:org:456", undefined, undefined);
 				return {
 					header: { alg: "EdDSA" },
 					payload: {
@@ -419,7 +420,7 @@ describe("EntityStorageAuthenticationService", () => {
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
+				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				if (!verified?.includes("user")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 				}
@@ -456,7 +457,7 @@ describe("EntityStorageAuthenticationService", () => {
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
+				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				if (!verified?.includes("organization")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "organizationNotVerified");
 				}
@@ -494,7 +495,8 @@ describe("EntityStorageAuthenticationService", () => {
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", 1);
+				// pver=1 in token but user has passwordVersion=2 — simulate stale token
+				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 1);
 				if (!verified?.includes("user")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 				}
@@ -773,7 +775,7 @@ describe("EntityStorageAuthenticationService", () => {
 
 			vi.spyOn(TokenHelper, "verify").mockImplementation(
 				async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-					const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
+					const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 					if (!verified?.includes("user")) {
 						throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 					}
@@ -791,5 +793,43 @@ describe("EntityStorageAuthenticationService", () => {
 				}
 			);
 		});
+	});
+
+	it("should throw UnauthorizedError when token tenant hash does not match context tenant during refresh", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1",
+			[ContextIdKeys.Tenant]: "tenant-b"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: "read,write"
+		});
+		// Token was issued for tenant-a but the request context is tenant-b
+		const tokenTenantHash = TokenHelper.hashTenantId("tenant-a");
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+				const verified = await verifyUser?.("did:user:123", "did:org:456", tokenTenantHash, 0);
+				if (!verified?.includes("tenant")) {
+					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "tenantNotVerified");
+				}
+				return {
+					header: { alg: "EdDSA" },
+					payload: {
+						sub: "did:user:123",
+						org: "did:org:456",
+						tid: tokenTenantHash,
+						scope: "read,write"
+					}
+				};
+			}
+		);
+
+		await service.start();
+
+		await expect(service.refresh("existing-token")).rejects.toThrow(UnauthorizedError);
 	});
 });

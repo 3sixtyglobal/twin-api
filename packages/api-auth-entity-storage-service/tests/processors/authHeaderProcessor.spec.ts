@@ -59,16 +59,17 @@ describe("AuthHeaderProcessor", () => {
 			token: "jwt",
 			location: "authorization"
 		});
+		const hashedTenantId = TokenHelper.hashTenantId("tenant-1");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, key, token, requiredScope, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
-				expect(verified).toEqual(["user", "organization"]);
+				const verified = await verifyUser?.("did:user:123", "did:org:456", hashedTenantId, 0);
+				expect(verified).toEqual(["user", "organization", "tenant"]);
 				return {
 					header: { alg: "EdDSA" },
 					payload: {
 						sub: "did:user:123",
 						org: "did:org:456",
-						tid: "tenant-1"
+						tid: hashedTenantId
 					}
 				};
 			}
@@ -105,7 +106,7 @@ describe("AuthHeaderProcessor", () => {
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, key, token, requiredScope, verifyUser) => {
-				await verifyUser?.("did:user:123", "did:org:456", undefined);
+				await verifyUser?.("did:user:123", "did:org:456", undefined, undefined);
 				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 			}
 		);
@@ -147,15 +148,17 @@ describe("AuthHeaderProcessor", () => {
 			token: "jwt",
 			location: "authorization"
 		});
+		const hashedTenantId = TokenHelper.hashTenantId("tenant-1");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, key, token, requiredScope, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", 0);
+				// pver=0 in token but user has passwordVersion=1 — simulate stale token
+				const verified = await verifyUser?.("did:user:123", "did:org:456", hashedTenantId, 0);
 				if (!verified?.includes("user")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 				}
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456", tid: "tenant-1" }
+					payload: { sub: "did:user:123", org: "did:org:456", tid: hashedTenantId }
 				};
 			}
 		);
@@ -197,13 +200,19 @@ describe("AuthHeaderProcessor", () => {
 			token: "jwt",
 			location: "authorization"
 		});
+		const hashedTenantId = TokenHelper.hashTenantId("tenant-1");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, key, token, requiredScope, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined);
-				expect(verified).toEqual(["user", "organization"]);
+				const verified = await verifyUser?.(
+					"did:user:123",
+					"did:org:456",
+					hashedTenantId,
+					undefined
+				);
+				expect(verified).toEqual(["user", "organization", "tenant"]);
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456", tid: "tenant-1" }
+					payload: { sub: "did:user:123", org: "did:org:456", tid: hashedTenantId }
 				};
 			}
 		);
@@ -226,5 +235,104 @@ describe("AuthHeaderProcessor", () => {
 		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
 		expect(contextIds[ContextIdKeys.Organization]).toBe("did:org:456");
 		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
+	});
+
+	it("should return unauthorized when token tenant hash does not match context tenant", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "hashed",
+			salt: "salt",
+			scope: "user-admin",
+			passwordVersion: 0
+		});
+		vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+			token: "jwt",
+			location: "authorization"
+		});
+		// Token was issued for tenant-a but the request context is tenant-b
+		const tokenTenantHash = TokenHelper.hashTenantId("tenant-a");
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vault, key, token, requiredScope, verifyUser) => {
+				const verified = await verifyUser?.("did:user:123", "did:org:456", tokenTenantHash, 0);
+				if (!verified?.includes("tenant")) {
+					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "tenantNotVerified");
+				}
+				return {
+					header: { alg: "EdDSA" },
+					payload: { sub: "did:user:123", org: "did:org:456", tid: tokenTenantHash }
+				};
+			}
+		);
+		const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
+
+		await processor.start();
+
+		const contextIds: IContextIds = {
+			[ContextIdKeys.Tenant]: "tenant-b"
+		};
+		const response: IHttpResponse = {};
+		await processor.pre(
+			{ headers: {} } as never,
+			response,
+			{ requiredScope: ["user-admin"] } as never,
+			contextIds,
+			{}
+		);
+
+		expect(buildResponseSpy).toHaveBeenCalled();
+		expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+		expect(contextIds[ContextIdKeys.User]).toBeUndefined();
+	});
+
+	it("should succeed in single-tenant setup when neither context nor token has a tenant", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "hashed",
+			salt: "salt",
+			scope: "user-admin",
+			passwordVersion: 0
+		});
+		vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+			token: "jwt",
+			location: "authorization"
+		});
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vault, key, token, requiredScope, verifyUser) => {
+				// No tid in token — single-tenant system
+				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+				expect(verified).toEqual(["user", "organization", "tenant"]);
+				return {
+					header: { alg: "EdDSA" },
+					payload: { sub: "did:user:123", org: "did:org:456" }
+				};
+			}
+		);
+
+		await processor.start();
+
+		// No tenant in context — single-tenant system
+		const contextIds: IContextIds = {};
+		const response: IHttpResponse = {};
+		await processor.pre(
+			{ headers: {} } as never,
+			response,
+			{ requiredScope: ["user-admin"] } as never,
+			contextIds,
+			{}
+		);
+
+		expect(response.statusCode).toBeUndefined();
+		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
+		expect(contextIds[ContextIdKeys.Organization]).toBe("did:org:456");
 	});
 });

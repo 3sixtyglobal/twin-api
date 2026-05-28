@@ -355,7 +355,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			`${this._nodeId}/${this._signingKeyName}`,
 			token,
 			undefined,
-			async (userIdentity, organizationIdentity, passwordVersion) => {
+			async (userIdentity, organizationIdentity, hashedTenantId, passwordVersion) => {
 				const validParts = [];
 				const user = await this._userEntityStorage.get(userIdentity, "identity");
 				refreshPasswordVersion = user?.passwordVersion;
@@ -367,6 +367,13 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				}
 				if (user?.organization === organizationIdentity) {
 					validParts.push("organization");
+				}
+				// Context tenant id might be undefined on a single tenant system,
+				// in this case the hash method will return undefined and the verification will pass as long
+				// as the token also has an undefined tenant id.
+				const contextIds = await ContextIdStore.getContextIds();
+				if (TokenHelper.hashTenantId(contextIds?.[ContextIdKeys.Tenant]) === hashedTenantId) {
+					validParts.push("tenant");
 				}
 				return validParts;
 			}

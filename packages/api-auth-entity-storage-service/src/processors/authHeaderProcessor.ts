@@ -13,7 +13,7 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, Coerce, GeneralError, Is } from "@twin.org/core";
+import { BaseError, Coerce, Is } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -134,6 +134,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 					async (
 						userIdentity: string,
 						organizationIdentity: string,
+						hashedTenantId: string | undefined,
 						passwordVersion: number | undefined
 					) => {
 						const validParts = [];
@@ -148,15 +149,17 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 						if (user?.organization === organizationIdentity) {
 							validParts.push("organization");
 						}
+
+						// Context tenant id might be undefined on a single tenant system,
+						// in this case the hash method will return undefined and the verification will pass as long
+						// as the token also has an undefined tenant id.
+						if (TokenHelper.hashTenantId(contextIds?.[ContextIdKeys.Tenant]) === hashedTenantId) {
+							validParts.push("tenant");
+						}
+
 						return validParts;
 					}
 				);
-
-				// If tenant id is defined in the context, then it must match the one in the token
-				// but both can be undefined in a single tenant context
-				if (contextIds?.[ContextIdKeys.Tenant] !== headerAndPayload?.payload?.tid) {
-					throw new GeneralError(AuthHeaderProcessor.CLASS_NAME, "tenantIdMismatch");
-				}
 
 				contextIds[ContextIdKeys.User] = headerAndPayload.payload?.sub;
 				contextIds[ContextIdKeys.Organization] = Coerce.string(headerAndPayload.payload?.org);
