@@ -4,7 +4,7 @@
 	"description": "REST client implementation for consuming information and hosting endpoints.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/api.git",
+		"url": "git+https://github.com/iotaledger/twin-api.git",
 		"directory": "packages/api-rest-client"
 	},
 	"author": "martyn.janes@iota.org",
@@ -73,7 +73,7 @@
 		"api"
 	],
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/api/issues"
+		"url": "git+https://github.com/iotaledger/twin-api/issues"
 	},
 	"homepage": "https://twindev.org"
 }

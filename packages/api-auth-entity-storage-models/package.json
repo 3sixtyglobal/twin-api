@@ -4,7 +4,7 @@
 	"description": "Contracts for authentication flows and admin user management with entity storage.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/api.git",
+		"url": "git+https://github.com/iotaledger/twin-api.git",
 		"directory": "packages/api-auth-entity-storage-models"
 	},
 	"author": "martyn.janes@iota.org",
@@ -78,7 +78,7 @@
 		"schemas"
 	],
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/api/issues"
+		"url": "git+https://github.com/iotaledger/twin-api/issues"
 	},
 	"homepage": "https://twindev.org"
 }

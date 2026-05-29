@@ -4,7 +4,7 @@
 	"description": "Reusable request and route processors for logging, context handling, and content negotiation.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/api.git",
+		"url": "git+https://github.com/iotaledger/twin-api.git",
 		"directory": "packages/api-processors"
 	},
 	"author": "martyn.janes@iota.org",
@@ -74,7 +74,7 @@
 		"api"
 	],
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/api/issues"
+		"url": "git+https://github.com/iotaledger/twin-api/issues"
 	},
 	"homepage": "https://twindev.org"
 }
