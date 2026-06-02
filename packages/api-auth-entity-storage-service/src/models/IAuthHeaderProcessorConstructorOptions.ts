@@ -19,6 +19,17 @@ export interface IAuthHeaderProcessorConstructorOptions {
 	vaultConnectorType?: string;
 
 	/**
+	 * The URL transformer component for the tenants.
+	 */
+	urlTransformerComponentType?: string;
+
+	/**
+	 * The component to retrieve tenant information.
+	 * @default tenant-admin
+	 */
+	tenantAdminComponentType?: string;
+
+	/**
 	 * The configuration for the processor.
 	 */
 	config?: IAuthHeaderProcessorConfig;

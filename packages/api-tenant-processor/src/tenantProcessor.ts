@@ -35,13 +35,19 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	public static readonly CLASS_NAME: string = nameof<TenantProcessor>();
 
 	/**
+	 * The default endpoints to match for api key processing.
+	 * @internal
+	 */
+	private static readonly _DEFAULT_API_KEY_ENDPOINTS: string[] = ["/login$"];
+
+	/**
 	 * The entity storage for api keys.
 	 * @internal
 	 */
 	private readonly _entityStorageConnector: IEntityStorageConnector<Tenant>;
 
 	/**
-	 * The hosting component, used to resolve public origins for tenants and encrypt/decrypt tenant tokens.
+	 * The transformer component, used to resolve public origins for tenants and encrypt/decrypt tenant tokens.
 	 * @internal
 	 */
 	private readonly _urlTransformerService: IUrlTransformerComponent;
@@ -51,6 +57,12 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	 * @internal
 	 */
 	private readonly _apiKeyName: string;
+
+	/**
+	 * The list of regexp patterns to match against the request URL to determine if the api key header should be processed.
+	 * @internal
+	 */
+	private readonly _apiKeyEndpoints: RegExp[];
 
 	/**
 	 * Create a new instance of TenantProcessor.
@@ -64,6 +76,9 @@ export class TenantProcessor implements IBaseRouteProcessor {
 			options?.urlTransformerComponentType ?? "url-transformer"
 		);
 		this._apiKeyName = options?.config?.apiKeyName ?? TenantProcessor.DEFAULT_API_KEY_NAME;
+		this._apiKeyEndpoints = (
+			options?.config?.apiKeyEndpoints ?? TenantProcessor._DEFAULT_API_KEY_ENDPOINTS
+		).map((ep: string) => new RegExp(ep));
 	}
 
 	/**
@@ -91,31 +106,36 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	): Promise<void> {
 		if (!Is.empty(route) && !(route.skipTenant ?? false)) {
 			try {
-				const apiKey = request.headers?.[this._apiKeyName] ?? request.query?.[this._apiKeyName];
 				let tenant;
+				const isSkipAuth = route.skipAuth ?? false;
+				const urlPath = new URL(request.url, "http://localhost").pathname;
+				const isApiKeyEndpoint = this._apiKeyEndpoints.some(re => re.test(urlPath));
 
-				// First check apiKey as this is the most common way to authenticate tenants,
-				// if that is not present check for the tenant token query param which is used
-				// in scenarios where there is an embedded static token.
-				if (Is.stringValue(apiKey)) {
-					tenant = await this.resolveByApiKey(apiKey);
+				if (isApiKeyEndpoint) {
+					const apiKey = request.headers?.[this._apiKeyName] ?? request.query?.[this._apiKeyName];
+					if (Is.stringValue(apiKey)) {
+						tenant = await this.resolveByApiKey(apiKey);
+					} else {
+						throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "missingApiKey", {
+							keyName: this._apiKeyName
+						});
+					}
 				} else {
 					const tenantToken = await this._urlTransformerService.getEncryptedQueryParam(
 						request.query,
 						"tenant"
 					);
-
 					if (Is.stringValue(tenantToken)) {
 						tenant = await this.resolveByTenantToken(tenantToken);
-					} else {
-						throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "missingApiKeyOrTenantToken", {
-							keyName: this._apiKeyName
+					} else if (isSkipAuth) {
+						throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "missingTenantToken", {
+							paramName: this._urlTransformerService.getParamName("tenant")
 						});
 					}
 				}
 
-				contextIds[ContextIdKeys.Tenant] = tenant.id;
-				if (Is.stringValue(tenant.publicOrigin)) {
+				if (!Is.empty(tenant)) {
+					contextIds[ContextIdKeys.Tenant] = tenant.id;
 					processorState.publicOrigin = tenant.publicOrigin;
 				}
 			} catch (err) {

@@ -40,6 +40,14 @@ export interface IUrlTransformerComponent extends IComponent {
 	addEncryptedToUrl(url: string, params: IHttpRequestQuery): Promise<string>;
 
 	/**
+	 * Get an encrypted value from a URL's query string.
+	 * @param url The URL to extract the encrypted value from.
+	 * @param id The logical identifier for the value to retrieve (e.g. "tenant").
+	 * @returns The decrypted value if it exists.
+	 */
+	getEncryptedFromUrl(url: string, id: string): Promise<string | undefined>;
+
+	/**
 	 * Decrypt specified keys from a query parameter object and return their plain-text values.
 	 * @param queryParams The HTTP request query containing the encrypted parameters.
 	 * @param keys The keys to decrypt.
@@ -85,4 +93,11 @@ export interface IUrlTransformerComponent extends IComponent {
 	 * @returns A promise that resolves to the decrypted value of the parameter.
 	 */
 	decryptParam(encryptedValue: string): Promise<string>;
+
+	/**
+	 * Get the parameter name for a given key.
+	 * @param key The key of the parameter.
+	 * @returns The parameter name.
+	 */
+	getParamName(key: string): string | undefined;
 }

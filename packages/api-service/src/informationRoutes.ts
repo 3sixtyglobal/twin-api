@@ -92,7 +92,8 @@ export function generateRestRoutesInformation(
 				]
 			}
 		],
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
 	};
 
 	const favIconRoute: IRestRoute<INoContentRequest, IServerFavIconResponse> = {
@@ -219,7 +220,8 @@ export function generateRestRoutesInformation(
 				]
 			}
 		],
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
 	};
 
 	return [rootRoute, favIconRoute, informationRoute, livezRoute, readyzRoute, specRoute];

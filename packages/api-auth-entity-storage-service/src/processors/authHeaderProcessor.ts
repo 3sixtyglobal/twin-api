@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	HttpErrorHelper,
+	type IUrlTransformerComponent,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
 	type IHttpResponse,
-	type IHttpServerRequest
+	type IHttpServerRequest,
+	type ITenantAdminComponent
 } from "@twin.org/api-models";
 import {
 	ContextIdHelper,
@@ -13,7 +15,7 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, Coerce, Is } from "@twin.org/core";
+import { BaseError, Coerce, ComponentFactory, Is } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -47,6 +49,18 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	private readonly _vaultConnector: IVaultConnector;
 
 	/**
+	 * The transformer component, used to resolve public origins for tenants and encrypt/decrypt tenant tokens.
+	 * @internal
+	 */
+	private readonly _urlTransformerService: IUrlTransformerComponent;
+
+	/**
+	 * The component to retrieve tenant information.
+	 * @internal
+	 */
+	private readonly _tenantAdminComponent?: ITenantAdminComponent;
+
+	/**
 	 * The entity storage for users.
 	 * @internal
 	 */
@@ -71,14 +85,19 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	private _nodeId?: string;
 
 	/**
-	 * Create a new instance of AuthCookiePreProcessor.
+	 * Create a new instance of AuthHeaderProcessor.
 	 * @param options Options for the processor.
 	 */
 	constructor(options?: IAuthHeaderProcessorConstructorOptions) {
 		this._vaultConnector = VaultConnectorFactory.get(options?.vaultConnectorType ?? "vault");
-
+		this._urlTransformerService = ComponentFactory.get(
+			options?.urlTransformerComponentType ?? "url-transformer"
+		);
 		this._userEntityStorage = EntityStorageConnectorFactory.get(
 			options?.userEntityStorageType ?? "authentication-user"
+		);
+		this._tenantAdminComponent = ComponentFactory.getIfExists<ITenantAdminComponent>(
+			options?.tenantAdminComponentType ?? "tenant-admin"
 		);
 
 		this._signingKeyName = options?.config?.signingKeyName ?? "auth-signing";
@@ -134,11 +153,30 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 					async (
 						userIdentity: string,
 						organizationIdentity: string,
-						hashedTenantId: string | undefined,
+						encryptedTenantId: string | undefined,
 						passwordVersion: number | undefined
 					) => {
 						const validParts = [];
-						const user = await this._userEntityStorage.get(userIdentity, "identity");
+
+						// If the token carries an encrypted tenant ID and the admin component is available,
+						// decrypt and resolve the tenant first so the user lookup runs in the correct partition.
+						if (Is.stringValue(encryptedTenantId)) {
+							const tenantId = await this._urlTransformerService.decryptParam(encryptedTenantId);
+
+							if (Is.stringValue(tenantId)) {
+								const tenant = await this._tenantAdminComponent?.get(tenantId);
+								if (!Is.empty(tenant)) {
+									processorState.publicOrigin = tenant.publicOrigin;
+									validParts.push("tenant");
+									contextIds[ContextIdKeys.Tenant] = tenantId;
+								}
+							}
+						}
+
+						// Wrap the user lookup in the request context so partitioned storage uses the correct tenant.
+						const user = await ContextIdStore.run(contextIds, async () =>
+							this._userEntityStorage.get(userIdentity, "identity")
+						);
 
 						if (
 							user?.identity === userIdentity &&
@@ -148,13 +186,6 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 						}
 						if (user?.organization === organizationIdentity) {
 							validParts.push("organization");
-						}
-
-						// Context tenant id might be undefined on a single tenant system,
-						// in this case the hash method will return undefined and the verification will pass as long
-						// as the token also has an undefined tenant id.
-						if (TokenHelper.hashTenantId(contextIds?.[ContextIdKeys.Tenant]) === hashedTenantId) {
-							validParts.push("tenant");
 						}
 
 						return validParts;

@@ -415,6 +415,94 @@ describe("UrlTransformerService", () => {
 		});
 	});
 
+	describe("getEncryptedFromUrl", () => {
+		test("returns undefined when url is invalid", async () => {
+			const service = new UrlTransformerService({
+				config: { queryParamNames: { tenant: "tenant-token" } }
+			});
+			await service.start();
+			await expect(service.getEncryptedFromUrl("not a url", "tenant")).resolves.toBeUndefined();
+		});
+
+		test("returns undefined when url is empty", async () => {
+			const service = new UrlTransformerService({
+				config: { queryParamNames: { tenant: "tenant-token" } }
+			});
+			await service.start();
+			await expect(service.getEncryptedFromUrl("", "tenant")).resolves.toBeUndefined();
+		});
+
+		test("returns undefined when key has no queryParamNames mapping", async () => {
+			const service = new UrlTransformerService();
+			await service.start();
+			await expect(
+				service.getEncryptedFromUrl(`${LOCAL_ORIGIN}/api?x-enc-tenant=abc`, "tenant")
+			).resolves.toBeUndefined();
+		});
+
+		test("returns undefined when mapped param is absent from the url", async () => {
+			const service = new UrlTransformerService({
+				config: { queryParamNames: { tenant: "tenant-token" } }
+			});
+			await service.start();
+			await expect(
+				service.getEncryptedFromUrl(`${LOCAL_ORIGIN}/api?other=value`, "tenant")
+			).resolves.toBeUndefined();
+		});
+
+		test("returns the decrypted value when the mapped param is present", async () => {
+			const originalValue = "my-tenant-id";
+			const valueBytes = Converter.utf8ToBytes(originalValue);
+			const decryptedWithSalt = new Uint8Array(8 + valueBytes.length);
+			decryptedWithSalt.set(valueBytes, 8);
+			vi.mocked(mockVaultConnector.decrypt).mockResolvedValue(decryptedWithSalt);
+
+			const service = new UrlTransformerService({
+				config: { queryParamNames: { tenant: "tenant-token" } }
+			});
+			await service.start();
+
+			const encryptedValue = Converter.bytesToBase64Url(new Uint8Array([1, 2, 3]));
+			const url = `${LOCAL_ORIGIN}/api?x-enc-tenant-token=${encodeURIComponent(encryptedValue)}`;
+			const result = await service.getEncryptedFromUrl(url, "tenant");
+			expect(result).toBe(originalValue);
+		});
+
+		test("uses the mapped param name from queryParamNames, not the raw key", async () => {
+			const originalValue = "value-xyz";
+			const valueBytes = Converter.utf8ToBytes(originalValue);
+			const decryptedWithSalt = new Uint8Array(8 + valueBytes.length);
+			decryptedWithSalt.set(valueBytes, 8);
+			vi.mocked(mockVaultConnector.decrypt).mockResolvedValue(decryptedWithSalt);
+
+			const service = new UrlTransformerService({
+				config: { queryParamNames: { myKey: "mapped-name" } }
+			});
+			await service.start();
+
+			const encryptedValue = Converter.bytesToBase64Url(new Uint8Array([4, 5, 6]));
+			const urlWithMappedName = `${LOCAL_ORIGIN}/api?x-enc-mapped-name=${encodeURIComponent(encryptedValue)}`;
+			const urlWithRawKey = `${LOCAL_ORIGIN}/api?x-enc-myKey=${encodeURIComponent(encryptedValue)}`;
+
+			await expect(service.getEncryptedFromUrl(urlWithMappedName, "myKey")).resolves.toBe(
+				originalValue
+			);
+			await expect(service.getEncryptedFromUrl(urlWithRawKey, "myKey")).resolves.toBeUndefined();
+		});
+
+		test("throws decryptionUnavailable when start has not been called", async () => {
+			const service = new UrlTransformerService({
+				config: { queryParamNames: { tenant: "tenant-token" } }
+			});
+
+			const encryptedValue = Converter.bytesToBase64Url(new Uint8Array([1, 2, 3]));
+			const url = `${LOCAL_ORIGIN}/api?x-enc-tenant-token=${encodeURIComponent(encryptedValue)}`;
+			await expect(service.getEncryptedFromUrl(url, "tenant")).rejects.toMatchObject({
+				message: "urlTransformerService.decryptionUnavailable"
+			});
+		});
+	});
+
 	describe("encryptQueryParams", () => {
 		test("returns early when httpRequestQuery is undefined", async () => {
 			const service = new UrlTransformerService();

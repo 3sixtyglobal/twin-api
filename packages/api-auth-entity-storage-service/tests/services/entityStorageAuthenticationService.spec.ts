@@ -4,7 +4,7 @@ import type {
 	IAuthenticationAuditComponent,
 	IAuthenticationRateComponent
 } from "@twin.org/api-auth-entity-storage-models";
-import { TooManyRequestsError } from "@twin.org/api-models";
+import { TooManyRequestsError, type IUrlTransformerComponent } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import { ComponentFactory, NotFoundError, UnauthorizedError } from "@twin.org/core";
 import { PasswordGenerator, PasswordValidator } from "@twin.org/crypto";
@@ -28,6 +28,7 @@ describe("EntityStorageAuthenticationService", () => {
 	let mockAuthenticationRateService: IAuthenticationRateComponent;
 	let mockUserEntityStorage: IEntityStorageConnector;
 	let mockVaultConnector: IVaultConnector;
+	let mockUrlTransformerComponent: IUrlTransformerComponent;
 	let service: EntityStorageAuthenticationService;
 
 	beforeEach(() => {
@@ -61,11 +62,28 @@ describe("EntityStorageAuthenticationService", () => {
 			remove: vi.fn()
 		} as unknown as IVaultConnector;
 
+		mockUrlTransformerComponent = {
+			className: vi.fn(),
+			encryptParam: vi.fn(),
+			decryptParam: vi.fn(),
+			getEncryptedQueryParam: vi.fn(),
+			getEncryptedFromUrl: vi.fn(),
+			addEncryptedQueryParamToUrl: vi.fn(),
+			addEncryptedToUrl: vi.fn(),
+			getDecryptedFromQueryParams: vi.fn(),
+			encryptQueryParams: vi.fn(),
+			decryptQueryParams: vi.fn(),
+			getParamName: vi.fn()
+		};
+
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockUserEntityStorage);
 		vi.spyOn(VaultConnectorFactory, "get").mockReturnValue(mockVaultConnector);
 		vi.spyOn(ComponentFactory, "get").mockImplementation(componentName => {
 			if (componentName === "authentication-rate") {
 				return mockAuthenticationRateService;
+			}
+			if (componentName === "url-transformer") {
+				return mockUrlTransformerComponent;
 			}
 
 			throw new Error(`Unexpected component ${componentName}`);
@@ -112,6 +130,7 @@ describe("EntityStorageAuthenticationService", () => {
 		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("user@example.com");
 		expect(TokenHelper.createToken).toHaveBeenCalledWith(
 			mockVaultConnector,
+			mockUrlTransformerComponent,
 			"node-1/auth-signing",
 			"did:user:123",
 			"did:org:456",
@@ -220,6 +239,7 @@ describe("EntityStorageAuthenticationService", () => {
 
 	it("should register login rate action on start when configured", async () => {
 		service = new EntityStorageAuthenticationService({
+			urlTransformerComponentType: "url-transformer",
 			config: {
 				loginRateLimit: {
 					maxAttempts: 5,
@@ -249,6 +269,7 @@ describe("EntityStorageAuthenticationService", () => {
 
 	it("should wrap rate limit check failures during login", async () => {
 		service = new EntityStorageAuthenticationService({
+			urlTransformerComponentType: "url-transformer",
 			config: {
 				loginRateLimit: {
 					maxAttempts: 2,
@@ -303,17 +324,15 @@ describe("EntityStorageAuthenticationService", () => {
 			salt: "c2FsdA==",
 			scope: "read,write"
 		});
-		const hashedTenantId = TokenHelper.hashTenantId("tenant-1");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
-				expect(verified).toEqual(["user", "organization", "tenant"]);
+				expect(verified).toEqual(["user", "organization"]);
 				return {
 					header: { alg: "EdDSA" },
 					payload: {
 						sub: "did:user:123",
 						org: "did:org:456",
-						tid: hashedTenantId,
 						scope: "read,write"
 					}
 				};
@@ -331,10 +350,11 @@ describe("EntityStorageAuthenticationService", () => {
 		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
 		expect(TokenHelper.createToken).toHaveBeenCalledWith(
 			mockVaultConnector,
+			mockUrlTransformerComponent,
 			"node-1/auth-signing",
 			"did:user:123",
 			"did:org:456",
-			hashedTenantId,
+			undefined,
 			60,
 			"read,write",
 			0
@@ -349,7 +369,7 @@ describe("EntityStorageAuthenticationService", () => {
 			event: "token-refreshed",
 			data: {
 				organizationIdentity: "did:org:456",
-				tenantId: hashedTenantId,
+				tenantId: undefined,
 				scope: ["read", "write"]
 			}
 		});
@@ -795,10 +815,9 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 	});
 
-	it("should throw UnauthorizedError when token tenant hash does not match context tenant during refresh", async () => {
+	it("should throw UnauthorizedError when token carries a tenant ID but tenantAdminComponent is not configured", async () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
-			[ContextIdKeys.Node]: "node-1",
-			[ContextIdKeys.Tenant]: "tenant-b"
+			[ContextIdKeys.Node]: "node-1"
 		});
 		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
 			email: "user@example.com",
@@ -808,11 +827,11 @@ describe("EntityStorageAuthenticationService", () => {
 			salt: "c2FsdA==",
 			scope: "read,write"
 		});
-		// Token was issued for tenant-a but the request context is tenant-b
-		const tokenTenantHash = TokenHelper.hashTenantId("tenant-a");
+		const encryptedTenantA = "encrypted:tenant-a";
+		vi.mocked(mockUrlTransformerComponent.decryptParam).mockResolvedValue("tenant-a");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", tokenTenantHash, 0);
+				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantA, 0);
 				if (!verified?.includes("tenant")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "tenantNotVerified");
 				}
@@ -821,7 +840,7 @@ describe("EntityStorageAuthenticationService", () => {
 					payload: {
 						sub: "did:user:123",
 						org: "did:org:456",
-						tid: tokenTenantHash,
+						tid: encryptedTenantA,
 						scope: "read,write"
 					}
 				};
@@ -831,5 +850,129 @@ describe("EntityStorageAuthenticationService", () => {
 		await service.start();
 
 		await expect(service.refresh("existing-token")).rejects.toThrow(UnauthorizedError);
+	});
+
+	it("should throw UnauthorizedError when tenantAdminComponent is present but tenant is not found during refresh", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: "read,write"
+		});
+		const encryptedTenantA = "encrypted:tenant-a";
+		vi.mocked(mockUrlTransformerComponent.decryptParam).mockResolvedValue("tenant-a");
+
+		// Provide a tenantAdminComponent that can't find the tenant.
+		const mockTenantAdminComponent = {
+			className: vi.fn(),
+			get: vi.fn().mockResolvedValue(undefined)
+		};
+		vi.spyOn(ComponentFactory, "getIfExists").mockImplementation(componentName => {
+			if (componentName === "authentication-audit") {
+				return mockAuthenticationAuditService;
+			}
+			if (componentName === "tenant-admin") {
+				return mockTenantAdminComponent;
+			}
+			return undefined;
+		});
+		service = new EntityStorageAuthenticationService();
+
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantA, 0);
+				if (!verified?.includes("tenant")) {
+					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "tenantNotVerified");
+				}
+				return {
+					header: { alg: "EdDSA" },
+					payload: {
+						sub: "did:user:123",
+						org: "did:org:456",
+						tid: encryptedTenantA,
+						scope: "read,write"
+					}
+				};
+			}
+		);
+
+		await service.start();
+
+		await expect(service.refresh("existing-token")).rejects.toThrow(UnauthorizedError);
+		expect(mockTenantAdminComponent.get).toHaveBeenCalledWith("tenant-a");
+	});
+
+	it("should refresh a token successfully when tenantAdminComponent is present and confirms the tenant", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: "read,write"
+		});
+		const encryptedTenantA = "encrypted:tenant-a";
+		vi.mocked(mockUrlTransformerComponent.decryptParam).mockResolvedValue("tenant-a");
+
+		const mockTenantAdminComponent = {
+			className: vi.fn(),
+			get: vi.fn().mockResolvedValue({ id: "tenant-a", publicOrigin: "https://a.example.com" })
+		};
+		vi.spyOn(ComponentFactory, "getIfExists").mockImplementation(componentName => {
+			if (componentName === "authentication-audit") {
+				return mockAuthenticationAuditService;
+			}
+			if (componentName === "tenant-admin") {
+				return mockTenantAdminComponent;
+			}
+			return undefined;
+		});
+		service = new EntityStorageAuthenticationService();
+
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantA, 0);
+				expect(verified).toContain("tenant");
+				return {
+					header: { alg: "EdDSA" },
+					payload: {
+						sub: "did:user:123",
+						org: "did:org:456",
+						tid: encryptedTenantA,
+						scope: "read,write"
+					}
+				};
+			}
+		);
+		vi.spyOn(TokenHelper, "createToken").mockResolvedValue({
+			token: "refreshed-token",
+			expiry: 987654321
+		});
+
+		await service.start();
+		const result = await service.refresh("existing-token");
+
+		expect(result).toEqual({ token: "refreshed-token", expiry: 987654321 });
+		expect(mockUrlTransformerComponent.decryptParam).toHaveBeenCalledWith(encryptedTenantA);
+		expect(mockTenantAdminComponent.get).toHaveBeenCalledWith("tenant-a");
+		expect(TokenHelper.createToken).toHaveBeenCalledWith(
+			mockVaultConnector,
+			mockUrlTransformerComponent,
+			"node-1/auth-signing",
+			"did:user:123",
+			"did:org:456",
+			"tenant-a",
+			60,
+			"read,write",
+			0
+		);
 	});
 });

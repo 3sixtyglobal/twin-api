@@ -1,49 +1,25 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IUrlTransformerComponent } from "@twin.org/api-models";
 import { UnauthorizedError } from "@twin.org/core";
 import type { IVaultConnector } from "@twin.org/vault-models";
 import { HeaderTypes, type IHttpHeaders, Jwt } from "@twin.org/web";
 import { TokenHelper } from "../../src/utils/tokenHelper.js";
 
-describe("TokenHelper.hashTenantId", () => {
-	it("should return undefined for undefined input", () => {
-		expect(TokenHelper.hashTenantId(undefined)).toBeUndefined();
-	});
-
-	it("should return undefined for empty string", () => {
-		expect(TokenHelper.hashTenantId("")).toBeUndefined();
-	});
-
-	it("should return a non-empty string for a valid tenant ID", () => {
-		const hash = TokenHelper.hashTenantId("my-tenant");
-		expect(hash).toBeDefined();
-		expect(hash).not.toBe("");
-	});
-
-	it("should produce the same hash for the same input (deterministic)", () => {
-		expect(TokenHelper.hashTenantId("my-tenant")).toBe(TokenHelper.hashTenantId("my-tenant"));
-	});
-
-	it("should produce different hashes for different tenant IDs", () => {
-		expect(TokenHelper.hashTenantId("tenant-a")).not.toBe(TokenHelper.hashTenantId("tenant-b"));
-	});
-
-	it("should return a Base64URL-encoded string with no padding or non-URL-safe characters", () => {
-		const hash = TokenHelper.hashTenantId("my-tenant");
-		expect(hash).toMatch(/^[\w-]+$/);
-	});
-});
-
 describe("TokenHelper.createToken", () => {
-	it("should store the hashed tenant ID in the jwt tid claim, not the raw value", async () => {
+	it("should store the encrypted tenant ID in the jwt tid claim, not the raw value", async () => {
 		const tenantId = "my-tenant";
-		const expectedHash = TokenHelper.hashTenantId(tenantId);
+		const encryptedTenantId = "encrypted-my-tenant";
 
 		const mockVaultConnector = {
 			get: vi.fn(),
 			set: vi.fn(),
 			remove: vi.fn()
 		} as unknown as IVaultConnector;
+
+		const mockUrlTransformerComponent = {
+			encryptParam: vi.fn().mockResolvedValue(encryptedTenantId)
+		} as unknown as IUrlTransformerComponent;
 
 		let capturedPayload: { [key: string]: unknown } | undefined;
 		vi.spyOn(Jwt, "encodeWithSigner").mockImplementation(async (header, payload) => {
@@ -53,6 +29,7 @@ describe("TokenHelper.createToken", () => {
 
 		await TokenHelper.createToken(
 			mockVaultConnector,
+			mockUrlTransformerComponent,
 			"signing-key",
 			"did:user:123",
 			"did:org:456",
@@ -60,8 +37,9 @@ describe("TokenHelper.createToken", () => {
 			60
 		);
 
-		expect(capturedPayload?.tid).toBe(expectedHash);
+		expect(capturedPayload?.tid).toBe(encryptedTenantId);
 		expect(capturedPayload?.tid).not.toBe(tenantId);
+		expect(mockUrlTransformerComponent.encryptParam).toHaveBeenCalledWith(tenantId);
 	});
 
 	it("should set tid to undefined when no tenant ID is provided", async () => {
@@ -71,6 +49,10 @@ describe("TokenHelper.createToken", () => {
 			remove: vi.fn()
 		} as unknown as IVaultConnector;
 
+		const mockUrlTransformerComponent = {
+			encryptParam: vi.fn()
+		} as unknown as IUrlTransformerComponent;
+
 		let capturedPayload: { [key: string]: unknown } | undefined;
 		vi.spyOn(Jwt, "encodeWithSigner").mockImplementation(async (header, payload) => {
 			capturedPayload = payload as { [key: string]: unknown };
@@ -79,6 +61,7 @@ describe("TokenHelper.createToken", () => {
 
 		await TokenHelper.createToken(
 			mockVaultConnector,
+			mockUrlTransformerComponent,
 			"signing-key",
 			"did:user:123",
 			"did:org:456",
@@ -87,6 +70,7 @@ describe("TokenHelper.createToken", () => {
 		);
 
 		expect(capturedPayload?.tid).toBeUndefined();
+		expect(mockUrlTransformerComponent.encryptParam).not.toHaveBeenCalled();
 	});
 });
 
@@ -674,6 +658,7 @@ describe("TokenHelper", () => {
 			const payload = {
 				sub: "user123",
 				org: "org456",
+				tid: "encrypted:tenant-xyz",
 				exp: Math.trunc(Date.now() / 1000) + 3600
 			};
 
@@ -689,16 +674,16 @@ describe("TokenHelper", () => {
 			).rejects.toThrow(UnauthorizedError);
 		});
 
-		it("should pass the tid claim from the token payload as hashedTenantId to verifyUser", async () => {
-			const hashedTenantId = "some-hashed-tenant-value";
+		it("should pass the tid claim from the token payload as encryptedTenantId to verifyUser", async () => {
+			const encryptedTenantId = "some-encrypted-tenant-value";
 			const payload = {
 				sub: "user123",
 				org: "org456",
-				tid: hashedTenantId,
+				tid: encryptedTenantId,
 				exp: Math.trunc(Date.now() / 1000) + 3600
 			};
 
-			const token = "with-hashed-tenant.jwt.token";
+			const token = "with-encrypted-tenant.jwt.token";
 			const verifyUser = vi.fn().mockResolvedValue(["user", "organization", "tenant"]);
 			vi.spyOn(Jwt, "verifyWithVerifier").mockResolvedValue({
 				header: { alg: "EdDSA" },
@@ -707,10 +692,10 @@ describe("TokenHelper", () => {
 
 			await TokenHelper.verify(mockVaultConnector, signingKeyName, token, undefined, verifyUser);
 
-			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", hashedTenantId, undefined);
+			expect(verifyUser).toHaveBeenCalledWith("user123", "org456", encryptedTenantId, undefined);
 		});
 
-		it("should pass undefined hashedTenantId to verifyUser when tid is absent from token payload", async () => {
+		it("should pass undefined encryptedTenantId to verifyUser when tid is absent from token payload", async () => {
 			const payload = {
 				sub: "user123",
 				org: "org456",

@@ -7,6 +7,7 @@ import type {
 	IAuthenticationComponent
 } from "@twin.org/api-auth-entity-storage-models";
 import { AuthAuditEvent } from "@twin.org/api-auth-entity-storage-models";
+import type { ITenantAdminComponent, IUrlTransformerComponent } from "@twin.org/api-models";
 import { ContextIdHelper, ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
 	Coerce,
@@ -106,6 +107,12 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	private readonly _vaultConnector: IVaultConnector;
 
 	/**
+	 * The transformer component, used to resolve public origins for tenants and encrypt/decrypt tenant tokens.
+	 * @internal
+	 */
+	private readonly _urlTransformerService: IUrlTransformerComponent;
+
+	/**
 	 * The name of the key to retrieve from the vault for signing JWT.
 	 * @internal
 	 */
@@ -142,6 +149,12 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	private readonly _tokenRefreshRateLimit: IAuthenticationRateActionConfig;
 
 	/**
+	 * The component to retrieve tenant information.
+	 * @internal
+	 */
+	private readonly _tenantAdminComponent?: ITenantAdminComponent;
+
+	/**
 	 * The node identity.
 	 * @internal
 	 */
@@ -158,12 +171,20 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 		this._vaultConnector = VaultConnectorFactory.get(options?.vaultConnectorType ?? "vault");
 
+		this._urlTransformerService = ComponentFactory.get(
+			options?.urlTransformerComponentType ?? "url-transformer"
+		);
+
 		this._authenticationAuditService = ComponentFactory.getIfExists<IAuthenticationAuditComponent>(
 			options?.authenticationAuditServiceType ?? "authentication-audit"
 		);
 
 		this._authenticationRateService = ComponentFactory.get<IAuthenticationRateComponent>(
 			options?.authenticationRateServiceType ?? "authentication-rate"
+		);
+
+		this._tenantAdminComponent = ComponentFactory.getIfExists<ITenantAdminComponent>(
+			options?.tenantAdminComponentType ?? "tenant-admin"
 		);
 
 		this._signingKeyName = options?.config?.signingKeyName ?? "auth-signing";
@@ -281,6 +302,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 			tokenAndExpiry = await TokenHelper.createToken(
 				this._vaultConnector,
+				this._urlTransformerService,
 				`${this._nodeId}/${this._signingKeyName}`,
 				user.identity,
 				user.organization,
@@ -348,6 +370,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		expiry: number;
 	}> {
 		let refreshPasswordVersion: number | undefined;
+		let tenantId: string | undefined;
 
 		// If the verify fails on the current token then it will throw an exception.
 		const headerAndPayload = await TokenHelper.verify(
@@ -355,9 +378,29 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			`${this._nodeId}/${this._signingKeyName}`,
 			token,
 			undefined,
-			async (userIdentity, organizationIdentity, hashedTenantId, passwordVersion) => {
+			async (userIdentity, organizationIdentity, encryptedTenantId, passwordVersion) => {
 				const validParts = [];
-				const user = await this._userEntityStorage.get(userIdentity, "identity");
+
+				const contextIds = (await ContextIdStore.getContextIds()) ?? {};
+
+				// If the token carries an encrypted tenant ID and the admin component is available,
+				// decrypt and resolve the tenant first so the user lookup runs in the correct partition.
+				if (Is.stringValue(encryptedTenantId)) {
+					tenantId = await this._urlTransformerService.decryptParam(encryptedTenantId);
+					if (Is.stringValue(tenantId)) {
+						const tenant = await this._tenantAdminComponent?.get(tenantId);
+						if (!Is.empty(tenant)) {
+							validParts.push("tenant");
+							contextIds[ContextIdKeys.Tenant] = tenantId;
+						}
+					}
+				}
+
+				// Wrap the user lookup in the request context so partitioned storage uses the correct tenant.
+				const user = await ContextIdStore.run(contextIds, async () =>
+					this._userEntityStorage.get(userIdentity, "identity")
+				);
+
 				refreshPasswordVersion = user?.passwordVersion;
 				if (
 					user?.identity === userIdentity &&
@@ -368,13 +411,6 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				if (user?.organization === organizationIdentity) {
 					validParts.push("organization");
 				}
-				// Context tenant id might be undefined on a single tenant system,
-				// in this case the hash method will return undefined and the verification will pass as long
-				// as the token also has an undefined tenant id.
-				const contextIds = await ContextIdStore.getContextIds();
-				if (TokenHelper.hashTenantId(contextIds?.[ContextIdKeys.Tenant]) === hashedTenantId) {
-					validParts.push("tenant");
-				}
 				return validParts;
 			}
 		);
@@ -384,10 +420,11 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 		const refreshTokenAndExpiry = await TokenHelper.createToken(
 			this._vaultConnector,
+			this._urlTransformerService,
 			`${this._nodeId}/${this._signingKeyName}`,
 			refreshSub,
 			Is.stringValue(headerAndPayload.payload.org) ? headerAndPayload.payload.org : "",
-			Is.string(headerAndPayload.payload.tid) ? headerAndPayload.payload.tid : undefined,
+			tenantId,
 			this._defaultTtlMinutes,
 			Coerce.string(headerAndPayload.payload?.scope),
 			refreshPasswordVersion ?? 0
@@ -401,9 +438,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				organizationIdentity: Is.stringValue(headerAndPayload.payload.org)
 					? headerAndPayload.payload.org
 					: "",
-				tenantId: Is.string(headerAndPayload.payload.tid)
-					? headerAndPayload.payload.tid
-					: undefined,
+				tenantId,
 				scope: refreshScope.split(",").filter(scope => scope.length > 0)
 			}
 		});

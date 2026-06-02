@@ -156,6 +156,34 @@ export class UrlTransformerService implements IUrlTransformerComponent {
 	}
 
 	/**
+	 * Get an encrypted value from a URL's query string.
+	 * @param url The URL to extract the encrypted value from.
+	 * @param id The logical identifier for the value to retrieve (e.g. "tenant").
+	 * @returns The decrypted value if it exists.
+	 */
+	public async getEncryptedFromUrl(url: string, id: string): Promise<string | undefined> {
+		let urlObj: URL;
+		try {
+			urlObj = new URL(url);
+		} catch {
+			return undefined;
+		}
+
+		const name = this.getParamName(id);
+		if (!Is.stringValue(name)) {
+			return undefined;
+		}
+
+		if (urlObj.searchParams.has(name)) {
+			const encryptedValue = urlObj.searchParams.get(name);
+			if (Is.stringValue(encryptedValue)) {
+				return this.decryptParam(encryptedValue);
+			}
+			return undefined;
+		}
+	}
+
+	/**
 	 * Decrypt specified keys from a query parameter object and return their plain-text values.
 	 * @param queryParams The HTTP request query containing the encrypted parameters.
 	 * @param keys The keys to decrypt.
@@ -294,5 +322,16 @@ export class UrlTransformerService implements IUrlTransformerComponent {
 				BaseError.fromError(err)
 			);
 		}
+	}
+
+	/**
+	 * Get the parameter name for a given key.
+	 * @param key The key of the parameter.
+	 * @returns The parameter name.
+	 */
+	public getParamName(key: string): string | undefined {
+		return Is.stringValue(this._queryParamNames[key])
+			? `${UrlTransformerService._KEY_PREFIX}${this._queryParamNames[key]}`
+			: undefined;
 	}
 }

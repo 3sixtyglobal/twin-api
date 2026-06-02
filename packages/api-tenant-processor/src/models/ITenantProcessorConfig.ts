@@ -10,4 +10,9 @@ export interface ITenantProcessorConfig {
 	 * @default x-api-key
 	 */
 	apiKeyName?: string;
+
+	/**
+	 * The list of endpoint paths that should be checked for an api key header, can be regexp strings. Defaults to ["/login$"].
+	 */
+	apiKeyEndpoints?: string[];
 }

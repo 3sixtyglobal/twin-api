@@ -117,8 +117,7 @@ export function generateRestRoutesAuthentication(
 			{
 				type: nameof<INoContentResponse>()
 			}
-		],
-		skipAuth: true
+		]
 	};
 
 	const refreshTokenRoute: IRestRoute<IRefreshTokenRequest, IRefreshTokenResponse> = {

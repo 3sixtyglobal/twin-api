@@ -1,7 +1,8 @@
 {
 	"error": {
 		"tenantProcessor": {
-			"missingApiKeyOrTenantToken": "API key \"{keyName}\" or tenant token is missing",
+			"missingApiKey": "API key \"{keyName}\" is missing",
+			"missingTenantToken": "Tenant token query parameter \"{paramName}\" is missing",
 			"apiKeyNotFound": "No node tenant found for API key \"{key}\".",
 			"tenantNotFound": "No node tenant found for the decrypted tenant token \"{tenantId}\"."
 		},

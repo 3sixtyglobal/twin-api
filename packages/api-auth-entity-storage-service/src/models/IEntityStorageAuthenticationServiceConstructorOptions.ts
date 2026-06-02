@@ -19,6 +19,11 @@ export interface IEntityStorageAuthenticationServiceConstructorOptions {
 	vaultConnectorType?: string;
 
 	/**
+	 * The URL transformer component for the tenants.
+	 */
+	urlTransformerComponentType?: string;
+
+	/**
 	 * The audit service.
 	 * @default authentication-audit
 	 */
@@ -29,6 +34,12 @@ export interface IEntityStorageAuthenticationServiceConstructorOptions {
 	 * @default authentication-rate
 	 */
 	authenticationRateServiceType?: string;
+
+	/**
+	 * The component to retrieve tenant information.
+	 * @default tenant-admin
+	 */
+	tenantAdminComponentType?: string;
 
 	/**
 	 * The configuration for the authentication.

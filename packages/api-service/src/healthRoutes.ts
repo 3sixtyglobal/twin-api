@@ -104,8 +104,7 @@ export function generateRestRoutesHealth(
 					}
 				]
 			}
-		],
-		skipAuth: true
+		]
 	};
 
 	return [healthRoute];
