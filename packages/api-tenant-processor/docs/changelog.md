@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.39](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.38...api-tenant-processor-v0.0.3-next.39) (2026-06-02)
+
+
+### Features
+
+* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.38 to 0.0.3-next.39
+
 ## [0.0.3-next.38](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.37...api-tenant-processor-v0.0.3-next.38) (2026-05-28)
 
 
