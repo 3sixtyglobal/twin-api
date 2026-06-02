@@ -102,6 +102,34 @@ The URL with the encrypted parameters added.
 
 ***
 
+### getEncryptedFromUrl() {#getencryptedfromurl}
+
+> **getEncryptedFromUrl**(`url`, `id`): `Promise`\<`string` \| `undefined`\>
+
+Get an encrypted value from a URL's query string.
+
+#### Parameters
+
+##### url
+
+`string`
+
+The URL to extract the encrypted value from.
+
+##### id
+
+`string`
+
+The logical identifier for the value to retrieve (e.g. "tenant").
+
+#### Returns
+
+`Promise`\<`string` \| `undefined`\>
+
+The decrypted value if it exists.
+
+***
+
 ### getDecryptedFromQueryParams() {#getdecryptedfromqueryparams}
 
 > **getDecryptedFromQueryParams**(`queryParams`, `keys`): `Promise`\<[`IHttpRequestQuery`](IHttpRequestQuery.md)\>
@@ -227,3 +255,25 @@ The encrypted value of the parameter.
 `Promise`\<`string`\>
 
 A promise that resolves to the decrypted value of the parameter.
+
+***
+
+### getParamName() {#getparamname}
+
+> **getParamName**(`key`): `string` \| `undefined`
+
+Get the parameter name for a given key.
+
+#### Parameters
+
+##### key
+
+`string`
+
+The key of the parameter.
+
+#### Returns
+
+`string` \| `undefined`
+
+The parameter name.

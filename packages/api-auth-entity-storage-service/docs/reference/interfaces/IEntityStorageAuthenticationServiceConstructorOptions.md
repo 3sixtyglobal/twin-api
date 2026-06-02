@@ -32,6 +32,14 @@ vault
 
 ***
 
+### urlTransformerComponentType? {#urltransformercomponenttype}
+
+> `optional` **urlTransformerComponentType?**: `string`
+
+The URL transformer component for the tenants.
+
+***
+
 ### authenticationAuditServiceType? {#authenticationauditservicetype}
 
 > `optional` **authenticationAuditServiceType?**: `string`
@@ -56,6 +64,20 @@ The rate service.
 
 ```ts
 authentication-rate
+```
+
+***
+
+### tenantAdminComponentType? {#tenantadmincomponenttype}
+
+> `optional` **tenantAdminComponentType?**: `string`
+
+The component to retrieve tenant information.
+
+#### Default
+
+```ts
+tenant-admin
 ```
 
 ***

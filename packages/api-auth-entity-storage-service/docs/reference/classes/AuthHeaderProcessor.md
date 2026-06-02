@@ -12,7 +12,7 @@ Handle a JWT token in the authorization header or cookies and validate it to pop
 
 > **new AuthHeaderProcessor**(`options?`): `AuthHeaderProcessor`
 
-Create a new instance of AuthCookiePreProcessor.
+Create a new instance of AuthHeaderProcessor.
 
 #### Parameters
 

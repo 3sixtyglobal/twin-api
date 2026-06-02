@@ -24,7 +24,7 @@ Runtime name for the class.
 
 ### createToken() {#createtoken}
 
-> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`, `passwordVersion?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+> `static` **createToken**(`vaultConnector`, `urlTransformerComponent`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`, `passwordVersion?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
 
 Create a new token.
 
@@ -35,6 +35,12 @@ Create a new token.
 `IVaultConnector`
 
 The vault connector.
+
+##### urlTransformerComponent
+
+`IUrlTransformerComponent`
+
+The URL transformer component, used to encrypt the tenant ID for inclusion in the token.
 
 ##### signingKeyName
 
@@ -120,7 +126,7 @@ The required scopes.
 
 ##### verifyUser?
 
-(`userIdentity`, `organizationIdentity`, `hashedTenantId`, `passwordVersion`) => `Promise`\<`string`[]\>
+(`userIdentity`, `organizationIdentity`, `encryptedTenantId`, `passwordVersion`) => `Promise`\<`string`[]\>
 
 A function to verify the user identity and organization. The password version counter embedded in the token (pver claim) is passed so callers can detect if the password has changed since the token was issued.
 
@@ -161,26 +167,3 @@ The name of the cookie to extract the token from.
 \{ `token`: `string`; `location`: `"authorization"` \| `"cookie"`; \} \| `undefined`
 
 The token if found.
-
-***
-
-### hashTenantId() {#hashtenantid}
-
-> `static` **hashTenantId**(`tenantId`): `string` \| `undefined`
-
-Hash the tenant ID using Blake2b and encode it in Base64URL format.
-Used to create a consistent and secure representation of tenant IDs without exposing the original values.
-
-#### Parameters
-
-##### tenantId
-
-`string` \| `undefined`
-
-The tenant ID to hash.
-
-#### Returns
-
-`string` \| `undefined`
-
-The hashed tenant ID in Base64URL format, or undefined if the input tenant ID is not a valid string.

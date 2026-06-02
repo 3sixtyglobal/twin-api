@@ -32,6 +32,28 @@ vault
 
 ***
 
+### urlTransformerComponentType? {#urltransformercomponenttype}
+
+> `optional` **urlTransformerComponentType?**: `string`
+
+The URL transformer component for the tenants.
+
+***
+
+### tenantAdminComponentType? {#tenantadmincomponenttype}
+
+> `optional` **tenantAdminComponentType?**: `string`
+
+The component to retrieve tenant information.
+
+#### Default
+
+```ts
+tenant-admin
+```
+
+***
+
 ### config? {#config}
 
 > `optional` **config?**: [`IAuthHeaderProcessorConfig`](IAuthHeaderProcessorConfig.md)
