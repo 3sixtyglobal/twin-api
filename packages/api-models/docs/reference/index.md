@@ -63,6 +63,7 @@
 - [IServerInfo](interfaces/IServerInfo.md)
 - [ITenant](interfaces/ITenant.md)
 - [ITenantAdminComponent](interfaces/ITenantAdminComponent.md)
+- [ITenantComponent](interfaces/ITenantComponent.md)
 - [IUrlTransformerComponent](interfaces/IUrlTransformerComponent.md)
 
 ## Type Aliases

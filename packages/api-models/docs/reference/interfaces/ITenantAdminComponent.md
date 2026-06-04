@@ -158,21 +158,17 @@ Error if the tenant is not found.
 
 ### query() {#query}
 
-> **query**(`options?`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: [`ITenant`](ITenant.md)[]; `cursor?`: `string`; \}\>
+> **query**(`properties`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: [`ITenant`](ITenant.md)[]; `cursor?`: `string`; \}\>
 
 Query tenants with pagination.
 
 #### Parameters
 
-##### options?
+##### properties
 
-Optional query options.
+keyof [`ITenant`](ITenant.md)[] \| `undefined`
 
-###### isNodeTenant?
-
-`boolean`
-
-Whether to filter for node admin tenants.
+The properties to include in the returned tenants.
 
 ##### cursor?
 

@@ -1,6 +1,6 @@
 # Class: TenantAdminService
 
-Service for performing email messaging operations to a connector.
+Service for performing tenant administration operations.
 
 ## Implements
 
@@ -224,21 +224,17 @@ Nothing.
 
 ### query() {#query}
 
-> **query**(`options?`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: `ITenant`[]; `cursor?`: `string`; \}\>
+> **query**(`properties`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: `ITenant`[]; `cursor?`: `string`; \}\>
 
 Query tenants with pagination.
 
 #### Parameters
 
-##### options?
+##### properties
 
-Optional query options.
+keyof `ITenant`[] \| `undefined`
 
-###### isNodeTenant?
-
-`boolean`
-
-Whether to filter for node admin tenants.
+The properties to include in the returned tenants.
 
 ##### cursor?
 

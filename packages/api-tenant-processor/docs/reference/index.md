@@ -6,6 +6,7 @@
 - [TenantAdminService](classes/TenantAdminService.md)
 - [TenantIdContextIdHandler](classes/TenantIdContextIdHandler.md)
 - [TenantProcessor](classes/TenantProcessor.md)
+- [TenantService](classes/TenantService.md)
 - [TenantIdHelper](classes/TenantIdHelper.md)
 
 ## Interfaces
@@ -14,6 +15,8 @@
 - [ITenantAdminServiceConstructorOptions](interfaces/ITenantAdminServiceConstructorOptions.md)
 - [ITenantProcessorConfig](interfaces/ITenantProcessorConfig.md)
 - [ITenantProcessorConstructorOptions](interfaces/ITenantProcessorConstructorOptions.md)
+- [ITenantServiceConfig](interfaces/ITenantServiceConfig.md)
+- [ITenantServiceConstructorOptions](interfaces/ITenantServiceConstructorOptions.md)
 - [ITenantCreateRequest](interfaces/ITenantCreateRequest.md)
 - [ITenantGetByApiKeyRequest](interfaces/ITenantGetByApiKeyRequest.md)
 - [ITenantGetByIdRequest](interfaces/ITenantGetByIdRequest.md)

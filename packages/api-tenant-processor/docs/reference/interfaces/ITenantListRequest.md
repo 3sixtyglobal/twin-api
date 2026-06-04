@@ -10,6 +10,13 @@ The list of tenants.
 
 The query parameters.
 
+#### properties?
+
+> `optional` **properties?**: `string`
+
+The properties to include in the returned tenants, separated by commas.
+If not provided, all properties will be returned.
+
 #### cursor?
 
 > `optional` **cursor?**: `string`

@@ -59,11 +59,3 @@ The date the tenant was modified.
 > `optional` **publicOrigin?**: `string`
 
 The origin available to the public for accessing the API.
-
-***
-
-### isNodeTenant {#isnodetenant}
-
-> **isNodeTenant**: `boolean`
-
-Indicates whether the tenant is the node tenant.
