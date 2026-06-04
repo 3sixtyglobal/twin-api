@@ -1,13 +1,14 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type {
-	ICreatedResponse,
-	IHostingComponent,
-	IHttpRequestContext,
-	INoContentResponse,
-	IRestRoute,
-	ITag,
-	ITenantAdminComponent
+import {
+	HttpParameterHelper,
+	type ICreatedResponse,
+	type IHostingComponent,
+	type IHttpRequestContext,
+	type INoContentResponse,
+	type IRestRoute,
+	type ITag,
+	type ITenantAdminComponent
 } from "@twin.org/api-models";
 import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
@@ -73,8 +74,7 @@ export function generateRestRoutesTenants(
 									label: "node",
 									dateCreated: "2026-01-19T03:59:35.742Z",
 									dateModified: "2026-01-19T03:59:35.742Z",
-									publicOrigin: "https://example.com:4321",
-									isNodeTenant: false
+									publicOrigin: "https://example.com:4321"
 								}
 							]
 						}
@@ -120,8 +120,7 @@ export function generateRestRoutesTenants(
 								label: "node",
 								dateCreated: "2026-01-19T03:59:35.742Z",
 								dateModified: "2026-01-19T03:59:35.742Z",
-								publicOrigin: "https://example.com:4321",
-								isNodeTenant: false
+								publicOrigin: "https://example.com:4321"
 							}
 						}
 					}
@@ -153,8 +152,7 @@ export function generateRestRoutesTenants(
 								label: "node",
 								dateCreated: "2026-01-19T03:59:35.742Z",
 								dateModified: "2026-01-19T03:59:35.742Z",
-								publicOrigin: "https://example.com:4321",
-								isNodeTenant: false
+								publicOrigin: "https://example.com:4321"
 							}
 						}
 					}
@@ -243,8 +241,7 @@ export function generateRestRoutesTenants(
 						body: {
 							apiKey: "ad7a5b0b816ca314b69c813ae1368232",
 							label: "node",
-							publicOrigin: "https://example.com:4321",
-							isNodeTenant: false
+							publicOrigin: "https://example.com:4321"
 						}
 					}
 				}
@@ -279,8 +276,7 @@ export function generateRestRoutesTenants(
 						body: {
 							apiKey: "ad7a5b0b816ca314b69c813ae1368232",
 							label: "node",
-							publicOrigin: "https://example.com:4321",
-							isNodeTenant: false
+							publicOrigin: "https://example.com:4321"
 						}
 					}
 				}
@@ -324,7 +320,7 @@ export async function tenantList(
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
 	const result = await component.query(
-		undefined,
+		HttpParameterHelper.arrayFromString(request.query?.properties),
 		request.query?.cursor,
 		Coerce.integer(request.query?.limit)
 	);

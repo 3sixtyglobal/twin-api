@@ -1,8 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { ITenantAdminComponent, ITenant } from "@twin.org/api-models";
-import { GeneralError, Guards, Is, Url, NotFoundError } from "@twin.org/core";
-import { ComparisonOperator } from "@twin.org/entity";
+import type { ITenant, ITenantAdminComponent } from "@twin.org/api-models";
+import { GeneralError, Guards, Is, NotFoundError, Url } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -13,7 +12,7 @@ import type { ITenantAdminServiceConstructorOptions } from "./models/ITenantAdmi
 import { TenantIdHelper } from "./utils/tenantIdHelper.js";
 
 /**
- * Service for performing email messaging operations to a connector.
+ * Service for performing tenant administration operations.
  */
 export class TenantAdminService implements ITenantAdminComponent {
 	/**
@@ -155,7 +154,6 @@ export class TenantAdminService implements ITenantAdminComponent {
 		tenantEntity.dateModified = tenantEntity.dateCreated;
 		tenantEntity.label = tenant.label;
 		tenantEntity.publicOrigin = publicOrigin;
-		tenantEntity.isNodeTenant = tenant.isNodeTenant;
 
 		await this._entityStorageConnector.set(tenantEntity);
 
@@ -209,7 +207,6 @@ export class TenantAdminService implements ITenantAdminComponent {
 		tenantEntity.dateModified = new Date(Date.now()).toISOString();
 		tenantEntity.label = tenant.label ?? currentTenant.label;
 		tenantEntity.publicOrigin = publicOrigin ?? currentTenant.publicOrigin;
-		tenantEntity.isNodeTenant = tenant.isNodeTenant ?? currentTenant.isNodeTenant;
 
 		await this._entityStorageConnector.set(tenantEntity);
 	}
@@ -227,31 +224,20 @@ export class TenantAdminService implements ITenantAdminComponent {
 
 	/**
 	 * Query tenants with pagination.
-	 * @param options Optional query options.
-	 * @param options.isNodeTenant Whether to filter for node admin tenants.
+	 * @param properties The properties to include in the returned tenants.
 	 * @param cursor The cursor to start from.
 	 * @param limit The maximum number of tenants to return.
 	 * @returns The tenants and the next cursor if more tenants are available.
 	 */
 	public async query(
-		options?: { isNodeTenant?: boolean },
+		properties: (keyof ITenant)[] | undefined,
 		cursor?: string,
 		limit?: number
 	): Promise<{ tenants: ITenant[]; cursor?: string }> {
-		const conditions = [];
-
-		if (Is.boolean(options?.isNodeTenant)) {
-			conditions.push({
-				property: "isNodeTenant",
-				value: options.isNodeTenant,
-				comparison: ComparisonOperator.Equals
-			});
-		}
-
 		const result = await this._entityStorageConnector.query(
-			conditions.length > 0 ? { conditions } : undefined,
 			undefined,
 			undefined,
+			properties,
 			cursor,
 			limit
 		);

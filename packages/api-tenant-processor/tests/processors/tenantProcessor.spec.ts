@@ -23,7 +23,6 @@ const TENANT_A: Tenant = {
 	publicOrigin: "https://a.example.com",
 	dateCreated: new Date().toISOString(),
 	dateModified: new Date().toISOString(),
-	isNodeTenant: false,
 	label: "Tenant A"
 };
 

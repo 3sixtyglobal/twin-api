@@ -34,9 +34,4 @@ export interface ITenant {
 	 * The public origin available to the public for accessing the API.
 	 */
 	publicOrigin?: string;
-
-	/**
-	 * Indicates whether the tenant is the node tenant.
-	 */
-	isNodeTenant: boolean;
 }

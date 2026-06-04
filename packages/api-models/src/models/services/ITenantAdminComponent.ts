@@ -57,14 +57,13 @@ export interface ITenantAdminComponent extends IComponent {
 
 	/**
 	 * Query tenants with pagination.
-	 * @param options Optional query options.
-	 * @param options.isNodeTenant Whether to filter for node admin tenants.
+	 * @param properties The properties to include in the returned tenants.
 	 * @param cursor The cursor to start from.
 	 * @param limit The maximum number of tenants to return.
 	 * @returns The tenants and the next cursor if more tenants are available.
 	 */
 	query(
-		options?: { isNodeTenant?: boolean },
+		properties: (keyof ITenant)[] | undefined,
 		cursor?: string,
 		limit?: number
 	): Promise<{ tenants: ITenant[]; cursor?: string }>;

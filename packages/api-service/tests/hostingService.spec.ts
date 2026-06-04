@@ -13,7 +13,6 @@ const MOCK_TENANT_BASE: ITenant = {
 	apiKey: "test-api-key",
 	dateCreated: "2026-01-01T00:00:00.000Z",
 	dateModified: "2026-01-01T00:00:00.000Z",
-	isNodeTenant: false,
 	label: "test-tenant"
 };
 

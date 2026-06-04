@@ -10,6 +10,12 @@ export interface ITenantListRequest {
 	 */
 	query: {
 		/**
+		 * The properties to include in the returned tenants, separated by commas.
+		 * If not provided, all properties will be returned.
+		 */
+		properties?: string;
+
+		/**
 		 * The cursor to get the next chunk of tenants.
 		 */
 		cursor?: string;

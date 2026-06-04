@@ -65,3 +65,4 @@ export * from "./models/services/IUrlTransformerComponent.js";
 export * from "./models/services/IServerInfo.js";
 export * from "./models/services/ITenant.js";
 export * from "./models/services/ITenantAdminComponent.js";
+export * from "./models/services/ITenantComponent.js";
