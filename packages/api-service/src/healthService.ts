@@ -153,7 +153,6 @@ export class HealthService implements IHealthComponent {
 	/**
 	 * Group raw health entries by name, collapsing duplicates into a parent with a grouped array.
 	 * @param entries The flat list of health entries from all components.
-	 * @returns The grouped list.
 	 * @internal
 	 */
 	private groupHealthByName(entries: IHealth[]): void {

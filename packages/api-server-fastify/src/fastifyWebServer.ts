@@ -524,6 +524,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param request The incoming request.
 	 * @param reply The outgoing response.
 	 * @param restRoute The REST route to handle.
+	 * @returns The Fastify reply with the response.
 	 * @internal
 	 */
 	private async handleRequestRest(
@@ -735,7 +736,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param socket The socket to handle.
 	 * @param fullPath The full path of the socket route.
 	 * @param emitTopic The topic to emit the response on.
-	 * @param data The incoming data.
+	 * @param request The incoming request.
 	 * @internal
 	 */
 	private async handleRequestSocket(
@@ -777,7 +778,6 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 	/**
 	 * Run the socket processors for the route.
-	 * @param socketId The id of the socket.
 	 * @param socketRouteProcessors The processors to run.
 	 * @param socketRoute The route to process.
 	 * @param socketServerRequest The incoming request.
@@ -785,6 +785,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
 	 * @param requestTopic The topic of the request.
+	 * @param responseEmitter The emitter to send the response on.
 	 * @internal
 	 */
 	private async runProcessorsSocket(

@@ -199,6 +199,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 
 	/**
 	 * Process the JSON.
+	 * @param propName The property name to process.
 	 * @param propValue The property to process.
 	 * @returns The processed property.
 	 * @internal

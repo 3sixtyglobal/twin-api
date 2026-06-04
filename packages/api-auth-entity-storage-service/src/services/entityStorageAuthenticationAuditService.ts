@@ -280,6 +280,7 @@ export class EntityStorageAuthenticationAuditService implements IAuthenticationA
 	 * Hash a list of IP addresses using SHA-256.
 	 * @param ipAddresses The IP addresses to hash.
 	 * @returns The hexadecimal hashes of the salted IPs.
+	 * @internal
 	 */
 	private hashIpAddresses(ipAddresses: string[] | undefined): string[] | undefined {
 		if (!Is.stringValue(this._ipHashSalt) || !Is.array(ipAddresses)) {
