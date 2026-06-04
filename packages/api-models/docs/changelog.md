@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.40](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.39...api-models-v0.0.3-next.40) (2026-06-04)
+
+
+### Features
+
+* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+
 ## [0.0.3-next.39](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.38...api-models-v0.0.3-next.39) (2026-06-02)
 
 
