@@ -24,7 +24,8 @@ describe("HostingService", () => {
 
 		mockTenantAdminComponent = {
 			className: vi.fn().mockReturnValue("TenantAdminComponent"),
-			get: vi.fn()
+			get: vi.fn(),
+			getByPublicOrigin: vi.fn()
 		} as unknown as ITenantAdminComponent;
 
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({});
@@ -154,6 +155,63 @@ describe("HostingService", () => {
 
 			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
 			await expect(service.getTenantOrigin(TENANT_ID)).resolves.toBeUndefined();
+		});
+	});
+
+	describe("matchesLocalOrigin", () => {
+		test("throws when url is missing", async () => {
+			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
+			await expect(service.matchesLocalOrigin(undefined as never)).rejects.toThrow();
+		});
+
+		test("returns undefined when origin cannot be extracted from url", async () => {
+			vi.spyOn(HttpUrlHelper, "extractOrigin").mockReturnValue("");
+
+			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
+			await expect(service.matchesLocalOrigin("not-a-url")).resolves.toBeUndefined();
+		});
+
+		test("returns node when the url origin matches the configured public origin", async () => {
+			vi.spyOn(HttpUrlHelper, "extractOrigin").mockReturnValue(PUBLIC_ORIGIN);
+
+			const service = new HostingService({
+				config: { localOrigin: LOCAL_ORIGIN, publicOrigin: PUBLIC_ORIGIN }
+			});
+			await expect(service.matchesLocalOrigin(`${PUBLIC_ORIGIN}/some/path`)).resolves.toBe("node");
+		});
+
+		test("returns undefined when origin does not match public origin and no tenant admin component is registered", async () => {
+			vi.spyOn(HttpUrlHelper, "extractOrigin").mockReturnValue("https://unknown.example.com");
+
+			const service = new HostingService({
+				config: { localOrigin: LOCAL_ORIGIN, publicOrigin: PUBLIC_ORIGIN }
+			});
+			await expect(service.matchesLocalOrigin("https://unknown.example.com/path")).resolves.toBeUndefined();
+		});
+
+		test("returns the tenant id when the url origin matches a tenant public origin", async () => {
+			const tenantOrigin = "https://tenant.example.com";
+			vi.spyOn(HttpUrlHelper, "extractOrigin").mockReturnValue(tenantOrigin);
+			vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(mockTenantAdminComponent);
+			vi.mocked(mockTenantAdminComponent.getByPublicOrigin).mockResolvedValue({
+				...MOCK_TENANT_BASE,
+				publicOrigin: tenantOrigin
+			});
+
+			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
+			await expect(service.matchesLocalOrigin(`${tenantOrigin}/some/path`)).resolves.toBe(TENANT_ID);
+			expect(mockTenantAdminComponent.getByPublicOrigin).toHaveBeenCalledWith(tenantOrigin);
+		});
+
+		test("returns undefined when tenant admin component is registered but origin is not found", async () => {
+			vi.spyOn(HttpUrlHelper, "extractOrigin").mockReturnValue("https://unknown.example.com");
+			vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(mockTenantAdminComponent);
+			vi.mocked(mockTenantAdminComponent.getByPublicOrigin).mockRejectedValue(
+				new Error("Not found")
+			);
+
+			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
+			await expect(service.matchesLocalOrigin("https://unknown.example.com/path")).resolves.toBeUndefined();
 		});
 	});
 

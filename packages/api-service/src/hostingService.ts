@@ -111,4 +111,37 @@ export class HostingService implements IHostingComponent {
 		const publicOrigin = await this.getPublicOrigin(url);
 		return HttpUrlHelper.replaceOrigin(url, publicOrigin);
 	}
+
+	/**
+	 * Check if the origin of the given url matches the node public origin or any tenant's public origin.
+	 * @param url The url whose origin to check.
+	 * @returns "node" for the node public origin, the tenant id for a tenant public origin, or undefined.
+	 */
+	public async matchesLocalOrigin(url: string): Promise<string | undefined> {
+		Guards.stringValue(HostingService.CLASS_NAME, nameof(url), url);
+
+		const origin = HttpUrlHelper.extractOrigin(url);
+		if (!Is.stringValue(origin)) {
+			return undefined;
+		}
+
+		if (Is.stringValue(this._publicOrigin) && origin === this._publicOrigin) {
+			return "node";
+		}
+
+		const tenantAdminComponent = ComponentFactory.getIfExists<ITenantAdminComponent>(
+			this._tenantAdminComponentType
+		);
+
+		if (Is.empty(tenantAdminComponent)) {
+			return undefined;
+		}
+
+		try {
+			const tenant = await tenantAdminComponent.getByPublicOrigin(origin);
+			return tenant?.id;
+		} catch {
+			return undefined;
+		}
+	}
 }
