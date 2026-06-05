@@ -26,4 +26,11 @@ export interface IHostingComponent extends IComponent {
 	 * @returns The full url based on the public origin.
 	 */
 	buildPublicUrl(url: string): Promise<string>;
+
+	/**
+	 * Check if the origin of the given url matches the public origin or any tenant's public origin.
+	 * @param url The url whose origin to check.
+	 * @returns True if the origin is recognised, false otherwise.
+	 */
+	matchesLocalOrigin(url: string): Promise<boolean>;
 }
