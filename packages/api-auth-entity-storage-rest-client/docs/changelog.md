@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.41](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-rest-client-v0.0.3-next.40...api-auth-entity-storage-rest-client-v0.0.3-next.41) (2026-06-05)
+
+
+### Miscellaneous Chores
+
+* **api-auth-entity-storage-rest-client:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.40 to 0.0.3-next.41
+    * @twin.org/api-core bumped from 0.0.3-next.40 to 0.0.3-next.41
+    * @twin.org/api-models bumped from 0.0.3-next.40 to 0.0.3-next.41
+
 ## [0.0.3-next.40](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-rest-client-v0.0.3-next.39...api-auth-entity-storage-rest-client-v0.0.3-next.40) (2026-06-04)
 
 

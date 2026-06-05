@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.41](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.40...api-models-v0.0.3-next.41) (2026-06-05)
+
+
+### Features
+
+* matches local origin ([#148](https://github.com/iotaledger/twin-api/issues/148)) ([7f6d30c](https://github.com/iotaledger/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
+
 ## [0.0.3-next.40](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.39...api-models-v0.0.3-next.40) (2026-06-04)
 
 

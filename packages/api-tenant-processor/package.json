@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-tenant-processor",
-	"version": "0.0.3-next.40",
+	"version": "0.0.3-next.41",
 	"description": "Tenant resolution services and route handlers that derive tenant context from API keys.",
 	"repository": {
 		"type": "git",
@@ -29,7 +29,7 @@
 		"dist:no-test": "npm run clean && npm run build && npm run merge-locales"
 	},
 	"dependencies": {
-		"@twin.org/api-models": "0.0.3-next.40",
+		"@twin.org/api-models": "0.0.3-next.41",
 		"@twin.org/context": "next",
 		"@twin.org/core": "next",
 		"@twin.org/entity": "next",
