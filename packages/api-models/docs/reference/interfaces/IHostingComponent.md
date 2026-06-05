@@ -71,3 +71,25 @@ The url to build upon the public origin.
 `Promise`\<`string`\>
 
 The full url based on the public origin.
+
+***
+
+### matchesLocalOrigin() {#matcheslocalorigin}
+
+> **matchesLocalOrigin**(`url`): `Promise`\<`string` \| `undefined`\>
+
+Check if the origin of the given url matches the node public origin or any tenant's public origin.
+
+#### Parameters
+
+##### url
+
+`string`
+
+The url whose origin to check.
+
+#### Returns
+
+`Promise`\<`string` \| `undefined`\>
+
+"node" for the node public origin, the tenant id for a tenant public origin, or undefined.
