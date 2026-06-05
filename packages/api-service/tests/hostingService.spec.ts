@@ -186,7 +186,9 @@ describe("HostingService", () => {
 			const service = new HostingService({
 				config: { localOrigin: LOCAL_ORIGIN, publicOrigin: PUBLIC_ORIGIN }
 			});
-			await expect(service.matchesLocalOrigin("https://unknown.example.com/path")).resolves.toBeUndefined();
+			await expect(
+				service.matchesLocalOrigin("https://unknown.example.com/path")
+			).resolves.toBeUndefined();
 		});
 
 		test("returns the tenant id when the url origin matches a tenant public origin", async () => {
@@ -199,7 +201,9 @@ describe("HostingService", () => {
 			});
 
 			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
-			await expect(service.matchesLocalOrigin(`${tenantOrigin}/some/path`)).resolves.toBe(TENANT_ID);
+			await expect(service.matchesLocalOrigin(`${tenantOrigin}/some/path`)).resolves.toBe(
+				TENANT_ID
+			);
 			expect(mockTenantAdminComponent.getByPublicOrigin).toHaveBeenCalledWith(tenantOrigin);
 		});
 
@@ -211,7 +215,9 @@ describe("HostingService", () => {
 			);
 
 			const service = new HostingService({ config: { localOrigin: LOCAL_ORIGIN } });
-			await expect(service.matchesLocalOrigin("https://unknown.example.com/path")).resolves.toBeUndefined();
+			await expect(
+				service.matchesLocalOrigin("https://unknown.example.com/path")
+			).resolves.toBeUndefined();
 		});
 	});
 
