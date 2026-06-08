@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.42](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.41...api-tenant-processor-v0.0.3-next.42) (2026-06-08)
+
+
+### Bug Fixes
+
+* prevent runPerTenant from mutating the active request context ([#152](https://github.com/iotaledger/twin-api/issues/152)) ([6e2c88c](https://github.com/iotaledger/twin-api/commit/6e2c88cfeba046ba71a218e62c90eafafaea2713))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.41 to 0.0.3-next.42
+
 ## [0.0.3-next.41](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.40...api-tenant-processor-v0.0.3-next.41) (2026-06-05)
 
 

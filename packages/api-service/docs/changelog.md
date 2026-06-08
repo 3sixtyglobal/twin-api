@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.42](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.41...api-service-v0.0.3-next.42) (2026-06-08)
+
+
+### Miscellaneous Chores
+
+* **api-service:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.41 to 0.0.3-next.42
+
 ## [0.0.3-next.41](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.40...api-service-v0.0.3-next.41) (2026-06-05)
 
 
