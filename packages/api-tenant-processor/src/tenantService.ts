@@ -52,17 +52,18 @@ export class TenantService implements ITenantComponent {
 	public async runPerTenant(method: () => Promise<void>): Promise<void> {
 		let cursor: string | undefined;
 
-		const contextIds = (await ContextIdStore.getContextIds()) ?? {};
+		const baseContextIds = (await ContextIdStore.getContextIds()) ?? {};
 
 		do {
 			const result = await this._entityStorageConnector.query(undefined, undefined, ["id"], cursor);
 
 			for (const tenant of result.entities) {
-				contextIds[ContextIdKeys.Tenant] = tenant.id;
-
-				await ContextIdStore.run(contextIds, async () => {
-					await method();
-				});
+				await ContextIdStore.run(
+					{ ...baseContextIds, [ContextIdKeys.Tenant]: tenant.id },
+					async () => {
+						await method();
+					}
+				);
 			}
 
 			cursor = result.cursor;
