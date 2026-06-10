@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.43](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.42...api-processors-v0.0.3-next.43) (2026-06-10)
+
+
+### Bug Fixes
+
+* exclude /logging requests from LoggingProcessor to prevent response feedback loop ([#155](https://github.com/iotaledger/twin-api/issues/155)) ([cc0fa09](https://github.com/iotaledger/twin-api/commit/cc0fa09fa657875f69cf4f51fe224d4d29d86917))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.42 to 0.0.3-next.43
+
 ## [0.0.3-next.42](https://github.com/iotaledger/twin-api/compare/api-processors-v0.0.3-next.41...api-processors-v0.0.3-next.42) (2026-06-08)
 
 
