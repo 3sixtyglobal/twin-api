@@ -25,3 +25,12 @@ Show the full base64 content for data, default to abbreviate.
 > `optional` **obfuscateProperties?**: `string`[]
 
 List of property names to obfuscate, can be regex, defaults to "password".
+
+***
+
+### excludePaths? {#excludepaths}
+
+> `optional` **excludePaths?**: `string`[]
+
+Request URL path prefixes to exclude from logging, defaults to ["/logging"].
+Use this to prevent the logging endpoint itself from appearing in its own output.
