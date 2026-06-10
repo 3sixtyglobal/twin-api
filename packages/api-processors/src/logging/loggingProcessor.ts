@@ -47,6 +47,12 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	private readonly _obfuscateProperties: string[];
 
 	/**
+	 * Request URL path prefixes to skip logging, defaults to ["/logging"].
+	 * @internal
+	 */
+	private readonly _excludePaths: string[];
+
+	/**
 	 * Create a new instance of LoggingProcessor.
 	 * @param options Options for the processor.
 	 */
@@ -55,6 +61,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		this._includeBody = options?.config?.includeBody ?? false;
 		this._fullBase64 = options?.config?.fullBase64 ?? false;
 		this._obfuscateProperties = options?.config?.obfuscateProperties ?? ["password"];
+		this._excludePaths = options?.config?.excludePaths ?? ["/logging"];
 	}
 
 	/**
@@ -80,12 +87,6 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
-		const now = process.hrtime.bigint();
-		processorState.requestStart = now;
-
-		const contentType = request.headers?.[HeaderTypes.ContentType];
-		const isJson = this.isMimeJson(contentType);
-
 		let requestUrl = "";
 		if (Is.stringValue(request.url)) {
 			// Socket paths do not have a prefix so just use the whole url.
@@ -95,6 +96,16 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 				requestUrl = request.url;
 			}
 		}
+
+		if (this._excludePaths.some(p => requestUrl.startsWith(p))) {
+			return;
+		}
+
+		const now = process.hrtime.bigint();
+		processorState.requestStart = now;
+
+		const contentType = request.headers?.[HeaderTypes.ContentType];
+		const isJson = this.isMimeJson(contentType);
 
 		await this._logging?.log({
 			level: "info",
@@ -127,6 +138,20 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
+		let requestUrl = "";
+		if (Is.stringValue(request.url)) {
+			// Socket paths do not have a prefix so just use the whole url.
+			if (request.url.startsWith("http")) {
+				requestUrl = new URL(request.url).pathname;
+			} else {
+				requestUrl = request.url;
+			}
+		}
+
+		if (this._excludePaths.some(p => requestUrl.startsWith(p))) {
+			return;
+		}
+
 		let data: { [id: string]: unknown } | undefined;
 		if (this._includeBody) {
 			const contentType = response.headers?.[HeaderTypes.ContentType];
@@ -155,16 +180,6 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		const start = Coerce.bigint(processorState.requestStart) ?? now;
 		const elapsed = now - start;
 		const elapsedMicroSeconds = Math.floor(Number(elapsed) / 1000);
-
-		let requestUrl = "";
-		if (Is.stringValue(request.url)) {
-			// Socket paths do not have a prefix so just use the whole url.
-			if (request.url.startsWith("http")) {
-				requestUrl = new URL(request.url).pathname;
-			} else {
-				requestUrl = request.url;
-			}
-		}
 
 		if (Is.number(response.statusCode) && response.statusCode >= HttpStatusCode.badRequest) {
 			await this._logging?.log({
