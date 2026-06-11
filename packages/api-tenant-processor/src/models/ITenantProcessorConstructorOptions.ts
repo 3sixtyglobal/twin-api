@@ -13,12 +13,6 @@ export interface ITenantProcessorConstructorOptions {
 	tenantEntityStorageType?: string;
 
 	/**
-	 * The URL transformer component for the tenants.
-	 * @default url-transformer
-	 */
-	urlTransformerComponentType?: string;
-
-	/**
 	 * Configuration for the processor.
 	 */
 	config?: ITenantProcessorConfig;

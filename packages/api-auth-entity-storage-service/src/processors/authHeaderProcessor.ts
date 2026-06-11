@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	HttpErrorHelper,
-	type IUrlTransformerComponent,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
 	type IHttpResponse,
@@ -15,7 +14,7 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, Coerce, ComponentFactory, Is } from "@twin.org/core";
+import { BaseError, ComponentFactory, Is } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -49,12 +48,6 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	private readonly _vaultConnector: IVaultConnector;
 
 	/**
-	 * The transformer component, used to resolve public origins for tenants and encrypt/decrypt tenant tokens.
-	 * @internal
-	 */
-	private readonly _urlTransformerService: IUrlTransformerComponent;
-
-	/**
 	 * The component to retrieve tenant information.
 	 * @internal
 	 */
@@ -85,14 +78,17 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	private _nodeId?: string;
 
 	/**
+	 * The organization ID for the single-tenant node, cached at startup.
+	 * @internal
+	 */
+	private _nodeOrganizationId?: string;
+
+	/**
 	 * Create a new instance of AuthHeaderProcessor.
 	 * @param options Options for the processor.
 	 */
 	constructor(options?: IAuthHeaderProcessorConstructorOptions) {
 		this._vaultConnector = VaultConnectorFactory.get(options?.vaultConnectorType ?? "vault");
-		this._urlTransformerService = ComponentFactory.get(
-			options?.urlTransformerComponentType ?? "url-transformer"
-		);
 		this._userEntityStorage = EntityStorageConnectorFactory.get(
 			options?.userEntityStorageType ?? "authentication-user"
 		);
@@ -121,6 +117,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 		const contextIds = await ContextIdStore.getContextIds();
 		ContextIdHelper.guard(contextIds, ContextIdKeys.Node);
 		this._nodeId = contextIds[ContextIdKeys.Node];
+		this._nodeOrganizationId = contextIds[ContextIdKeys.Organization];
 	}
 
 	/**
@@ -145,46 +142,49 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 					this._cookieName
 				);
 
-				const headerAndPayload = await TokenHelper.verify(
+				let user: AuthenticationUser | undefined;
+				let tenantId: string | undefined;
+				let tenantOrganizationId: string | undefined;
+
+				await TokenHelper.verify(
 					this._vaultConnector,
 					`${this._nodeId}/${this._signingKeyName}`,
 					tokenAndLocation?.token,
 					route.requiredScope,
 					async (
-						userIdentity: string,
-						organizationIdentity: string,
-						encryptedTenantId: string | undefined,
+						sub: string,
+						org: string,
+						tid: string | undefined,
 						passwordVersion: number | undefined
 					) => {
 						const validParts = [];
 
-						// If the token carries an encrypted tenant ID and the admin component is available,
-						// decrypt and resolve the tenant first so the user lookup runs in the correct partition.
-						if (Is.stringValue(encryptedTenantId)) {
-							const tenantId = await this._urlTransformerService.decryptParam(encryptedTenantId);
+						tenantId = tid;
 
-							if (Is.stringValue(tenantId)) {
-								const tenant = await this._tenantAdminComponent?.get(tenantId);
-								if (!Is.empty(tenant)) {
-									processorState.publicOrigin = tenant.publicOrigin;
-									validParts.push("tenant");
-									contextIds[ContextIdKeys.Tenant] = tenantId;
-								}
+						if (Is.stringValue(tenantId)) {
+							const tenant = await this._tenantAdminComponent?.get(tenantId);
+							if (tenant?.id === tenantId) {
+								validParts.push("tenant");
+								tenantOrganizationId = tenant.organizationId;
 							}
 						}
 
+						// We use the tenant id from the token, if the user is not in that
+						// partition then the get will fail
+						const contextIdsForUserLookup = {
+							...contextIds,
+							[ContextIdKeys.Tenant]: tid
+						};
+
 						// Wrap the user lookup in the request context so partitioned storage uses the correct tenant.
-						const user = await ContextIdStore.run(contextIds, async () =>
-							this._userEntityStorage.get(userIdentity, "identity")
+						user = await ContextIdStore.run(contextIdsForUserLookup, async () =>
+							this._userEntityStorage.get(sub, "identity")
 						);
 
-						if (
-							user?.identity === userIdentity &&
-							(passwordVersion ?? 0) === (user.passwordVersion ?? 0)
-						) {
+						if (user?.identity === sub && (passwordVersion ?? 0) === (user.passwordVersion ?? 0)) {
 							validParts.push("user");
 						}
-						if (user?.organization === organizationIdentity) {
+						if (user?.organization === org) {
 							validParts.push("organization");
 						}
 
@@ -192,8 +192,12 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 					}
 				);
 
-				contextIds[ContextIdKeys.User] = headerAndPayload.payload?.sub;
-				contextIds[ContextIdKeys.Organization] = Coerce.string(headerAndPayload.payload?.org);
+				contextIds[ContextIdKeys.Tenant] = tenantId;
+				// In a multi-tenant environment the tenant organization ID is authoritative,
+				// in a single-tenant environment we fall back to the node organization ID.
+				contextIds[ContextIdKeys.Organization] = tenantOrganizationId ?? this._nodeOrganizationId;
+				contextIds[ContextIdKeys.User] = user?.identity;
+				contextIds[ContextIdKeys.UserOrganization] = user?.organization;
 
 				processorState.authToken = tokenAndLocation?.token;
 				processorState.authTokenLocation = tokenAndLocation?.location;

@@ -34,4 +34,14 @@ export interface ITenant {
 	 * The public origin available to the public for accessing the API.
 	 */
 	publicOrigin?: string;
+
+	/**
+	 * The organization id for the tenant.
+	 */
+	organizationId?: string;
+
+	/**
+	 * Optional list of organization aliases that can are used for legacy lookups.
+	 */
+	organizationIdLegacy?: string[];
 }

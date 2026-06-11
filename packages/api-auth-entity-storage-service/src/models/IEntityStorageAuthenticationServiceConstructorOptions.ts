@@ -19,11 +19,6 @@ export interface IEntityStorageAuthenticationServiceConstructorOptions {
 	vaultConnectorType?: string;
 
 	/**
-	 * The URL transformer component for the tenants.
-	 */
-	urlTransformerComponentType?: string;
-
-	/**
 	 * The audit service.
 	 * @default authentication-audit
 	 */

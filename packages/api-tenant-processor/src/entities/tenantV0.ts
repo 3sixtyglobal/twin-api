@@ -5,8 +5,8 @@ import { entity, property } from "@twin.org/entity";
 /**
  * Class defining the storage for node tenants.
  */
-@entity({ version: 1 })
-export class Tenant {
+@entity({ version: 0 })
+export class TenantV0 {
 	/**
 	 * The unique identifier for the tenant.
 	 */
@@ -42,16 +42,4 @@ export class Tenant {
 	 */
 	@property({ type: "string", optional: true, isSecondary: true })
 	public publicOrigin?: string;
-
-	/**
-	 * The organization id for the tenant.
-	 */
-	@property({ type: "string", optional: true, isSecondary: true })
-	public organizationId?: string;
-
-	/**
-	 * Optional list of organization aliases that can are used for legacy lookups, indexed format.
-	 */
-	@property({ type: "string", optional: true, isSecondary: true })
-	public organizationIdLegacy?: string;
 }

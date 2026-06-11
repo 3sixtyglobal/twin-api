@@ -1,12 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import {
-	HttpErrorHelper,
-	type IHttpResponse,
-	type IUrlTransformerComponent
-} from "@twin.org/api-models";
+import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
-import { ComponentFactory } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -21,6 +16,8 @@ const TENANT_A: Tenant = {
 	id: "tenant-A",
 	apiKey: "key-A",
 	publicOrigin: "https://a.example.com",
+	organizationId: "org-A",
+	organizationIdLegacy: "|org-legacy-1|org-legacy-2|",
 	dateCreated: new Date().toISOString(),
 	dateModified: new Date().toISOString(),
 	label: "Tenant A"
@@ -28,7 +25,6 @@ const TENANT_A: Tenant = {
 
 describe("TenantProcessor", () => {
 	let mockTenantStorage: IEntityStorageConnector<Tenant>;
-	let mockUrlTransformerComponent: IUrlTransformerComponent;
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
@@ -36,27 +32,12 @@ describe("TenantProcessor", () => {
 		mockTenantStorage = {
 			getSchema: vi.fn(),
 			set: vi.fn(),
-			get: vi.fn(),
+			get: vi.fn().mockResolvedValue(undefined),
 			remove: vi.fn(),
-			query: vi.fn()
+			query: vi.fn().mockResolvedValue({ entities: [] })
 		} as unknown as IEntityStorageConnector<Tenant>;
 
-		mockUrlTransformerComponent = {
-			className: vi.fn(),
-			getEncryptedQueryParam: vi.fn().mockResolvedValue(undefined),
-			addEncryptedQueryParamToUrl: vi.fn(),
-			getEncryptedFromUrl: vi.fn(),
-			addEncryptedToUrl: vi.fn(),
-			getDecryptedFromQueryParams: vi.fn(),
-			encryptQueryParams: vi.fn(),
-			decryptQueryParams: vi.fn(),
-			encryptParam: vi.fn(),
-			decryptParam: vi.fn(),
-			getParamName: vi.fn()
-		};
-
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockTenantStorage);
-		vi.spyOn(ComponentFactory, "get").mockReturnValue(mockUrlTransformerComponent);
 	});
 
 	describe("api-key path", () => {
@@ -78,7 +59,7 @@ describe("TenantProcessor", () => {
 
 			expect(response.statusCode).toBeUndefined();
 			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
-			expect(processorState.publicOrigin).toBe("https://a.example.com");
+			expect(contextIds[ContextIdKeys.Organization]).toBe("org-A");
 			expect(mockTenantStorage.get).toHaveBeenCalledWith("key-A", "apiKey");
 		});
 
@@ -137,22 +118,189 @@ describe("TenantProcessor", () => {
 		});
 	});
 
-	describe("tenant-token path", () => {
-		it("api-key wins when both api-key and tenant-token are present", async () => {
+	describe("organization- path", () => {
+		it("resolves tenant by exact organizationId", async () => {
+			vi.mocked(mockTenantStorage.get).mockResolvedValue(TENANT_A);
+
+			const processor = new TenantProcessor();
+			const contextIds: IContextIds = {};
+			const processorState: { [id: string]: unknown } = {};
+			const response: IHttpResponse = {};
+
+			await processor.pre(
+				{ url: "/api/users", headers: {}, query: { organization: "org-A" } } as never,
+				response,
+				{} as never,
+				contextIds,
+				processorState
+			);
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
+			expect(contextIds[ContextIdKeys.Organization]).toBe("org-A");
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-A", "organizationId");
+			expect(mockTenantStorage.query).not.toHaveBeenCalled();
+		});
+
+		it("resolves tenant by organizationIdLegacy pipe-delimited match", async () => {
+			vi.mocked(mockTenantStorage.get).mockResolvedValue(undefined);
+			vi.mocked(mockTenantStorage.query).mockResolvedValue({ entities: [TENANT_A] });
+
+			const processor = new TenantProcessor();
+			const contextIds: IContextIds = {};
+			const processorState: { [id: string]: unknown } = {};
+			const response: IHttpResponse = {};
+
+			await processor.pre(
+				{
+					url: "/api/users",
+					headers: {},
+					query: { organization: "org-legacy-1" }
+				} as never,
+				response,
+				{} as never,
+				contextIds,
+				processorState
+			);
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
+			expect(contextIds[ContextIdKeys.Organization]).toBe("org-A");
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-legacy-1", "organizationId");
+			expect(mockTenantStorage.query).toHaveBeenCalledWith({
+				property: "organizationIdLegacy",
+				value: "|org-legacy-1|",
+				comparison: "includes"
+			});
+		});
+
+		it("returns 401 organizationIdNotFound when neither exact nor legacy match", async () => {
+			vi.mocked(mockTenantStorage.get).mockResolvedValue(undefined);
+			vi.mocked(mockTenantStorage.query).mockResolvedValue({ entities: [] });
+
+			const processor = new TenantProcessor();
+			const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
+			const response: IHttpResponse = {};
+
+			await processor.pre(
+				{ url: "/api/users", headers: {}, query: { organization: "unknown-org" } } as never,
+				response,
+				{} as never,
+				{},
+				{}
+			);
+
+			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+			expect(buildResponseSpy).toHaveBeenCalledWith(
+				expect.anything(),
+				expect.objectContaining({ message: "tenantProcessor.organizationIdNotFound" }),
+				HttpStatusCode.unauthorized
+			);
+		});
+
+		it("returns 401 missingOrganizationId when organization query param is absent", async () => {
+			const processor = new TenantProcessor();
+			const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
+			const response: IHttpResponse = {};
+
+			await processor.pre(
+				{ url: "/api/users", headers: {}, query: {} } as never,
+				response,
+				{} as never,
+				{},
+				{}
+			);
+
+			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+			expect(buildResponseSpy).toHaveBeenCalledWith(
+				expect.anything(),
+				expect.objectContaining({ message: "tenantProcessor.missingOrganizationId" }),
+				HttpStatusCode.unauthorized
+			);
+			expect(mockTenantStorage.get).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("skipAuth path", () => {
+		it("resolves tenant from organization when skipAuth is true", async () => {
+			vi.mocked(mockTenantStorage.get).mockResolvedValue(TENANT_A);
+
+			const processor = new TenantProcessor();
+			const contextIds: IContextIds = {};
+			const processorState: { [id: string]: unknown } = {};
+			const response: IHttpResponse = {};
+
+			await processor.pre(
+				{ url: "/api/some-endpoint", headers: {}, query: { organization: "org-A" } } as never,
+				response,
+				{ skipAuth: true } as never,
+				contextIds,
+				processorState
+			);
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
+			expect(contextIds[ContextIdKeys.Organization]).toBe("org-A");
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-A", "organizationId");
+		});
+
+		it("passes through silently when organization is absent and skipAuth is true", async () => {
+			const processor = new TenantProcessor();
+			const contextIds: IContextIds = {};
+			const response: IHttpResponse = {};
+
+			await processor.pre(
+				{ url: "/api/some-endpoint", headers: {}, query: {} } as never,
+				response,
+				{ skipAuth: true } as never,
+				contextIds,
+				{}
+			);
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.Tenant]).toBeUndefined();
+			expect(mockTenantStorage.get).not.toHaveBeenCalled();
+			expect(mockTenantStorage.query).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("apiKeyEndpoints", () => {
+		it("resolves tenant via organization on a non-api-key-endpoint URL", async () => {
+			vi.mocked(mockTenantStorage.get).mockResolvedValue(TENANT_A);
+
+			const processor = new TenantProcessor();
+			const contextIds: IContextIds = {};
+			const response: IHttpResponse = {};
+
+			await processor.pre(
+				{ url: "/api/users", headers: {}, query: { organization: "org-A" } } as never,
+				response,
+				{} as never,
+				contextIds,
+				{}
+			);
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
+			expect(mockTenantStorage.get).not.toHaveBeenCalledWith(expect.anything(), "apiKey");
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-A", "organizationId");
+		});
+
+		it("api-key wins on a login URL even when organization is also present", async () => {
 			vi.mocked(mockTenantStorage.get).mockResolvedValue({
 				...TENANT_A,
-				id: "tenant-from-key",
-				publicOrigin: "https://key.example.com"
+				id: "tenant-from-key"
 			});
 
 			const processor = new TenantProcessor();
 			const contextIds: IContextIds = {};
 			const response: IHttpResponse = {};
+
 			await processor.pre(
 				{
 					url: LOGIN_URL,
 					headers: { "x-api-key": "key-A" },
-					query: { "tenant-token": "should-be-ignored" }
+					query: { organization: "org-A" }
 				} as never,
 				response,
 				{} as never,
@@ -162,232 +310,8 @@ describe("TenantProcessor", () => {
 
 			expect(response.statusCode).toBeUndefined();
 			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-from-key");
-			expect(mockUrlTransformerComponent.getEncryptedQueryParam).not.toHaveBeenCalled();
 			expect(mockTenantStorage.get).toHaveBeenCalledWith("key-A", "apiKey");
-		});
-
-		it("resolves tenant from token on a non-api-key-endpoint URL", async () => {
-			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(
-				"tenant-from-token"
-			);
-			vi.mocked(mockTenantStorage.get).mockResolvedValue({
-				...TENANT_A,
-				id: "tenant-from-token",
-				publicOrigin: "https://token.example.com"
-			});
-
-			const processor = new TenantProcessor();
-			const contextIds: IContextIds = {};
-			const processorState: { [id: string]: unknown } = {};
-			const response: IHttpResponse = {};
-			await processor.pre(
-				{ url: "/api/users", headers: {}, query: { "tenant-token": "opaque-token" } } as never,
-				response,
-				{} as never,
-				contextIds,
-				processorState
-			);
-
-			expect(response.statusCode).toBeUndefined();
-			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-from-token");
-			expect(processorState.publicOrigin).toBe("https://token.example.com");
-			expect(mockUrlTransformerComponent.getEncryptedQueryParam).toHaveBeenCalledWith(
-				{ "tenant-token": "opaque-token" },
-				"tenant"
-			);
-			expect(mockTenantStorage.get).toHaveBeenCalledWith("tenant-from-token");
-		});
-
-		it("returns 401 tenantNotFound when token resolves but tenant is unknown", async () => {
-			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(
-				"unknown-tenant"
-			);
-			vi.mocked(mockTenantStorage.get).mockResolvedValue(undefined);
-
-			const processor = new TenantProcessor();
-			const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
-			const response: IHttpResponse = {};
-			await processor.pre(
-				{ url: "/api/users", headers: {}, query: { "tenant-token": "valid-shape" } } as never,
-				response,
-				{} as never,
-				{},
-				{}
-			);
-
-			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
-			expect(buildResponseSpy).toHaveBeenCalledWith(
-				expect.anything(),
-				expect.objectContaining({ message: "tenantProcessor.tenantNotFound" }),
-				HttpStatusCode.unauthorized
-			);
-		});
-
-		it("returns 401 missingApiKey when no api key is provided on an api-key endpoint", async () => {
-			const processor = new TenantProcessor();
-			const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
-			const response: IHttpResponse = {};
-			await processor.pre(
-				{ url: LOGIN_URL, headers: {}, query: {} } as never,
-				response,
-				{} as never,
-				{},
-				{}
-			);
-
-			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
-			expect(buildResponseSpy).toHaveBeenCalledWith(
-				expect.anything(),
-				expect.objectContaining({ message: "tenantProcessor.missingApiKey" }),
-				HttpStatusCode.unauthorized
-			);
-			expect(mockUrlTransformerComponent.getEncryptedQueryParam).not.toHaveBeenCalled();
-		});
-
-		it("returns 401 when token decryption throws on a non-api-key-endpoint URL", async () => {
-			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockRejectedValue(
-				new Error("decryption failed")
-			);
-
-			const processor = new TenantProcessor();
-			const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
-			const response: IHttpResponse = {};
-			await processor.pre(
-				{ url: "/api/users", headers: {}, query: { "tenant-token": "tampered" } } as never,
-				response,
-				{} as never,
-				{},
-				{}
-			);
-
-			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
-			expect(buildResponseSpy).toHaveBeenCalled();
-			expect(mockTenantStorage.get).not.toHaveBeenCalled();
-		});
-	});
-
-	describe("skipAuth path", () => {
-		it("resolves tenant from encrypted query param when skipAuth is true", async () => {
-			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(
-				"tenant-from-token"
-			);
-			vi.mocked(mockTenantStorage.get).mockResolvedValue({ ...TENANT_A, id: "tenant-from-token" });
-
-			const processor = new TenantProcessor();
-			const contextIds: IContextIds = {};
-			const processorState: { [id: string]: unknown } = {};
-			const response: IHttpResponse = {};
-
-			await processor.pre(
-				{ url: "/api/some-endpoint", headers: {}, query: { tt: "opaque-token" } } as never,
-				response,
-				{ skipAuth: true } as never,
-				contextIds,
-				processorState
-			);
-
-			expect(response.statusCode).toBeUndefined();
-			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-from-token");
-			expect(mockUrlTransformerComponent.getEncryptedQueryParam).toHaveBeenCalledWith(
-				{ tt: "opaque-token" },
-				"tenant"
-			);
-			expect(mockTenantStorage.get).toHaveBeenCalledWith("tenant-from-token");
-		});
-
-		it("returns 401 missingTenantToken when encrypted query param is absent on skipAuth route", async () => {
-			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(undefined);
-			vi.mocked(mockUrlTransformerComponent.getParamName).mockReturnValue("tenant-token");
-
-			const processor = new TenantProcessor();
-			const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
-			const response: IHttpResponse = {};
-
-			await processor.pre(
-				{ url: "/api/some-endpoint", headers: {}, query: {} } as never,
-				response,
-				{ skipAuth: true } as never,
-				{},
-				{}
-			);
-
-			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
-			expect(buildResponseSpy).toHaveBeenCalledWith(
-				expect.anything(),
-				expect.objectContaining({ message: "tenantProcessor.missingTenantToken" }),
-				HttpStatusCode.unauthorized
-			);
-		});
-
-		it("returns 401 missingTenantToken on a non-api-key-endpoint route when skipAuth is true and no token", async () => {
-			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(undefined);
-			vi.mocked(mockUrlTransformerComponent.getParamName).mockReturnValue("tenant-token");
-
-			const processor = new TenantProcessor();
-			const buildResponseSpy = vi.spyOn(HttpErrorHelper, "buildResponse");
-			const response: IHttpResponse = {};
-
-			await processor.pre(
-				{ url: "/api/some-endpoint", headers: {}, query: {} } as never,
-				response,
-				{ skipAuth: true } as never,
-				{},
-				{}
-			);
-
-			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
-			expect(buildResponseSpy).toHaveBeenCalledWith(
-				expect.anything(),
-				expect.objectContaining({ message: "tenantProcessor.missingTenantToken" }),
-				HttpStatusCode.unauthorized
-			);
-		});
-	});
-
-	describe("apiKeyEndpoints", () => {
-		it("passes through without tenant resolution when URL does not match default pattern and no tenant token", async () => {
-			const processor = new TenantProcessor();
-			const contextIds: IContextIds = {};
-			const response: IHttpResponse = {};
-
-			await processor.pre(
-				{ url: "/api/users", headers: { "x-api-key": "key-A" } } as never,
-				response,
-				{} as never,
-				contextIds,
-				{}
-			);
-
-			expect(response.statusCode).toBeUndefined();
-			expect(contextIds[ContextIdKeys.Tenant]).toBeUndefined();
-			expect(mockTenantStorage.get).not.toHaveBeenCalled();
-			expect(mockUrlTransformerComponent.getEncryptedQueryParam).toHaveBeenCalled();
-		});
-
-		it("resolves tenant via token on a non-matching URL when tenant token is present", async () => {
-			vi.mocked(mockUrlTransformerComponent.getEncryptedQueryParam).mockResolvedValue(
-				"tenant-from-token"
-			);
-			vi.mocked(mockTenantStorage.get).mockResolvedValue({
-				...TENANT_A,
-				id: "tenant-from-token"
-			});
-
-			const processor = new TenantProcessor();
-			const contextIds: IContextIds = {};
-			const response: IHttpResponse = {};
-
-			await processor.pre(
-				{ url: "/api/users", headers: {} } as never,
-				response,
-				{} as never,
-				contextIds,
-				{}
-			);
-
-			expect(response.statusCode).toBeUndefined();
-			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-from-token");
-			expect(mockTenantStorage.get).not.toHaveBeenCalledWith(expect.anything(), "apiKey");
+			expect(mockTenantStorage.get).not.toHaveBeenCalledWith("org-A", "organizationId");
 		});
 
 		it("default pattern matches URL ending in /login", async () => {
@@ -410,12 +334,18 @@ describe("TenantProcessor", () => {
 		});
 
 		it("default pattern does not match URL with /login in the middle", async () => {
+			vi.mocked(mockTenantStorage.get).mockResolvedValue(TENANT_A);
+
 			const processor = new TenantProcessor();
 			const contextIds: IContextIds = {};
 			const response: IHttpResponse = {};
 
 			await processor.pre(
-				{ url: "/login/callback", headers: { "x-api-key": "key-A" } } as never,
+				{
+					url: "/login/callback",
+					headers: {},
+					query: { organization: "org-A" }
+				} as never,
 				response,
 				{} as never,
 				contextIds,
@@ -423,9 +353,8 @@ describe("TenantProcessor", () => {
 			);
 
 			expect(response.statusCode).toBeUndefined();
-			expect(contextIds[ContextIdKeys.Tenant]).toBeUndefined();
-			expect(mockTenantStorage.get).not.toHaveBeenCalled();
-			expect(mockUrlTransformerComponent.getEncryptedQueryParam).toHaveBeenCalled();
+			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-A", "organizationId");
 		});
 
 		it("uses custom apiKeyEndpoints when provided", async () => {
@@ -449,7 +378,9 @@ describe("TenantProcessor", () => {
 			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
 		});
 
-		it("passes through when URL does not match custom apiKeyEndpoints and no tenant token", async () => {
+		it("falls through to organization when URL does not match custom apiKeyEndpoints", async () => {
+			vi.mocked(mockTenantStorage.get).mockResolvedValue(TENANT_A);
+
 			const processor = new TenantProcessor({
 				config: { apiKeyEndpoints: ["^/auth/token$"] }
 			});
@@ -457,7 +388,7 @@ describe("TenantProcessor", () => {
 			const response: IHttpResponse = {};
 
 			await processor.pre(
-				{ url: LOGIN_URL, headers: { "x-api-key": "key-A" } } as never,
+				{ url: LOGIN_URL, headers: {}, query: { organization: "org-A" } } as never,
 				response,
 				{} as never,
 				contextIds,
@@ -465,9 +396,8 @@ describe("TenantProcessor", () => {
 			);
 
 			expect(response.statusCode).toBeUndefined();
-			expect(contextIds[ContextIdKeys.Tenant]).toBeUndefined();
-			expect(mockTenantStorage.get).not.toHaveBeenCalled();
-			expect(mockUrlTransformerComponent.getEncryptedQueryParam).toHaveBeenCalled();
+			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-A", "organizationId");
 		});
 
 		it("matches any of multiple configured patterns", async () => {
@@ -510,23 +440,29 @@ describe("TenantProcessor", () => {
 			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
 		});
 
-		it("does not match when the query string contains /login but the path does not end with it", async () => {
+		it("does not use api-key path when query string contains /login but path does not end with it", async () => {
+			vi.mocked(mockTenantStorage.get).mockResolvedValue(TENANT_A);
+
 			const processor = new TenantProcessor();
 			const contextIds: IContextIds = {};
 			const response: IHttpResponse = {};
 
 			await processor.pre(
-				{ url: "/api/users?redirect=/login", headers: { "x-api-key": "key-A" } } as never,
+				{
+					url: "/api/users?redirect=/login",
+					headers: {},
+					query: { organization: "org-A" }
+				} as never,
 				response,
 				{} as never,
 				contextIds,
 				{}
 			);
 
-			// Path is /api/users which doesn't match /login$ — should pass through.
 			expect(response.statusCode).toBeUndefined();
-			expect(contextIds[ContextIdKeys.Tenant]).toBeUndefined();
-			expect(mockTenantStorage.get).not.toHaveBeenCalled();
+			expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-A");
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-A", "organizationId");
+			expect(mockTenantStorage.get).not.toHaveBeenCalledWith(expect.anything(), "apiKey");
 		});
 	});
 });

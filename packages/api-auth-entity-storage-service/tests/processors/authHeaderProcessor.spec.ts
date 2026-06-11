@@ -1,10 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import {
-	HttpErrorHelper,
-	type IHttpResponse,
-	type IUrlTransformerComponent
-} from "@twin.org/api-models";
+import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
 import { ComponentFactory, UnauthorizedError } from "@twin.org/core";
 import {
@@ -21,7 +17,6 @@ import { TokenHelper } from "../../src/utils/tokenHelper.js";
 describe("AuthHeaderProcessor", () => {
 	let mockUserEntityStorage: IEntityStorageConnector<AuthenticationUser>;
 	let mockVaultConnector: IVaultConnector;
-	let mockUrlTransformerComponent: IUrlTransformerComponent;
 	let processor: AuthHeaderProcessor;
 
 	beforeEach(() => {
@@ -41,26 +36,9 @@ describe("AuthHeaderProcessor", () => {
 			remove: vi.fn()
 		} as unknown as IVaultConnector;
 
-		mockUrlTransformerComponent = {
-			className: vi.fn(),
-			encryptParam: vi.fn(),
-			decryptParam: vi.fn(),
-			getEncryptedQueryParam: vi.fn(),
-			getEncryptedFromUrl: vi.fn(),
-			addEncryptedQueryParamToUrl: vi.fn(),
-			addEncryptedToUrl: vi.fn(),
-			getDecryptedFromQueryParams: vi.fn(),
-			encryptQueryParams: vi.fn(),
-			decryptQueryParams: vi.fn(),
-			getParamName: vi.fn()
-		};
-
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockUserEntityStorage);
 		vi.spyOn(VaultConnectorFactory, "get").mockReturnValue(mockVaultConnector);
 		vi.spyOn(ComponentFactory, "get").mockImplementation(componentName => {
-			if (componentName === "url-transformer") {
-				return mockUrlTransformerComponent;
-			}
 			throw new Error(`Unexpected component ${componentName}`);
 		});
 		vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(undefined);
@@ -70,7 +48,8 @@ describe("AuthHeaderProcessor", () => {
 
 	it("should populate context ids on successful verify", async () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
-			[ContextIdKeys.Node]: "node-1"
+			[ContextIdKeys.Node]: "node-1",
+			[ContextIdKeys.Organization]: "did:org:456"
 		});
 		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
 			email: "user@example.com",
@@ -112,6 +91,7 @@ describe("AuthHeaderProcessor", () => {
 		expect(response.statusCode).toBeUndefined();
 		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
 		expect(contextIds[ContextIdKeys.Organization]).toBe("did:org:456");
+		expect(contextIds[ContextIdKeys.UserOrganization]).toBe("did:org:456");
 		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
 	});
 
@@ -144,15 +124,14 @@ describe("AuthHeaderProcessor", () => {
 			token: "jwt",
 			location: "authorization"
 		});
-		const encryptedTenantId = "encrypted:tenant-1";
-		vi.mocked(mockUrlTransformerComponent.decryptParam).mockResolvedValue("tenant-1");
+		const tenantId = "tenant-1";
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, key, token, requiredScope, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantId, 0);
+				const verified = await verifyUser?.("did:user:123", "did:org:456", tenantId, 0);
 				expect(verified).toContain("tenant");
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456", tid: encryptedTenantId }
+					payload: { sub: "did:user:123", org: "did:org:456", tid: tenantId }
 				};
 			}
 		);
@@ -172,6 +151,7 @@ describe("AuthHeaderProcessor", () => {
 		expect(response.statusCode).toBeUndefined();
 		expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-1");
 		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
+		expect(contextIds[ContextIdKeys.UserOrganization]).toBe("did:org:456");
 	});
 
 	it("should return unauthorized response when verifyUser cannot confirm user", async () => {
@@ -228,7 +208,6 @@ describe("AuthHeaderProcessor", () => {
 			location: "authorization"
 		});
 		const encryptedTenantId = "encrypted:tenant-1";
-		vi.mocked(mockUrlTransformerComponent.decryptParam).mockResolvedValue("tenant-1");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, key, token, requiredScope, verifyUser) => {
 				// pver=0 in token but user has passwordVersion=1 — simulate stale token
@@ -266,7 +245,8 @@ describe("AuthHeaderProcessor", () => {
 
 	it("should succeed when token has no pver and user has no passwordVersion stored", async () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
-			[ContextIdKeys.Node]: "node-1"
+			[ContextIdKeys.Node]: "node-1",
+			[ContextIdKeys.Organization]: "did:org:456"
 		});
 		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
 			email: "user@example.com",
@@ -307,6 +287,7 @@ describe("AuthHeaderProcessor", () => {
 		expect(response.statusCode).toBeUndefined();
 		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
 		expect(contextIds[ContextIdKeys.Organization]).toBe("did:org:456");
+		expect(contextIds[ContextIdKeys.UserOrganization]).toBe("did:org:456");
 		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
 	});
 
@@ -328,7 +309,6 @@ describe("AuthHeaderProcessor", () => {
 			location: "authorization"
 		});
 		const encryptedTenantId = "encrypted:tenant-1";
-		vi.mocked(mockUrlTransformerComponent.decryptParam).mockResolvedValue("tenant-1");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, key, token, requiredScope, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantId, 0);
@@ -389,15 +369,14 @@ describe("AuthHeaderProcessor", () => {
 			token: "jwt",
 			location: "authorization"
 		});
-		const encryptedTenantA = "encrypted:tenant-a";
-		vi.mocked(mockUrlTransformerComponent.decryptParam).mockResolvedValue("tenant-a");
+		const tenantA = "tenant-a";
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, key, token, requiredScope, verifyUser) => {
-				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantA, 0);
+				const verified = await verifyUser?.("did:user:123", "did:org:456", tenantA, 0);
 				expect(verified).toContain("tenant");
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456", tid: encryptedTenantA }
+					payload: { sub: "did:user:123", org: "did:org:456", tid: tenantA }
 				};
 			}
 		);
@@ -420,11 +399,13 @@ describe("AuthHeaderProcessor", () => {
 		expect(response.statusCode).toBeUndefined();
 		expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-a");
 		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
+		expect(contextIds[ContextIdKeys.UserOrganization]).toBe("did:org:456");
 	});
 
 	it("should succeed in single-tenant setup when neither context nor token has a tenant", async () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
-			[ContextIdKeys.Node]: "node-1"
+			[ContextIdKeys.Node]: "node-1",
+			[ContextIdKeys.Organization]: "did:org:456"
 		});
 		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
 			email: "user@example.com",
@@ -467,11 +448,125 @@ describe("AuthHeaderProcessor", () => {
 		expect(response.statusCode).toBeUndefined();
 		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
 		expect(contextIds[ContextIdKeys.Organization]).toBe("did:org:456");
+		expect(contextIds[ContextIdKeys.UserOrganization]).toBe("did:org:456");
 		expect(contextIds[ContextIdKeys.Tenant]).toBeUndefined();
 	});
 
 	it("should return the class name", () => {
 		expect(processor.className()).toBe(AuthHeaderProcessor.CLASS_NAME);
+	});
+
+	describe("_nodeOrganizationId and UserOrganization", () => {
+		const NODE_ORG = "did:node-org:111";
+		const USER_ORG = "did:user-org:456";
+		const USER_IDENTITY = "did:user:123";
+
+		beforeEach(() => {
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+				[ContextIdKeys.Node]: "node-1",
+				[ContextIdKeys.Organization]: NODE_ORG
+			});
+			vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+				email: "user@example.com",
+				identity: USER_IDENTITY,
+				organization: USER_ORG,
+				password: "hashed",
+				salt: "salt",
+				scope: "user-admin",
+				passwordVersion: 0
+			});
+			vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+				token: "jwt",
+				location: "authorization"
+			});
+		});
+
+		it("sets Organization context to _nodeOrganizationId when no tenant ID is in the token", async () => {
+			vi.spyOn(TokenHelper, "verify").mockImplementation(
+				async (vault, key, token, requiredScope, verifyUser) => {
+					await verifyUser?.(USER_IDENTITY, USER_ORG, undefined, 0);
+					return { header: { alg: "EdDSA" }, payload: {} };
+				}
+			);
+
+			await processor.start();
+
+			const contextIds: IContextIds = {};
+			const response: IHttpResponse = {};
+			await processor.pre({ headers: {} } as never, response, {} as never, contextIds, {});
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.Organization]).toBe(NODE_ORG);
+		});
+
+		it("sets UserOrganization to the user entity's own organization on successful verify", async () => {
+			vi.spyOn(TokenHelper, "verify").mockImplementation(
+				async (vault, key, token, requiredScope, verifyUser) => {
+					await verifyUser?.(USER_IDENTITY, USER_ORG, undefined, 0);
+					return { header: { alg: "EdDSA" }, payload: {} };
+				}
+			);
+
+			await processor.start();
+
+			const contextIds: IContextIds = {};
+			const response: IHttpResponse = {};
+			await processor.pre({ headers: {} } as never, response, {} as never, contextIds, {});
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.UserOrganization]).toBe(USER_ORG);
+		});
+
+		it("tenant organizationId takes precedence over _nodeOrganizationId for Organization context", async () => {
+			const TENANT_ORG = "did:tenant-org:999";
+			const mockTenantAdminComponent = {
+				className: vi.fn(),
+				get: vi.fn().mockResolvedValue({ id: "tenant-1", organizationId: TENANT_ORG })
+			};
+			vi.spyOn(ComponentFactory, "getIfExists").mockImplementation(componentName => {
+				if (componentName === "tenant-admin") {
+					return mockTenantAdminComponent;
+				}
+				return undefined;
+			});
+			const multiTenantProcessor = new AuthHeaderProcessor();
+
+			vi.spyOn(TokenHelper, "verify").mockImplementation(
+				async (vault, key, token, requiredScope, verifyUser) => {
+					await verifyUser?.(USER_IDENTITY, USER_ORG, "tenant-1", 0);
+					return { header: { alg: "EdDSA" }, payload: {} };
+				}
+			);
+
+			await multiTenantProcessor.start();
+
+			const contextIds: IContextIds = {};
+			const response: IHttpResponse = {};
+			await multiTenantProcessor.pre(
+				{ headers: {} } as never,
+				response,
+				{} as never,
+				contextIds,
+				{}
+			);
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.Organization]).toBe(TENANT_ORG);
+			expect(contextIds[ContextIdKeys.UserOrganization]).toBe(USER_ORG);
+		});
+
+		it("UserOrganization is undefined when token verification fails", async () => {
+			vi.spyOn(TokenHelper, "verify").mockRejectedValue(new Error("token invalid"));
+
+			await processor.start();
+
+			const contextIds: IContextIds = {};
+			const response: IHttpResponse = {};
+			await processor.pre({ headers: {} } as never, response, {} as never, contextIds, {});
+
+			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+			expect(contextIds[ContextIdKeys.UserOrganization]).toBeUndefined();
+		});
 	});
 
 	describe("post", () => {

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { ITenant, ITenantAdminComponent } from "@twin.org/api-models";
 import { GeneralError, Guards, Is, NotFoundError, Url } from "@twin.org/core";
+import type { EntityCondition } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -63,7 +64,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", tenantId);
 		}
 
-		return tenant;
+		return this.entityToModel(tenant);
 	}
 
 	/**
@@ -85,7 +86,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", apiKey);
 		}
 
-		return tenant;
+		return this.entityToModel(tenant);
 	}
 
 	/**
@@ -107,7 +108,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", publicOrigin);
 		}
 
-		return tenant;
+		return this.entityToModel(tenant);
 	}
 
 	/**
@@ -147,15 +148,18 @@ export class TenantAdminService implements ITenantAdminComponent {
 			}
 		}
 
-		const tenantEntity = new Tenant();
-		tenantEntity.id = tenant.id ?? TenantIdHelper.generateTenantId();
-		tenantEntity.apiKey = tenant.apiKey ?? TenantIdHelper.generateApiKey();
-		tenantEntity.dateCreated = new Date(Date.now()).toISOString();
-		tenantEntity.dateModified = tenantEntity.dateCreated;
-		tenantEntity.label = tenant.label;
-		tenantEntity.publicOrigin = publicOrigin;
+		const tenantEntity: ITenant = {
+			id: tenant.id ?? TenantIdHelper.generateTenantId(),
+			apiKey: tenant.apiKey ?? TenantIdHelper.generateApiKey(),
+			dateCreated: new Date(Date.now()).toISOString(),
+			dateModified: new Date(Date.now()).toISOString(),
+			label: tenant.label,
+			publicOrigin,
+			organizationId: tenant.organizationId,
+			organizationIdLegacy: tenant.organizationIdLegacy
+		};
 
-		await this._entityStorageConnector.set(tenantEntity);
+		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));
 
 		return tenantEntity.id;
 	}
@@ -200,15 +204,24 @@ export class TenantAdminService implements ITenantAdminComponent {
 			}
 		}
 
-		const tenantEntity = new Tenant();
-		tenantEntity.id = tenant.id;
-		tenantEntity.apiKey = tenant.apiKey ?? currentTenant.apiKey;
-		tenantEntity.dateCreated = currentTenant.dateCreated;
-		tenantEntity.dateModified = new Date(Date.now()).toISOString();
-		tenantEntity.label = tenant.label ?? currentTenant.label;
-		tenantEntity.publicOrigin = publicOrigin ?? currentTenant.publicOrigin;
+		const currentTenantEntity = this.entityToModel(currentTenant);
 
-		await this._entityStorageConnector.set(tenantEntity);
+		const tenantEntity: ITenant = {
+			id: tenant.id,
+			apiKey: tenant.apiKey ?? currentTenantEntity.apiKey,
+			dateCreated: currentTenantEntity.dateCreated,
+			dateModified: new Date(Date.now()).toISOString(),
+			label: tenant.label ?? currentTenantEntity.label,
+			publicOrigin: publicOrigin ?? currentTenantEntity.publicOrigin,
+			organizationId: Is.stringValue(tenant.organizationId)
+				? tenant.organizationId
+				: currentTenantEntity.organizationId,
+			organizationIdLegacy: Is.array(tenant.organizationIdLegacy)
+				? tenant.organizationIdLegacy
+				: currentTenantEntity.organizationIdLegacy
+		};
+
+		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));
 	}
 
 	/**
@@ -224,18 +237,20 @@ export class TenantAdminService implements ITenantAdminComponent {
 
 	/**
 	 * Query tenants with pagination.
+	 * @param conditions The conditions to filter the tenants.
 	 * @param properties The properties to include in the returned tenants.
 	 * @param cursor The cursor to start from.
 	 * @param limit The maximum number of tenants to return.
 	 * @returns The tenants and the next cursor if more tenants are available.
 	 */
 	public async query(
-		properties: (keyof ITenant)[] | undefined,
+		conditions?: EntityCondition<ITenant>,
+		properties?: (keyof ITenant)[],
 		cursor?: string,
 		limit?: number
 	): Promise<{ tenants: ITenant[]; cursor?: string }> {
 		const result = await this._entityStorageConnector.query(
-			undefined,
+			conditions,
 			undefined,
 			properties,
 			cursor,
@@ -246,5 +261,45 @@ export class TenantAdminService implements ITenantAdminComponent {
 			tenants: result.entities as ITenant[],
 			cursor: result.cursor
 		};
+	}
+
+	/**
+	 * Convert a tenant entity to a tenant model.
+	 * @param tenant The tenant entity.
+	 * @returns The tenant model.
+	 * @internal
+	 */
+	private entityToModel(tenant: Tenant): ITenant {
+		return {
+			id: tenant.id,
+			apiKey: tenant.apiKey,
+			label: tenant.label,
+			dateCreated: tenant.dateCreated,
+			dateModified: tenant.dateModified,
+			publicOrigin: tenant.publicOrigin,
+			organizationId: tenant.organizationId,
+			organizationIdLegacy: tenant.organizationIdLegacy?.split("|").filter(Boolean)
+		};
+	}
+
+	/**
+	 * Convert a tenant model to a tenant entity.
+	 * @param tenant The tenant model.
+	 * @returns The tenant entity.
+	 * @internal
+	 */
+	private modelToEntity(tenant: ITenant): Tenant {
+		const tenantEntity = new Tenant();
+		tenantEntity.id = tenant.id;
+		tenantEntity.apiKey = tenant.apiKey;
+		tenantEntity.label = tenant.label;
+		tenantEntity.dateCreated = tenant.dateCreated;
+		tenantEntity.dateModified = tenant.dateModified;
+		tenantEntity.publicOrigin = tenant.publicOrigin;
+		tenantEntity.organizationId = tenant.organizationId;
+		tenantEntity.organizationIdLegacy = Is.arrayValue(tenant.organizationIdLegacy)
+			? `|${tenant.organizationIdLegacy.join("|")}|`
+			: undefined;
+		return tenantEntity;
 	}
 }

@@ -1,11 +1,5 @@
 {
 	"error": {
-		"urlTransformerService": {
-			"encryptionUnavailable": "Encryption is unavailable because no nodeId is configured",
-			"decryptionUnavailable": "Decryption is unavailable because no nodeId is configured",
-			"encryptionFailed": "An error occurred during encryption",
-			"decryptionFailed": "An error occurred during decryption"
-		},
 		"healthService": {
 			"componentHealthCheckFailed": "Health check failed for component \"{className}\""
 		}

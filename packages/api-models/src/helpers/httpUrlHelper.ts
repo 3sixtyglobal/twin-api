@@ -105,4 +105,44 @@ export class HttpUrlHelper {
 
 		return url;
 	}
+
+	/**
+	 * Add a query string parameter to the url.
+	 * @param url The url to add the query string parameter to.
+	 * @param key The key of the query string parameter.
+	 * @param value The value of the query string parameter.
+	 * @returns The url with the added query string parameter.
+	 */
+	public static addQueryStringParam(url: string, key: string, value: string): string {
+		if (!Is.stringValue(url) || !Is.stringValue(key) || !Is.stringValue(value)) {
+			return url;
+		}
+
+		try {
+			const parsedUrl = new URL(url);
+			parsedUrl.searchParams.append(key, value);
+			return parsedUrl.toString();
+		} catch {}
+
+		return url;
+	}
+
+	/**
+	 * Get a query string parameter from the url.
+	 * @param url The url to get the query string parameter from.
+	 * @param key The key of the query string parameter.
+	 * @returns The value of the query string parameter.
+	 */
+	public static getQueryStringParam(url: string, key: string): string | undefined {
+		if (!Is.stringValue(url) || !Is.stringValue(key)) {
+			return undefined;
+		}
+
+		try {
+			const parsedUrl = new URL(url);
+			return parsedUrl.searchParams.get(key) ?? undefined;
+		} catch {}
+
+		return undefined;
+	}
 }

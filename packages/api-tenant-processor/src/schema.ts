@@ -3,10 +3,12 @@
 import { EntitySchemaFactory, EntitySchemaHelper } from "@twin.org/entity";
 import { nameof } from "@twin.org/nameof";
 import { Tenant } from "./entities/tenant.js";
+import { TenantV0 } from "./entities/tenantV0.js";
 
 /**
  * Initialize the schema for the node tenant processor.
  */
 export function initSchema(): void {
 	EntitySchemaFactory.register(nameof<Tenant>(), () => EntitySchemaHelper.getSchema(Tenant));
+	EntitySchemaFactory.register(nameof<TenantV0>(), () => EntitySchemaHelper.getSchema(TenantV0));
 }

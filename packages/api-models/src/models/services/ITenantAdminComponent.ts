@@ -1,6 +1,7 @@
 // Copyright 2025 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IComponent } from "@twin.org/core";
+import type { EntityCondition } from "@twin.org/entity";
 import type { ITenant } from "./ITenant.js";
 
 /**
@@ -57,13 +58,15 @@ export interface ITenantAdminComponent extends IComponent {
 
 	/**
 	 * Query tenants with pagination.
+	 * @param conditions The conditions to filter the tenants.
 	 * @param properties The properties to include in the returned tenants.
 	 * @param cursor The cursor to start from.
 	 * @param limit The maximum number of tenants to return.
 	 * @returns The tenants and the next cursor if more tenants are available.
 	 */
 	query(
-		properties: (keyof ITenant)[] | undefined,
+		conditions?: EntityCondition<ITenant>,
+		properties?: (keyof ITenant)[],
 		cursor?: string,
 		limit?: number
 	): Promise<{ tenants: ITenant[]; cursor?: string }>;

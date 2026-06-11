@@ -620,7 +620,8 @@ describe("api-server-fastify", () => {
 
 	test("Can add a custom content type processor", async () => {
 		const server = new FastifyWebServer({
-			mimeTypeProcessors: [new JwtMimeTypeProcessor()]
+			mimeTypeProcessors: [new JwtMimeTypeProcessor()],
+			loggingComponentType: "logging"
 		});
 
 		const logEntries: ILogEntry[] = [];
@@ -646,7 +647,7 @@ describe("api-server-fastify", () => {
 						body = request.body;
 					}
 				},
-				new LoggingProcessor()
+				new LoggingProcessor({ loggingComponentType: "logging" })
 			],
 			[
 				{

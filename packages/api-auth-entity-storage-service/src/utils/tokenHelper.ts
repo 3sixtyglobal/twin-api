@@ -1,6 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IUrlTransformerComponent } from "@twin.org/api-models";
 import { Coerce, Is, UnauthorizedError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { type IVaultConnector, VaultConnectorHelper } from "@twin.org/vault-models";
@@ -26,7 +25,6 @@ export class TokenHelper {
 	/**
 	 * Create a new token.
 	 * @param vaultConnector The vault connector.
-	 * @param urlTransformerComponent The URL transformer component, used to encrypt the tenant ID for inclusion in the token.
 	 * @param signingKeyName The signing key name.
 	 * @param userIdentity The subject for the token.
 	 * @param organizationIdentity The organization for the token.
@@ -38,7 +36,6 @@ export class TokenHelper {
 	 */
 	public static async createToken(
 		vaultConnector: IVaultConnector,
-		urlTransformerComponent: IUrlTransformerComponent,
 		signingKeyName: string,
 		userIdentity: string,
 		organizationIdentity: string | undefined,
@@ -58,9 +55,7 @@ export class TokenHelper {
 			{
 				sub: userIdentity,
 				org: organizationIdentity,
-				tid: Is.stringValue(tenantId)
-					? await urlTransformerComponent.encryptParam(tenantId)
-					: undefined,
+				tid: tenantId,
 				exp: nowSeconds + ttlSeconds,
 				scope,
 				pver: passwordVersion
@@ -91,9 +86,9 @@ export class TokenHelper {
 		token: string | undefined,
 		requiredScopes?: string[],
 		verifyUser?: (
-			userIdentity: string,
-			organizationIdentity: string,
-			encryptedTenantId: string | undefined,
+			sub: string,
+			org: string,
+			tid: string | undefined,
 			passwordVersion: number | undefined
 		) => Promise<string[]>
 	): Promise<{
@@ -121,18 +116,18 @@ export class TokenHelper {
 		}
 
 		if (Is.function(verifyUser)) {
-			const encryptedTenantId = Coerce.string(decoded.payload.tid);
+			const tid = Coerce.string(decoded.payload.tid);
 			const userVerified = await verifyUser(
 				decoded.payload.sub,
 				decoded.payload.org,
-				encryptedTenantId,
+				tid,
 				Coerce.integer(decoded.payload.pver)
 			);
 			if (!userVerified.includes("user")) {
 				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 			} else if (!userVerified.includes("organization")) {
 				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "organizationNotVerified");
-			} else if (Is.stringValue(encryptedTenantId) && !userVerified.includes("tenant")) {
+			} else if (Is.stringValue(tid) && !userVerified.includes("tenant")) {
 				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "tenantNotVerified");
 			}
 		}

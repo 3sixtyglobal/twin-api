@@ -320,6 +320,7 @@ export async function tenantList(
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
 	const result = await component.query(
+		HttpParameterHelper.objectFromString(request.query?.conditions),
 		HttpParameterHelper.arrayFromString(request.query?.properties),
 		request.query?.cursor,
 		Coerce.integer(request.query?.limit)

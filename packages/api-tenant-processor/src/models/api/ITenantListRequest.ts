@@ -10,6 +10,11 @@ export interface ITenantListRequest {
 	 */
 	query: {
 		/**
+		 * The condition for the query as JSON version of EntityCondition type.
+		 */
+		conditions?: string;
+
+		/**
 		 * The properties to include in the returned tenants, separated by commas.
 		 * If not provided, all properties will be returned.
 		 */

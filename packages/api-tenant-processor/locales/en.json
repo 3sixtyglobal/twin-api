@@ -2,9 +2,12 @@
 	"error": {
 		"tenantProcessor": {
 			"missingApiKey": "API key \"{keyName}\" is missing",
-			"missingTenantToken": "Tenant token query parameter \"{paramName}\" is missing",
-			"apiKeyNotFound": "No node tenant found for API key \"{key}\".",
-			"tenantNotFound": "No node tenant found for the decrypted tenant token \"{tenantId}\"."
+			"missingOrganizationId": "Organization ID query parameter \"{paramName}\" is missing",
+			"apiKeyNotFound": "No tenant found for API key \"{key}\".",
+			"organizationIdNotFound": "No tenant found for organization ID \"{organizationId}\"."
+		},
+		"singleTenantProcessor": {
+			"invalidOrganizationId": "Organization ID query parameter \"{paramName}\" value \"{value}\" is not valid for this node"
 		},
 		"tenantAdminService": {
 			"apiKeyAlreadyInUse": "The provided API key is already in use by another tenant.",

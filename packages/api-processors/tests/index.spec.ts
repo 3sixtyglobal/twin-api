@@ -34,7 +34,10 @@ describe("LoggingProcessor", () => {
 			const logEntries: ILogEntry[] = [];
 			ComponentFactory.register("logging", () => makeLogger(logEntries));
 
-			const processor = new LoggingProcessor({ config: { includeBody: true } });
+			const processor = new LoggingProcessor({
+				loggingComponentType: "logging",
+				config: { includeBody: true }
+			});
 
 			for (let i = 0; i < 5; i++) {
 				const request = makeRequest("/logging");
@@ -52,7 +55,10 @@ describe("LoggingProcessor", () => {
 			const logEntries: ILogEntry[] = [];
 			ComponentFactory.register("logging", () => makeLogger(logEntries));
 
-			const processor = new LoggingProcessor({ config: { includeBody: true } });
+			const processor = new LoggingProcessor({
+				loggingComponentType: "logging",
+				config: { includeBody: true }
+			});
 
 			const request = makeRequest("/tasks");
 			const response = makeResponse({ id: "task-1" });
@@ -69,6 +75,7 @@ describe("LoggingProcessor", () => {
 			const logEntries: ILogEntry[] = [];
 			ComponentFactory.register("logging", () => makeLogger(logEntries));
 			const processor = new LoggingProcessor({
+				loggingComponentType: "logging",
 				config: { includeBody: true, excludePaths: [] }
 			});
 
@@ -93,6 +100,7 @@ describe("LoggingProcessor", () => {
 			const logEntries: ILogEntry[] = [];
 			ComponentFactory.register("logging", () => makeLogger(logEntries));
 			const processor = new LoggingProcessor({
+				loggingComponentType: "logging",
 				config: { includeBody: true, excludePaths: ["/logging"] }
 			});
 
@@ -113,6 +121,7 @@ describe("LoggingProcessor", () => {
 			ComponentFactory.register("logging", () => makeLogger(logEntries));
 
 			const processor = new LoggingProcessor({
+				loggingComponentType: "logging",
 				config: { excludePaths: ["/custom-logs"] }
 			});
 

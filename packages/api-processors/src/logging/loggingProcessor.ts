@@ -57,7 +57,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * @param options Options for the processor.
 	 */
 	constructor(options?: ILoggingProcessorConstructorOptions) {
-		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType ?? "logging");
+		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType);
 		this._includeBody = options?.config?.includeBody ?? false;
 		this._fullBase64 = options?.config?.fullBase64 ?? false;
 		this._obfuscateProperties = options?.config?.obfuscateProperties ?? ["password"];

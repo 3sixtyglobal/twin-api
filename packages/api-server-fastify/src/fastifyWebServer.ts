@@ -133,7 +133,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 */
 	constructor(options?: IFastifyWebServerConstructorOptions) {
 		this._loggingComponentType = options?.loggingComponentType;
-		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType ?? "logging");
+		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType);
 		this._hostingComponentType = options?.hostingComponentType;
 		this._fastify = Fastify({
 			routerOptions: {

@@ -5,11 +5,11 @@ import {
 	type IBaseRoute,
 	type IBaseRouteProcessor,
 	type IHttpResponse,
-	type IHttpServerRequest,
-	type IUrlTransformerComponent
+	type IHttpServerRequest
 } from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
-import { BaseError, ComponentFactory, Is, UnauthorizedError } from "@twin.org/core";
+import { BaseError, Is, UnauthorizedError } from "@twin.org/core";
+import { ComparisonOperator } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -47,12 +47,6 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	private readonly _entityStorageConnector: IEntityStorageConnector<Tenant>;
 
 	/**
-	 * The transformer component, used to resolve public origins for tenants and encrypt/decrypt tenant tokens.
-	 * @internal
-	 */
-	private readonly _urlTransformerService: IUrlTransformerComponent;
-
-	/**
 	 * The key in the header to look for the api key.
 	 * @internal
 	 */
@@ -71,9 +65,6 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	constructor(options?: ITenantProcessorConstructorOptions) {
 		this._entityStorageConnector = EntityStorageConnectorFactory.get(
 			options?.tenantEntityStorageType ?? "tenant"
-		);
-		this._urlTransformerService = ComponentFactory.get(
-			options?.urlTransformerComponentType ?? "url-transformer"
 		);
 		this._apiKeyName = options?.config?.apiKeyName ?? TenantProcessor.DEFAULT_API_KEY_NAME;
 		this._apiKeyEndpoints = (
@@ -121,22 +112,19 @@ export class TenantProcessor implements IBaseRouteProcessor {
 						});
 					}
 				} else {
-					const tenantToken = await this._urlTransformerService.getEncryptedQueryParam(
-						request.query,
-						"tenant"
-					);
-					if (Is.stringValue(tenantToken)) {
-						tenant = await this.resolveByTenantToken(tenantToken);
-					} else if (isSkipAuth) {
-						throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "missingTenantToken", {
-							paramName: this._urlTransformerService.getParamName("tenant")
+					const organizationIdQueryParam = request.query?.[ContextIdKeys.Organization];
+					if (Is.stringValue(organizationIdQueryParam)) {
+						tenant = await this.resolveByOrganizationId(organizationIdQueryParam);
+					} else if (!isSkipAuth) {
+						throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "missingOrganizationId", {
+							paramName: ContextIdKeys.Organization
 						});
 					}
 				}
 
 				if (!Is.empty(tenant)) {
 					contextIds[ContextIdKeys.Tenant] = tenant.id;
-					processorState.publicOrigin = tenant.publicOrigin;
+					contextIds[ContextIdKeys.Organization] = tenant.organizationId;
 				}
 			} catch (err) {
 				HttpErrorHelper.buildResponse(
@@ -167,17 +155,27 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	}
 
 	/**
-	 * Resolve the tenant context from an encrypted tenant token query param.
-	 * @param tenantId The encrypted tenant token.
-	 * @returns The tenant associated with the tenant token.
+	 * Resolve the tenant context from a plain organization query param.
+	 * Matches against organizationId (exact) or organizationIdLegacy (pipe-delimited contains).
+	 * @param organizationId The organization id from the query param.
+	 * @returns The tenant associated with the organization id.
 	 * @internal
 	 */
-	private async resolveByTenantToken(tenantId: string): Promise<Tenant> {
-		const nodeTenant = await this._entityStorageConnector.get(tenantId);
+	private async resolveByOrganizationId(organizationId: string): Promise<Tenant> {
+		let nodeTenant = await this._entityStorageConnector.get(organizationId, "organizationId");
 
 		if (Is.empty(nodeTenant)) {
-			throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "tenantNotFound", {
-				tenantId
+			const result = await this._entityStorageConnector.query({
+				property: "organizationIdLegacy",
+				value: `|${organizationId}|`,
+				comparison: ComparisonOperator.Includes
+			});
+			nodeTenant = result.entities[0] as Tenant | undefined;
+		}
+
+		if (Is.empty(nodeTenant)) {
+			throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "organizationIdNotFound", {
+				organizationId
 			});
 		}
 
