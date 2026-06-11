@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.44](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.43...api-models-v0.0.3-next.44) (2026-06-11)
+
+
+### Features
+
+* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+
 ## [0.0.3-next.43](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.42...api-models-v0.0.3-next.43) (2026-06-10)
 
 
