@@ -224,15 +224,21 @@ Nothing.
 
 ### query() {#query}
 
-> **query**(`properties`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: `ITenant`[]; `cursor?`: `string`; \}\>
+> **query**(`conditions?`, `properties?`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: `ITenant`[]; `cursor?`: `string`; \}\>
 
 Query tenants with pagination.
 
 #### Parameters
 
-##### properties
+##### conditions?
 
-keyof `ITenant`[] \| `undefined`
+`EntityCondition`\<`ITenant`\>
+
+The conditions to filter the tenants.
+
+##### properties?
+
+keyof `ITenant`[]
 
 The properties to include in the returned tenants.
 

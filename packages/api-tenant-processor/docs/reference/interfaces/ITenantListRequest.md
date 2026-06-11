@@ -10,6 +10,12 @@ The list of tenants.
 
 The query parameters.
 
+#### conditions?
+
+> `optional` **conditions?**: `string`
+
+The condition for the query as JSON version of EntityCondition type.
+
 #### properties?
 
 > `optional` **properties?**: `string`

@@ -24,7 +24,7 @@ Runtime name for the class.
 
 ### createToken() {#createtoken}
 
-> `static` **createToken**(`vaultConnector`, `urlTransformerComponent`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`, `passwordVersion?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`, `passwordVersion?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
 
 Create a new token.
 
@@ -35,12 +35,6 @@ Create a new token.
 `IVaultConnector`
 
 The vault connector.
-
-##### urlTransformerComponent
-
-`IUrlTransformerComponent`
-
-The URL transformer component, used to encrypt the tenant ID for inclusion in the token.
 
 ##### signingKeyName
 
@@ -126,7 +120,7 @@ The required scopes.
 
 ##### verifyUser?
 
-(`userIdentity`, `organizationIdentity`, `encryptedTenantId`, `passwordVersion`) => `Promise`\<`string`[]\>
+(`sub`, `org`, `tid`, `passwordVersion`) => `Promise`\<`string`[]\>
 
 A function to verify the user identity and organization. The password version counter embedded in the token (pver claim) is passed so callers can detect if the password has changed since the token was issued.
 

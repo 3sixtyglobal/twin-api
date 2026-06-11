@@ -158,15 +158,21 @@ Error if the tenant is not found.
 
 ### query() {#query}
 
-> **query**(`properties`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: [`ITenant`](ITenant.md)[]; `cursor?`: `string`; \}\>
+> **query**(`conditions?`, `properties?`, `cursor?`, `limit?`): `Promise`\<\{ `tenants`: [`ITenant`](ITenant.md)[]; `cursor?`: `string`; \}\>
 
 Query tenants with pagination.
 
 #### Parameters
 
-##### properties
+##### conditions?
 
-keyof [`ITenant`](ITenant.md)[] \| `undefined`
+`EntityCondition`\<[`ITenant`](ITenant.md)\>
+
+The conditions to filter the tenants.
+
+##### properties?
+
+keyof [`ITenant`](ITenant.md)[]
 
 The properties to include in the returned tenants.
 

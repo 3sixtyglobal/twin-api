@@ -49,3 +49,19 @@ The date the tenant was modified.
 > `optional` **publicOrigin?**: `string`
 
 The public origin available to the public for accessing the API.
+
+***
+
+### organizationId? {#organizationid}
+
+> `optional` **organizationId?**: `string`
+
+The organization id for the tenant.
+
+***
+
+### organizationIdLegacy? {#organizationidlegacy}
+
+> `optional` **organizationIdLegacy?**: `string`[]
+
+Optional list of organization aliases that can are used for legacy lookups.

@@ -32,14 +32,6 @@ vault
 
 ***
 
-### urlTransformerComponentType? {#urltransformercomponenttype}
-
-> `optional` **urlTransformerComponentType?**: `string`
-
-The URL transformer component for the tenants.
-
-***
-
 ### tenantAdminComponentType? {#tenantadmincomponenttype}
 
 > `optional` **tenantAdminComponentType?**: `string`

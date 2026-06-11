@@ -5,7 +5,7 @@
 - [HealthService](classes/HealthService.md)
 - [HostingService](classes/HostingService.md)
 - [InformationService](classes/InformationService.md)
-- [UrlTransformerService](classes/UrlTransformerService.md)
+- [PlatformService](classes/PlatformService.md)
 
 ## Interfaces
 
@@ -15,8 +15,8 @@
 - [IHostingServiceConstructorOptions](interfaces/IHostingServiceConstructorOptions.md)
 - [IInformationServiceConfig](interfaces/IInformationServiceConfig.md)
 - [IInformationServiceConstructorOptions](interfaces/IInformationServiceConstructorOptions.md)
-- [IUrlTransformerServiceConfig](interfaces/IUrlTransformerServiceConfig.md)
-- [IUrlTransformerServiceConstructorOptions](interfaces/IUrlTransformerServiceConstructorOptions.md)
+- [IPlatformServiceConfig](interfaces/IPlatformServiceConfig.md)
+- [IPlatformServiceConstructorOptions](interfaces/IPlatformServiceConstructorOptions.md)
 
 ## Variables
 

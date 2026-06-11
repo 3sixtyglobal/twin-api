@@ -1,6 +1,6 @@
-# Interface: ITenantServiceConstructorOptions
+# Interface: IPlatformServiceConstructorOptions
 
-Options for the Tenant Service constructor.
+Options for the Platform Service constructor.
 
 ## Properties
 
@@ -20,6 +20,6 @@ tenant
 
 ### config? {#config}
 
-> `optional` **config?**: [`ITenantServiceConfig`](ITenantServiceConfig.md)
+> `optional` **config?**: [`IPlatformServiceConfig`](IPlatformServiceConfig.md)
 
 Configuration for the service.

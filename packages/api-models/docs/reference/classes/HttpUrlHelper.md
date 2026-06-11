@@ -195,3 +195,65 @@ The new origin to use.
 `string`
 
 The url with the replaced origin.
+
+***
+
+### addQueryStringParam() {#addquerystringparam}
+
+> `static` **addQueryStringParam**(`url`, `key`, `value`): `string`
+
+Add a query string parameter to the url.
+
+#### Parameters
+
+##### url
+
+`string`
+
+The url to add the query string parameter to.
+
+##### key
+
+`string`
+
+The key of the query string parameter.
+
+##### value
+
+`string`
+
+The value of the query string parameter.
+
+#### Returns
+
+`string`
+
+The url with the added query string parameter.
+
+***
+
+### getQueryStringParam() {#getquerystringparam}
+
+> `static` **getQueryStringParam**(`url`, `key`): `string` \| `undefined`
+
+Get a query string parameter from the url.
+
+#### Parameters
+
+##### url
+
+`string`
+
+The url to get the query string parameter from.
+
+##### key
+
+`string`
+
+The key of the query string parameter.
+
+#### Returns
+
+`string` \| `undefined`
+
+The value of the query string parameter.

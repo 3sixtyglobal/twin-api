@@ -18,20 +18,6 @@ tenant
 
 ***
 
-### urlTransformerComponentType? {#urltransformercomponenttype}
-
-> `optional` **urlTransformerComponentType?**: `string`
-
-The URL transformer component for the tenants.
-
-#### Default
-
-```ts
-url-transformer
-```
-
-***
-
 ### config? {#config}
 
 > `optional` **config?**: [`ITenantProcessorConfig`](ITenantProcessorConfig.md)

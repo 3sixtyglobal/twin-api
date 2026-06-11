@@ -3,20 +3,20 @@
 ## Classes
 
 - [Tenant](classes/Tenant.md)
+- [SingleTenantProcessor](classes/SingleTenantProcessor.md)
 - [TenantAdminService](classes/TenantAdminService.md)
 - [TenantIdContextIdHandler](classes/TenantIdContextIdHandler.md)
 - [TenantProcessor](classes/TenantProcessor.md)
-- [TenantService](classes/TenantService.md)
 - [TenantIdHelper](classes/TenantIdHelper.md)
 
 ## Interfaces
 
+- [ISingleTenantProcessorConfig](interfaces/ISingleTenantProcessorConfig.md)
+- [ISingleTenantProcessorConstructorOptions](interfaces/ISingleTenantProcessorConstructorOptions.md)
 - [ITenantAdminServiceConfig](interfaces/ITenantAdminServiceConfig.md)
 - [ITenantAdminServiceConstructorOptions](interfaces/ITenantAdminServiceConstructorOptions.md)
 - [ITenantProcessorConfig](interfaces/ITenantProcessorConfig.md)
 - [ITenantProcessorConstructorOptions](interfaces/ITenantProcessorConstructorOptions.md)
-- [ITenantServiceConfig](interfaces/ITenantServiceConfig.md)
-- [ITenantServiceConstructorOptions](interfaces/ITenantServiceConstructorOptions.md)
 - [ITenantCreateRequest](interfaces/ITenantCreateRequest.md)
 - [ITenantGetByApiKeyRequest](interfaces/ITenantGetByApiKeyRequest.md)
 - [ITenantGetByIdRequest](interfaces/ITenantGetByIdRequest.md)
