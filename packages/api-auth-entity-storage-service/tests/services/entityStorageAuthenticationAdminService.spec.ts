@@ -32,13 +32,22 @@ describe("EntityStorageAuthenticationAdminService", () => {
 		});
 
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(userEntityStorage);
-		vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(mockAuthenticationAuditService);
+		vi.spyOn(ComponentFactory, "getIfExists").mockImplementation(componentName => {
+			if (componentName === "authentication-audit") {
+				return mockAuthenticationAuditService;
+			}
+			return undefined;
+		});
 
 		service = new EntityStorageAuthenticationAdminService({
 			config: {
 				minPasswordLength: 10
 			}
 		});
+	});
+
+	afterEach(async () => {
+		await userEntityStorage.teardown();
 	});
 
 	it("should return the class name", () => {
