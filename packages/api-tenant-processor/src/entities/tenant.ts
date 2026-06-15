@@ -46,8 +46,8 @@ export class Tenant {
 	/**
 	 * The organization id for the tenant.
 	 */
-	@property({ type: "string", optional: true, isSecondary: true })
-	public organizationId?: string;
+	@property({ type: "string", isSecondary: true })
+	public organizationId!: string;
 
 	/**
 	 * Optional list of organization aliases that can are used for legacy lookups, indexed format.

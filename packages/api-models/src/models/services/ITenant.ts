@@ -38,7 +38,7 @@ export interface ITenant {
 	/**
 	 * The organization id for the tenant.
 	 */
-	organizationId?: string;
+	organizationId: string;
 
 	/**
 	 * Optional list of organization aliases that can are used for legacy lookups.

@@ -57,6 +57,15 @@ export interface ITenantAdminComponent extends IComponent {
 	remove(tenantId: string): Promise<void>;
 
 	/**
+	 * Get a tenant by its organization id, optionally searching legacy ids.
+	 * @param organizationId The organization id of the tenant.
+	 * @param includeLegacy Whether to also search the legacy organization id array.
+	 * @returns The tenant.
+	 * @throws Error if the tenant is not found.
+	 */
+	getTenantByOrganizationId(organizationId: string, includeLegacy?: boolean): Promise<ITenant>;
+
+	/**
 	 * Query tenants with pagination.
 	 * @param conditions The conditions to filter the tenants.
 	 * @param properties The properties to include in the returned tenants.

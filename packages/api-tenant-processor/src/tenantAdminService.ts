@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { ITenant, ITenantAdminComponent } from "@twin.org/api-models";
-import { GeneralError, Guards, Is, NotFoundError, Url } from "@twin.org/core";
-import type { EntityCondition } from "@twin.org/entity";
+import { AlreadyExistsError, GeneralError, Guards, Is, NotFoundError, Url } from "@twin.org/core";
+import { ComparisonOperator, type EntityCondition } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -112,6 +112,47 @@ export class TenantAdminService implements ITenantAdminComponent {
 	}
 
 	/**
+	 * Get a tenant by its organization id, optionally searching legacy ids.
+	 * @param organizationId The organization id of the tenant.
+	 * @param includeLegacy Whether to also search the legacy organization id array.
+	 * @returns The tenant.
+	 * @throws Error if the tenant is not found.
+	 */
+	public async getTenantByOrganizationId(
+		organizationId: string,
+		includeLegacy?: boolean
+	): Promise<ITenant> {
+		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(organizationId), organizationId);
+
+		let tenant: Tenant | undefined;
+
+		try {
+			tenant = await this._entityStorageConnector.get(organizationId, "organizationId");
+		} catch {}
+
+		if (!Is.object(tenant) && includeLegacy) {
+			const result = await this._entityStorageConnector.query(
+				{
+					property: "organizationIdLegacy",
+					comparison: ComparisonOperator.Includes,
+					value: `|${organizationId}|`
+				},
+				undefined,
+				undefined,
+				undefined,
+				1
+			);
+			tenant = (result.entities as Tenant[])[0];
+		}
+
+		if (!Is.object(tenant)) {
+			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", organizationId);
+		}
+
+		return this.entityToModel(tenant);
+	}
+
+	/**
 	 * Create a tenant.
 	 * @param tenant The tenant to store.
 	 * @returns The tenant id.
@@ -120,8 +161,21 @@ export class TenantAdminService implements ITenantAdminComponent {
 		tenant: Omit<ITenant, "id" | "dateCreated" | "dateModified"> & { id?: string }
 	): Promise<string> {
 		Guards.objectValue<ITenant>(TenantAdminService.CLASS_NAME, nameof(tenant), tenant);
+		Guards.stringValue(
+			TenantAdminService.CLASS_NAME,
+			nameof(tenant.organizationId),
+			tenant.organizationId
+		);
 		if (Is.stringValue(tenant.id)) {
 			Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenant.id), tenant.id, 32);
+			const existing = await this._entityStorageConnector.get(tenant.id);
+			if (Is.object(existing)) {
+				throw new AlreadyExistsError(
+					TenantAdminService.CLASS_NAME,
+					"tenantAlreadyExists",
+					tenant.id
+				);
+			}
 		}
 		if (Is.stringValue(tenant.apiKey)) {
 			Guards.stringHexLength(
@@ -146,6 +200,18 @@ export class TenantAdminService implements ITenantAdminComponent {
 			if (Is.object(existingApiKey) && existingApiKey.id !== tenant.id) {
 				throw new GeneralError(TenantAdminService.CLASS_NAME, "apiKeyAlreadyInUse");
 			}
+		}
+
+		const existingOrgId = await this._entityStorageConnector.get(
+			tenant.organizationId,
+			"organizationId"
+		);
+		if (Is.object(existingOrgId)) {
+			throw new AlreadyExistsError(
+				TenantAdminService.CLASS_NAME,
+				"organizationIdAlreadyExists",
+				tenant.organizationId
+			);
 		}
 
 		const tenantEntity: ITenant = {
@@ -174,6 +240,11 @@ export class TenantAdminService implements ITenantAdminComponent {
 	): Promise<void> {
 		Guards.objectValue<ITenant>(TenantAdminService.CLASS_NAME, nameof(tenant), tenant);
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenant.id), tenant.id, 32);
+		Guards.stringValue(
+			TenantAdminService.CLASS_NAME,
+			nameof(tenant.organizationId),
+			tenant.organizationId
+		);
 		if (Is.stringValue(tenant.apiKey)) {
 			Guards.stringHexLength(
 				TenantAdminService.CLASS_NAME,
@@ -204,7 +275,35 @@ export class TenantAdminService implements ITenantAdminComponent {
 			}
 		}
 
+		const existingOrgId = await this._entityStorageConnector.get(
+			tenant.organizationId,
+			"organizationId"
+		);
+		if (Is.object(existingOrgId) && existingOrgId.id !== currentTenant.id) {
+			throw new AlreadyExistsError(
+				TenantAdminService.CLASS_NAME,
+				"organizationIdAlreadyExists",
+				tenant.organizationId
+			);
+		}
+
 		const currentTenantEntity = this.entityToModel(currentTenant);
+
+		const orgIdChanged = tenant.organizationId !== currentTenantEntity.organizationId;
+
+		let newOrganizationIdLegacy: string[] | undefined;
+		if (orgIdChanged) {
+			const legacySet = new Set(currentTenantEntity.organizationIdLegacy ?? []);
+			if (Is.stringValue(currentTenantEntity.organizationId)) {
+				legacySet.add(currentTenantEntity.organizationId);
+			}
+			legacySet.delete(tenant.organizationId);
+			newOrganizationIdLegacy = legacySet.size > 0 ? [...legacySet] : undefined;
+		} else {
+			newOrganizationIdLegacy = Is.array(tenant.organizationIdLegacy)
+				? tenant.organizationIdLegacy
+				: currentTenantEntity.organizationIdLegacy;
+		}
 
 		const tenantEntity: ITenant = {
 			id: tenant.id,
@@ -213,12 +312,8 @@ export class TenantAdminService implements ITenantAdminComponent {
 			dateModified: new Date(Date.now()).toISOString(),
 			label: tenant.label ?? currentTenantEntity.label,
 			publicOrigin: publicOrigin ?? currentTenantEntity.publicOrigin,
-			organizationId: Is.stringValue(tenant.organizationId)
-				? tenant.organizationId
-				: currentTenantEntity.organizationId,
-			organizationIdLegacy: Is.array(tenant.organizationIdLegacy)
-				? tenant.organizationIdLegacy
-				: currentTenantEntity.organizationIdLegacy
+			organizationId: tenant.organizationId,
+			organizationIdLegacy: newOrganizationIdLegacy
 		};
 
 		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));

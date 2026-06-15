@@ -14,7 +14,8 @@ const TENANT_A: ITenant = {
 	publicOrigin: "https://a.example.com",
 	dateCreated: new Date().toISOString(),
 	dateModified: new Date().toISOString(),
-	label: "Tenant A"
+	label: "Tenant A",
+	organizationId: "org-1"
 };
 
 const TENANT_B: ITenant = {
@@ -23,7 +24,8 @@ const TENANT_B: ITenant = {
 	publicOrigin: "https://b.example.com",
 	dateCreated: new Date().toISOString(),
 	dateModified: new Date().toISOString(),
-	label: "Tenant B"
+	label: "Tenant B",
+	organizationId: "org-2"
 };
 
 const TENANT_C: ITenant = {
@@ -32,7 +34,8 @@ const TENANT_C: ITenant = {
 	publicOrigin: "https://c.example.com",
 	dateCreated: new Date().toISOString(),
 	dateModified: new Date().toISOString(),
-	label: "Tenant C"
+	label: "Tenant C",
+	organizationId: "org-3"
 };
 
 describe("PlatformService", () => {

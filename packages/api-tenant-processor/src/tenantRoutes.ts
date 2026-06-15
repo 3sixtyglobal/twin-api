@@ -74,7 +74,8 @@ export function generateRestRoutesTenants(
 									label: "node",
 									dateCreated: "2026-01-19T03:59:35.742Z",
 									dateModified: "2026-01-19T03:59:35.742Z",
-									publicOrigin: "https://example.com:4321"
+									publicOrigin: "https://example.com:4321",
+									organizationId: "org-1"
 								}
 							]
 						}
@@ -120,7 +121,8 @@ export function generateRestRoutesTenants(
 								label: "node",
 								dateCreated: "2026-01-19T03:59:35.742Z",
 								dateModified: "2026-01-19T03:59:35.742Z",
-								publicOrigin: "https://example.com:4321"
+								publicOrigin: "https://example.com:4321",
+								organizationId: "org-1"
 							}
 						}
 					}
@@ -152,7 +154,8 @@ export function generateRestRoutesTenants(
 								label: "node",
 								dateCreated: "2026-01-19T03:59:35.742Z",
 								dateModified: "2026-01-19T03:59:35.742Z",
-								publicOrigin: "https://example.com:4321"
+								publicOrigin: "https://example.com:4321",
+								organizationId: "org-1"
 							}
 						}
 					}
@@ -241,7 +244,8 @@ export function generateRestRoutesTenants(
 						body: {
 							apiKey: "ad7a5b0b816ca314b69c813ae1368232",
 							label: "node",
-							publicOrigin: "https://example.com:4321"
+							publicOrigin: "https://example.com:4321",
+							organizationId: "org-1"
 						}
 					}
 				}
@@ -276,7 +280,8 @@ export function generateRestRoutesTenants(
 						body: {
 							apiKey: "ad7a5b0b816ca314b69c813ae1368232",
 							label: "node",
-							publicOrigin: "https://example.com:4321"
+							publicOrigin: "https://example.com:4321",
+							organizationId: "org-1"
 						}
 					}
 				}
