@@ -23,7 +23,7 @@ export interface IAuthenticationComponent extends IComponent {
 	/**
 	 * Logout the current user.
 	 * @param token The token to logout, if it uses a mechanism with public access.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the logout has been completed.
 	 */
 	logout(token?: string): Promise<void>;
 
@@ -41,7 +41,7 @@ export interface IAuthenticationComponent extends IComponent {
 	 * Update the user's password.
 	 * @param currentPassword The current password for the user.
 	 * @param newPassword The new password for the user.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the password has been updated.
 	 */
 	updatePassword(currentPassword: string, newPassword: string): Promise<void>;
 }

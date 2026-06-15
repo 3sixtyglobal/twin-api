@@ -4,6 +4,9 @@ import type { IRestRouteEntryPoint } from "@twin.org/api-models";
 import { generateRestRoutesHealth, tagsHealth } from "./healthRoutes.js";
 import { generateRestRoutesInformation, tagsInformation } from "./informationRoutes.js";
 
+/**
+ * REST entry points for the information and health services.
+ */
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{
 		name: "information",

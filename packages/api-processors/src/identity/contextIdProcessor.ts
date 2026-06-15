@@ -70,7 +70,7 @@ export class ContextIdProcessor implements IBaseRouteProcessor {
 	/**
 	 * The service needs to be started when the application is initialized.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the context ID has been loaded from the store.
 	 */
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		const contextIds = await ContextIdStore.getContextIds();
@@ -85,6 +85,7 @@ export class ContextIdProcessor implements IBaseRouteProcessor {
 	 * @param route The route to process.
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the context ID has been injected into the request.
 	 */
 	public async pre(
 		request: IHttpServerRequest,

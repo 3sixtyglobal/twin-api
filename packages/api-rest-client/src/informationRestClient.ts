@@ -42,7 +42,7 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 
 	/**
 	 * Get the server root.
-	 * @returns The root root.
+	 * @returns The root text page content.
 	 */
 	public async root(): Promise<string> {
 		const response = await this.fetch<INoContentRequest, IServerRootResponse>("/", "GET");
@@ -81,7 +81,7 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 
 	/**
 	 * Is the server live.
-	 * @returns True if the server is live.
+	 * @returns The liveness status of the server.
 	 */
 	public async livez(): Promise<{ status: "alive" | "dead" }> {
 		const response = await this.fetch<INoContentRequest, IServerLivezResponse>("/livez", "GET");
@@ -90,7 +90,7 @@ export class InformationRestClient extends BaseRestClient implements IInformatio
 
 	/**
 	 * Is the server ready.
-	 * @returns True if the server is ready.
+	 * @returns The readiness status of the server.
 	 */
 	public async readyz(): Promise<{ status: "ready" | "not ready" }> {
 		const response = await this.fetch<INoContentRequest, IServerReadyzResponse>("/readyz", "GET");

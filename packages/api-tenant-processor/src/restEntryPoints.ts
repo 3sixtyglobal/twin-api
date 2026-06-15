@@ -3,6 +3,9 @@
 import type { IRestRouteEntryPoint } from "@twin.org/api-models";
 import { generateRestRoutesTenants, tagsTenants } from "./tenantRoutes.js";
 
+/**
+ * REST entry points for the tenant administration service.
+ */
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{
 		name: "tenants",

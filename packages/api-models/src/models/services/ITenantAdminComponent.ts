@@ -20,7 +20,7 @@ export interface ITenantAdminComponent extends IComponent {
 	/**
 	 * Update a tenant.
 	 * @param tenant The tenant to update.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the tenant has been updated.
 	 */
 	update(tenant: Partial<Omit<ITenant, "dateCreated" | "dateModified">>): Promise<void>;
 
@@ -51,7 +51,7 @@ export interface ITenantAdminComponent extends IComponent {
 	/**
 	 * Remove a tenant by its id.
 	 * @param tenantId The id of the tenant.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the tenant has been removed.
 	 * @throws Error if the tenant is not found.
 	 */
 	remove(tenantId: string): Promise<void>;

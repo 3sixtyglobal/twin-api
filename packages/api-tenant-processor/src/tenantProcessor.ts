@@ -87,6 +87,7 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	 * @param route The route to process.
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the tenant context has been resolved and injected, or an error response set.
 	 */
 	public async pre(
 		request: IHttpServerRequest,

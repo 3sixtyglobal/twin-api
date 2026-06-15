@@ -80,7 +80,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	/**
 	 * Create a login for the user.
 	 * @param user The user to create.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the user account has been created and the audit entry recorded.
 	 */
 	public async create(user: IAuthenticationUser & { password: string }): Promise<void> {
 		Guards.object<IAuthenticationUser>(
@@ -166,7 +166,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	/**
 	 * Update a login for the user.
 	 * @param user The user to update.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the user account has been updated and the audit entry recorded.
 	 */
 	public async update(user: Partial<IAuthenticationUser>): Promise<void> {
 		Guards.object<IAuthenticationUser>(
@@ -334,7 +334,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	/**
 	 * Remove the current user.
 	 * @param email The email address of the user to remove.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the user account has been removed and the audit entry recorded.
 	 */
 	public async remove(email: string): Promise<void> {
 		Guards.stringValue(EntityStorageAuthenticationAdminService.CLASS_NAME, nameof(email), email);
@@ -378,7 +378,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	 * @param email The email address of the user to update.
 	 * @param newPassword The new password for the user.
 	 * @param currentPassword The current password, optional, if supplied will check against existing.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the password has been updated.
 	 */
 	public async updatePassword(
 		email: string,

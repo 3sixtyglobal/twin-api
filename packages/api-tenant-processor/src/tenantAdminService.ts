@@ -167,7 +167,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 	/**
 	 * Update a tenant.
 	 * @param tenant The tenant to update.
-	 * @returns The nothing.
+	 * @returns A promise that resolves when the tenant has been updated.
 	 */
 	public async update(
 		tenant: Partial<Omit<ITenant, "dateCreated" | "dateModified">>

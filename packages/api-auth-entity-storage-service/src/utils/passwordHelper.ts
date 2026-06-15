@@ -26,7 +26,7 @@ export class PasswordHelper {
 	 * @param newPassword The new password to set.
 	 * @param currentPassword The current password to verify against, if supplied.
 	 * @param minPasswordLength Optional minimum password length for validation.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the new password has been stored and the audit entry recorded.
 	 */
 	public static async updatePassword(
 		userEntityStorage: IEntityStorageConnector<AuthenticationUser>,

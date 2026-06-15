@@ -105,6 +105,7 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 	 * @param processorState The state handed through the processors.
 	 * @param responseEmitter The function to emit a response.
 	 * @param loggingComponentType The logging component type for the request.
+	 * @returns A promise that resolves when the request has been processed and the response emitted.
 	 */
 	public async process(
 		request: ISocketServerRequest,

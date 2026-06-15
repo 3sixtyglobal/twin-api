@@ -218,7 +218,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	/**
 	 * The service needs to be started when the application is initialized.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when rate-limit actions have been registered and the node identity cached.
 	 */
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		const contextIds = await ContextIdStore.getContextIds();
@@ -239,7 +239,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	/**
 	 * The component needs to be stopped when the node is closed.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when all rate-limit actions have been unregistered.
 	 */
 	public async stop(nodeLoggingComponentType?: string): Promise<void> {
 		await this._authenticationRateService.unregisterAction("login");
@@ -334,7 +334,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	/**
 	 * Logout the current user.
 	 * @param token The token to logout, if it uses a mechanism with public access.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the logout audit entry has been recorded.
 	 */
 	public async logout(token?: string): Promise<void> {
 		// Nothing to do here, as we are stateless.
@@ -438,7 +438,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 	 * Update the user's password.
 	 * @param currentPassword The current password for the user.
 	 * @param newPassword The new password for the user.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the password has been updated and the rate limit cleared.
 	 */
 	public async updatePassword(currentPassword: string, newPassword: string): Promise<void> {
 		const contextIds = await ContextIdStore.getContextIds();

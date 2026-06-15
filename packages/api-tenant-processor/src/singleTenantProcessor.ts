@@ -19,7 +19,7 @@ import { HttpStatusCode } from "@twin.org/web";
 import type { ISingleTenantProcessorConstructorOptions } from "./models/ISingleTenantProcessorConstructorOptions.js";
 
 /**
- * Handles incoming api keys and maps them to tenant ids.
+ * Injects the single-tenant organization ID into every request context and validates any organization query parameter.
  */
 export class SingleTenantProcessor implements IBaseRouteProcessor {
 	/**
@@ -52,6 +52,7 @@ export class SingleTenantProcessor implements IBaseRouteProcessor {
 	 * Cache the node organization ID from the engine context so it can be injected into each
 	 * per-request context without requiring a separate ContextIdProcessor for Organization.
 	 * @param nodeLoggingComponentType The node logging component type.
+	 * @returns A promise that resolves when the node organization ID has been cached.
 	 */
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		const contextIds = await ContextIdStore.getContextIds();
@@ -66,6 +67,7 @@ export class SingleTenantProcessor implements IBaseRouteProcessor {
 	 * @param route The route to process.
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the organization ID has been injected and any query parameter validated.
 	 */
 	public async pre(
 		request: IHttpServerRequest,

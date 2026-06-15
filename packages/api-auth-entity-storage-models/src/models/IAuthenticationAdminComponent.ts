@@ -10,14 +10,14 @@ export interface IAuthenticationAdminComponent extends IComponent {
 	/**
 	 * Create a login for the user.
 	 * @param user The user to create.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the user account has been created.
 	 */
 	create(user: IAuthenticationUser & { password: string }): Promise<void>;
 
 	/**
 	 * Update a login for the user.
 	 * @param user The user to update.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the user account has been updated.
 	 */
 	update(user: Partial<IAuthenticationUser>): Promise<void>;
 
@@ -38,7 +38,7 @@ export interface IAuthenticationAdminComponent extends IComponent {
 	/**
 	 * Remove a user.
 	 * @param email The email address of the user to remove.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the user account has been removed.
 	 */
 	remove(email: string): Promise<void>;
 
@@ -47,7 +47,7 @@ export interface IAuthenticationAdminComponent extends IComponent {
 	 * @param email The email address of the user to update.
 	 * @param newPassword The new password for the user.
 	 * @param currentPassword The current password, optional, if supplied will check against existing.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the password has been updated.
 	 */
 	updatePassword(email: string, newPassword: string, currentPassword?: string): Promise<void>;
 }

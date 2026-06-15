@@ -89,7 +89,7 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 	 * Register or update rate-limit configuration for an action.
 	 * @param action The action name.
 	 * @param config The action configuration.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the action configuration has been stored.
 	 */
 	public async registerAction(
 		action: string,
@@ -111,7 +111,7 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 	/**
 	 * Unregister rate-limit configuration for an action.
 	 * @param action The action name.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the action configuration has been removed.
 	 */
 	public async unregisterAction(action: string): Promise<void> {
 		Guards.stringValue(EntityStorageAuthenticationRateService.CLASS_NAME, nameof(action), action);
@@ -130,7 +130,7 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 	/**
 	 * The service needs to be started when the application is initialized.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the periodic cleanup task has been registered.
 	 */
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		await this._taskScheduler.addTask(
@@ -147,7 +147,7 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 	/**
 	 * The component needs to be stopped when the node is closed.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the periodic cleanup task has been removed.
 	 */
 	public async stop(nodeLoggingComponentType?: string): Promise<void> {
 		await this._taskScheduler.removeTask(EntityStorageAuthenticationRateService._CLEANUP_TASK_ID);
@@ -226,7 +226,7 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 	 * Clear the authentication rate entry for the given action and identifier.
 	 * @param action The action to clear.
 	 * @param identifier The identifier to clear.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the rate entry has been removed.
 	 */
 	public async clear(action: string, identifier: string): Promise<void> {
 		Guards.stringValue(EntityStorageAuthenticationRateService.CLASS_NAME, nameof(action), action);
@@ -244,7 +244,7 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 
 	/**
 	 * Cleanup expired rate limit entries.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when all expired entries have been removed from storage.
 	 * @internal
 	 */
 	private async cleanupExpiredEntries(): Promise<void> {

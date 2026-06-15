@@ -184,7 +184,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param socketRouteProcessors The processors for incoming requests over Sockets.
 	 * @param socketRoutes The socket routes.
 	 * @param options Options for building the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server is fully built and ready to start.
 	 */
 	public async build(
 		restRouteProcessors?: IRestRouteProcessor[],
@@ -285,7 +285,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 	/**
 	 * Start the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server is listening for connections.
 	 */
 	public async start(): Promise<void> {
 		const host = this._options?.host ?? FastifyWebServer._DEFAULT_HOST;
@@ -337,7 +337,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 	/**
 	 * Stop the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server has shut down all connections.
 	 */
 	public async stop(): Promise<void> {
 		if (this._started) {

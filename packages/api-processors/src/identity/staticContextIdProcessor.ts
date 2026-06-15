@@ -80,6 +80,7 @@ export class StaticContextIdProcessor implements IBaseRouteProcessor {
 	 * @param route The route to process.
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the static context ID has been injected into the request.
 	 */
 	public async pre(
 		request: IHttpServerRequest,

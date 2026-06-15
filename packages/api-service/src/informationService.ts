@@ -74,7 +74,7 @@ export class InformationService implements IInformationComponent {
 
 	/**
 	 * The service needs to be started when the application is initialized.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the OpenAPI spec and favicon have been loaded from disk.
 	 */
 	public async start(): Promise<void> {
 		const openApiPath = this._openApiSpecPath;
@@ -123,7 +123,7 @@ export class InformationService implements IInformationComponent {
 
 	/**
 	 * Is the server live.
-	 * @returns True if the server is live.
+	 * @returns The liveness status of the server.
 	 */
 	public async livez(): Promise<{
 		status: "alive" | "dead";

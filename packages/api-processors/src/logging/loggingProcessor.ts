@@ -79,6 +79,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * @param route The route to process.
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the pre-processing log entry has been written.
 	 */
 	public async pre(
 		request: IHttpServerRequest,
@@ -130,6 +131,7 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * @param route The route to process.
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the post-processing log entry has been written.
 	 */
 	public async post(
 		request: IHttpServerRequest,

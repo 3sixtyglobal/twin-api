@@ -14,6 +14,9 @@ import {
 	tagsAuthentication
 } from "./routes/entityStorageAuthenticationRoutes.js";
 
+/**
+ * REST entry points for the authentication, authentication admin, and authentication audit services.
+ */
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{
 		name: "authentication",

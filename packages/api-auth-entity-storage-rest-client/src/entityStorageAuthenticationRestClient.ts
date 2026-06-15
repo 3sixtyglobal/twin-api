@@ -97,7 +97,7 @@ export class EntityStorageAuthenticationRestClient
 	/**
 	 * Logout the current user.
 	 * @param token The token to logout, if it uses a mechanism with public access.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the logout request has completed.
 	 */
 	public async logout(token?: string): Promise<void> {
 		await this.fetch<ILogoutRequest, INoContentResponse>("/logout", "POST", {
@@ -139,7 +139,7 @@ export class EntityStorageAuthenticationRestClient
 	 * Update the user's password.
 	 * @param currentPassword The current password for the user.
 	 * @param newPassword The new password for the user.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the password has been updated on the server.
 	 */
 	public async updatePassword(currentPassword: string, newPassword: string): Promise<void> {
 		Guards.stringValue(

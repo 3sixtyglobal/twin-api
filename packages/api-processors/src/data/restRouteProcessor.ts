@@ -54,6 +54,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 	 * @param componentTypes The component types for the request.
 	 * @param componentTypes.loggingComponentType The logging component type.
 	 * @param componentTypes.hostingComponentType The hosting component type.
+	 * @returns A promise that resolves when the request has been processed and the response populated.
 	 */
 	public async process(
 		request: IHttpServerRequest,

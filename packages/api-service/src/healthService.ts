@@ -66,7 +66,7 @@ export class HealthService implements IHealthComponent {
 	/**
 	 * The component needs to be started when the node is initialized.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the initial health check timer has been scheduled.
 	 */
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		const engineCore = EngineCoreFactory.getIfExists("engine");
@@ -85,7 +85,7 @@ export class HealthService implements IHealthComponent {
 	/**
 	 * The component needs to be stopped when the node is closed.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the health check timer has been cancelled.
 	 */
 	public async stop(nodeLoggingComponentType?: string): Promise<void> {
 		if (this._healthTimer) {
@@ -106,7 +106,7 @@ export class HealthService implements IHealthComponent {
 	 * Check the health of all registered components and set the health info in the service.
 	 * @param engineCore The engine core to get the registered components from.
 	 * @param nodeLoggingComponentType The node logging component type to log any errors that occur during health checks.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when all component health checks are complete and the next check is scheduled.
 	 * @internal
 	 */
 	private async checkHealth(

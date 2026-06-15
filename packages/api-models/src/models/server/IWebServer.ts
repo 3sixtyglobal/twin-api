@@ -24,7 +24,7 @@ export interface IWebServer<T> extends IComponent {
 	 * @param socketRouteProcessors The processors for incoming requests over Sockets.
 	 * @param socketRoutes The socket routes.
 	 * @param options Options for building the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server is fully built and ready to start.
 	 */
 	build(
 		restRouteProcessors?: IRestRouteProcessor[],
@@ -36,13 +36,13 @@ export interface IWebServer<T> extends IComponent {
 
 	/**
 	 * Start the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server is listening for connections.
 	 */
 	start(): Promise<void>;
 
 	/**
 	 * Stop the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server has shut down all connections.
 	 */
 	stop(): Promise<void>;
 

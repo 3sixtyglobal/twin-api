@@ -111,7 +111,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	/**
 	 * The service needs to be started when the application is initialized.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the node identity and organization ID have been cached.
 	 */
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		const contextIds = await ContextIdStore.getContextIds();
@@ -127,6 +127,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	 * @param route The route to process.
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the JWT has been verified and the context populated, or an error response set.
 	 */
 	public async pre(
 		request: IHttpServerRequest,
@@ -215,6 +216,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	 * @param route The route to process.
 	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the Set-Cookie header has been applied to the response if required.
 	 */
 	public async post(
 		request: IHttpServerRequest,

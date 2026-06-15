@@ -65,7 +65,7 @@ export class PlatformService implements IPlatformComponent {
 	/**
 	 * Execute a method, if single tenant will run once, if multi-tenant will run for each tenant.
 	 * @param method The method to run for each tenant.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the method has been executed for all applicable tenants.
 	 */
 	public async execute(method: () => Promise<void>): Promise<void> {
 		if (this._isMultiTenant) {

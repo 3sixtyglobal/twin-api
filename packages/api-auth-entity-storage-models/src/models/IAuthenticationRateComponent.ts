@@ -10,14 +10,14 @@ export interface IAuthenticationRateComponent extends IComponent {
 	/**
 	 * The service needs to be started when the application is initialized.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the service has been started.
 	 */
 	start(nodeLoggingComponentType?: string): Promise<void>;
 
 	/**
 	 * The component needs to be stopped when the node is closed.
 	 * @param nodeLoggingComponentType The node logging component type.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the service has been stopped.
 	 */
 	stop(nodeLoggingComponentType?: string): Promise<void>;
 
@@ -25,14 +25,14 @@ export interface IAuthenticationRateComponent extends IComponent {
 	 * Register or update rate-limit configuration for an action.
 	 * @param action The action name.
 	 * @param config The action configuration.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the action configuration has been stored.
 	 */
 	registerAction(action: string, config: IAuthenticationRateActionConfig): Promise<void>;
 
 	/**
 	 * Unregister rate-limit configuration for an action.
 	 * @param action The action name.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the action configuration has been removed.
 	 */
 	unregisterAction(action: string): Promise<void>;
 
@@ -48,7 +48,7 @@ export interface IAuthenticationRateComponent extends IComponent {
 	 * Clear the authentication rate entry for the given action and identifier.
 	 * @param action The action to clear.
 	 * @param identifier The identifier to clear.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the rate entry has been removed.
 	 */
 	clear(action: string, identifier: string): Promise<void>;
 }

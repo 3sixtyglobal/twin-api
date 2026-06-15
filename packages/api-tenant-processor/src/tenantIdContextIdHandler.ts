@@ -5,7 +5,7 @@ import { Converter, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 
 /**
- * Context Id handler for testing as a tenant id.
+ * Context ID handler that treats a tenant ID as a compact base64url-encoded hex string.
  */
 export class TenantIdContextIdHandler implements IContextIdHandler {
 	/**
