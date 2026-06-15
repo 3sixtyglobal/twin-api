@@ -72,7 +72,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the context ID has been loaded from the store.
 
 #### Implementation of
 
@@ -119,6 +119,8 @@ The state handed through the processors.
 #### Returns
 
 `Promise`\<`void`\>
+
+A promise that resolves when the context ID has been injected into the request.
 
 #### Implementation of
 

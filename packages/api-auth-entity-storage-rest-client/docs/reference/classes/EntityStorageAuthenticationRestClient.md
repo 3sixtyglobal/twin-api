@@ -112,7 +112,7 @@ The token to logout, if it uses a mechanism with public access.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the logout request has completed.
 
 #### Implementation of
 
@@ -170,7 +170,7 @@ The new password for the user.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the password has been updated on the server.
 
 #### Implementation of
 

@@ -176,6 +176,8 @@ The logging component type for the request.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the request has been processed and the response emitted.
+
 #### Implementation of
 
 `ISocketRouteProcessor.process`

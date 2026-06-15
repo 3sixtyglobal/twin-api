@@ -71,4 +71,4 @@ Optional minimum password length for validation.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the new password has been stored and the audit entry recorded.

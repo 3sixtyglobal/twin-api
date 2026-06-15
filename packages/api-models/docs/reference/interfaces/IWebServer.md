@@ -70,7 +70,7 @@ Options for building the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server is fully built and ready to start.
 
 ***
 
@@ -84,7 +84,7 @@ Start the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server is listening for connections.
 
 #### Overrides
 
@@ -102,7 +102,7 @@ Stop the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server has shut down all connections.
 
 #### Overrides
 

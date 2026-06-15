@@ -26,7 +26,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the service has been started.
 
 #### Overrides
 
@@ -52,7 +52,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the service has been stopped.
 
 #### Overrides
 
@@ -84,7 +84,7 @@ The action configuration.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the action configuration has been stored.
 
 ***
 
@@ -106,7 +106,7 @@ The action name.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the action configuration has been removed.
 
 ***
 
@@ -162,4 +162,4 @@ The identifier to clear.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the rate entry has been removed.

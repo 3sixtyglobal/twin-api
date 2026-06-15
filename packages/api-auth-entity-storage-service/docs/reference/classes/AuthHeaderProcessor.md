@@ -72,7 +72,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the node identity and organization ID have been cached.
 
 #### Implementation of
 
@@ -120,6 +120,8 @@ The state handed through the processors.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the JWT has been verified and the context populated, or an error response set.
+
 #### Implementation of
 
 `IBaseRouteProcessor.pre`
@@ -165,6 +167,8 @@ The state handed through the processors.
 #### Returns
 
 `Promise`\<`void`\>
+
+A promise that resolves when the Set-Cookie header has been applied to the response if required.
 
 #### Implementation of
 

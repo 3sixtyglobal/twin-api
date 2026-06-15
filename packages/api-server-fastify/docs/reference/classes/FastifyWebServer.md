@@ -114,7 +114,7 @@ Options for building the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server is fully built and ready to start.
 
 #### Implementation of
 
@@ -132,7 +132,7 @@ Start the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server is listening for connections.
 
 #### Implementation of
 
@@ -150,7 +150,7 @@ Stop the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server has shut down all connections.
 
 #### Implementation of
 

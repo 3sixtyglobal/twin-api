@@ -94,6 +94,8 @@ The state handed through the processors.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the pre-processing log entry has been written.
+
 #### Implementation of
 
 `IBaseRouteProcessor.pre`
@@ -139,6 +141,8 @@ The state handed through the processors.
 #### Returns
 
 `Promise`\<`void`\>
+
+A promise that resolves when the post-processing log entry has been written.
 
 #### Implementation of
 

@@ -60,7 +60,7 @@ The action configuration.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the action configuration has been stored.
 
 #### Implementation of
 
@@ -86,7 +86,7 @@ The action name.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the action configuration has been removed.
 
 #### Implementation of
 
@@ -130,7 +130,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the periodic cleanup task has been registered.
 
 #### Implementation of
 
@@ -156,7 +156,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the periodic cleanup task has been removed.
 
 #### Implementation of
 
@@ -220,7 +220,7 @@ The identifier to clear.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the rate entry has been removed.
 
 #### Implementation of
 

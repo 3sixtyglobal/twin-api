@@ -104,6 +104,8 @@ The hosting component type.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the request has been processed and the response populated.
+
 #### Implementation of
 
 `IRestRouteProcessor.process`

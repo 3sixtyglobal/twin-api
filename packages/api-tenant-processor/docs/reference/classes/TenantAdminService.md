@@ -144,6 +144,42 @@ Error if the tenant is not found.
 
 ***
 
+### getTenantByOrganizationId() {#gettenantbyorganizationid}
+
+> **getTenantByOrganizationId**(`organizationId`, `includeLegacy?`): `Promise`\<`ITenant`\>
+
+Get a tenant by its organization id, optionally searching legacy ids.
+
+#### Parameters
+
+##### organizationId
+
+`string`
+
+The organization id of the tenant.
+
+##### includeLegacy?
+
+`boolean`
+
+Whether to also search the legacy organization id array.
+
+#### Returns
+
+`Promise`\<`ITenant`\>
+
+The tenant.
+
+#### Throws
+
+Error if the tenant is not found.
+
+#### Implementation of
+
+`ITenantAdminComponent.getTenantByOrganizationId`
+
+***
+
 ### create() {#create}
 
 > **create**(`tenant`): `Promise`\<`string`\>
@@ -188,7 +224,7 @@ The tenant to update.
 
 `Promise`\<`void`\>
 
-The nothing.
+A promise that resolves when the tenant has been updated.
 
 #### Implementation of
 

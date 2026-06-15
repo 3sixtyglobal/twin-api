@@ -62,9 +62,9 @@ The origin available to the public for accessing the API.
 
 ***
 
-### organizationId? {#organizationid}
+### organizationId {#organizationid}
 
-> `optional` **organizationId?**: `string`
+> **organizationId**: `string`
 
 The organization id for the tenant.
 

@@ -138,7 +138,7 @@ Get the server root.
 
 `Promise`\<`string`\>
 
-The root root.
+The root text page content.
 
 #### Implementation of
 
@@ -210,7 +210,7 @@ Is the server live.
 
 `Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
-True if the server is live.
+The liveness status of the server.
 
 #### Implementation of
 
@@ -228,7 +228,7 @@ Is the server ready.
 
 `Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-True if the server is ready.
+The readiness status of the server.
 
 #### Implementation of
 

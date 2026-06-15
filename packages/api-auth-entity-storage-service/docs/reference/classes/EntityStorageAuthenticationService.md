@@ -72,7 +72,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when rate-limit actions have been registered and the node identity cached.
 
 #### Implementation of
 
@@ -98,7 +98,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when all rate-limit actions have been unregistered.
 
 #### Implementation of
 
@@ -156,7 +156,7 @@ The token to logout, if it uses a mechanism with public access.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the logout audit entry has been recorded.
 
 #### Implementation of
 
@@ -214,7 +214,7 @@ The new password for the user.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the password has been updated and the rate limit cleared.
 
 #### Implementation of
 

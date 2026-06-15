@@ -26,7 +26,7 @@ The user to create.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the user account has been created.
 
 ***
 
@@ -48,7 +48,7 @@ The user to update.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the user account has been updated.
 
 ***
 
@@ -114,7 +114,7 @@ The email address of the user to remove.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the user account has been removed.
 
 ***
 
@@ -148,4 +148,4 @@ The current password, optional, if supplied will check against existing.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the password has been updated.

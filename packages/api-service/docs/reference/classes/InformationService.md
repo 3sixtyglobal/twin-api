@@ -64,7 +64,7 @@ The service needs to be started when the application is initialized.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the OpenAPI spec and favicon have been loaded from disk.
 
 #### Implementation of
 
@@ -154,7 +154,7 @@ Is the server live.
 
 `Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
-True if the server is live.
+The liveness status of the server.
 
 #### Implementation of
 

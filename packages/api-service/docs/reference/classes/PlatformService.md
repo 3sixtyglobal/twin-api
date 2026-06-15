@@ -90,7 +90,7 @@ The method to run for each tenant.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the method has been executed for all applicable tenants.
 
 #### Implementation of
 

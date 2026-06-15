@@ -1,6 +1,6 @@
 # Class: SingleTenantProcessor
 
-Handles incoming api keys and maps them to tenant ids.
+Injects the single-tenant organization ID into every request context and validates any organization query parameter.
 
 ## Implements
 
@@ -73,6 +73,8 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the node organization ID has been cached.
+
 #### Implementation of
 
 `IBaseRouteProcessor.start`
@@ -118,6 +120,8 @@ The state handed through the processors.
 #### Returns
 
 `Promise`\<`void`\>
+
+A promise that resolves when the organization ID has been injected and any query parameter validated.
 
 #### Implementation of
 

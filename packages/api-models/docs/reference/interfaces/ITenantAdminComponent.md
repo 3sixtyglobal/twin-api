@@ -48,7 +48,7 @@ The tenant to update.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the tenant has been updated.
 
 ***
 
@@ -148,7 +148,39 @@ The id of the tenant.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the tenant has been removed.
+
+#### Throws
+
+Error if the tenant is not found.
+
+***
+
+### getTenantByOrganizationId() {#gettenantbyorganizationid}
+
+> **getTenantByOrganizationId**(`organizationId`, `includeLegacy?`): `Promise`\<[`ITenant`](ITenant.md)\>
+
+Get a tenant by its organization id, optionally searching legacy ids.
+
+#### Parameters
+
+##### organizationId
+
+`string`
+
+The organization id of the tenant.
+
+##### includeLegacy?
+
+`boolean`
+
+Whether to also search the legacy organization id array.
+
+#### Returns
+
+`Promise`\<[`ITenant`](ITenant.md)\>
+
+The tenant.
 
 #### Throws
 

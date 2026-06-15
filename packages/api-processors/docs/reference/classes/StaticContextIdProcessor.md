@@ -94,6 +94,8 @@ The state handed through the processors.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the static context ID has been injected into the request.
+
 #### Implementation of
 
 `IBaseRouteProcessor.pre`

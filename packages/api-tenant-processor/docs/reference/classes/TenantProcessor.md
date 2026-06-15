@@ -94,6 +94,8 @@ The state handed through the processors.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the tenant context has been resolved and injected, or an error response set.
+
 #### Implementation of
 
 `IBaseRouteProcessor.pre`
