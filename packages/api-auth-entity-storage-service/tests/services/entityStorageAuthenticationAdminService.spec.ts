@@ -28,7 +28,8 @@ describe("EntityStorageAuthenticationAdminService", () => {
 		};
 
 		userEntityStorage = new MemoryEntityStorageConnector<AuthenticationUser>({
-			entitySchema: nameof<AuthenticationUser>()
+			entitySchema: nameof<AuthenticationUser>(),
+			config: { storageKey: "authentication-user" }
 		});
 
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(userEntityStorage);
@@ -369,7 +370,8 @@ describe("EntityStorageAuthenticationAdminService", () => {
 		beforeEach(() => {
 			userEntityStorage = new MemoryEntityStorageConnector<AuthenticationUser>({
 				entitySchema: nameof<AuthenticationUser>(),
-				partitionContextIds: [ContextIdKeys.Tenant]
+				partitionContextIds: [ContextIdKeys.Tenant],
+				config: { storageKey: "authentication-user-tenant" }
 			});
 
 			vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(userEntityStorage);

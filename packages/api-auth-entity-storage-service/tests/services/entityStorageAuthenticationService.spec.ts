@@ -600,7 +600,8 @@ describe("EntityStorageAuthenticationService", () => {
 		beforeEach(async () => {
 			userEntityStorage = new MemoryEntityStorageConnector<AuthenticationUser>({
 				entitySchema: nameof<AuthenticationUser>(),
-				partitionContextIds: [ContextIdKeys.Tenant]
+				partitionContextIds: [ContextIdKeys.Tenant],
+				config: { storageKey: "authentication-user-tenant-2" }
 			});
 
 			vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(userEntityStorage);
