@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.45](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.44...api-models-v0.0.3-next.45) (2026-06-15)
+
+
+### Bug Fixes
+
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+
 ## [0.0.3-next.44](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.43...api-models-v0.0.3-next.44) (2026-06-11)
 
 
