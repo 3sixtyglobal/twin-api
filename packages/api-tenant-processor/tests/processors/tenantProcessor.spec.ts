@@ -206,7 +206,7 @@ describe("TenantProcessor", () => {
 			await processor.pre(
 				{ url: "/api/users", headers: {}, query: {} } as never,
 				response,
-				{} as never,
+				{ skipAuth: true } as never,
 				{},
 				{}
 			);
@@ -244,7 +244,7 @@ describe("TenantProcessor", () => {
 			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-A", "organizationId");
 		});
 
-		it("passes through silently when organization is absent and skipAuth is true", async () => {
+		it("passes through silently when organization is absent and skipAuth is false", async () => {
 			const processor = new TenantProcessor();
 			const contextIds: IContextIds = {};
 			const response: IHttpResponse = {};
@@ -252,7 +252,7 @@ describe("TenantProcessor", () => {
 			await processor.pre(
 				{ url: "/api/some-endpoint", headers: {}, query: {} } as never,
 				response,
-				{ skipAuth: true } as never,
+				{} as never,
 				contextIds,
 				{}
 			);

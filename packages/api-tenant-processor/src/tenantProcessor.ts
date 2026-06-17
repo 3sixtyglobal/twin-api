@@ -116,7 +116,7 @@ export class TenantProcessor implements IBaseRouteProcessor {
 					const organizationIdQueryParam = request.query?.[ContextIdKeys.Organization];
 					if (Is.stringValue(organizationIdQueryParam)) {
 						tenant = await this.resolveByOrganizationId(organizationIdQueryParam);
-					} else if (!isSkipAuth) {
+					} else if (isSkipAuth) {
 						throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "missingOrganizationId", {
 							paramName: ContextIdKeys.Organization
 						});
