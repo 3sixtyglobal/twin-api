@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.46](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.45...api-tenant-processor-v0.0.3-next.46) (2026-06-17)
+
+
+### Bug Fixes
+
+* tenant processor skip auth inversion ([#168](https://github.com/iotaledger/twin-api/issues/168)) ([40fadd3](https://github.com/iotaledger/twin-api/commit/40fadd3bc711da34bfef62986ad83b2fa38114da))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.45 to 0.0.3-next.46
+
 ## [0.0.3-next.45](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.44...api-tenant-processor-v0.0.3-next.45) (2026-06-15)
 
 

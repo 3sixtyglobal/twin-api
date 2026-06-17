@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.0.3-next.46](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.45...api-auth-entity-storage-service-v0.0.3-next.46) (2026-06-17)
+
+
+### Bug Fixes
+
+* use async getStore in tests ([0d25633](https://github.com/iotaledger/twin-api/commit/0d2563364de06a54ba487c700b601a883402d292))
+* use async getStore in tests ([63493dd](https://github.com/iotaledger/twin-api/commit/63493ddf3cf394c0d1e4cfcddae9a39f7ac697c4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.45 to 0.0.3-next.46
+    * @twin.org/api-core bumped from 0.0.3-next.45 to 0.0.3-next.46
+    * @twin.org/api-models bumped from 0.0.3-next.45 to 0.0.3-next.46
+
 ## [0.0.3-next.45](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.44...api-auth-entity-storage-service-v0.0.3-next.45) (2026-06-15)
 
 
