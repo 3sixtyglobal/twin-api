@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.47](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.46...api-models-v0.0.3-next.47) (2026-06-18)
+
+
+### Features
+
+* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+
 ## [0.0.3-next.46](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.45...api-models-v0.0.3-next.46) (2026-06-17)
 
 

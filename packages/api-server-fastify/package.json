@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-server-fastify",
-	"version": "0.0.3-next.46",
+	"version": "0.0.3-next.47",
 	"description": "Fastify web server integration for exposing API routes with consistent runtime behaviour.",
 	"repository": {
 		"type": "git",
@@ -30,9 +30,9 @@
 	"dependencies": {
 		"@fastify/compress": "8.3.1",
 		"@fastify/cors": "11.2.0",
-		"@twin.org/api-core": "0.0.3-next.46",
-		"@twin.org/api-models": "0.0.3-next.46",
-		"@twin.org/api-processors": "0.0.3-next.46",
+		"@twin.org/api-core": "0.0.3-next.47",
+		"@twin.org/api-models": "0.0.3-next.47",
+		"@twin.org/api-processors": "0.0.3-next.47",
 		"@twin.org/context": "next",
 		"@twin.org/core": "next",
 		"@twin.org/logging-models": "next",
