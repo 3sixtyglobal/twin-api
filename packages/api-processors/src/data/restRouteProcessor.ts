@@ -53,7 +53,6 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 	 * @param processorState The state handed through the processors.
 	 * @param componentTypes The component types for the request.
 	 * @param componentTypes.loggingComponentType The logging component type.
-	 * @param componentTypes.hostingComponentType The hosting component type.
 	 * @returns A promise that resolves when the request has been processed and the response populated.
 	 */
 	public async process(
@@ -63,7 +62,6 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 		processorState: { [id: string]: unknown },
 		componentTypes?: {
 			loggingComponentType?: string;
-			hostingComponentType?: string;
 		}
 	): Promise<void> {
 		// Don't handle the route if another processor has already set the response
@@ -94,8 +92,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 						{
 							serverRequest: request,
 							processorState,
-							loggingComponentType: componentTypes?.loggingComponentType,
-							hostingComponentType: componentTypes?.hostingComponentType
+							loggingComponentType: componentTypes?.loggingComponentType
 						},
 						req
 					);

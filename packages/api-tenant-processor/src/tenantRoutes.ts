@@ -1,15 +1,17 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import {
+	HttpContextIdKeys,
 	HttpParameterHelper,
+	HttpUrlHelper,
 	type ICreatedResponse,
-	type IHostingComponent,
 	type IHttpRequestContext,
 	type INoContentResponse,
 	type IRestRoute,
 	type ITag,
 	type ITenantAdminComponent
 } from "@twin.org/api-models";
+import { ContextIdStore } from "@twin.org/context";
 import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HeaderHelper, HeaderTypes, HttpStatusCode } from "@twin.org/web";
@@ -318,10 +320,6 @@ export async function tenantList(
 	componentName: string,
 	request: ITenantListRequest
 ): Promise<ITenantListResponse> {
-	const hostingComponent = ComponentFactory.get<IHostingComponent>(
-		httpRequestContext.hostingComponentType ?? "hosting"
-	);
-
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
 	const result = await component.query(
@@ -332,22 +330,23 @@ export async function tenantList(
 	);
 
 	const headers: ITenantListResponse["headers"] = {};
+	const contextIds = await ContextIdStore.getContextIds();
+	const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
 
 	if (Is.stringValue(result.cursor)) {
 		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			await hostingComponent.buildPublicUrl(httpRequestContext.serverRequest.url),
+			HttpUrlHelper.replaceOrigin(httpRequestContext.serverRequest.url, publicOrigin),
 			{ cursor: result.cursor },
 			"next"
 		);
 	}
 
-	const defaultPublicOrigin = await hostingComponent.getPublicOrigin(
-		httpRequestContext.serverRequest.url
-	);
-
 	return {
 		headers,
-		body: result.tenants.map(t => ({ ...t, publicOrigin: t.publicOrigin ?? defaultPublicOrigin }))
+		body: result.tenants.map(t => ({
+			...t,
+			publicOrigin: t.publicOrigin ?? publicOrigin
+		}))
 	};
 }
 
@@ -366,18 +365,13 @@ export async function tenantById(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
-	const hostingComponent = ComponentFactory.get<IHostingComponent>(
-		httpRequestContext.hostingComponentType ?? "hosting"
-	);
-
 	const result = await component.get(request.pathParams.id);
 
 	if (!Is.stringValue(result.publicOrigin)) {
-		const defaultPublicOrigin = await hostingComponent.getPublicOrigin(
-			httpRequestContext.serverRequest.url
-		);
+		const contextIds = await ContextIdStore.getContextIds();
+		const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
 
-		result.publicOrigin ??= defaultPublicOrigin;
+		result.publicOrigin ??= publicOrigin;
 	}
 
 	return {
@@ -400,18 +394,12 @@ export async function tenantByApiKey(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.apiKey), request.pathParams.apiKey);
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
-	const hostingComponent = ComponentFactory.get<IHostingComponent>(
-		httpRequestContext.hostingComponentType ?? "hosting"
-	);
-
 	const result = await component.getByApiKey(request.pathParams.apiKey);
 
 	if (!Is.stringValue(result.publicOrigin)) {
-		const defaultPublicOrigin = await hostingComponent.getPublicOrigin(
-			httpRequestContext.serverRequest.url
-		);
-
-		result.publicOrigin ??= defaultPublicOrigin;
+		const contextIds = await ContextIdStore.getContextIds();
+		const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
+		result.publicOrigin ??= publicOrigin;
 	}
 
 	return {
@@ -438,18 +426,12 @@ export async function tenantByPublicOrigin(
 	);
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
-	const hostingComponent = ComponentFactory.get<IHostingComponent>(
-		httpRequestContext.hostingComponentType ?? "hosting"
-	);
-
 	const result = await component.getByPublicOrigin(request.pathParams.publicOrigin);
 
 	if (!Is.stringValue(result.publicOrigin)) {
-		const defaultPublicOrigin = await hostingComponent.getPublicOrigin(
-			httpRequestContext.serverRequest.url
-		);
-
-		result.publicOrigin ??= defaultPublicOrigin;
+		const contextIds = await ContextIdStore.getContextIds();
+		const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
+		result.publicOrigin ??= publicOrigin;
 	}
 
 	return {

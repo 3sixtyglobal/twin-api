@@ -59,7 +59,6 @@ export * from "./models/server/ISocketRouteProcessor.js";
 export * from "./models/server/IWebServer.js";
 export * from "./models/server/IWebServerOptions.js";
 export * from "./models/services/IHealthComponent.js";
-export * from "./models/services/IHostingComponent.js";
 export * from "./models/services/IInformationComponent.js";
 export * from "./models/services/IPlatformComponent.js";
 export * from "./models/services/IServerInfo.js";

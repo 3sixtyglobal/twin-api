@@ -17,7 +17,6 @@ export interface IRestRouteProcessor extends IBaseRouteProcessor<IRestRoute> {
 	 * @param processorState The state handed through the processors.
 	 * @param componentTypes The component types for the request.
 	 * @param componentTypes.loggingComponentType The logging component type.
-	 * @param componentTypes.hostingComponentType The hosting component type.
 	 * @returns Promise that resolves when the request is processed.
 	 */
 	process?(
@@ -27,7 +26,6 @@ export interface IRestRouteProcessor extends IBaseRouteProcessor<IRestRoute> {
 		processorState: { [id: string]: unknown },
 		componentTypes?: {
 			loggingComponentType?: string;
-			hostingComponentType?: string;
 		}
 	): Promise<void>;
 }

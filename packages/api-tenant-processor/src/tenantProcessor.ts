@@ -5,7 +5,8 @@ import {
 	type IBaseRoute,
 	type IBaseRouteProcessor,
 	type IHttpResponse,
-	type IHttpServerRequest
+	type IHttpServerRequest,
+	HttpContextIdKeys
 } from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
 import { BaseError, Is, UnauthorizedError } from "@twin.org/core";
@@ -126,6 +127,11 @@ export class TenantProcessor implements IBaseRouteProcessor {
 				if (!Is.empty(tenant)) {
 					contextIds[ContextIdKeys.Tenant] = tenant.id;
 					contextIds[ContextIdKeys.Organization] = tenant.organizationId;
+
+					// If the tenant has a custom public origin, we set it in the context for downstream processors to use.
+					if (Is.stringValue(tenant.publicOrigin)) {
+						contextIds[HttpContextIdKeys.PublicOrigin] = tenant.publicOrigin;
+					}
 				}
 			} catch (err) {
 				HttpErrorHelper.buildResponse(

@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import {
+	HttpContextIdKeys,
 	HttpErrorHelper,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
@@ -146,6 +147,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				let user: AuthenticationUser | undefined;
 				let tenantId: string | undefined;
 				let tenantOrganizationId: string | undefined;
+				let tenantPublicOrigin: string | undefined;
 
 				await TokenHelper.verify(
 					this._vaultConnector,
@@ -167,6 +169,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 							if (tenant?.id === tenantId) {
 								validParts.push("tenant");
 								tenantOrganizationId = tenant.organizationId;
+								tenantPublicOrigin = tenant.publicOrigin;
 							}
 						}
 
@@ -199,6 +202,11 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				contextIds[ContextIdKeys.Organization] = tenantOrganizationId ?? this._nodeOrganizationId;
 				contextIds[ContextIdKeys.User] = user?.identity;
 				contextIds[ContextIdKeys.UserOrganization] = user?.organization;
+
+				// If the tenant has a custom public origin, we set it in the context for downstream processors to use.
+				if (Is.stringValue(tenantPublicOrigin)) {
+					contextIds[HttpContextIdKeys.PublicOrigin] = tenantPublicOrigin;
+				}
 
 				processorState.authToken = tokenAndLocation?.token;
 				processorState.authTokenLocation = tokenAndLocation?.location;

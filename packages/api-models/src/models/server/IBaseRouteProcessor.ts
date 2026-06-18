@@ -27,7 +27,6 @@ export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> ext
 	 * @param processorState The state handed through the processors.
 	 * @param componentTypes The component types for the request.
 	 * @param componentTypes.loggingComponentType The logging component type.
-	 * @param componentTypes.hostingComponentType The hosting component type.
 	 * @returns Promise that resolves when the request is processed.
 	 */
 	pre?(
@@ -38,7 +37,6 @@ export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> ext
 		processorState: { [id: string]: unknown },
 		componentTypes?: {
 			loggingComponentType?: string;
-			hostingComponentType?: string;
 		}
 	): Promise<void>;
 
@@ -51,7 +49,6 @@ export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> ext
 	 * @param processorState The state handed through the processors.
 	 * @param componentTypes The component types for the request.
 	 * @param componentTypes.loggingComponentType The logging component type.
-	 * @param componentTypes.hostingComponentType The hosting component type.
 	 * @returns Promise that resolves when the request is processed.
 	 */
 	post?(
@@ -62,7 +59,6 @@ export interface IBaseRouteProcessor<T = IBaseRoute, R = IHttpServerRequest> ext
 		processorState: { [id: string]: unknown },
 		componentTypes?: {
 			loggingComponentType?: string;
-			hostingComponentType?: string;
 		}
 	): Promise<void>;
 }

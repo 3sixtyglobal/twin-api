@@ -19,7 +19,17 @@ export const HttpContextIdKeys = {
 	/**
 	 * Correlation ID of the request.
 	 */
-	CorrelationId: "correlationId"
+	CorrelationId: "correlationId",
+
+	/**
+	 * Public Origin of the request.
+	 */
+	PublicOrigin: "publicOrigin",
+
+	/**
+	 * Local Origin of the request.
+	 */
+	LocalOrigin: "localOrigin"
 } as const;
 
 /**

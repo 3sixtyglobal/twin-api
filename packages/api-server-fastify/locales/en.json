@@ -5,7 +5,8 @@
 			"badRequest": "The web server could not handle the request",
 			"noRestProcessors": "You must configure at least one REST processor",
 			"noSocketProcessors": "You must configure at least one socket processor",
-			"postProcessorError": "There was a failure after in a post processor for route \"{route}\""
+			"postProcessorError": "There was a failure after in a post processor for route \"{route}\"",
+			"invalidPublicOrigin": "The public origin \"{publicOrigin}\" is not a valid origin URL, it should be in the format \"protocol://host[:port]\"."
 		}
 	},
 	"info": {

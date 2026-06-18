@@ -31,7 +31,8 @@ import {
 	type IError,
 	type IHealth,
 	Is,
-	StringHelper
+	StringHelper,
+	Url
 } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
@@ -86,12 +87,6 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	private readonly _logging?: ILoggingComponent;
 
 	/**
-	 * The hosting component type.
-	 * @internal
-	 */
-	private readonly _hostingComponentType?: string;
-
-	/**
 	 * The options for the server.
 	 * @internal
 	 */
@@ -128,13 +123,24 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	private readonly _includeErrorStack: boolean;
 
 	/**
+	 * The public origin of the server, used for constructing the request URL and for CORS.
+	 * @internal
+	 */
+	private _publicOrigin?: string;
+
+	/**
+	 * The local origin of the server, used for constructing the request URL and for CORS.
+	 * @internal
+	 */
+	private _localOrigin?: string;
+
+	/**
 	 * Create a new instance of FastifyWebServer.
 	 * @param options The options for the server.
 	 */
 	constructor(options?: IFastifyWebServerConstructorOptions) {
 		this._loggingComponentType = options?.loggingComponentType;
 		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType);
-		this._hostingComponentType = options?.hostingComponentType;
 		this._fastify = Fastify({
 			routerOptions: {
 				maxParamLength: 2000
@@ -205,6 +211,20 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			source: FastifyWebServer.CLASS_NAME,
 			message: "building"
 		});
+
+		this._localOrigin = `http://${options?.host ?? "localhost"}:${options?.port ?? 3000}`;
+
+		if (Is.stringValue(options?.publicOrigin)) {
+			const publicUrl = Url.tryParseExact(options.publicOrigin);
+			if (!Is.empty(publicUrl)) {
+				const urlParts = publicUrl.parts();
+				this._publicOrigin = `${urlParts.schema}://${urlParts.host}${Is.integer(urlParts.port) ? `:${urlParts.port}` : ""}`;
+			} else {
+				throw new GeneralError(FastifyWebServer.CLASS_NAME, "invalidPublicOrigin", {
+					publicOrigin: options.publicOrigin
+				});
+			}
+		}
 
 		this._options = options;
 
@@ -540,14 +560,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				? ""
 				: `:${request.port}`;
 
+		const requestOrigin = `${request.protocol}://${request.hostname}${port}`;
+
 		const httpServerRequest: IHttpServerRequest = {
 			method: request.method.toUpperCase() as HttpMethod,
-			url: `${request.protocol}://${request.hostname}${port}${request.url}`,
+			url: `${requestOrigin}${request.url}`,
 			body: request.body,
 			query: request.query as IHttpRequestQuery,
 			pathParams: request.params as IHttpRequestPathParams,
 			headers: request.headers as IHttpHeaders
 		};
+
 		const httpResponse: IHttpResponse = {};
 		const contextIds: IContextIds = {
 			[HttpContextIdKeys.IpAddress]: HeaderHelper.extractClientIps(httpServerRequest.headers).join(
@@ -556,7 +579,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			[HttpContextIdKeys.UserAgent]: HeaderHelper.extractUserAgent(httpServerRequest.headers),
 			[HttpContextIdKeys.CorrelationId]: HeaderHelper.extractCorrelationId(
 				httpServerRequest.headers
-			)
+			),
+			[HttpContextIdKeys.LocalOrigin]: this._localOrigin,
+			// This can be overridden by a processor if needed, for example a tenant processor
+			[HttpContextIdKeys.PublicOrigin]: this._publicOrigin ?? requestOrigin ?? this._localOrigin
 		};
 		const processorState = restRoute?.processorData ?? {};
 
@@ -617,8 +643,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					const pre = routeProcessor.pre?.bind(routeProcessor);
 					if (Is.function(pre)) {
 						await pre(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
-							loggingComponentType: this._loggingComponentType,
-							hostingComponentType: this._hostingComponentType
+							loggingComponentType: this._loggingComponentType
 						});
 					}
 				}
@@ -649,8 +674,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 						const process = routeProcessor.process?.bind(routeProcessor);
 						if (Is.function(process)) {
 							await process(httpServerRequest, httpResponse, restRoute, processorState, {
-								loggingComponentType: this._loggingComponentType,
-								hostingComponentType: this._hostingComponentType
+								loggingComponentType: this._loggingComponentType
 							});
 						}
 					}
@@ -672,8 +696,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					const post = routeProcessor.post?.bind(routeProcessor);
 					if (Is.function(post)) {
 						await post(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
-							loggingComponentType: this._loggingComponentType,
-							hostingComponentType: this._hostingComponentType
+							loggingComponentType: this._loggingComponentType
 						});
 					}
 				}
@@ -824,8 +847,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 							contextIds,
 							responseProcessorState,
 							{
-								loggingComponentType: this._loggingComponentType,
-								hostingComponentType: this._hostingComponentType
+								loggingComponentType: this._loggingComponentType
 							}
 						);
 					}
@@ -849,8 +871,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const pre = socketRouteProcessor.pre?.bind(socketRouteProcessor);
 				if (Is.function(pre)) {
 					await pre(socketServerRequest, httpResponse, socketRoute, contextIds, processorState, {
-						loggingComponentType: this._loggingComponentType,
-						hostingComponentType: this._hostingComponentType
+						loggingComponentType: this._loggingComponentType
 					});
 				}
 			}

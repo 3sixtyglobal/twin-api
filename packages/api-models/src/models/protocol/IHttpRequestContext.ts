@@ -20,9 +20,4 @@ export interface IHttpRequestContext {
 	 * Logging component type for the request.
 	 */
 	loggingComponentType?: string;
-
-	/**
-	 * Hosting component type for the request.
-	 */
-	hostingComponentType?: string;
 }
