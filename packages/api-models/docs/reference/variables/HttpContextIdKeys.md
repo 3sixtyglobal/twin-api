@@ -23,3 +23,15 @@ User agent of the client.
 > `readonly` **CorrelationId**: `"correlationId"` = `"correlationId"`
 
 Correlation ID of the request.
+
+### PublicOrigin {#publicorigin}
+
+> `readonly` **PublicOrigin**: `"publicOrigin"` = `"publicOrigin"`
+
+Public Origin of the request.
+
+### LocalOrigin {#localorigin}
+
+> `readonly` **LocalOrigin**: `"localOrigin"` = `"localOrigin"`
+
+Local Origin of the request.

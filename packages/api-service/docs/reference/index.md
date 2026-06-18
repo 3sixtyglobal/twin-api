@@ -3,7 +3,6 @@
 ## Classes
 
 - [HealthService](classes/HealthService.md)
-- [HostingService](classes/HostingService.md)
 - [InformationService](classes/InformationService.md)
 - [PlatformService](classes/PlatformService.md)
 
@@ -11,8 +10,6 @@
 
 - [IHealthServiceConfig](interfaces/IHealthServiceConfig.md)
 - [IHealthServiceConstructorOptions](interfaces/IHealthServiceConstructorOptions.md)
-- [IHostingServiceConfig](interfaces/IHostingServiceConfig.md)
-- [IHostingServiceConstructorOptions](interfaces/IHostingServiceConstructorOptions.md)
 - [IInformationServiceConfig](interfaces/IInformationServiceConfig.md)
 - [IInformationServiceConstructorOptions](interfaces/IInformationServiceConstructorOptions.md)
 - [IPlatformServiceConfig](interfaces/IPlatformServiceConfig.md)

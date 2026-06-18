@@ -73,3 +73,12 @@ The allowed CORS domains.
 ```ts
 ["*"]
 ```
+
+***
+
+### publicOrigin? {#publicorigin}
+
+> `optional` **publicOrigin?**: `string`
+
+The public origin of the server, used for constructing the request URL.
+If not provided, it will be determined from the incoming request.

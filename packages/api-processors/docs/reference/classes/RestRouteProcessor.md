@@ -94,12 +94,6 @@ The component types for the request.
 
 The logging component type.
 
-###### hostingComponentType?
-
-`string`
-
-The hosting component type.
-
 #### Returns
 
 `Promise`\<`void`\>

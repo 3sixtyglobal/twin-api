@@ -74,12 +74,6 @@ The component types for the request.
 
 The logging component type.
 
-###### hostingComponentType?
-
-`string`
-
-The hosting component type.
-
 #### Returns
 
 `Promise`\<`void`\>
@@ -138,12 +132,6 @@ The component types for the request.
 
 The logging component type.
 
-###### hostingComponentType?
-
-`string`
-
-The hosting component type.
-
 #### Returns
 
 `Promise`\<`void`\>
@@ -195,12 +183,6 @@ The component types for the request.
 `string`
 
 The logging component type.
-
-###### hostingComponentType?
-
-`string`
-
-The hosting component type.
 
 #### Returns
 

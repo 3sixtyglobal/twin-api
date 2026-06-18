@@ -58,7 +58,6 @@
 - [IWebServer](interfaces/IWebServer.md)
 - [IWebServerOptions](interfaces/IWebServerOptions.md)
 - [IHealthComponent](interfaces/IHealthComponent.md)
-- [IHostingComponent](interfaces/IHostingComponent.md)
 - [IInformationComponent](interfaces/IInformationComponent.md)
 - [IPlatformComponent](interfaces/IPlatformComponent.md)
 - [IServerInfo](interfaces/IServerInfo.md)

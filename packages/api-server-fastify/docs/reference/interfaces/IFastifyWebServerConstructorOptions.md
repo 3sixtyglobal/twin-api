@@ -12,14 +12,6 @@ The type of the logging component to use, if undefined, no logging will happen.
 
 ***
 
-### hostingComponentType? {#hostingcomponenttype}
-
-> `optional` **hostingComponentType?**: `string`
-
-The type of the hosting component to use.
-
-***
-
 ### config? {#config}
 
 > `optional` **config?**: [`IFastifyWebServerConfig`](IFastifyWebServerConfig.md)
