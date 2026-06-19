@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.50](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.49...api-service-v0.0.3-next.50) (2026-06-19)
+
+
+### Bug Fixes
+
+* ensure publicOrigin is unique ([1aaf7f5](https://github.com/iotaledger/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.49 to 0.0.3-next.50
+
 ## [0.0.3-next.49](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.48...api-service-v0.0.3-next.49) (2026-06-19)
 
 
