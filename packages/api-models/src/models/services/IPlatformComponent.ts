@@ -1,5 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IContextIds } from "@twin.org/context";
 import type { IComponent } from "@twin.org/core";
 
 /**
@@ -20,9 +21,9 @@ export interface IPlatformComponent extends IComponent {
 	execute(method: () => Promise<void>): Promise<void>;
 
 	/**
-	 * Determines if the given URL is a local origin.
+	 * Get the local origin context IDs for the given URL.
 	 * @param url The URL to check.
-	 * @returns A promise that resolves to true if the URL is a local origin, false otherwise.
+	 * @returns A promise that resolves to the context IDs if the URL is a local origin, undefined otherwise.
 	 */
-	isLocalOrigin(url: string): Promise<boolean>;
+	getLocalOriginContext(url: string): Promise<IContextIds | undefined>;
 }

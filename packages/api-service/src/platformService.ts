@@ -6,7 +6,7 @@ import {
 	type IPlatformComponent,
 	type ITenant
 } from "@twin.org/api-models";
-import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
+import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
 import { Guards, Is } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
@@ -109,27 +109,27 @@ export class PlatformService implements IPlatformComponent {
 	}
 
 	/**
-	 * Determines if the given URL is a local origin.
+	 * Get the local origin context IDs for the given URL.
 	 * @param url The URL to check.
-	 * @returns A promise that resolves to true if the URL is a local origin, false otherwise.
+	 * @returns A promise that resolves to the context IDs if the URL is a local origin, undefined otherwise.
 	 */
-	public async isLocalOrigin(url: string): Promise<boolean> {
+	public async getLocalOriginContext(url: string): Promise<IContextIds | undefined> {
 		Guards.stringValue(PlatformService.CLASS_NAME, nameof(url), url);
 
 		const origin = HttpUrlHelper.extractOrigin(url);
 		if (!Is.stringValue(origin)) {
-			return false;
+			return undefined;
 		}
 
 		const contextIds = await ContextIdStore.getContextIds();
 		const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
 		if (publicOrigin === origin) {
-			return true;
+			return contextIds;
 		}
 
 		const localOrigin = contextIds?.[HttpContextIdKeys.LocalOrigin];
 		if (localOrigin === origin) {
-			return true;
+			return contextIds;
 		}
 
 		if (Is.empty(this._entityStorageConnector)) {
@@ -151,13 +151,16 @@ export class PlatformService implements IPlatformComponent {
 				const tenantPublicOrigin = tenant.publicOrigin;
 
 				if (Is.stringValue(tenantPublicOrigin) && tenantPublicOrigin === origin) {
-					return true;
+					return {
+						...contextIds,
+						[ContextIdKeys.Tenant]: tenant.id,
+						[ContextIdKeys.Organization]: tenant.organizationId,
+						[HttpContextIdKeys.PublicOrigin]: tenantPublicOrigin
+					};
 				}
 			}
 
 			cursor = result.cursor;
 		} while (Is.stringValue(cursor));
-
-		return false;
 	}
 }

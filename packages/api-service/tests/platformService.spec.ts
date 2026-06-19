@@ -57,59 +57,84 @@ describe("PlatformService", () => {
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockTenantStorage);
 	});
 
-	describe("isLocalOrigin", () => {
+	describe("getLocalOriginContext", () => {
 		beforeEach(() => {
 			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({});
 		});
 
 		it("should throw when url is empty", async () => {
 			const service = new PlatformService();
-			await expect(service.isLocalOrigin("")).rejects.toThrow();
+			await expect(service.getLocalOriginContext("")).rejects.toThrow();
 		});
 
-		it("should return false when the url has no parseable origin", async () => {
+		it("should return undefined when the url has no parseable origin", async () => {
 			const service = new PlatformService();
-			await expect(service.isLocalOrigin("not-a-valid-url")).resolves.toBe(false);
+			await expect(service.getLocalOriginContext("not-a-valid-url")).resolves.toBeUndefined();
 		});
 
-		it("should return true when url origin matches the context publicOrigin without querying storage", async () => {
-			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
-				[HttpContextIdKeys.PublicOrigin]: "https://example.com"
-			});
+		it("should return contextIds when url origin matches the context publicOrigin without querying storage", async () => {
+			const contextIds = { [HttpContextIdKeys.PublicOrigin]: "https://example.com" };
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds);
 			const service = new PlatformService();
-			await expect(service.isLocalOrigin("https://example.com/some/path")).resolves.toBe(true);
+			await expect(service.getLocalOriginContext("https://example.com/some/path")).resolves.toBe(
+				contextIds
+			);
 			expect(mockTenantStorage.query).not.toHaveBeenCalled();
 		});
 
-		it("should return false when origin matches neither context nor any tenant", async () => {
+		it("should return contextIds when url origin matches the context localOrigin without querying storage", async () => {
+			const contextIds = { [HttpContextIdKeys.LocalOrigin]: "https://local.example.com" };
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds);
+			const service = new PlatformService();
+			await expect(
+				service.getLocalOriginContext("https://local.example.com/some/path")
+			).resolves.toBe(contextIds);
+			expect(mockTenantStorage.query).not.toHaveBeenCalled();
+		});
+
+		it("should return undefined when origin matches neither context nor any tenant", async () => {
 			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
 				[HttpContextIdKeys.PublicOrigin]: "https://other.com"
 			});
 			(mockTenantStorage.query as ReturnType<typeof vi.fn>).mockResolvedValue({ entities: [] });
 			const service = new PlatformService();
-			await expect(service.isLocalOrigin("https://example.com/path")).resolves.toBe(false);
+			await expect(
+				service.getLocalOriginContext("https://example.com/path")
+			).resolves.toBeUndefined();
 		});
 
-		it("should return true when a tenant's publicOrigin matches the url origin", async () => {
+		it("should return contextIds with tenant info when a tenant's publicOrigin matches the url origin", async () => {
 			const service = new PlatformService();
-			await expect(service.isLocalOrigin("https://b.example.com/page")).resolves.toBe(true);
+			const result = await service.getLocalOriginContext("https://b.example.com/page");
+			expect(result).toMatchObject({
+				[ContextIdKeys.Tenant]: TENANT_B.id,
+				[ContextIdKeys.Organization]: TENANT_B.organizationId,
+				[HttpContextIdKeys.PublicOrigin]: TENANT_B.publicOrigin
+			});
 		});
 
-		it("should follow cursor pagination and return true when a match is on a later page", async () => {
+		it("should follow cursor pagination and return contextIds when a match is on a later page", async () => {
 			(mockTenantStorage.query as ReturnType<typeof vi.fn>)
 				.mockResolvedValueOnce({ entities: [TENANT_A], cursor: "page2" })
 				.mockResolvedValueOnce({ entities: [TENANT_B] });
 			const service = new PlatformService();
-			await expect(service.isLocalOrigin("https://b.example.com/page")).resolves.toBe(true);
+			const result = await service.getLocalOriginContext("https://b.example.com/page");
+			expect(result).toMatchObject({
+				[ContextIdKeys.Tenant]: TENANT_B.id,
+				[ContextIdKeys.Organization]: TENANT_B.organizationId,
+				[HttpContextIdKeys.PublicOrigin]: TENANT_B.publicOrigin
+			});
 			expect(mockTenantStorage.query).toHaveBeenCalledTimes(2);
 		});
 
-		it("should return false when no page contains a matching tenant", async () => {
+		it("should return undefined when no page contains a matching tenant", async () => {
 			(mockTenantStorage.query as ReturnType<typeof vi.fn>)
 				.mockResolvedValueOnce({ entities: [TENANT_A], cursor: "page2" })
 				.mockResolvedValueOnce({ entities: [TENANT_B] });
 			const service = new PlatformService();
-			await expect(service.isLocalOrigin("https://unknown.example.com/")).resolves.toBe(false);
+			await expect(
+				service.getLocalOriginContext("https://unknown.example.com/")
+			).resolves.toBeUndefined();
 			expect(mockTenantStorage.query).toHaveBeenCalledTimes(2);
 		});
 
@@ -119,7 +144,12 @@ describe("PlatformService", () => {
 				entities: [tenantNoOrigin, TENANT_B]
 			});
 			const service = new PlatformService();
-			await expect(service.isLocalOrigin("https://b.example.com/")).resolves.toBe(true);
+			const result = await service.getLocalOriginContext("https://b.example.com/");
+			expect(result).toMatchObject({
+				[ContextIdKeys.Tenant]: TENANT_B.id,
+				[ContextIdKeys.Organization]: TENANT_B.organizationId,
+				[HttpContextIdKeys.PublicOrigin]: TENANT_B.publicOrigin
+			});
 		});
 	});
 
