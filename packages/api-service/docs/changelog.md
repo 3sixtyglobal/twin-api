@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.48](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.47...api-service-v0.0.3-next.48) (2026-06-19)
+
+
+### Features
+
+* add platform isLocalOrigin ([#173](https://github.com/iotaledger/twin-api/issues/173)) ([5e024d5](https://github.com/iotaledger/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.47 to 0.0.3-next.48
+
 ## [0.0.3-next.47](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.46...api-service-v0.0.3-next.47) (2026-06-18)
 
 
