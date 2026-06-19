@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.49](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.48...api-service-v0.0.3-next.49) (2026-06-19)
+
+
+### Features
+
+* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.0.3-next.48 to 0.0.3-next.49
+
 ## [0.0.3-next.48](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.47...api-service-v0.0.3-next.48) (2026-06-19)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.49](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.48...api-models-v0.0.3-next.49) (2026-06-19)
+
+
+### Features
+
+* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+
 ## [0.0.3-next.48](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.47...api-models-v0.0.3-next.48) (2026-06-19)
 
 
