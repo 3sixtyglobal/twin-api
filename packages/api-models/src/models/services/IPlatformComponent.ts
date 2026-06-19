@@ -18,4 +18,11 @@ export interface IPlatformComponent extends IComponent {
 	 * @returns A promise that resolves when the method has been executed for all applicable tenants.
 	 */
 	execute(method: () => Promise<void>): Promise<void>;
+
+	/**
+	 * Determines if the given URL is a local origin.
+	 * @param url The URL to check.
+	 * @returns A promise that resolves to true if the URL is a local origin, false otherwise.
+	 */
+	isLocalOrigin(url: string): Promise<boolean>;
 }

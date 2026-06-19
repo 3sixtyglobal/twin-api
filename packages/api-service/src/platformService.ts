@@ -1,8 +1,13 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IPlatformComponent, ITenant } from "@twin.org/api-models";
+import {
+	HttpContextIdKeys,
+	HttpUrlHelper,
+	type IPlatformComponent,
+	type ITenant
+} from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
-import { Is } from "@twin.org/core";
+import { Guards, Is } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -101,5 +106,58 @@ export class PlatformService implements IPlatformComponent {
 		} else {
 			await method();
 		}
+	}
+
+	/**
+	 * Determines if the given URL is a local origin.
+	 * @param url The URL to check.
+	 * @returns A promise that resolves to true if the URL is a local origin, false otherwise.
+	 */
+	public async isLocalOrigin(url: string): Promise<boolean> {
+		Guards.stringValue(PlatformService.CLASS_NAME, nameof(url), url);
+
+		const origin = HttpUrlHelper.extractOrigin(url);
+		if (!Is.stringValue(origin)) {
+			return false;
+		}
+
+		const contextIds = await ContextIdStore.getContextIds();
+		const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
+		if (publicOrigin === origin) {
+			return true;
+		}
+
+		const localOrigin = contextIds?.[HttpContextIdKeys.LocalOrigin];
+		if (localOrigin === origin) {
+			return true;
+		}
+
+		if (Is.empty(this._entityStorageConnector)) {
+			this._entityStorageConnector = EntityStorageConnectorFactory.get(
+				this._entityStorageConnectorType
+			);
+		}
+
+		let cursor: string | undefined;
+
+		do {
+			const result = await this._entityStorageConnector.query(
+				undefined,
+				undefined,
+				["publicOrigin"],
+				cursor
+			);
+			for (const tenant of result.entities) {
+				const tenantPublicOrigin = tenant.publicOrigin;
+
+				if (Is.stringValue(tenantPublicOrigin) && tenantPublicOrigin === origin) {
+					return true;
+				}
+			}
+
+			cursor = result.cursor;
+		} while (Is.stringValue(cursor));
+
+		return false;
 	}
 }

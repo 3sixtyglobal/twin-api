@@ -1,6 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { ITenant } from "@twin.org/api-models";
+import { HttpContextIdKeys, type ITenant } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
 	EntityStorageConnectorFactory,
@@ -55,6 +55,72 @@ describe("PlatformService", () => {
 		} as unknown as IEntityStorageConnector<ITenant>;
 
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockTenantStorage);
+	});
+
+	describe("isLocalOrigin", () => {
+		beforeEach(() => {
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({});
+		});
+
+		it("should throw when url is empty", async () => {
+			const service = new PlatformService();
+			await expect(service.isLocalOrigin("")).rejects.toThrow();
+		});
+
+		it("should return false when the url has no parseable origin", async () => {
+			const service = new PlatformService();
+			await expect(service.isLocalOrigin("not-a-valid-url")).resolves.toBe(false);
+		});
+
+		it("should return true when url origin matches the context publicOrigin without querying storage", async () => {
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+				[HttpContextIdKeys.PublicOrigin]: "https://example.com"
+			});
+			const service = new PlatformService();
+			await expect(service.isLocalOrigin("https://example.com/some/path")).resolves.toBe(true);
+			expect(mockTenantStorage.query).not.toHaveBeenCalled();
+		});
+
+		it("should return false when origin matches neither context nor any tenant", async () => {
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+				[HttpContextIdKeys.PublicOrigin]: "https://other.com"
+			});
+			(mockTenantStorage.query as ReturnType<typeof vi.fn>).mockResolvedValue({ entities: [] });
+			const service = new PlatformService();
+			await expect(service.isLocalOrigin("https://example.com/path")).resolves.toBe(false);
+		});
+
+		it("should return true when a tenant's publicOrigin matches the url origin", async () => {
+			const service = new PlatformService();
+			await expect(service.isLocalOrigin("https://b.example.com/page")).resolves.toBe(true);
+		});
+
+		it("should follow cursor pagination and return true when a match is on a later page", async () => {
+			(mockTenantStorage.query as ReturnType<typeof vi.fn>)
+				.mockResolvedValueOnce({ entities: [TENANT_A], cursor: "page2" })
+				.mockResolvedValueOnce({ entities: [TENANT_B] });
+			const service = new PlatformService();
+			await expect(service.isLocalOrigin("https://b.example.com/page")).resolves.toBe(true);
+			expect(mockTenantStorage.query).toHaveBeenCalledTimes(2);
+		});
+
+		it("should return false when no page contains a matching tenant", async () => {
+			(mockTenantStorage.query as ReturnType<typeof vi.fn>)
+				.mockResolvedValueOnce({ entities: [TENANT_A], cursor: "page2" })
+				.mockResolvedValueOnce({ entities: [TENANT_B] });
+			const service = new PlatformService();
+			await expect(service.isLocalOrigin("https://unknown.example.com/")).resolves.toBe(false);
+			expect(mockTenantStorage.query).toHaveBeenCalledTimes(2);
+		});
+
+		it("should skip tenants with no publicOrigin and still match a later tenant", async () => {
+			const tenantNoOrigin = { ...TENANT_A, publicOrigin: undefined };
+			(mockTenantStorage.query as ReturnType<typeof vi.fn>).mockResolvedValue({
+				entities: [tenantNoOrigin, TENANT_B]
+			});
+			const service = new PlatformService();
+			await expect(service.isLocalOrigin("https://b.example.com/")).resolves.toBe(true);
+		});
 	});
 
 	describe("execute", () => {
