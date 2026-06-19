@@ -202,6 +202,20 @@ export class TenantAdminService implements ITenantAdminComponent {
 			}
 		}
 
+		if (Is.stringValue(publicOrigin)) {
+			const existingPublicOrigin = await this._entityStorageConnector.get(
+				publicOrigin,
+				"publicOrigin"
+			);
+			if (Is.object(existingPublicOrigin)) {
+				throw new AlreadyExistsError(
+					TenantAdminService.CLASS_NAME,
+					"publicOriginAlreadyExists",
+					publicOrigin
+				);
+			}
+		}
+
 		const existingOrgId = await this._entityStorageConnector.get(
 			tenant.organizationId,
 			"organizationId"
@@ -272,6 +286,20 @@ export class TenantAdminService implements ITenantAdminComponent {
 			const existingApiKey = await this._entityStorageConnector.get(tenant.apiKey, "apiKey");
 			if (Is.object(existingApiKey) && existingApiKey.id !== currentTenant.id) {
 				throw new GeneralError(TenantAdminService.CLASS_NAME, "apiKeyAlreadyInUse");
+			}
+		}
+
+		if (Is.stringValue(publicOrigin)) {
+			const existingPublicOrigin = await this._entityStorageConnector.get(
+				publicOrigin,
+				"publicOrigin"
+			);
+			if (Is.object(existingPublicOrigin) && existingPublicOrigin.id !== currentTenant.id) {
+				throw new AlreadyExistsError(
+					TenantAdminService.CLASS_NAME,
+					"publicOriginAlreadyExists",
+					publicOrigin
+				);
 			}
 		}
 

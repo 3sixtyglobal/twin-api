@@ -13,7 +13,8 @@
 			"apiKeyAlreadyInUse": "The provided API key is already in use by another tenant.",
 			"tenantAlreadyExists": "Tenant with ID \"{existingId}\" already exists.",
 			"tenantNotFound": "Tenant with ID \"{notFoundId}\" not found.",
-			"organizationIdAlreadyExists": "A tenant with organization ID \"{existingId}\" already exists."
+			"organizationIdAlreadyExists": "A tenant with organization ID \"{existingId}\" already exists.",
+			"publicOriginAlreadyExists": "A tenant with public origin \"{existingId}\" already exists."
 		}
 	}
 }

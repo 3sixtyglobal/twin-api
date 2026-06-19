@@ -138,29 +138,14 @@ export class PlatformService implements IPlatformComponent {
 			);
 		}
 
-		let cursor: string | undefined;
-
-		do {
-			const result = await this._entityStorageConnector.query(
-				undefined,
-				undefined,
-				["publicOrigin"],
-				cursor
-			);
-			for (const tenant of result.entities) {
-				const tenantPublicOrigin = tenant.publicOrigin;
-
-				if (Is.stringValue(tenantPublicOrigin) && tenantPublicOrigin === origin) {
-					return {
-						...contextIds,
-						[ContextIdKeys.Tenant]: tenant.id,
-						[ContextIdKeys.Organization]: tenant.organizationId,
-						[HttpContextIdKeys.PublicOrigin]: tenantPublicOrigin
-					};
-				}
-			}
-
-			cursor = result.cursor;
-		} while (Is.stringValue(cursor));
+		const tenant = await this._entityStorageConnector.get(origin, "publicOrigin");
+		if (!Is.empty(tenant)) {
+			return {
+				...contextIds,
+				[ContextIdKeys.Tenant]: tenant.id,
+				[ContextIdKeys.Organization]: tenant.organizationId,
+				[HttpContextIdKeys.PublicOrigin]: tenant.publicOrigin
+			};
+		}
 	}
 }

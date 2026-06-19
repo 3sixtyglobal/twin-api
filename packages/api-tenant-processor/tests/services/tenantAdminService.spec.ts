@@ -14,6 +14,8 @@ const API_KEY = "abcdef1234567890abcdef1234567890";
 const ORG_ID = "org-original";
 const OTHER_ORG_ID = "org-other";
 const LEGACY_ORG_ID = "org-legacy";
+const PUBLIC_ORIGIN = "https://node.example.org";
+const OTHER_PUBLIC_ORIGIN = "https://other.example.org";
 
 const EXISTING_TENANT: Tenant = {
 	id: TENANT_ID,
@@ -61,6 +63,28 @@ describe("TenantAdminService", () => {
 					apiKey: API_KEY,
 					label: "Someone Else",
 					organizationId: OTHER_ORG_ID
+				})
+			).rejects.toThrow(AlreadyExistsError);
+		});
+
+		it("should throw AlreadyExistsError when publicOrigin is already in use by another tenant", async () => {
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (index === "publicOrigin" && id === PUBLIC_ORIGIN) {
+						return EXISTING_TENANT;
+					}
+					return undefined;
+				}
+			);
+
+			const service = new TenantAdminService();
+
+			await expect(
+				service.create({
+					apiKey: API_KEY,
+					label: "New Tenant",
+					organizationId: OTHER_ORG_ID,
+					publicOrigin: PUBLIC_ORIGIN
 				})
 			).rejects.toThrow(AlreadyExistsError);
 		});
@@ -113,6 +137,46 @@ describe("TenantAdminService", () => {
 	});
 
 	describe("update", () => {
+		it("should throw AlreadyExistsError when publicOrigin is already used by another tenant", async () => {
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (!index && id === TENANT_ID) {
+						return EXISTING_TENANT;
+					}
+					if (index === "publicOrigin" && id === OTHER_PUBLIC_ORIGIN) {
+						return { ...EXISTING_TENANT, id: OTHER_TENANT_ID, publicOrigin: OTHER_PUBLIC_ORIGIN };
+					}
+					return undefined;
+				}
+			);
+
+			const service = new TenantAdminService();
+
+			await expect(
+				service.update({ id: TENANT_ID, organizationId: ORG_ID, publicOrigin: OTHER_PUBLIC_ORIGIN })
+			).rejects.toThrow(AlreadyExistsError);
+		});
+
+		it("should not throw when publicOrigin is unchanged on the same tenant", async () => {
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (!index && id === TENANT_ID) {
+						return EXISTING_TENANT;
+					}
+					if (index === "publicOrigin" && id === PUBLIC_ORIGIN) {
+						return EXISTING_TENANT;
+					}
+					return undefined;
+				}
+			);
+
+			const service = new TenantAdminService();
+
+			await expect(
+				service.update({ id: TENANT_ID, organizationId: ORG_ID, publicOrigin: PUBLIC_ORIGIN })
+			).resolves.toBeUndefined();
+		});
+
 		it("should throw AlreadyExistsError when organizationId is already used by another tenant", async () => {
 			vi.mocked(mockStorage.get).mockImplementation(
 				async (id: string, index?: string): Promise<Tenant | undefined> => {
