@@ -95,3 +95,29 @@ A promise that resolves when the method has been executed for all applicable ten
 #### Implementation of
 
 `IPlatformComponent.execute`
+
+***
+
+### isLocalOrigin() {#islocalorigin}
+
+> **isLocalOrigin**(`url`): `Promise`\<`boolean`\>
+
+Determines if the given URL is a local origin.
+
+#### Parameters
+
+##### url
+
+`string`
+
+The URL to check.
+
+#### Returns
+
+`Promise`\<`boolean`\>
+
+A promise that resolves to true if the URL is a local origin, false otherwise.
+
+#### Implementation of
+
+`IPlatformComponent.isLocalOrigin`

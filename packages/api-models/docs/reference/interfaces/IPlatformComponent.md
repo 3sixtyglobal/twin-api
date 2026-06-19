@@ -41,3 +41,25 @@ The method to run for each tenant.
 `Promise`\<`void`\>
 
 A promise that resolves when the method has been executed for all applicable tenants.
+
+***
+
+### isLocalOrigin() {#islocalorigin}
+
+> **isLocalOrigin**(`url`): `Promise`\<`boolean`\>
+
+Determines if the given URL is a local origin.
+
+#### Parameters
+
+##### url
+
+`string`
+
+The URL to check.
+
+#### Returns
+
+`Promise`\<`boolean`\>
+
+A promise that resolves to true if the URL is a local origin, false otherwise.
