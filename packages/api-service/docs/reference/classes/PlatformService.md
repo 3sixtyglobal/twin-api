@@ -98,11 +98,11 @@ A promise that resolves when the method has been executed for all applicable ten
 
 ***
 
-### isLocalOrigin() {#islocalorigin}
+### getLocalOriginContext() {#getlocalorigincontext}
 
-> **isLocalOrigin**(`url`): `Promise`\<`boolean`\>
+> **getLocalOriginContext**(`url`): `Promise`\<`IContextIds` \| `undefined`\>
 
-Determines if the given URL is a local origin.
+Get the local origin context IDs for the given URL.
 
 #### Parameters
 
@@ -114,10 +114,10 @@ The URL to check.
 
 #### Returns
 
-`Promise`\<`boolean`\>
+`Promise`\<`IContextIds` \| `undefined`\>
 
-A promise that resolves to true if the URL is a local origin, false otherwise.
+A promise that resolves to the context IDs if the URL is a local origin, undefined otherwise.
 
 #### Implementation of
 
-`IPlatformComponent.isLocalOrigin`
+`IPlatformComponent.getLocalOriginContext`
