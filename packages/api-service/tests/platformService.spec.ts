@@ -54,7 +54,7 @@ describe("PlatformService", () => {
 			})
 		} as unknown as IEntityStorageConnector<ITenant>;
 
-		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockTenantStorage);
+		vi.spyOn(EntityStorageConnectorFactory, "getIfExists").mockReturnValue(mockTenantStorage);
 	});
 
 	describe("getLocalOriginContext", () => {
@@ -112,7 +112,7 @@ describe("PlatformService", () => {
 					return undefined;
 				}
 			);
-			const service = new PlatformService();
+			const service = new PlatformService({ config: { isMultiTenant: true } });
 			const result = await service.getLocalOriginContext("https://b.example.com/page");
 			expect(result).toMatchObject({
 				[ContextIdKeys.Tenant]: TENANT_B.id,
@@ -124,7 +124,7 @@ describe("PlatformService", () => {
 
 		it("should return undefined when the publicOrigin secondary index has no match", async () => {
 			(mockTenantStorage.get as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
-			const service = new PlatformService();
+			const service = new PlatformService({ config: { isMultiTenant: true } });
 			await expect(
 				service.getLocalOriginContext("https://unknown.example.com/")
 			).resolves.toBeUndefined();
@@ -132,6 +132,50 @@ describe("PlatformService", () => {
 				"https://unknown.example.com",
 				"publicOrigin"
 			);
+		});
+
+		it("should resolve the target tenant from the organization query param even when the url origin matches the current context (single-node multi-tenant)", async () => {
+			// Caller is tenant A (org-1) on the node origin; the callback URL targets tenant B
+			// via ?organization=org-2. On a single multi-tenant node every callback shares the
+			// node origin, so an origin-only match would wrongly return the caller's own
+			// (org-1) context. The organization query param must take precedence and resolve
+			// to tenant B's partition, otherwise same-node cross-tenant callbacks misroute.
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+				[HttpContextIdKeys.PublicOrigin]: "https://example.com",
+				[ContextIdKeys.Tenant]: TENANT_A.id,
+				[ContextIdKeys.Organization]: TENANT_A.organizationId
+			});
+			(mockTenantStorage.get as ReturnType<typeof vi.fn>).mockImplementation(
+				async (id: string, index?: string) => {
+					if (index === "organizationId" && id === "org-2") {
+						return TENANT_B;
+					}
+					return undefined;
+				}
+			);
+			const service = new PlatformService({ config: { isMultiTenant: true } });
+			const result = await service.getLocalOriginContext(
+				"https://example.com/rights-management?organization=org-2"
+			);
+			expect(result).toMatchObject({
+				[ContextIdKeys.Tenant]: TENANT_B.id,
+				[ContextIdKeys.Organization]: TENANT_B.organizationId
+			});
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("org-2", "organizationId");
+		});
+
+		it("should return undefined when the organization query param does not resolve to a local tenant (cross-node)", async () => {
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+				[HttpContextIdKeys.PublicOrigin]: "https://example.com"
+			});
+			(mockTenantStorage.get as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+			const service = new PlatformService({ config: { isMultiTenant: true } });
+			await expect(
+				service.getLocalOriginContext(
+					"https://example.com/rights-management?organization=remote-org"
+				)
+			).resolves.toBeUndefined();
+			expect(mockTenantStorage.get).toHaveBeenCalledWith("remote-org", "organizationId");
 		});
 	});
 

@@ -31,6 +31,7 @@ import {
 	type IError,
 	type IHealth,
 	Is,
+	RandomHelper,
 	StringHelper,
 	Url
 } from "@twin.org/core";
@@ -580,6 +581,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			[HttpContextIdKeys.CorrelationId]: HeaderHelper.extractCorrelationId(
 				httpServerRequest.headers
 			),
+			[HttpContextIdKeys.RemoteRequest]: RandomHelper.generateUuidV7("compact"),
 			[HttpContextIdKeys.LocalOrigin]: this._localOrigin,
 			// This can be overridden by a processor if needed, for example a tenant processor
 			[HttpContextIdKeys.PublicOrigin]: this._publicOrigin ?? requestOrigin ?? this._localOrigin

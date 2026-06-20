@@ -22,6 +22,11 @@ export const HttpContextIdKeys = {
 	CorrelationId: "correlationId",
 
 	/**
+	 * Is this a remote request, will be a random UUID if request arrived through a REST endpoint, otherwise undefined.
+	 */
+	RemoteRequest: "remoteRequest",
+
+	/**
 	 * Public Origin of the request.
 	 */
 	PublicOrigin: "publicOrigin",
