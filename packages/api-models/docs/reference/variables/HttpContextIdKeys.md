@@ -24,6 +24,12 @@ User agent of the client.
 
 Correlation ID of the request.
 
+### RemoteRequest {#remoterequest}
+
+> `readonly` **RemoteRequest**: `"remoteRequest"` = `"remoteRequest"`
+
+Is this a remote request, will be a random UUID if request arrived through a REST endpoint, otherwise undefined.
+
 ### PublicOrigin {#publicorigin}
 
 > `readonly` **PublicOrigin**: `"publicOrigin"` = `"publicOrigin"`
