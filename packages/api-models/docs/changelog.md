@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.52](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.51...api-models-v0.0.3-next.52) (2026-06-22)
+
+
+### Bug Fixes
+
+* replace duplicate query param instead of appending in addQueryStringParam ([#184](https://github.com/iotaledger/twin-api/issues/184)) ([a4049e3](https://github.com/iotaledger/twin-api/commit/a4049e374493b85cd02804b6d1687d24399b6eff))
+
 ## [0.0.3-next.51](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.50...api-models-v0.0.3-next.51) (2026-06-20)
 
 

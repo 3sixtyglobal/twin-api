@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.52](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.51...api-auth-entity-storage-service-v0.0.3-next.52) (2026-06-22)
+
+
+### Bug Fixes
+
+* run authentication rate cleanup per tenant ([#186](https://github.com/iotaledger/twin-api/issues/186)) ([d69c7aa](https://github.com/iotaledger/twin-api/commit/d69c7aa4ade77f1a52f1f554d8f7a3bd20f1b330))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.0.3-next.51 to 0.0.3-next.52
+    * @twin.org/api-core bumped from 0.0.3-next.51 to 0.0.3-next.52
+    * @twin.org/api-models bumped from 0.0.3-next.51 to 0.0.3-next.52
+
 ## [0.0.3-next.51](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.0.3-next.50...api-auth-entity-storage-service-v0.0.3-next.51) (2026-06-20)
 
 
