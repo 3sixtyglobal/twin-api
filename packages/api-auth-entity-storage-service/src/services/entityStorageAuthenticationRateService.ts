@@ -4,7 +4,7 @@ import type {
 	IAuthenticationRateActionConfig,
 	IAuthenticationRateComponent
 } from "@twin.org/api-auth-entity-storage-models";
-import { TooManyRequestsError } from "@twin.org/api-models";
+import { TooManyRequestsError, type IPlatformComponent } from "@twin.org/api-models";
 import type { ITaskSchedulerComponent } from "@twin.org/background-task-models";
 import { ComponentFactory, Converter, GeneralError, Guards, Is } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
@@ -69,6 +69,12 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 	private readonly _cleanupIntervalMinutes: number;
 
 	/**
+	 * Platform component used to run the periodic cleanup with the correct tenant context.
+	 * @internal
+	 */
+	private readonly _platformComponent: IPlatformComponent;
+
+	/**
 	 * Create a new instance of EntityStorageAuthenticationRateService.
 	 * @param options The constructor options.
 	 */
@@ -83,6 +89,9 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 		this._cleanupIntervalMinutes =
 			options?.config?.cleanupIntervalMinutes ??
 			EntityStorageAuthenticationRateService._DEFAULT_CLEANUP_INTERVAL_MINUTES;
+		this._platformComponent = ComponentFactory.get<IPlatformComponent>(
+			options?.platformComponentType ?? "platform"
+		);
 	}
 
 	/**
@@ -243,48 +252,53 @@ export class EntityStorageAuthenticationRateService implements IAuthenticationRa
 	}
 
 	/**
-	 * Cleanup expired rate limit entries.
+	 * Cleanup expired rate limit entries. Runs via the platform component's execute so the work runs with
+	 * the correct context (once in single-tenant mode, once per tenant in multi-tenant mode).
 	 * @returns A promise that resolves when all expired entries have been removed from storage.
 	 * @internal
 	 */
 	private async cleanupExpiredEntries(): Promise<void> {
-		const now = Date.now();
+		// Run via the platform component's execute so the work runs with the correct context (once in
+		// single-tenant mode, once per tenant in multi-tenant mode).
+		await this._platformComponent.execute(async () => {
+			const now = Date.now();
 
-		for (const action of Object.keys(this._actionConfigs)) {
-			const actionConfig = this._actionConfigs[action];
-			const windowMs = actionConfig.windowMinutes * 60 * 1000;
-			const cutoffIso = new Date(now - windowMs).toISOString();
-			let cursor: string | undefined;
+			for (const action of Object.keys(this._actionConfigs)) {
+				const actionConfig = this._actionConfigs[action];
+				const windowMs = actionConfig.windowMinutes * 60 * 1000;
+				const cutoffIso = new Date(now - windowMs).toISOString();
+				let cursor: string | undefined;
 
-			do {
-				// Query by composite rate entry id prefix and expiry window for this action.
-				const result = await this._authenticationRateEntryStorage.query(
-					{
-						conditions: [
-							{
-								property: "id",
-								value: `|${action}|`,
-								comparison: ComparisonOperator.Includes
-							},
-							{
-								property: "dateModified",
-								value: cutoffIso,
-								comparison: ComparisonOperator.LessThanOrEqual
-							}
-						]
-					},
-					undefined,
-					undefined,
-					cursor,
-					EntityStorageAuthenticationRateService._CLEANUP_PAGE_SIZE
-				);
+				do {
+					// Query by composite rate entry id prefix and expiry window for this action.
+					const result = await this._authenticationRateEntryStorage.query(
+						{
+							conditions: [
+								{
+									property: "id",
+									value: `|${action}|`,
+									comparison: ComparisonOperator.Includes
+								},
+								{
+									property: "dateModified",
+									value: cutoffIso,
+									comparison: ComparisonOperator.LessThanOrEqual
+								}
+							]
+						},
+						undefined,
+						undefined,
+						cursor,
+						EntityStorageAuthenticationRateService._CLEANUP_PAGE_SIZE
+					);
 
-				for (const entity of result.entities as AuthenticationRateEntry[]) {
-					await this._authenticationRateEntryStorage.remove(entity.id);
-				}
+					for (const entity of result.entities as AuthenticationRateEntry[]) {
+						await this._authenticationRateEntryStorage.remove(entity.id);
+					}
 
-				cursor = result.cursor;
-			} while (!Is.empty(cursor));
-		}
+					cursor = result.cursor;
+				} while (!Is.empty(cursor));
+			}
+		});
 	}
 }

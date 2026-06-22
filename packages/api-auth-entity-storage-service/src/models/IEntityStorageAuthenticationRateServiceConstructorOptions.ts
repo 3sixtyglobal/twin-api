@@ -19,6 +19,12 @@ export interface IEntityStorageAuthenticationRateServiceConstructorOptions {
 	taskSchedulerComponentType?: string;
 
 	/**
+	 * The platform component type, used to run the periodic cleanup per tenant.
+	 * @default platform
+	 */
+	platformComponentType?: string;
+
+	/**
 	 * The configuration for the authentication rate service.
 	 */
 	config?: IEntityStorageAuthenticationRateServiceConfig;
