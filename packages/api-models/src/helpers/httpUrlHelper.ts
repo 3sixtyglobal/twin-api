@@ -120,7 +120,7 @@ export class HttpUrlHelper {
 
 		try {
 			const parsedUrl = new URL(url);
-			parsedUrl.searchParams.append(key, value);
+			parsedUrl.searchParams.set(key, value);
 			return parsedUrl.toString();
 		} catch {}
 

@@ -107,6 +107,54 @@ describe("HttpUrlHelper", () => {
 		});
 	});
 
+	describe("addQueryStringParam", () => {
+		it("should add a new parameter to a url with no existing query string", () => {
+			const result = HttpUrlHelper.addQueryStringParam("https://example.com/api", "page", "1");
+			expect(result).toBe("https://example.com/api?page=1");
+		});
+
+		it("should add a new parameter alongside existing parameters", () => {
+			const result = HttpUrlHelper.addQueryStringParam("https://example.com/api?x=1", "page", "2");
+			expect(result).toBe("https://example.com/api?x=1&page=2");
+		});
+
+		// Regression tests for duplicate query params when updating an existing key
+		it("should replace the value when the key already exists in the url", () => {
+			const result = HttpUrlHelper.addQueryStringParam(
+				"https://example.com/api?page=1",
+				"page",
+				"2"
+			);
+			expect(result).toBe("https://example.com/api?page=2");
+		});
+
+		it("should not produce duplicate entries when the key already exists", () => {
+			const result = HttpUrlHelper.addQueryStringParam(
+				"https://example.com/api?organization=providerOrg",
+				"organization",
+				"consumerOrg"
+			);
+			const params = new URL(result).searchParams.getAll("organization");
+			expect(params).toHaveLength(1);
+			expect(params[0]).toBe("consumerOrg");
+		});
+
+		it("should return the url unchanged when url is empty", () => {
+			const result = HttpUrlHelper.addQueryStringParam("", "page", "1");
+			expect(result).toBe("");
+		});
+
+		it("should return the url unchanged when key is empty", () => {
+			const result = HttpUrlHelper.addQueryStringParam("https://example.com/api", "", "1");
+			expect(result).toBe("https://example.com/api");
+		});
+
+		it("should return the url unchanged when value is empty", () => {
+			const result = HttpUrlHelper.addQueryStringParam("https://example.com/api", "page", "");
+			expect(result).toBe("https://example.com/api");
+		});
+	});
+
 	describe("replaceOrigin", () => {
 		it("should return the original url when inputs are not valid", () => {
 			expect(
