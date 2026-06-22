@@ -32,6 +32,20 @@ task-scheduler
 
 ***
 
+### platformComponentType? {#platformcomponenttype}
+
+> `optional` **platformComponentType?**: `string`
+
+The platform component type, used to run the periodic cleanup per tenant.
+
+#### Default
+
+```ts
+platform
+```
+
+***
+
 ### config? {#config}
 
 > `optional` **config?**: [`IEntityStorageAuthenticationRateServiceConfig`](IEntityStorageAuthenticationRateServiceConfig.md)
