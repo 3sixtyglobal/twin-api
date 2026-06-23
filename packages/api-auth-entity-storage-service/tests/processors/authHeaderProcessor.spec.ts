@@ -65,7 +65,7 @@ describe("AuthHeaderProcessor", () => {
 			location: "authorization"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vault, key, token, requiredScope, verifyUser) => {
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 				// No tid — single-tenant or tenant-free token; only user+org verified.
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				expect(verified).toEqual(["user", "organization"]);
@@ -126,7 +126,7 @@ describe("AuthHeaderProcessor", () => {
 		});
 		const tenantId = "tenant-1";
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vault, key, token, requiredScope, verifyUser) => {
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", tenantId, 0);
 				expect(verified).toContain("tenant");
 				return {
@@ -164,7 +164,7 @@ describe("AuthHeaderProcessor", () => {
 			location: "authorization"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vault, key, token, requiredScope, verifyUser) => {
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 				await verifyUser?.("did:user:123", "did:org:456", undefined, undefined);
 				throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
 			}
@@ -209,7 +209,7 @@ describe("AuthHeaderProcessor", () => {
 		});
 		const encryptedTenantId = "encrypted:tenant-1";
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vault, key, token, requiredScope, verifyUser) => {
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 				// pver=0 in token but user has passwordVersion=1 — simulate stale token
 				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantId, 0);
 				if (!verified?.includes("user")) {
@@ -261,7 +261,7 @@ describe("AuthHeaderProcessor", () => {
 			location: "authorization"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vault, key, token, requiredScope, verifyUser) => {
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 				// No tid — pver behaviour is the focus here.
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, undefined);
 				expect(verified).toEqual(["user", "organization"]);
@@ -310,7 +310,7 @@ describe("AuthHeaderProcessor", () => {
 		});
 		const encryptedTenantId = "encrypted:tenant-1";
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vault, key, token, requiredScope, verifyUser) => {
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantId, 0);
 				if (!verified?.includes("tenant")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "tenantNotVerified");
@@ -371,7 +371,7 @@ describe("AuthHeaderProcessor", () => {
 		});
 		const tenantA = "tenant-a";
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vault, key, token, requiredScope, verifyUser) => {
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", tenantA, 0);
 				expect(verified).toContain("tenant");
 				return {
@@ -421,7 +421,7 @@ describe("AuthHeaderProcessor", () => {
 			location: "authorization"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vault, key, token, requiredScope, verifyUser) => {
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 				// No tid in token — single-tenant system, no tenant verification required.
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				expect(verified).toEqual(["user", "organization"]);
@@ -483,7 +483,7 @@ describe("AuthHeaderProcessor", () => {
 
 		it("sets Organization context to _nodeOrganizationId when no tenant ID is in the token", async () => {
 			vi.spyOn(TokenHelper, "verify").mockImplementation(
-				async (vault, key, token, requiredScope, verifyUser) => {
+				async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 					await verifyUser?.(USER_IDENTITY, USER_ORG, undefined, 0);
 					return { header: { alg: "EdDSA" }, payload: {} };
 				}
@@ -501,7 +501,7 @@ describe("AuthHeaderProcessor", () => {
 
 		it("sets UserOrganization to the user entity's own organization on successful verify", async () => {
 			vi.spyOn(TokenHelper, "verify").mockImplementation(
-				async (vault, key, token, requiredScope, verifyUser) => {
+				async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 					await verifyUser?.(USER_IDENTITY, USER_ORG, undefined, 0);
 					return { header: { alg: "EdDSA" }, payload: {} };
 				}
@@ -532,7 +532,7 @@ describe("AuthHeaderProcessor", () => {
 			const multiTenantProcessor = new AuthHeaderProcessor();
 
 			vi.spyOn(TokenHelper, "verify").mockImplementation(
-				async (vault, key, token, requiredScope, verifyUser) => {
+				async (vault, nodeId, key, token, requiredScope, verifyUser) => {
 					await verifyUser?.(USER_IDENTITY, USER_ORG, "tenant-1", 0);
 					return { header: { alg: "EdDSA" }, payload: {} };
 				}

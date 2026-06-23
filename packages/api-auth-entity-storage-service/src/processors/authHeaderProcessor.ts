@@ -15,7 +15,7 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, ComponentFactory, Is } from "@twin.org/core";
+import { BaseError, ComponentFactory, GeneralError, Is } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -139,6 +139,10 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	): Promise<void> {
 		if (!Is.empty(route) && !(route.skipAuth ?? false)) {
 			try {
+				if (!Is.stringValue(this._nodeId)) {
+					throw new GeneralError(AuthHeaderProcessor.CLASS_NAME, "nodeIdNotSet");
+				}
+
 				const tokenAndLocation = TokenHelper.extractTokenFromHeaders(
 					request.headers,
 					this._cookieName
@@ -151,7 +155,8 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 
 				await TokenHelper.verify(
 					this._vaultConnector,
-					`${this._nodeId}/${this._signingKeyName}`,
+					this._nodeId,
+					this._signingKeyName,
 					tokenAndLocation?.token,
 					route.requiredScope,
 					async (

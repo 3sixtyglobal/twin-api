@@ -3,7 +3,8 @@
 		"entityStorageAuthenticationService": {
 			"loginFailed": "Login failed",
 			"userNotFound": "The user with the specified e-mail could not be found",
-			"passwordMismatch": "The password does not match the user's password"
+			"passwordMismatch": "The password does not match the user's password",
+			"nodeIdNotSet": "The node ID has not been set"
 		},
 		"entityStorageAuthenticationAdminService": {
 			"userExists": "The user with the specified e-mail already exists",
@@ -14,6 +15,9 @@
 			"updatePasswordFailed": "Updating the user's password failed",
 			"userNotFound": "The user with the specified e-mail could not be found \"{notFoundId}\""
 		},
+		"authHeaderProcessor": {
+			"nodeIdNotSet": "The node ID has not been set"
+		},
 		"passwordHelper": {
 			"currentPasswordMismatch": "The current password is incorrect"
 		},
@@ -23,6 +27,8 @@
 		},
 		"tokenHelper": {
 			"missing": "The JSON Web token could not be found in the authorization header",
+			"headerKeyIdMismatch": "The JSON Web token key identifier does not match the expected signing key",
+			"payloadIssuerMismatch": "The JSON Web token issuer does not match the expected signing key",
 			"payloadMissingSubject": "The JSON Web token payload does not contain a subject",
 			"payloadMissingOrganization": "The JSON Web token payload does not contain an organization",
 			"expired": "The JSON Web token has expired",

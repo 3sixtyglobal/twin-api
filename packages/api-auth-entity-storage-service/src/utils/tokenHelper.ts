@@ -25,7 +25,8 @@ export class TokenHelper {
 	/**
 	 * Create a new token.
 	 * @param vaultConnector The vault connector.
-	 * @param signingKeyName The signing key name.
+	 * @param nodeId The node identifier, embedded as the JWT issuer claim.
+	 * @param signingKeyName The signing key name, embedded as the JWT key identifier.
 	 * @param userIdentity The subject for the token.
 	 * @param organizationIdentity The organization for the token.
 	 * @param tenantId The tenant id for the token.
@@ -36,6 +37,7 @@ export class TokenHelper {
 	 */
 	public static async createToken(
 		vaultConnector: IVaultConnector,
+		nodeId: string,
 		signingKeyName: string,
 		userIdentity: string,
 		organizationIdentity: string | undefined,
@@ -49,10 +51,12 @@ export class TokenHelper {
 	}> {
 		const nowSeconds = Math.trunc(Date.now() / 1000);
 		const ttlSeconds = ttlMinutes * 60;
+		const vaultKeyName = `${nodeId}/${signingKeyName}`;
 
 		const jwt = await Jwt.encodeWithSigner(
-			{ alg: "EdDSA" },
+			{ alg: "EdDSA", kid: signingKeyName },
 			{
+				iss: nodeId,
 				sub: userIdentity,
 				org: organizationIdentity,
 				tid: tenantId,
@@ -61,7 +65,7 @@ export class TokenHelper {
 				pver: passwordVersion
 			},
 			async (header, payload) =>
-				VaultConnectorHelper.jwtSigner(vaultConnector, signingKeyName, header, payload)
+				VaultConnectorHelper.jwtSigner(vaultConnector, vaultKeyName, header, payload)
 		);
 
 		return {
@@ -73,7 +77,8 @@ export class TokenHelper {
 	/**
 	 * Verify the token.
 	 * @param vaultConnector The vault connector.
-	 * @param signingKeyName The signing key name.
+	 * @param nodeId The node identifier, expected to match the JWT issuer claim.
+	 * @param signingKeyName The signing key name, expected to match the JWT key identifier.
 	 * @param token The token to verify.
 	 * @param requiredScopes The required scopes.
 	 * @param verifyUser A function to verify the user identity and organization. The password version counter embedded in the token (pver claim) is passed so callers can detect if the password has changed since the token was issued.
@@ -82,6 +87,7 @@ export class TokenHelper {
 	 */
 	public static async verify(
 		vaultConnector: IVaultConnector,
+		nodeId: string,
 		signingKeyName: string,
 		token: string | undefined,
 		requiredScopes?: string[],
@@ -99,12 +105,17 @@ export class TokenHelper {
 			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "missing");
 		}
 
+		const vaultKeyName = `${nodeId}/${signingKeyName}`;
 		const decoded = await Jwt.verifyWithVerifier(token, async t =>
-			VaultConnectorHelper.jwtVerifier(vaultConnector, signingKeyName, t)
+			VaultConnectorHelper.jwtVerifier(vaultConnector, vaultKeyName, t)
 		);
 
 		// If some of the header/payload data is not properly populated then it is unauthorized.
-		if (!Is.stringValue(decoded.payload.sub)) {
+		if (decoded.header.kid !== signingKeyName) {
+			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "headerKeyIdMismatch");
+		} else if (decoded.payload.iss !== nodeId) {
+			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "payloadIssuerMismatch");
+		} else if (!Is.stringValue(decoded.payload.sub)) {
 			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "payloadMissingSubject");
 		} else if (!Is.stringValue(decoded.payload.org)) {
 			throw new UnauthorizedError(TokenHelper.CLASS_NAME, "payloadMissingOrganization");

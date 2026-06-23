@@ -112,7 +112,8 @@ describe("EntityStorageAuthenticationService", () => {
 		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("user@example.com");
 		expect(TokenHelper.createToken).toHaveBeenCalledWith(
 			mockVaultConnector,
-			"node-1/auth-signing",
+			"node-1",
+			"auth-signing",
 			"did:user:123",
 			"did:org:456",
 			"tenant-1",
@@ -304,7 +305,7 @@ describe("EntityStorageAuthenticationService", () => {
 			scope: "read,write"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				expect(verified).toEqual(["user", "organization"]);
 				return {
@@ -329,7 +330,8 @@ describe("EntityStorageAuthenticationService", () => {
 		expect(mockUserEntityStorage.get).toHaveBeenCalledWith("did:user:123", "identity");
 		expect(TokenHelper.createToken).toHaveBeenCalledWith(
 			mockVaultConnector,
-			"node-1/auth-signing",
+			"node-1",
+			"auth-signing",
 			"did:user:123",
 			"did:org:456",
 			undefined,
@@ -359,7 +361,7 @@ describe("EntityStorageAuthenticationService", () => {
 			[ContextIdKeys.Node]: "node-1"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 				await verifyUser?.("did:user:123", "did:org:456", undefined, undefined);
 				return {
 					header: { alg: "EdDSA" },
@@ -418,7 +420,7 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				if (!verified?.includes("user")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
@@ -455,7 +457,7 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				if (!verified?.includes("organization")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "organizationNotVerified");
@@ -493,7 +495,7 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 				// pver=1 in token but user has passwordVersion=2 — simulate stale token
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 1);
 				if (!verified?.includes("user")) {
@@ -774,7 +776,7 @@ describe("EntityStorageAuthenticationService", () => {
 			});
 
 			vi.spyOn(TokenHelper, "verify").mockImplementation(
-				async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+				async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 					const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 					if (!verified?.includes("user")) {
 						throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
@@ -808,7 +810,7 @@ describe("EntityStorageAuthenticationService", () => {
 			scope: "read,write"
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", "tenant-a", 0);
 				if (!verified?.includes("tenant")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "tenantNotVerified");
@@ -860,7 +862,7 @@ describe("EntityStorageAuthenticationService", () => {
 		service = new EntityStorageAuthenticationService();
 
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", "tenant-a", 0);
 				if (!verified?.includes("tenant")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "tenantNotVerified");
@@ -912,7 +914,7 @@ describe("EntityStorageAuthenticationService", () => {
 		service = new EntityStorageAuthenticationService();
 
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
-			async (vaultConnector, signingKeyName, token, requiredScopes, verifyUser) => {
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
 				const verified = await verifyUser?.("did:user:123", "did:org:456", "tenant-a", 0);
 				expect(verified).toContain("tenant");
 				return {
@@ -938,7 +940,8 @@ describe("EntityStorageAuthenticationService", () => {
 		expect(mockTenantAdminComponent.get).toHaveBeenCalledWith("tenant-a");
 		expect(TokenHelper.createToken).toHaveBeenCalledWith(
 			mockVaultConnector,
-			"node-1/auth-signing",
+			"node-1",
+			"auth-signing",
 			"did:user:123",
 			"did:org:456",
 			"tenant-a",

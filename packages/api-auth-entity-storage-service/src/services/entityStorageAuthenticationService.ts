@@ -263,6 +263,10 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		Guards.stringValue(EntityStorageAuthenticationService.CLASS_NAME, nameof(email), email);
 		Guards.stringValue(EntityStorageAuthenticationService.CLASS_NAME, nameof(password), password);
 
+		if (!Is.stringValue(this._nodeId)) {
+			throw new GeneralError(EntityStorageAuthenticationService.CLASS_NAME, "nodeIdNotSet");
+		}
+
 		let loginUser: AuthenticationUser | undefined;
 		let loginTenantId: string | undefined;
 		let tokenAndExpiry: { token?: string; expiry: number } | undefined;
@@ -292,7 +296,8 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 			tokenAndExpiry = await TokenHelper.createToken(
 				this._vaultConnector,
-				`${this._nodeId}/${this._signingKeyName}`,
+				this._nodeId,
+				this._signingKeyName,
 				user.identity,
 				user.organization,
 				loginTenantId,
@@ -358,13 +363,18 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		token?: string;
 		expiry: number;
 	}> {
+		if (!Is.stringValue(this._nodeId)) {
+			throw new GeneralError(EntityStorageAuthenticationService.CLASS_NAME, "nodeIdNotSet");
+		}
+
 		let refreshPasswordVersion: number | undefined;
 		let tenantId: string | undefined;
 
 		// If the verify fails on the current token then it will throw an exception.
 		const headerAndPayload = await TokenHelper.verify(
 			this._vaultConnector,
-			`${this._nodeId}/${this._signingKeyName}`,
+			this._nodeId,
+			this._signingKeyName,
 			token,
 			undefined,
 			async (sub, org, tid, passwordVersion) => {
@@ -411,7 +421,8 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 		const refreshTokenAndExpiry = await TokenHelper.createToken(
 			this._vaultConnector,
-			`${this._nodeId}/${this._signingKeyName}`,
+			this._nodeId,
+			this._signingKeyName,
 			refreshSub,
 			payloadOrg,
 			tenantId,
