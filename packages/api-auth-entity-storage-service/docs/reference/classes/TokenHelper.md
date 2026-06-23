@@ -24,7 +24,7 @@ Runtime name for the class.
 
 ### createToken() {#createtoken}
 
-> `static` **createToken**(`vaultConnector`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`, `passwordVersion?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+> `static` **createToken**(`vaultConnector`, `nodeId`, `signingKeyName`, `userIdentity`, `organizationIdentity`, `tenantId`, `ttlMinutes`, `scope?`, `passwordVersion?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
 
 Create a new token.
 
@@ -36,11 +36,17 @@ Create a new token.
 
 The vault connector.
 
+##### nodeId
+
+`string`
+
+The node identifier, embedded as the JWT issuer claim.
+
 ##### signingKeyName
 
 `string`
 
-The signing key name.
+The signing key name, embedded as the JWT key identifier.
 
 ##### userIdentity
 
@@ -88,7 +94,7 @@ The new token and its expiry date.
 
 ### verify() {#verify}
 
-> `static` **verify**(`vaultConnector`, `signingKeyName`, `token`, `requiredScopes?`, `verifyUser?`): `Promise`\<\{ `header`: `JWTHeaderParameters`; `payload`: `JWTPayload`; \}\>
+> `static` **verify**(`vaultConnector`, `nodeId`, `signingKeyName`, `token`, `requiredScopes?`, `verifyUser?`): `Promise`\<\{ `header`: `JWTHeaderParameters`; `payload`: `JWTPayload`; \}\>
 
 Verify the token.
 
@@ -100,11 +106,17 @@ Verify the token.
 
 The vault connector.
 
+##### nodeId
+
+`string`
+
+The node identifier, expected to match the JWT issuer claim.
+
 ##### signingKeyName
 
 `string`
 
-The signing key name.
+The signing key name, expected to match the JWT key identifier.
 
 ##### token
 
