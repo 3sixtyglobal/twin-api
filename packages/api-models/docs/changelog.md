@@ -1,5 +1,54 @@
 # Changelog
 
+## [0.9.0-next.1](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.0-next.0...api-models-v0.9.0-next.1) (2026-06-23)
+
+
+### Features
+
+* add authentication generators and process features option ([a67edf1](https://github.com/iotaledger/twin-api/commit/a67edf1df212bd8ab94a40cddf5338551155696f))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add logging component type to request contexts ([210de1b](https://github.com/iotaledger/twin-api/commit/210de1b9e1c91079b59a2b90ddd57569668d647d))
+* add new error types ([#86](https://github.com/iotaledger/twin-api/issues/86)) ([71e3c07](https://github.com/iotaledger/twin-api/commit/71e3c07c792984af01c307943e0e09a3ae98710d))
+* add platform isLocalOrigin ([#173](https://github.com/iotaledger/twin-api/issues/173)) ([5e024d5](https://github.com/iotaledger/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
+* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add socket id, connect and disconnect ([20b0d0e](https://github.com/iotaledger/twin-api/commit/20b0d0ec279cab46141fee09de2c4a7087cdce16))
+* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* auth enhancements ([#93](https://github.com/iotaledger/twin-api/issues/93)) ([921a50c](https://github.com/iotaledger/twin-api/commit/921a50cd89d26e530a6be6174a5a803060fa0eb6))
+* decodeURIComponent for query and path params ([ead68a2](https://github.com/iotaledger/twin-api/commit/ead68a257425c10dd912497f7edd473c469ca132))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* export error type map ([#68](https://github.com/iotaledger/twin-api/issues/68)) ([697dfc4](https://github.com/iotaledger/twin-api/commit/697dfc4c9f6a7be493bf4b3619d7bcebf2e4584e))
+* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* matches local origin ([#148](https://github.com/iotaledger/twin-api/issues/148)) ([7f6d30c](https://github.com/iotaledger/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
+* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* remove authentication generators ([#66](https://github.com/iotaledger/twin-api/issues/66)) ([adaa169](https://github.com/iotaledger/twin-api/commit/adaa1698df1c5ccb0ad645a7a7c0d3ef82ef6ac1))
+* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* tenant api and scopes ([#75](https://github.com/iotaledger/twin-api/issues/75)) ([c663141](https://github.com/iotaledger/twin-api/commit/c663141091e8974d769f8f9904ecdab009ebd083))
+* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update public origin building ([6c8e042](https://github.com/iotaledger/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
+* use new includeStackTrace flag for toJsonObject ([6452b15](https://github.com/iotaledger/twin-api/commit/6452b153af786eee14b21152420f8a2578b70593))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* validationError mapped to http status badrequest ([adc5eb1](https://github.com/iotaledger/twin-api/commit/adc5eb11d987abb0ab9f7e0dc8e1fdae207e436e))
+
+
+### Bug Fixes
+
+* error handling make sure primary error takes precedence ([84b61f2](https://github.com/iotaledger/twin-api/commit/84b61f27fe5e4919c0c9f9a1edc8ff46dc45c1f7))
+* prevent error body masking 4xx as 500, run pre-processors in context scope ([#102](https://github.com/iotaledger/twin-api/issues/102)) ([5fbe14c](https://github.com/iotaledger/twin-api/commit/5fbe14c98e11e77a30e16704dcb8bfba7705926b))
+* replace duplicate query param instead of appending in addQueryStringParam ([#184](https://github.com/iotaledger/twin-api/issues/184)) ([a4049e3](https://github.com/iotaledger/twin-api/commit/a4049e374493b85cd02804b6d1687d24399b6eff))
+* resolve local origin context by organization routing param ([#180](https://github.com/iotaledger/twin-api/issues/180)) ([bceb9f1](https://github.com/iotaledger/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+
 ## [0.0.3-next.53](https://github.com/iotaledger/twin-api/compare/api-models-v0.0.3-next.52...api-models-v0.0.3-next.53) (2026-06-23)
 
 

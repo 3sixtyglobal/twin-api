@@ -1,5 +1,49 @@
 # Changelog
 
+## [0.9.0-next.1](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.0-next.0...api-tenant-processor-v0.9.0-next.1) (2026-06-23)
+
+
+### Features
+
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+* add tests for tenant id handler ([c868e7e](https://github.com/iotaledger/twin-api/commit/c868e7e5831e13df39b8994c40834e51f69fa0b9))
+* check tenant id in auth if set ([937ba0c](https://github.com/iotaledger/twin-api/commit/937ba0cd790038556a7b2af251e52b43cb059df4))
+* check tenant id in auth if set ([66f7337](https://github.com/iotaledger/twin-api/commit/66f73374d3cf4c1c85ea96ec74bb30712fb84dd7))
+* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* location encoding ([#79](https://github.com/iotaledger/twin-api/issues/79)) ([c684465](https://github.com/iotaledger/twin-api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
+* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* reduce short form tenant id length ([bcda377](https://github.com/iotaledger/twin-api/commit/bcda377daed03b21fd1c6ffe47bad4a45d96602b))
+* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* tenant api and scopes ([#75](https://github.com/iotaledger/twin-api/issues/75)) ([c663141](https://github.com/iotaledger/twin-api/commit/c663141091e8974d769f8f9904ecdab009ebd083))
+* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+* tenantToken decoder on skipTenant routes + BaseRestClient query-string preservation ([#108](https://github.com/iotaledger/twin-api/issues/108)) ([1435357](https://github.com/iotaledger/twin-api/commit/1435357034b41130fc97238c728265e48f746f1e))
+* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+
+
+### Bug Fixes
+
+* do not check x-api-key for health resourcr ([#54](https://github.com/iotaledger/twin-api/issues/54)) ([897a747](https://github.com/iotaledger/twin-api/commit/897a747a57ed76ee37035f7ea3d40953df3f5fb0))
+* duplicate api keys ([#61](https://github.com/iotaledger/twin-api/issues/61)) ([5519c2d](https://github.com/iotaledger/twin-api/commit/5519c2d077d9b3d4b5fc7d5f073ef67cd000a367))
+* ensure publicOrigin is unique ([1aaf7f5](https://github.com/iotaledger/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
+* prevent runPerTenant from mutating the active request context ([#152](https://github.com/iotaledger/twin-api/issues/152)) ([6e2c88c](https://github.com/iotaledger/twin-api/commit/6e2c88cfeba046ba71a218e62c90eafafaea2713))
+* remove extraneous type ([f85c52c](https://github.com/iotaledger/twin-api/commit/f85c52c55caa3a7a64f6f675842f0ea59289a5d9))
+* tenant processor skip auth inversion ([#168](https://github.com/iotaledger/twin-api/issues/168)) ([40fadd3](https://github.com/iotaledger/twin-api/commit/40fadd3bc711da34bfef62986ad83b2fa38114da))
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+* use base64Url for tenant id short form so it doesn't include slash ([7210771](https://github.com/iotaledger/twin-api/commit/72107718650acd05440ce9d9bf10905e6052281c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.0-next.0 to 0.9.0-next.1
+
 ## [0.0.3-next.53](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.0.3-next.52...api-tenant-processor-v0.0.3-next.53) (2026-06-23)
 
 
