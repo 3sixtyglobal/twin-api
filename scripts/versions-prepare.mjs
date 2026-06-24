@@ -89,7 +89,7 @@ async function run() {
 
 			if (cMaj > 999 || cMin > 999 || cPat > 999) {
 				throw new Error(
-					`customVersion ${customVersionArg} has a component exceeding 999 — this is likely a typo.`
+					`customVersion ${customVersionArg} has a component exceeding 999 - this is likely a typo.`
 				);
 			}
 
@@ -122,7 +122,7 @@ async function run() {
 
 			if (cMaj - pMaj > 1) {
 				throw new Error(
-					`customVersion ${customVersionArg} would jump the major version by ${cMaj - pMaj} from the current ${currentProdVersion}. Maximum allowed increment is 1 — if this is intentional, update the production manifest manually before running this workflow.`
+					`customVersion ${customVersionArg} would jump the major version by ${cMaj - pMaj} from the current ${currentProdVersion}. Maximum allowed increment is 1 - if this is intentional, update the production manifest manually before running this workflow.`
 				);
 			}
 
@@ -356,15 +356,11 @@ async function processDependencies(
 				}
 				dependencies[name] = `^${versionCache[name] ?? prodVersion}`;
 			} else if (!isProduction) {
-				// NEXT MODE: Convert fixed versions back to "next" references
-				// For development, use either the cached version which will be a local package
-				// or "next" to get latest prerelease
-				if (version.startsWith('^')) {
-					dependencies[name] = versionCache[name] ?? 'next';
-				} else {
-					await getPackageVersion(name, 'next', versionCache);
-					dependencies[name] = versionCache[name];
-				}
+				// NEXT MODE: Use the cached version for local workspace packages
+				// (already processed in this run), or "next" for all external deps.
+				// Do NOT fetch from npm — external deps must stay as "next", not a
+				// resolved specific version like "0.9.0-next.1".
+				dependencies[name] = versionCache[name] ?? 'next';
 			}
 		}
 	}
