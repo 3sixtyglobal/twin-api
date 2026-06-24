@@ -10,14 +10,17 @@ import { MimeTypes } from "@twin.org/web";
  */
 export class JwtMimeTypeProcessor implements IMimeTypeProcessor {
 	/**
-	 * The namespace supported by the processor.
-	 */
-	public static readonly NAMESPACE: string = "jwt";
-
-	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<JwtMimeTypeProcessor>();
+	public static readonly CLASS_NAME: string = nameof<JwtMimeTypeProcessor>();
+
+	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return JwtMimeTypeProcessor.CLASS_NAME;
+	}
 
 	/**
 	 * Get the MIME types that this handler can handle.

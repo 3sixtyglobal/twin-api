@@ -4,17 +4,25 @@ Response from a login on the server.
 
 ## Properties
 
-### body
+### headers? {#headers}
+
+> `optional` **headers?**: `object`
+
+Response headers.
+
+#### set-cookie?
+
+> `optional` **set-cookie?**: `string`
+
+The cookie containing the auth token.
+
+***
+
+### body {#body}
 
 > **body**: `object`
 
 The login response details.
-
-#### token?
-
-> `optional` **token**: `string`
-
-The access token, if it uses a mechanism with public access.
 
 #### expiry
 

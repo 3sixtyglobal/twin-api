@@ -2,6 +2,10 @@
 
 Interface describing a web server.
 
+## Extends
+
+- `IComponent`
+
 ## Type Parameters
 
 ### T
@@ -10,7 +14,7 @@ Interface describing a web server.
 
 ## Methods
 
-### getInstance()
+### getInstance() {#getinstance}
 
 > **getInstance**(): `T`
 
@@ -24,7 +28,7 @@ The web server instance.
 
 ***
 
-### build()
+### build() {#build}
 
 > **build**(`restRouteProcessors?`, `restRoutes?`, `socketRouteProcessors?`, `socketRoutes?`, `options?`): `Promise`\<`void`\>
 
@@ -66,11 +70,11 @@ Options for building the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server is fully built and ready to start.
 
 ***
 
-### start()
+### start() {#start}
 
 > **start**(): `Promise`\<`void`\>
 
@@ -80,11 +84,15 @@ Start the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server is listening for connections.
+
+#### Overrides
+
+`IComponent.start`
 
 ***
 
-### stop()
+### stop() {#stop}
 
 > **stop**(): `Promise`\<`void`\>
 
@@ -94,4 +102,26 @@ Stop the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server has shut down all connections.
+
+#### Overrides
+
+`IComponent.stop`
+
+***
+
+### health() {#health}
+
+> **health**(): `Promise`\<`IHealth`[]\>
+
+Returns the health status of the component.
+
+#### Returns
+
+`Promise`\<`IHealth`[]\>
+
+The health status of the component, can return multiple entries for elements within the component.
+
+#### Overrides
+
+`IComponent.health`

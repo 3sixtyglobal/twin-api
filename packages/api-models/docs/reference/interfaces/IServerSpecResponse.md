@@ -4,16 +4,16 @@ The OpenAPI spec for the endpoints.
 
 ## Properties
 
-### statusCode?
+### statusCode? {#statuscode}
 
-> `optional` **statusCode**: `HttpStatusCode`
+> `optional` **statusCode?**: `HttpStatusCode`
 
 Response status code.
 
 ***
 
-### body?
+### body? {#body}
 
-> `optional` **body**: `unknown`
+> `optional` **body?**: `unknown`
 
 The spec for the server.

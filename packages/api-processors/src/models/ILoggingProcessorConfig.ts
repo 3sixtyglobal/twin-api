@@ -19,4 +19,10 @@ export interface ILoggingProcessorConfig {
 	 * List of property names to obfuscate, can be regex, defaults to "password".
 	 */
 	obfuscateProperties?: string[];
+
+	/**
+	 * Request URL path prefixes to exclude from logging, defaults to ["/logging"].
+	 * Use this to prevent the logging endpoint itself from appearing in its own output.
+	 */
+	excludePaths?: string[];
 }

@@ -18,7 +18,7 @@ Interface which defines a REST route.
 
 ## Properties
 
-### operationId
+### operationId {#operationid}
 
 > **operationId**: `string`
 
@@ -30,7 +30,7 @@ The id of the operation.
 
 ***
 
-### path
+### path {#path}
 
 > **path**: `string`
 
@@ -42,11 +42,11 @@ The path to use for routing.
 
 ***
 
-### skipAuth?
+### skipAuth? {#skipauth}
 
-> `optional` **skipAuth**: `boolean`
+> `optional` **skipAuth?**: `boolean`
 
-Skips the authentication for this route.
+Skips the authentication requirement for this route.
 
 #### Inherited from
 
@@ -54,7 +54,59 @@ Skips the authentication for this route.
 
 ***
 
-### summary
+### skipTenant? {#skiptenant}
+
+> `optional` **skipTenant?**: `boolean`
+
+Skips the tenant requirement for this route.
+
+#### Inherited from
+
+[`IBaseRoute`](IBaseRoute.md).[`skipTenant`](IBaseRoute.md#skiptenant)
+
+***
+
+### requiredScope? {#requiredscope}
+
+> `optional` **requiredScope?**: `string`[]
+
+The user must have one of the specified scopes to access the route.
+
+#### Inherited from
+
+[`IBaseRoute`](IBaseRoute.md).[`requiredScope`](IBaseRoute.md#requiredscope)
+
+***
+
+### processorFeatures? {#processorfeatures}
+
+> `optional` **processorFeatures?**: `string`[]
+
+The features supported by additional processors to run for this route.
+
+#### Inherited from
+
+[`IBaseRoute`](IBaseRoute.md).[`processorFeatures`](IBaseRoute.md#processorfeatures)
+
+***
+
+### processorData? {#processordata}
+
+> `optional` **processorData?**: `object`
+
+The data for additional processors to run for this route.
+
+#### Index Signature
+
+\[`key`: `string`\]: `unknown`
+
+#### Inherited from
+
+[`IBaseRoute`](IBaseRoute.md).[`processorData`](IBaseRoute.md#processordata)
+
+***
+
+### summary {#summary}
 
 > **summary**: `string`
 
@@ -62,7 +114,7 @@ Summary of what task the operation performs.
 
 ***
 
-### tag
+### tag {#tag}
 
 > **tag**: `string`
 
@@ -70,7 +122,7 @@ Tag for the operation.
 
 ***
 
-### method
+### method {#method}
 
 > **method**: `HttpMethod`
 
@@ -78,7 +130,7 @@ The http method.
 
 ***
 
-### handler()
+### handler {#handler}
 
 > **handler**: (`httpRequestContext`, `request`) => `Promise`\<`U`\>
 
@@ -104,9 +156,9 @@ The request object, combined query param, path params and body.
 
 ***
 
-### requestType?
+### requestType? {#requesttype}
 
-> `optional` **requestType**: `object`
+> `optional` **requestType?**: `object`
 
 The type of the request object.
 
@@ -118,21 +170,21 @@ The object type for the request.
 
 #### mimeType?
 
-> `optional` **mimeType**: `string`
+> `optional` **mimeType?**: `string`
 
 The mime type of the request, defaults to "application/json" if there is a body.
 
 #### examples?
 
-> `optional` **examples**: [`IRestRouteRequestExample`](IRestRouteRequestExample.md)\<`T`\>[]
+> `optional` **examples?**: [`IRestRouteRequestExample`](IRestRouteRequestExample.md)\<`T`\>[]
 
 Example objects for the request.
 
 ***
 
-### responseType?
+### responseType? {#responsetype}
 
-> `optional` **responseType**: `object`[]
+> `optional` **responseType?**: `object`[]
 
 The type of the response object.
 
@@ -144,20 +196,20 @@ The object type of the response.
 
 #### mimeType?
 
-> `optional` **mimeType**: `string`
+> `optional` **mimeType?**: `string`
 
 The mime type of the response, defaults to "application/json" if there is a body.
 
 #### examples?
 
-> `optional` **examples**: [`IRestRouteResponseExample`](IRestRouteResponseExample.md)\<`U`\>[]
+> `optional` **examples?**: [`IRestRouteResponseExample`](IRestRouteResponseExample.md)\<`U`\>[]
 
 Example objects of the response.
 
 ***
 
-### excludeFromSpec?
+### excludeFromSpec? {#excludefromspec}
 
-> `optional` **excludeFromSpec**: `boolean`
+> `optional` **excludeFromSpec?**: `boolean`
 
 Exclude the route from being included in the spec file.

@@ -14,9 +14,9 @@ Class to help with handling http parameters.
 
 ## Methods
 
-### arrayFromString()
+### arrayFromString() {#arrayfromstring}
 
-> `static` **arrayFromString**\<`T`\>(`values?`): `undefined` \| `T`[]
+> `static` **arrayFromString**\<`T`\>(`values?`): `T`[] \| `undefined`
 
 Convert list query to array.
 
@@ -36,15 +36,15 @@ The values query string.
 
 #### Returns
 
-`undefined` \| `T`[]
+`T`[] \| `undefined`
 
 The array of values.
 
 ***
 
-### arrayToString()
+### arrayToString() {#arraytostring}
 
-> `static` **arrayToString**\<`T`\>(`values?`): `undefined` \| `string`
+> `static` **arrayToString**\<`T`\>(`values?`): `string` \| `undefined`
 
 Convert array of values to query string.
 
@@ -64,15 +64,15 @@ The values to combine string.
 
 #### Returns
 
-`undefined` \| `string`
+`string` \| `undefined`
 
 The combined.
 
 ***
 
-### objectFromString()
+### objectFromString() {#objectfromstring}
 
-> `static` **objectFromString**\<`T`\>(`value?`): `undefined` \| `T`
+> `static` **objectFromString**\<`T`\>(`value?`): `T` \| `undefined`
 
 Convert object string to object.
 
@@ -92,15 +92,15 @@ The value query string.
 
 #### Returns
 
-`undefined` \| `T`
+`T` \| `undefined`
 
 The object.
 
 ***
 
-### objectToString()
+### objectToString() {#objecttostring}
 
-> `static` **objectToString**\<`T`\>(`value?`): `undefined` \| `string`
+> `static` **objectToString**\<`T`\>(`value?`): `string` \| `undefined`
 
 Convert object to query string.
 
@@ -120,6 +120,6 @@ The value to convert to a string.
 
 #### Returns
 
-`undefined` \| `string`
+`string` \| `undefined`
 
 The converted object.

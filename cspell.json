@@ -10,19 +10,32 @@
 		"**/tests/**",
 		"*.yaml",
 		"package.json",
-		"rollup.config.mjs",
 		"vitest.config.*",
 		"tsconfig.json",
+		"tsconfig.eslint.json",
 		"typedoc.json",
-		".eslintrc.cjs",
+		"eslint.config*",
 		"**/wordlists/**",
 		"changelog.md"
 	],
-	"words": ["abbrev", "autorelease", "Fastify", "nameof", "openapi", "requestor", "Stiftung"],
+	"words": [
+		"abbrev",
+		"autorelease",
+		"cutoff",
+		"Fastify",
+		"livez",
+		"nameof",
+		"openapi",
+		"readyz",
+		"requestor",
+		"Stiftung",
+		"pver"
+	],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",
 		"/eslint-disable.*/",
 		"/^```shell[\\s\\S]*?```$/gm",
-		"/^```json[\\s\\S]*?```$/gm"
+		"/^```json[\\s\\S]*?```$/gm",
+		"/^```typescript[\\s\\S]*?```$/gm"
 	]
 }

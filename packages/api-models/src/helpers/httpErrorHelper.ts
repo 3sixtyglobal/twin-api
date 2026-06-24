@@ -13,12 +13,30 @@ import {
 	ValidationError
 } from "@twin.org/core";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
-import type { IHttpResponse } from "../models/protocol/IHttpResponse";
+import { ForbiddenError } from "../errors/forbiddenError.js";
+import { TooManyRequestsError } from "../errors/tooManyRequestsError.js";
+import type { IHttpResponse } from "../models/protocol/IHttpResponse.js";
 
 /**
  * Class to help with processing http errors.
  */
 export class HttpErrorHelper {
+	/**
+	 * Mapping of error types to status codes.
+	 */
+	public static readonly ERROR_TYPE_MAP: { [id: string]: HttpStatusCode } = {
+		[GuardError.CLASS_NAME]: HttpStatusCode.badRequest,
+		[ValidationError.CLASS_NAME]: HttpStatusCode.badRequest,
+		[ConflictError.CLASS_NAME]: HttpStatusCode.conflict,
+		[AlreadyExistsError.CLASS_NAME]: HttpStatusCode.conflict,
+		[NotFoundError.CLASS_NAME]: HttpStatusCode.notFound,
+		[UnauthorizedError.CLASS_NAME]: HttpStatusCode.unauthorized,
+		[NotImplementedError.CLASS_NAME]: HttpStatusCode.notImplemented,
+		[UnprocessableError.CLASS_NAME]: HttpStatusCode.unprocessableEntity,
+		[TooManyRequestsError.CLASS_NAME]: HttpStatusCode.tooManyRequests,
+		[ForbiddenError.CLASS_NAME]: HttpStatusCode.forbidden
+	};
+
 	/**
 	 * Process the errors from the routes.
 	 * @param err The error to process.
@@ -39,24 +57,23 @@ export class HttpErrorHelper {
 		const flattened = BaseError.flatten(error);
 
 		let httpStatusCode: HttpStatusCode = HttpStatusCode.internalServerError;
-		if (
-			flattened.some(e => BaseError.isErrorName(e, GuardError.CLASS_NAME)) ||
-			flattened.some(e => BaseError.isErrorName(e, ValidationError.CLASS_NAME))
-		) {
-			httpStatusCode = HttpStatusCode.badRequest;
-		} else if (
-			flattened.some(e => BaseError.isErrorName(e, ConflictError.CLASS_NAME)) ||
-			flattened.some(e => BaseError.isErrorName(e, AlreadyExistsError.CLASS_NAME))
-		) {
-			httpStatusCode = HttpStatusCode.conflict;
-		} else if (flattened.some(e => BaseError.isErrorName(e, NotFoundError.CLASS_NAME))) {
-			httpStatusCode = HttpStatusCode.notFound;
-		} else if (flattened.some(e => BaseError.isErrorName(e, UnauthorizedError.CLASS_NAME))) {
-			httpStatusCode = HttpStatusCode.unauthorized;
-		} else if (flattened.some(e => BaseError.isErrorName(e, NotImplementedError.CLASS_NAME))) {
-			httpStatusCode = HttpStatusCode.forbidden;
-		} else if (flattened.some(e => BaseError.isErrorName(e, UnprocessableError.CLASS_NAME))) {
-			httpStatusCode = HttpStatusCode.unprocessableEntity;
+
+		// First check the primary error, as we don't want to override that with a sub error
+		if (flattened.length > 0) {
+			const primaryError = flattened[0];
+			if (HttpErrorHelper.ERROR_TYPE_MAP[primaryError.name]) {
+				httpStatusCode = HttpErrorHelper.ERROR_TYPE_MAP[primaryError.name];
+			}
+
+			// The primary error is still internal server error, check the sub errors
+			if (httpStatusCode === HttpStatusCode.internalServerError) {
+				for (const className in HttpErrorHelper.ERROR_TYPE_MAP) {
+					if (flattened.some(e => BaseError.isErrorName(e, className))) {
+						httpStatusCode = HttpErrorHelper.ERROR_TYPE_MAP[className];
+						break;
+					}
+				}
+			}
 		}
 
 		const returnError = error.toJsonObject(includeStack);
@@ -80,7 +97,8 @@ export class HttpErrorHelper {
 	): void {
 		response.headers ??= {};
 		response.headers[HeaderTypes.ContentType] = `${MimeTypes.Json}; charset=utf-8`;
-		response.body = error;
+		// Fastify treats an Error-typed body as a framework error and overrides the status with 500.
+		response.body = BaseError.fromError(error).toJsonObject();
 		response.statusCode = statusCode;
 	}
 }

@@ -1,29 +1,20 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { readFile } from "node:fs/promises";
-import type {
-	HealthStatus,
-	IHealthInfo,
-	IInformationComponent,
-	IServerInfo
-} from "@twin.org/api-models";
+import type { IInformationComponent, IServerInfo } from "@twin.org/api-models";
 import { Guards, Is } from "@twin.org/core";
+import { EngineCoreFactory } from "@twin.org/engine-models";
 import { nameof } from "@twin.org/nameof";
-import type { IInformationServiceConstructorOptions } from "./models/IInformationServiceConstructorOptions";
+import type { IInformationServiceConstructorOptions } from "./models/IInformationServiceConstructorOptions.js";
 
 /**
  * The information service for the server.
  */
 export class InformationService implements IInformationComponent {
 	/**
-	 * The namespace supported by the information service.
-	 */
-	public static readonly NAMESPACE: string = "information";
-
-	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<InformationService>();
+	public static readonly CLASS_NAME: string = nameof<InformationService>();
 
 	/**
 	 * The server information.
@@ -32,10 +23,16 @@ export class InformationService implements IInformationComponent {
 	private readonly _serverInfo: IServerInfo;
 
 	/**
-	 * The server health.
+	 * The path to the favicon Spec.
 	 * @internal
 	 */
-	private readonly _healthInfo: IHealthInfo;
+	private readonly _faviconPath?: string;
+
+	/**
+	 * The favicon.
+	 * @internal
+	 */
+	private _favicon?: Uint8Array;
 
 	/**
 	 * The path to the OpenAPI Spec.
@@ -47,35 +44,57 @@ export class InformationService implements IInformationComponent {
 	 * The OpenAPI spec.
 	 * @internal
 	 */
-	private _openApiSpec?: unknown;
+	private _openApiSpec?: string;
 
 	/**
 	 * Create a new instance of InformationService.
 	 * @param options The options to create the service.
 	 */
 	constructor(options: IInformationServiceConstructorOptions) {
-		Guards.object(this.CLASS_NAME, nameof(options), options);
-		Guards.object(this.CLASS_NAME, nameof(options.config), options.config);
-		Guards.object(this.CLASS_NAME, nameof(options.config.serverInfo), options.config.serverInfo);
+		Guards.object(InformationService.CLASS_NAME, nameof(options), options);
+		Guards.object(InformationService.CLASS_NAME, nameof(options.config), options.config);
+		Guards.object(
+			InformationService.CLASS_NAME,
+			nameof(options.config.serverInfo),
+			options.config.serverInfo
+		);
 
 		this._serverInfo = options.config.serverInfo;
-		this._healthInfo = {
-			status: "ok"
-		};
+		this._faviconPath = options.config.favIconPath;
 		this._openApiSpecPath = options.config.openApiSpecPath;
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return InformationService.CLASS_NAME;
+	}
+
+	/**
 	 * The service needs to be started when the application is initialized.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the OpenAPI spec and favicon have been loaded from disk.
 	 */
 	public async start(): Promise<void> {
-		const filename = this._openApiSpecPath;
-
-		if (Is.stringValue(filename)) {
-			const contentBuffer = await readFile(filename, "utf8");
+		const openApiPath = this._openApiSpecPath;
+		if (Is.stringValue(openApiPath)) {
+			const contentBuffer = await readFile(openApiPath, "utf8");
 			this._openApiSpec = JSON.parse(contentBuffer);
 		}
+
+		const favIconPath = this._faviconPath;
+		if (Is.stringValue(favIconPath)) {
+			this._favicon = await readFile(favIconPath);
+		}
+	}
+
+	/**
+	 * Get the root information.
+	 * @returns The root information.
+	 */
+	public async root(): Promise<string> {
+		return `${this._serverInfo.name} - ${this._serverInfo.version}`;
 	}
 
 	/**
@@ -87,6 +106,14 @@ export class InformationService implements IInformationComponent {
 	}
 
 	/**
+	 * Get the favicon.
+	 * @returns The favicon.
+	 */
+	public async favicon(): Promise<Uint8Array | undefined> {
+		return this._favicon;
+	}
+
+	/**
 	 * Get the OpenAPI spec.
 	 * @returns The OpenAPI spec.
 	 */
@@ -95,67 +122,28 @@ export class InformationService implements IInformationComponent {
 	}
 
 	/**
-	 * Get the server health.
-	 * @returns The service health.
+	 * Is the server live.
+	 * @returns The liveness status of the server.
 	 */
-	public async health(): Promise<IHealthInfo> {
-		let errorCount = 0;
-		let warningCount = 0;
-
-		if (Is.arrayValue(this._healthInfo.components)) {
-			errorCount = this._healthInfo.components.filter(c => c.status === "error").length;
-			warningCount = this._healthInfo.components.filter(c => c.status === "warning").length;
-		}
-
-		if (errorCount > 0) {
-			this._healthInfo.status = "error";
-		} else if (warningCount > 0) {
-			this._healthInfo.status = "warning";
-		} else {
-			this._healthInfo.status = "ok";
-		}
-
-		return this._healthInfo;
+	public async livez(): Promise<{
+		status: "alive" | "dead";
+	}> {
+		return { status: "alive" };
 	}
 
 	/**
-	 * Set the status of a component.
-	 * @param name The component name.
-	 * @param status The status of the component.
-	 * @param details The details for the status.
-	 * @returns Nothing.
+	 * Is the server ready.
+	 * @returns The readyz status of the server.
 	 */
-	public async setComponentHealth(
-		name: string,
-		status: HealthStatus,
-		details?: string
-	): Promise<void> {
-		const component = this._healthInfo.components?.find(c => c.name === name);
+	public async readyz(): Promise<{
+		status: "ready" | "not ready";
+	}> {
+		const engine = EngineCoreFactory.getIfExists("engine");
 
-		if (Is.undefined(component)) {
-			this._healthInfo.components ??= [];
-			this._healthInfo.components.push({
-				name,
-				status,
-				details
-			});
-		} else {
-			component.status = status;
-			component.details = details;
+		if (engine?.isStarted()) {
+			return { status: "ready" };
 		}
-	}
 
-	/**
-	 * Remove the status of a component.
-	 * @param name The component name.
-	 * @returns Nothing.
-	 */
-	public async removeComponentHealth(name: string): Promise<void> {
-		if (Is.arrayValue(this._healthInfo.components)) {
-			const componentIndex = this._healthInfo.components.findIndex(c => c.name === name);
-			if (componentIndex !== -1) {
-				this._healthInfo.components.splice(componentIndex, 1);
-			}
-		}
+		return { status: "not ready" };
 	}
 }

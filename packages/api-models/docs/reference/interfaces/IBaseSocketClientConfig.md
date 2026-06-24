@@ -4,15 +4,15 @@ Definition for the configuration of a socket service.
 
 ## Properties
 
-### basePath?
+### basePath? {#basepath}
 
-> `optional` **basePath**: `string`
+> `optional` **basePath?**: `string`
 
 Base path for the socket service, defaults to /socket.
 
 ***
 
-### endpoint
+### endpoint {#endpoint}
 
 > **endpoint**: `string`
 
@@ -20,16 +20,16 @@ The endpoint where the api is hosted.
 
 ***
 
-### pathPrefix?
+### pathPrefix? {#pathprefix}
 
-> `optional` **pathPrefix**: `string`
+> `optional` **pathPrefix?**: `string`
 
 The prefix to the routes.
 
 ***
 
-### headers?
+### headers? {#headers}
 
-> `optional` **headers**: `IHttpHeaders`
+> `optional` **headers?**: `IHttpHeaders`
 
 The headers to include in requests.

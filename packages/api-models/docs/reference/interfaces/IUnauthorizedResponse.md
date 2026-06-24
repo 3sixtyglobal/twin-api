@@ -4,7 +4,7 @@ You are not authorized to use the API or no credentials were supplied, see the c
 
 ## Properties
 
-### statusCode
+### statusCode {#statuscode}
 
 > **statusCode**: `401`
 
@@ -12,7 +12,7 @@ Response status code.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `IError`
 

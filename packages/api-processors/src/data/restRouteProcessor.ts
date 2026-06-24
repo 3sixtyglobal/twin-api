@@ -3,31 +3,25 @@
 import {
 	HttpErrorHelper,
 	type IHttpRequest,
-	type IHttpRequestIdentity,
 	type IHttpResponse,
-	type IRestRouteProcessor,
 	type IHttpServerRequest,
 	type IRestRoute,
+	type IRestRouteProcessor,
 	type IRestRouteResponseOptions
 } from "@twin.org/api-models";
 import { Is, NotFoundError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
-import type { IRestRouteProcessorConstructorOptions } from "../models/IRestRouteProcessorConstructorOptions";
+import type { IRestRouteProcessorConstructorOptions } from "../models/IRestRouteProcessorConstructorOptions.js";
 
 /**
  * Process the REST request and hands it on to the route handler.
  */
 export class RestRouteProcessor implements IRestRouteProcessor {
 	/**
-	 * The namespace supported by the processor.
-	 */
-	public static readonly NAMESPACE: string = "rest-route";
-
-	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<RestRouteProcessor>();
+	public static readonly CLASS_NAME: string = nameof<RestRouteProcessor>();
 
 	/**
 	 * Include the stack with errors.
@@ -44,19 +38,31 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 	}
 
 	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return RestRouteProcessor.CLASS_NAME;
+	}
+
+	/**
 	 * Process the REST request for the specified route.
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
 	 * @param processorState The state handed through the processors.
+	 * @param componentTypes The component types for the request.
+	 * @param componentTypes.loggingComponentType The logging component type.
+	 * @returns A promise that resolves when the request has been processed and the response populated.
 	 */
 	public async process(
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IRestRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
-		processorState: { [id: string]: unknown }
+		processorState: { [id: string]: unknown },
+		componentTypes?: {
+			loggingComponentType?: string;
+		}
 	): Promise<void> {
 		// Don't handle the route if another processor has already set the response
 		// status code e.g. from an auth processor
@@ -66,7 +72,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 					response,
 					{
 						name: NotFoundError.CLASS_NAME,
-						message: `${this.CLASS_NAME}.routeNotFound`,
+						message: `${RestRouteProcessor.CLASS_NAME}.routeNotFound`,
 						properties: {
 							notFoundId: request.url
 						}
@@ -76,6 +82,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 			} else {
 				try {
 					const req: IHttpRequest = {
+						headers: request.headers,
 						pathParams: request.pathParams,
 						query: request.query,
 						body: request.body
@@ -83,9 +90,9 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 
 					const restRouteResponse: IHttpResponse & IRestRouteResponseOptions = await route.handler(
 						{
-							...requestIdentity,
 							serverRequest: request,
-							processorState
+							processorState,
+							loggingComponentType: componentTypes?.loggingComponentType
 						},
 						req
 					);
@@ -94,6 +101,18 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 						restRouteResponse.statusCode ?? response.statusCode ?? HttpStatusCode.ok;
 
 					const headers = restRouteResponse?.headers ?? {};
+
+					const location = headers[HeaderTypes.Location];
+					if (
+						restRouteResponse.statusCode === HttpStatusCode.created &&
+						Is.stringValue(location) &&
+						!location.includes("/")
+					) {
+						// If this was a create with a location header and its a plain id
+						// then make sure it is encoded to avoid problems such as embedded colons
+						// if it contains slashes then we assume it is already encoded correctly
+						headers[HeaderTypes.Location] = encodeURIComponent(location);
+					}
 
 					if (Is.empty(restRouteResponse?.body)) {
 						// If there is no custom status code and the body is empty
@@ -111,7 +130,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 						// instead of the default application/json
 						headers[HeaderTypes.ContentType] =
 							restRouteResponse?.attachment?.mimeType ??
-							response.headers?.[HeaderTypes.ContentType] ??
+							restRouteResponse.headers?.[HeaderTypes.ContentType] ??
 							`${MimeTypes.Json}; charset=utf-8`;
 
 						// If there are filename or inline options set then add the content disposition

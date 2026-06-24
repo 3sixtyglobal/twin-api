@@ -4,14 +4,14 @@ Perform a refresh of the auth token.
 
 ## Properties
 
-### query?
+### body? {#body}
 
-> `optional` **query**: `object`
+> `optional` **body?**: `object`
 
 The refresh token details.
 
 #### token?
 
-> `optional` **token**: `string`
+> `optional` **token?**: `string`
 
 The token to refresh, if it uses a mechanism with public access.

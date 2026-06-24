@@ -10,24 +10,24 @@ Model for the standard parameters for an http response.
 
 ## Properties
 
-### statusCode?
+### statusCode? {#statuscode}
 
-> `optional` **statusCode**: `HttpStatusCode`
+> `optional` **statusCode?**: `HttpStatusCode`
 
 Response status code.
 
 ***
 
-### headers?
+### headers? {#headers}
 
-> `optional` **headers**: `IHttpHeaders`
+> `optional` **headers?**: `IHttpHeaders`
 
 Response headers.
 
 ***
 
-### body?
+### body? {#body}
 
-> `optional` **body**: `T`
+> `optional` **body?**: `T`
 
 Data to return as the main payload.

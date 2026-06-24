@@ -1,19 +1,29 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IComponent } from "@twin.org/core";
-import type { HealthStatus } from "./healthStatus";
-import type { IHealthInfo } from "./IHealthInfo";
-import type { IServerInfo } from "./IServerInfo";
+import type { IServerInfo } from "./IServerInfo.js";
 
 /**
  * The information component for the server.
  */
 export interface IInformationComponent extends IComponent {
 	/**
+	 * Get the root information.
+	 * @returns The root information.
+	 */
+	root(): Promise<string>;
+
+	/**
 	 * Get the server information.
 	 * @returns The service information.
 	 */
 	info(): Promise<IServerInfo>;
+
+	/**
+	 * Get the favicon.
+	 * @returns The favicon.
+	 */
+	favicon(): Promise<Uint8Array | undefined>;
 
 	/**
 	 * Get the OpenAPI spec.
@@ -22,24 +32,14 @@ export interface IInformationComponent extends IComponent {
 	spec(): Promise<unknown>;
 
 	/**
-	 * Get the server health.
-	 * @returns The service health.
+	 * Is the server live.
+	 * @returns The livez status of the server.
 	 */
-	health(): Promise<IHealthInfo>;
+	livez(): Promise<{ status: "alive" | "dead" }>;
 
 	/**
-	 * Set the status of a component.
-	 * @param name The component name.
-	 * @param status The status of the component.
-	 * @param details The details for the status.
-	 * @returns Nothing.
+	 * Is the server ready.
+	 * @returns The readyz status of the server.
 	 */
-	setComponentHealth(name: string, status: HealthStatus, details?: string): Promise<void>;
-
-	/**
-	 * Remove the status of a component.
-	 * @param name The component name.
-	 * @returns Nothing.
-	 */
-	removeComponentHealth(name: string): Promise<void>;
+	readyz(): Promise<{ status: "ready" | "not ready" }>;
 }

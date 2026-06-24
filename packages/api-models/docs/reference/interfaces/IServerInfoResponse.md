@@ -4,7 +4,7 @@ The information about the server.
 
 ## Properties
 
-### body
+### body {#body}
 
 > **body**: [`IServerInfo`](IServerInfo.md)
 

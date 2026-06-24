@@ -7,5 +7,6 @@
 	"packages/api-rest-client": "0.0.1",
 	"packages/api-auth-entity-storage-models": "0.0.1",
 	"packages/api-auth-entity-storage-service": "0.0.1",
-	"packages/api-auth-entity-storage-rest-client": "0.0.1"
+	"packages/api-auth-entity-storage-rest-client": "0.0.1",
+	"packages/api-tenant-processor": "0.0.1"
 }

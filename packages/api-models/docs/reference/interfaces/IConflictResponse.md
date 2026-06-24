@@ -4,7 +4,7 @@ The request resulted in a conflicting operation, see the content for more detail
 
 ## Properties
 
-### statusCode
+### statusCode {#statuscode}
 
 > **statusCode**: `409`
 
@@ -12,16 +12,8 @@ Response status code.
 
 ***
 
-### body
+### body {#body}
 
-> **body**: `IError` & `object`
+> **body**: `IError`
 
 The body which contains the error.
-
-#### Type declaration
-
-##### conflicts
-
-> **conflicts**: `string`[]
-
-The conflicting items.

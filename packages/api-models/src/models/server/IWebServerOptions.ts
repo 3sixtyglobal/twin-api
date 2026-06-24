@@ -39,4 +39,10 @@ export interface IWebServerOptions {
 	 * @default ["*"]
 	 */
 	corsOrigins?: string | string[];
+
+	/**
+	 * The public origin of the server, used for constructing the request URL.
+	 * If not provided, it will be determined from the incoming request.
+	 */
+	publicOrigin?: string;
 }

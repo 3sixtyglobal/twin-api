@@ -8,7 +8,21 @@ The information component for the server.
 
 ## Methods
 
-### info()
+### root() {#root}
+
+> **root**(): `Promise`\<`string`\>
+
+Get the root information.
+
+#### Returns
+
+`Promise`\<`string`\>
+
+The root information.
+
+***
+
+### info() {#info}
 
 > **info**(): `Promise`\<[`IServerInfo`](IServerInfo.md)\>
 
@@ -22,7 +36,21 @@ The service information.
 
 ***
 
-### spec()
+### favicon() {#favicon}
+
+> **favicon**(): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
+
+Get the favicon.
+
+#### Returns
+
+`Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
+
+The favicon.
+
+***
+
+### spec() {#spec}
 
 > **spec**(): `Promise`\<`unknown`\>
 
@@ -36,70 +64,28 @@ The OpenAPI spec.
 
 ***
 
-### health()
+### livez() {#livez}
 
-> **health**(): `Promise`\<[`IHealthInfo`](IHealthInfo.md)\>
+> **livez**(): `Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
-Get the server health.
+Is the server live.
 
 #### Returns
 
-`Promise`\<[`IHealthInfo`](IHealthInfo.md)\>
+`Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
-The service health.
+The livez status of the server.
 
 ***
 
-### setComponentHealth()
+### readyz() {#readyz}
 
-> **setComponentHealth**(`name`, `status`, `details?`): `Promise`\<`void`\>
+> **readyz**(): `Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-Set the status of a component.
-
-#### Parameters
-
-##### name
-
-`string`
-
-The component name.
-
-##### status
-
-[`HealthStatus`](../type-aliases/HealthStatus.md)
-
-The status of the component.
-
-##### details?
-
-`string`
-
-The details for the status.
+Is the server ready.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-Nothing.
-
-***
-
-### removeComponentHealth()
-
-> **removeComponentHealth**(`name`): `Promise`\<`void`\>
-
-Remove the status of a component.
-
-#### Parameters
-
-##### name
-
-`string`
-
-The component name.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
+The readyz status of the server.

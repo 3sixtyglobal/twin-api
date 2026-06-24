@@ -9,7 +9,7 @@ Interface which defines a route.
 
 ## Properties
 
-### operationId
+### operationId {#operationid}
 
 > **operationId**: `string`
 
@@ -17,7 +17,7 @@ The id of the operation.
 
 ***
 
-### path
+### path {#path}
 
 > **path**: `string`
 
@@ -25,8 +25,44 @@ The path to use for routing.
 
 ***
 
-### skipAuth?
+### skipAuth? {#skipauth}
 
-> `optional` **skipAuth**: `boolean`
+> `optional` **skipAuth?**: `boolean`
 
-Skips the authentication for this route.
+Skips the authentication requirement for this route.
+
+***
+
+### skipTenant? {#skiptenant}
+
+> `optional` **skipTenant?**: `boolean`
+
+Skips the tenant requirement for this route.
+
+***
+
+### requiredScope? {#requiredscope}
+
+> `optional` **requiredScope?**: `string`[]
+
+The user must have one of the specified scopes to access the route.
+
+***
+
+### processorFeatures? {#processorfeatures}
+
+> `optional` **processorFeatures?**: `string`[]
+
+The features supported by additional processors to run for this route.
+
+***
+
+### processorData? {#processordata}
+
+> `optional` **processorData?**: `object`
+
+The data for additional processors to run for this route.
+
+#### Index Signature
+
+\[`key`: `string`\]: `unknown`

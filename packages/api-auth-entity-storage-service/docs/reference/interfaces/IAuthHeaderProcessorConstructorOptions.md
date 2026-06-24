@@ -4,9 +4,23 @@ Options for the AuthHeaderProcessor constructor.
 
 ## Properties
 
-### vaultConnectorType?
+### userEntityStorageType? {#userentitystoragetype}
 
-> `optional` **vaultConnectorType**: `string`
+> `optional` **userEntityStorageType?**: `string`
+
+The entity storage for users.
+
+#### Default
+
+```ts
+authentication-user
+```
+
+***
+
+### vaultConnectorType? {#vaultconnectortype}
+
+> `optional` **vaultConnectorType?**: `string`
 
 The vault for the private keys.
 
@@ -18,8 +32,22 @@ vault
 
 ***
 
-### config?
+### tenantAdminComponentType? {#tenantadmincomponenttype}
 
-> `optional` **config**: [`IAuthHeaderProcessorConfig`](IAuthHeaderProcessorConfig.md)
+> `optional` **tenantAdminComponentType?**: `string`
+
+The component to retrieve tenant information.
+
+#### Default
+
+```ts
+tenant-admin
+```
+
+***
+
+### config? {#config}
+
+> `optional` **config?**: [`IAuthHeaderProcessorConfig`](IAuthHeaderProcessorConfig.md)
 
 The configuration for the processor.

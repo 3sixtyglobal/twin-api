@@ -4,7 +4,7 @@ Configuration for the information service.
 
 ## Properties
 
-### serverInfo
+### serverInfo {#serverinfo}
 
 > **serverInfo**: `IServerInfo`
 
@@ -12,8 +12,16 @@ The server information.
 
 ***
 
-### openApiSpecPath?
+### openApiSpecPath? {#openapispecpath}
 
-> `optional` **openApiSpecPath**: `string`
+> `optional` **openApiSpecPath?**: `string`
 
 The path to the OpenAPI Spec.
+
+***
+
+### favIconPath? {#faviconpath}
+
+> `optional` **favIconPath?**: `string`
+
+The path to the favicon.

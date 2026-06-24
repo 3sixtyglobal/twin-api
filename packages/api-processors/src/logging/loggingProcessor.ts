@@ -3,35 +3,30 @@
 import type {
 	IBaseRoute,
 	IBaseRouteProcessor,
-	IHttpRequestIdentity,
 	IHttpResponse,
 	IHttpServerRequest
 } from "@twin.org/api-models";
-import { Coerce, Is, ObjectHelper } from "@twin.org/core";
-import { LoggingConnectorFactory, type ILoggingConnector } from "@twin.org/logging-models";
+import type { IContextIds } from "@twin.org/context";
+import { Coerce, ComponentFactory, Is, ObjectHelper } from "@twin.org/core";
+import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
-import type { ILoggingProcessorConstructorOptions } from "../models/ILoggingProcessorConstructorOptions";
+import type { ILoggingProcessorConstructorOptions } from "../models/ILoggingProcessorConstructorOptions.js";
 
 /**
  * Process the REST request and log its information.
  */
 export class LoggingProcessor implements IBaseRouteProcessor {
 	/**
-	 * The namespace supported by the processor.
-	 */
-	public static readonly NAMESPACE: string = "logging";
-
-	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<LoggingProcessor>();
+	public static readonly CLASS_NAME: string = nameof<LoggingProcessor>();
 
 	/**
-	 * The connector for logging the information.
+	 * The component for logging the information.
 	 * @internal
 	 */
-	private readonly _loggingConnector: ILoggingConnector;
+	private readonly _logging?: ILoggingComponent;
 
 	/**
 	 * Include the body objects when logging the information.
@@ -52,16 +47,29 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	private readonly _obfuscateProperties: string[];
 
 	/**
+	 * Request URL path prefixes to skip logging, defaults to ["/logging"].
+	 * @internal
+	 */
+	private readonly _excludePaths: string[];
+
+	/**
 	 * Create a new instance of LoggingProcessor.
 	 * @param options Options for the processor.
 	 */
 	constructor(options?: ILoggingProcessorConstructorOptions) {
-		this._loggingConnector = LoggingConnectorFactory.get(
-			options?.loggingConnectorType ?? "logging"
-		);
+		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType);
 		this._includeBody = options?.config?.includeBody ?? false;
 		this._fullBase64 = options?.config?.fullBase64 ?? false;
 		this._obfuscateProperties = options?.config?.obfuscateProperties ?? ["password"];
+		this._excludePaths = options?.config?.excludePaths ?? ["/logging"];
+	}
+
+	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return LoggingProcessor.CLASS_NAME;
 	}
 
 	/**
@@ -69,24 +77,17 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the pre-processing log entry has been written.
 	 */
 	public async pre(
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IBaseRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
-		const now = process.hrtime.bigint();
-		processorState.requestStart = now;
-
-		const contentType = request.headers?.[HeaderTypes.ContentType];
-		const isJson = Is.stringValue(contentType)
-			? contentType.includes(MimeTypes.Json) || contentType.includes(MimeTypes.JsonLd)
-			: false;
-
 		let requestUrl = "";
 		if (Is.stringValue(request.url)) {
 			// Socket paths do not have a prefix so just use the whole url.
@@ -97,17 +98,29 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 			}
 		}
 
-		await this._loggingConnector.log({
+		if (this._excludePaths.some(p => requestUrl.startsWith(p))) {
+			return;
+		}
+
+		const now = process.hrtime.bigint();
+		processorState.requestStart = now;
+
+		const contentType = request.headers?.[HeaderTypes.ContentType];
+		const isJson = this.isMimeJson(contentType);
+
+		await this._logging?.log({
 			level: "info",
-			source: this.CLASS_NAME,
+			source: LoggingProcessor.CLASS_NAME,
 			ts: Date.now(),
-			message: `===> ${request.method} ${requestUrl}`,
-			data:
-				this._includeBody && isJson
-					? (this.processJson("body", ObjectHelper.clone(request?.body)) as {
-							[key: string]: unknown;
-						})
-					: undefined
+			message: "requestMessage",
+			data: {
+				method: request.method,
+				requestUrl,
+				body:
+					this._includeBody && isJson
+						? this.processJson("body", ObjectHelper.clone(request?.body))
+						: undefined
+			}
 		});
 	}
 
@@ -116,22 +129,35 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
+	 * @returns A promise that resolves when the post-processing log entry has been written.
 	 */
 	public async post(
 		request: IHttpServerRequest,
 		response: IHttpResponse,
 		route: IBaseRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: { [id: string]: unknown }
 	): Promise<void> {
+		let requestUrl = "";
+		if (Is.stringValue(request.url)) {
+			// Socket paths do not have a prefix so just use the whole url.
+			if (request.url.startsWith("http")) {
+				requestUrl = new URL(request.url).pathname;
+			} else {
+				requestUrl = request.url;
+			}
+		}
+
+		if (this._excludePaths.some(p => requestUrl.startsWith(p))) {
+			return;
+		}
+
 		let data: { [id: string]: unknown } | undefined;
 		if (this._includeBody) {
 			const contentType = response.headers?.[HeaderTypes.ContentType];
-			const isJson = Is.stringValue(contentType)
-				? contentType.includes(MimeTypes.Json) || contentType.includes(MimeTypes.JsonLd)
-				: false;
+			const isJson = this.isMimeJson(contentType);
 			const contentLength = response.headers?.[HeaderTypes.ContentLength];
 			if (isJson) {
 				data = {
@@ -157,30 +183,40 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		const elapsed = now - start;
 		const elapsedMicroSeconds = Math.floor(Number(elapsed) / 1000);
 
-		let requestUrl = "";
-		if (Is.stringValue(request.url)) {
-			// Socket paths do not have a prefix so just use the whole url.
-			if (request.url.startsWith("http")) {
-				requestUrl = new URL(request.url).pathname;
-			} else {
-				requestUrl = request.url;
-			}
+		if (Is.number(response.statusCode) && response.statusCode >= HttpStatusCode.badRequest) {
+			await this._logging?.log({
+				level: "error",
+				source: LoggingProcessor.CLASS_NAME,
+				ts: Date.now(),
+				message: "responseMessage",
+				data: {
+					statusCode: response.statusCode,
+					method: request.method,
+					requestUrl: requestUrl ?? "",
+					elapsedMicroSeconds,
+					...data
+				}
+			});
+		} else {
+			await this._logging?.log({
+				level: "info",
+				source: LoggingProcessor.CLASS_NAME,
+				ts: Date.now(),
+				message: "responseMessage",
+				data: {
+					statusCode: response.statusCode,
+					method: request.method,
+					requestUrl: requestUrl ?? "",
+					elapsedMicroSeconds,
+					...data
+				}
+			});
 		}
-
-		await this._loggingConnector.log({
-			level:
-				Is.number(response.statusCode) && response.statusCode >= HttpStatusCode.badRequest
-					? "error"
-					: "info",
-			source: this.CLASS_NAME,
-			ts: Date.now(),
-			message: `<=== ${response.statusCode ?? ""} ${request.method} ${requestUrl} duration: ${elapsedMicroSeconds}µs`,
-			data
-		});
 	}
 
 	/**
 	 * Process the JSON.
+	 * @param propName The property name to process.
 	 * @param propValue The property to process.
 	 * @returns The processed property.
 	 * @internal
@@ -204,5 +240,17 @@ export class LoggingProcessor implements IBaseRouteProcessor {
 		}
 
 		return propValue;
+	}
+
+	/**
+	 * Check if the content type is JSON.
+	 * @param contentType The content type to check.
+	 * @returns True if the content type is JSON, false otherwise.
+	 * @internal
+	 */
+	private isMimeJson(contentType: string | string[] | undefined): boolean {
+		return Is.stringValue(contentType)
+			? contentType.includes(MimeTypes.Json) || contentType.includes(MimeTypes.JsonLd)
+			: false;
 	}
 }

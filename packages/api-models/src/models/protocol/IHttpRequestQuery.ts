@@ -5,5 +5,5 @@
  * Model used for Http request query parameters.
  */
 export interface IHttpRequestQuery {
-	[id: string]: string | number | boolean;
+	[id: string]: string;
 }

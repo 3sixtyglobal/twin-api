@@ -1,1 +1,7 @@
-{}
+{
+	"error": {
+		"healthService": {
+			"componentHealthCheckFailed": "Health check failed for component \"{className}\""
+		}
+	}
+}

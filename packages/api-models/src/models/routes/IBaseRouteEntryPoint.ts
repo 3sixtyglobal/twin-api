@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { ITag } from "./ITag";
+import type { ITag } from "./ITag.js";
 
 /**
  * Route entry points are used for exposing the routes from a package.

@@ -28,51 +28,51 @@ The dependencies for the identity connector.
 
 ## Properties
 
-### NAMESPACE
+### CLASS\_NAME {#class_name}
 
-> `readonly` `static` **NAMESPACE**: `string` = `"authentication-entity-storage"`
-
-The namespace supported by the authentication service.
-
-***
-
-### CLASS\_NAME
-
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
 
-#### Implementation of
-
-`IAuthenticationComponent.CLASS_NAME`
-
 ## Methods
 
-### start()
+### className() {#classname}
 
-> **start**(`nodeIdentity`, `nodeLoggingConnectorType?`): `Promise`\<`void`\>
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`IAuthenticationComponent.className`
+
+***
+
+### start() {#start}
+
+> **start**(`nodeLoggingComponentType?`): `Promise`\<`void`\>
 
 The service needs to be started when the application is initialized.
 
 #### Parameters
 
-##### nodeIdentity
+##### nodeLoggingComponentType?
 
 `string`
 
-The identity of the node.
-
-##### nodeLoggingConnectorType?
-
-`string`
-
-The node logging connector type, defaults to "node-logging".
+The node logging component type.
 
 #### Returns
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when rate-limit actions have been registered and the node identity cached.
 
 #### Implementation of
 
@@ -80,7 +80,33 @@ Nothing.
 
 ***
 
-### login()
+### stop() {#stop}
+
+> **stop**(`nodeLoggingComponentType?`): `Promise`\<`void`\>
+
+The component needs to be stopped when the node is closed.
+
+#### Parameters
+
+##### nodeLoggingComponentType?
+
+`string`
+
+The node logging component type.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when all rate-limit actions have been unregistered.
+
+#### Implementation of
+
+`IAuthenticationComponent.stop`
+
+***
+
+### login() {#login}
 
 > **login**(`email`, `password`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
@@ -112,7 +138,7 @@ The authentication token for the user, if it uses a mechanism with public access
 
 ***
 
-### logout()
+### logout() {#logout}
 
 > **logout**(`token?`): `Promise`\<`void`\>
 
@@ -130,7 +156,7 @@ The token to logout, if it uses a mechanism with public access.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the logout audit entry has been recorded.
 
 #### Implementation of
 
@@ -138,9 +164,9 @@ Nothing.
 
 ***
 
-### refresh()
+### refresh() {#refresh}
 
-> **refresh**(`token?`): `Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+> **refresh**(`token?`): `Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
 Refresh the token.
 
@@ -154,10 +180,42 @@ The token to refresh, if it uses a mechanism with public access.
 
 #### Returns
 
-`Promise`\<\{ `token`: `string`; `expiry`: `number`; \}\>
+`Promise`\<\{ `token?`: `string`; `expiry`: `number`; \}\>
 
 The refreshed token, if it uses a mechanism with public access.
 
 #### Implementation of
 
 `IAuthenticationComponent.refresh`
+
+***
+
+### updatePassword() {#updatepassword}
+
+> **updatePassword**(`currentPassword`, `newPassword`): `Promise`\<`void`\>
+
+Update the user's password.
+
+#### Parameters
+
+##### currentPassword
+
+`string`
+
+The current password for the user.
+
+##### newPassword
+
+`string`
+
+The new password for the user.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the password has been updated and the rate limit cleared.
+
+#### Implementation of
+
+`IAuthenticationComponent.updatePassword`

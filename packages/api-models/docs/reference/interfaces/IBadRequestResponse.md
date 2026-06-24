@@ -4,7 +4,7 @@ The server cannot process the request, see the content for more details.
 
 ## Properties
 
-### statusCode
+### statusCode {#statuscode}
 
 > **statusCode**: `400`
 
@@ -12,7 +12,7 @@ Response status code.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `IError`
 

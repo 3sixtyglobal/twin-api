@@ -15,10 +15,5 @@ export interface IConflictResponse {
 	/**
 	 * The body which contains the error.
 	 */
-	body: IError & {
-		/**
-		 * The conflicting items.
-		 */
-		conflicts: string[];
-	};
+	body: IError;
 }

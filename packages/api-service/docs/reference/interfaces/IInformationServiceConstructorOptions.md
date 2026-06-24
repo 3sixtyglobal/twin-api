@@ -4,7 +4,7 @@ Options for the InformationService constructor.
 
 ## Properties
 
-### config
+### config {#config}
 
 > **config**: [`IInformationServiceConfig`](IInformationServiceConfig.md)
 

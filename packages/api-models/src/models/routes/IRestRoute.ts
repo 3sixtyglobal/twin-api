@@ -1,13 +1,13 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { HttpMethod } from "@twin.org/web";
-import type { IBaseRoute } from "./IBaseRoute";
-import type { IRestRouteRequestExample } from "./IRestRouteRequestExample";
-import type { IRestRouteResponseExample } from "./IRestRouteResponseExample";
-import type { IRestRouteResponseOptions } from "./IRestRouteResponseOptions";
-import type { IHttpRequest } from "../protocol/IHttpRequest";
-import type { IHttpRequestContext } from "../protocol/IHttpRequestContext";
-import type { IHttpResponse } from "../protocol/IHttpResponse";
+import type { IBaseRoute } from "./IBaseRoute.js";
+import type { IRestRouteRequestExample } from "./IRestRouteRequestExample.js";
+import type { IRestRouteResponseExample } from "./IRestRouteResponseExample.js";
+import type { IRestRouteResponseOptions } from "./IRestRouteResponseOptions.js";
+import type { IHttpRequest } from "../protocol/IHttpRequest.js";
+import type { IHttpRequestContext } from "../protocol/IHttpRequestContext.js";
+import type { IHttpResponse } from "../protocol/IHttpResponse.js";
 
 /**
  * Interface which defines a REST route.

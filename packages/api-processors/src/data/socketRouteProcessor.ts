@@ -3,30 +3,25 @@
 import {
 	HttpErrorHelper,
 	type IHttpRequest,
-	type IHttpRequestIdentity,
 	type IHttpResponse,
-	type IHttpServerRequest,
+	type ISocketRequestContext,
 	type ISocketRoute,
-	type ISocketRouteProcessor
+	type ISocketRouteProcessor,
+	type ISocketServerRequest
 } from "@twin.org/api-models";
 import { Is, NotFoundError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HttpStatusCode } from "@twin.org/web";
-import type { ISocketRouteProcessorConstructorOptions } from "../models/ISocketRouteProcessorConstructorOptions";
+import type { ISocketRouteProcessorConstructorOptions } from "../models/ISocketRouteProcessorConstructorOptions.js";
 
 /**
  * Process the socket request and hands it on to the route handler.
  */
 export class SocketRouteProcessor implements ISocketRouteProcessor {
 	/**
-	 * The namespace supported by the processor.
-	 */
-	public static readonly NAMESPACE: string = "socket-route";
-
-	/**
 	 * Runtime name for the class.
 	 */
-	public readonly CLASS_NAME: string = nameof<SocketRouteProcessor>();
+	public static readonly CLASS_NAME: string = nameof<SocketRouteProcessor>();
 
 	/**
 	 * Include the stack with errors.
@@ -43,21 +38,82 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 	}
 
 	/**
-	 * Process the REST request for the specified route.
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return SocketRouteProcessor.CLASS_NAME;
+	}
+
+	/**
+	 * Process the connected event.
+	 * @param request The server request object containing the socket id and other parameters.
+	 * @param route The route being requested, if a matching one was found.
+	 * @param loggingComponentType The logging component type for the request.
+	 * @returns Promise that resolves when the request is processed.
+	 */
+	public async connected(
+		request: ISocketServerRequest,
+		route: ISocketRoute | undefined,
+		loggingComponentType?: string
+	): Promise<void> {
+		if (route?.connected) {
+			try {
+				const socketRequestContext: ISocketRequestContext = {
+					socketId: request.socketId,
+					serverRequest: request,
+					processorState: {},
+					loggingComponentType
+				};
+
+				route.connected(socketRequestContext);
+			} catch {}
+		}
+	}
+
+	/**
+	 * Process the disconnected event.
+	 * @param request The server request object containing the socket id and other parameters.
+	 * @param route The route being requested, if a matching one was found.
+	 * @param loggingComponentType The logging component type for the request.
+	 * @returns Promise that resolves when the request is processed.
+	 */
+	public async disconnected(
+		request: ISocketServerRequest,
+		route: ISocketRoute | undefined,
+		loggingComponentType?: string
+	): Promise<void> {
+		if (route?.disconnected) {
+			try {
+				const socketRequestContext: ISocketRequestContext = {
+					socketId: request.socketId,
+					serverRequest: request,
+					processorState: {},
+					loggingComponentType
+				};
+
+				route.disconnected(socketRequestContext);
+			} catch {}
+		}
+	}
+
+	/**
+	 * Process the socket request for the specified route.
 	 * @param request The incoming request.
 	 * @param response The outgoing response.
 	 * @param route The route to process.
-	 * @param requestIdentity The identity context for the request.
 	 * @param processorState The state handed through the processors.
 	 * @param responseEmitter The function to emit a response.
+	 * @param loggingComponentType The logging component type for the request.
+	 * @returns A promise that resolves when the request has been processed and the response emitted.
 	 */
 	public async process(
-		request: IHttpServerRequest,
+		request: ISocketServerRequest,
 		response: IHttpResponse,
 		route: ISocketRoute | undefined,
-		requestIdentity: IHttpRequestIdentity,
 		processorState: { [id: string]: unknown },
-		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>
+		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>,
+		loggingComponentType?: string
 	): Promise<void> {
 		// Don't handle the route if another processor has already set the response
 		// status code e.g. from an auth processor
@@ -67,7 +123,7 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 					response,
 					{
 						name: NotFoundError.CLASS_NAME,
-						message: `${this.CLASS_NAME}.routeNotFound`,
+						message: `${SocketRouteProcessor.CLASS_NAME}.routeNotFound`,
 						properties: {
 							notFoundId: request.url
 						}
@@ -82,21 +138,20 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 						body: request.body
 					};
 
-					await route.handler(
-						{
-							...requestIdentity,
-							serverRequest: request,
-							processorState
-						},
-						req,
-						async (topic, restRouteResponse) => {
-							response.headers = restRouteResponse?.headers;
-							response.body = restRouteResponse?.body;
-							response.statusCode =
-								restRouteResponse.statusCode ?? response.statusCode ?? HttpStatusCode.ok;
-							await responseEmitter(topic, response);
-						}
-					);
+					const socketRequestContext: ISocketRequestContext = {
+						socketId: request.socketId,
+						serverRequest: request,
+						processorState,
+						loggingComponentType
+					};
+
+					route.handler(socketRequestContext, req, async (topic, socketRouteResponse) => {
+						response.headers = socketRouteResponse?.headers;
+						response.body = socketRouteResponse?.body;
+						response.statusCode =
+							socketRouteResponse.statusCode ?? response.statusCode ?? HttpStatusCode.ok;
+						await responseEmitter(topic, response);
+					});
 				} catch (err) {
 					const { error, httpStatusCode } = HttpErrorHelper.processError(
 						err,

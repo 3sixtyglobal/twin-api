@@ -4,7 +4,7 @@ The operation that you tried to perform is not possible, see the content for mor
 
 ## Properties
 
-### statusCode
+### statusCode {#statuscode}
 
 > **statusCode**: `403`
 
@@ -12,7 +12,7 @@ Response status code.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `IError`
 

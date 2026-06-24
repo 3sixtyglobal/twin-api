@@ -4,7 +4,10 @@ import type { FastifyInstance, FastifyPluginAsync } from "fastify";
 import fp from "fastify-plugin";
 import { Server, type ServerOptions } from "socket.io";
 
-// This is a clone of fastify-socket.io which runs with recent fastify versions.
+/**
+ * Fastify plugin that attaches a Socket.IO server to the Fastify HTTP server.
+ * Cloned from fastify-socket.io to support recent Fastify versions.
+ */
 const fastifySocketIO: FastifyPluginAsync<Partial<ServerOptions>> = fp(
 	async (fastify: FastifyInstance, opts: Partial<ServerOptions>) => {
 		const ioServer = new Server(fastify.server, opts);
@@ -12,8 +15,12 @@ const fastifySocketIO: FastifyPluginAsync<Partial<ServerOptions>> = fp(
 		fastify.decorate("io", ioServer);
 		fastify.addHook("preClose", done => {
 			ioServer.disconnectSockets();
-			ioServer.close();
-			done();
+			ioServer
+				.close()
+				// eslint-disable-next-line promise/prefer-await-to-then, promise/no-callback-in-promise
+				.then(() => done())
+				// eslint-disable-next-line promise/prefer-await-to-then, promise/no-callback-in-promise
+				.catch(() => done());
 		});
 	},
 	{ fastify: ">=5.x.x", name: "socket.io" }

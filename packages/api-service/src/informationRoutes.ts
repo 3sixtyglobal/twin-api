@@ -4,16 +4,18 @@ import type {
 	IHttpRequestContext,
 	IInformationComponent,
 	INoContentRequest,
-	INoContentResponse,
 	IRestRoute,
-	IServerHealthResponse,
+	IServerFavIconResponse,
 	IServerInfoResponse,
+	IServerLivezResponse,
+	IServerReadyzResponse,
+	IServerRootResponse,
 	IServerSpecResponse,
 	ITag
 } from "@twin.org/api-models";
 import { ComponentFactory, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { HttpStatusCode } from "@twin.org/web";
+import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
 
 /**
  * The tag to associate with the routes.
@@ -37,18 +39,32 @@ export function generateRestRoutesInformation(
 ): IRestRoute[] {
 	const rootRoute: IRestRoute = {
 		operationId: "serverRoot",
-		summary: "Get the root blank page",
+		summary: "Get the root text page",
 		tag: tagsInformation[0].name,
 		method: "GET",
 		path: `${baseRouteName}/`,
-		handler: async () => ({}),
+		handler: async (httpRequestContext, request) =>
+			serverRoot(httpRequestContext, componentName, request),
 		responseType: [
 			{
-				type: nameof<INoContentResponse>()
+				type: nameof<IServerRootResponse>(),
+				mimeType: MimeTypes.PlainText,
+				examples: [
+					{
+						id: "serverRootResponse",
+						description: "The response for the root request.",
+						response: {
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "API Server - 1.0.0"
+						}
+					}
+				]
 			}
 		],
-		excludeFromSpec: true,
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
 	};
 
 	const informationRoute: IRestRoute<INoContentRequest, IServerInfoResponse> = {
@@ -76,84 +92,106 @@ export function generateRestRoutesInformation(
 				]
 			}
 		],
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
 	};
 
-	const healthRoute: IRestRoute<INoContentRequest, IServerHealthResponse> = {
-		operationId: "serverHealth",
-		summary: "Get the health for the server",
+	const favIconRoute: IRestRoute<INoContentRequest, IServerFavIconResponse> = {
+		operationId: "serverFavIcon",
+		summary: "Get the favicon for the server",
 		tag: tagsInformation[0].name,
 		method: "GET",
-		path: `${baseRouteName}/health`,
+		path: `${baseRouteName}/favicon.ico`,
 		handler: async (httpRequestContext, request) =>
-			serverHealth(httpRequestContext, componentName, request),
+			serverFavIcon(httpRequestContext, componentName, request),
 		responseType: [
 			{
-				type: nameof<IServerHealthResponse>(),
+				type: nameof<IServerFavIconResponse>(),
+				mimeType: "image/x-icon"
+			}
+		],
+		skipAuth: true,
+		skipTenant: true
+	};
+
+	const livezRoute: IRestRoute<INoContentRequest, IServerLivezResponse> = {
+		operationId: "serverLivez",
+		summary: "Get the livez status for the server",
+		tag: tagsInformation[0].name,
+		method: "GET",
+		path: `${baseRouteName}/livez`,
+		handler: async (httpRequestContext, request) =>
+			serverLivez(httpRequestContext, componentName, request),
+		responseType: [
+			{
+				type: nameof<IServerLivezResponse>(),
+				mimeType: MimeTypes.PlainText,
 				examples: [
 					{
-						id: "healthResponseOK",
-						description: "The response for the health request.",
+						id: "livezResponseOK",
+						description: "The response for the liveness request.",
 						response: {
-							body: {
-								status: "ok",
-								components: [
-									{
-										name: "Database",
-										status: "ok"
-									},
-									{
-										name: "Storage",
-										status: "ok"
-									}
-								]
-							}
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "alive"
 						}
 					},
 					{
-						id: "healthResponseWarning",
-						description: "The response for the health request with warnings.",
+						id: "livezResponseFailure",
+						description: "The response for the liveness request with errors.",
 						response: {
-							body: {
-								status: "warning",
-								components: [
-									{
-										name: "Database",
-										status: "warning",
-										details: "The database is running slow."
-									},
-									{
-										name: "Storage",
-										status: "ok"
-									}
-								]
-							}
-						}
-					},
-					{
-						id: "healthResponseError",
-						description: "The response for the health request with errors.",
-						response: {
-							body: {
-								status: "error",
-								components: [
-									{
-										name: "Database",
-										status: "ok"
-									},
-									{
-										name: "Storage",
-										status: "error",
-										details: "The storage is full."
-									}
-								]
-							}
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "dead"
 						}
 					}
 				]
 			}
 		],
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
+	};
+
+	const readyzRoute: IRestRoute<INoContentRequest, IServerReadyzResponse> = {
+		operationId: "serverReadyz",
+		summary: "Get the readyz status for the server",
+		tag: tagsInformation[0].name,
+		method: "GET",
+		path: `${baseRouteName}/readyz`,
+		handler: async (httpRequestContext, request) =>
+			serverReadyz(httpRequestContext, componentName, request),
+		responseType: [
+			{
+				type: nameof<IServerReadyzResponse>(),
+				mimeType: MimeTypes.PlainText,
+				examples: [
+					{
+						id: "readyzResponseOK",
+						description: "The response for the readiness request.",
+						response: {
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "ready"
+						}
+					},
+					{
+						id: "readyzResponseFailure",
+						description: "The response for the readiness request with errors.",
+						response: {
+							headers: {
+								[HeaderTypes.ContentType]: MimeTypes.PlainText
+							},
+							body: "not ready"
+						}
+					}
+				]
+			}
+		],
+		skipAuth: true,
+		skipTenant: true
 	};
 
 	const specRoute: IRestRoute<INoContentRequest, IServerSpecResponse> = {
@@ -182,10 +220,32 @@ export function generateRestRoutesInformation(
 				]
 			}
 		],
-		skipAuth: true
+		skipAuth: true,
+		skipTenant: true
 	};
 
-	return [rootRoute, informationRoute, healthRoute, specRoute];
+	return [rootRoute, favIconRoute, informationRoute, livezRoute, readyzRoute, specRoute];
+}
+
+/**
+ * Get the root for the server.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function serverRoot(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: INoContentRequest
+): Promise<IServerRootResponse> {
+	const component = ComponentFactory.get<IInformationComponent>(componentName);
+	return {
+		headers: {
+			[HeaderTypes.ContentType]: MimeTypes.PlainText
+		},
+		body: await component.root()
+	};
 }
 
 /**
@@ -207,20 +267,72 @@ export async function serverInfo(
 }
 
 /**
- * Get the health for the server.
+ * Get the livez for the server.
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
-export async function serverHealth(
+export async function serverLivez(
 	httpRequestContext: IHttpRequestContext,
 	componentName: string,
 	request: INoContentRequest
-): Promise<IServerHealthResponse> {
+): Promise<IServerLivezResponse> {
 	const component = ComponentFactory.get<IInformationComponent>(componentName);
 	return {
-		body: await component.health()
+		headers: {
+			[HeaderTypes.ContentType]: MimeTypes.PlainText
+		},
+		body: (await component.livez()).status
+	};
+}
+
+/**
+ * Get the readyz for the server.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function serverReadyz(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: INoContentRequest
+): Promise<IServerReadyzResponse> {
+	const component = ComponentFactory.get<IInformationComponent>(componentName);
+	return {
+		headers: {
+			[HeaderTypes.ContentType]: MimeTypes.PlainText
+		},
+		body: (await component.readyz()).status
+	};
+}
+
+/**
+ * Get the favicon for the server.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function serverFavIcon(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: INoContentRequest
+): Promise<IServerFavIconResponse> {
+	const component = ComponentFactory.get<IInformationComponent>(componentName);
+	const favIcon = await component.favicon();
+
+	if (Is.uint8Array(favIcon)) {
+		return {
+			headers: {
+				[HeaderTypes.ContentType]: "image/x-icon"
+			},
+			body: favIcon
+		};
+	}
+	return {
+		statusCode: HttpStatusCode.notFound
 	};
 }
 

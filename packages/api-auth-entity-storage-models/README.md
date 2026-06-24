@@ -1,6 +1,6 @@
-# TWIN Auth Entity Storage Models
+# TWIN API Auth Entity Storage Models
 
-Models which define the structure of the Auth Entity Storage contracts.
+This package provides contracts for authentication flows and admin user management with entity storage.
 
 ## Installation
 

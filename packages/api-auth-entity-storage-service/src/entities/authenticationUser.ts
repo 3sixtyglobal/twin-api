@@ -28,6 +28,24 @@ export class AuthenticationUser {
 	/**
 	 * The user identity.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", isSecondary: true })
 	public identity!: string;
+
+	/**
+	 * The users organization.
+	 */
+	@property({ type: "string" })
+	public organization!: string;
+
+	/**
+	 * The scope assigned to the user, comma separated.
+	 */
+	@property({ type: "string" })
+	public scope!: string;
+
+	/**
+	 * The password version counter, incremented on every password change to invalidate existing tokens.
+	 */
+	@property({ type: "integer", optional: true })
+	public passwordVersion?: number;
 }

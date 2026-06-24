@@ -1,6 +1,6 @@
 # TWIN API Service
 
-Implementation of the information service.
+This package provides information and hosting service implementations with generated REST route handlers.
 
 ## Installation
 

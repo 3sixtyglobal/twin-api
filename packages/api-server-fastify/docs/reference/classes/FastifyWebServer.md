@@ -28,15 +28,33 @@ The options for the server.
 
 ## Properties
 
-### CLASS\_NAME
+### CLASS\_NAME {#class_name}
 
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
 
 ## Methods
 
-### getInstance()
+### className() {#classname}
+
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`IWebServer.className`
+
+***
+
+### getInstance() {#getinstance}
 
 > **getInstance**(): `FastifyInstance`
 
@@ -54,7 +72,7 @@ The web server instance.
 
 ***
 
-### build()
+### build() {#build}
 
 > **build**(`restRouteProcessors?`, `restRoutes?`, `socketRouteProcessors?`, `socketRoutes?`, `options?`): `Promise`\<`void`\>
 
@@ -96,7 +114,7 @@ Options for building the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server is fully built and ready to start.
 
 #### Implementation of
 
@@ -104,7 +122,7 @@ Nothing.
 
 ***
 
-### start()
+### start() {#start}
 
 > **start**(): `Promise`\<`void`\>
 
@@ -114,7 +132,7 @@ Start the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server is listening for connections.
 
 #### Implementation of
 
@@ -122,7 +140,7 @@ Nothing.
 
 ***
 
-### stop()
+### stop() {#stop}
 
 > **stop**(): `Promise`\<`void`\>
 
@@ -132,8 +150,26 @@ Stop the server.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the server has shut down all connections.
 
 #### Implementation of
 
 `IWebServer.stop`
+
+***
+
+### health() {#health}
+
+> **health**(): `Promise`\<`IHealth`[]\>
+
+Perform a health check on the server by fetching its own root endpoint.
+
+#### Returns
+
+`Promise`\<`IHealth`[]\>
+
+The health status of the server.
+
+#### Implementation of
+
+`IWebServer.health`

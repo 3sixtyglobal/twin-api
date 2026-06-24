@@ -28,27 +28,33 @@ The options to create the service.
 
 ## Properties
 
-### NAMESPACE
+### CLASS\_NAME {#class_name}
 
-> `readonly` `static` **NAMESPACE**: `string` = `"information"`
-
-The namespace supported by the information service.
-
-***
-
-### CLASS\_NAME
-
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
 
-#### Implementation of
-
-`IInformationComponent.CLASS_NAME`
-
 ## Methods
 
-### start()
+### className() {#classname}
+
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`IInformationComponent.className`
+
+***
+
+### start() {#start}
 
 > **start**(): `Promise`\<`void`\>
 
@@ -58,7 +64,7 @@ The service needs to be started when the application is initialized.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the OpenAPI spec and favicon have been loaded from disk.
 
 #### Implementation of
 
@@ -66,7 +72,25 @@ Nothing.
 
 ***
 
-### info()
+### root() {#root}
+
+> **root**(): `Promise`\<`string`\>
+
+Get the root information.
+
+#### Returns
+
+`Promise`\<`string`\>
+
+The root information.
+
+#### Implementation of
+
+`IInformationComponent.root`
+
+***
+
+### info() {#info}
 
 > **info**(): `Promise`\<`IServerInfo`\>
 
@@ -84,7 +108,25 @@ The service information.
 
 ***
 
-### spec()
+### favicon() {#favicon}
+
+> **favicon**(): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
+
+Get the favicon.
+
+#### Returns
+
+`Promise`\<`Uint8Array`\<`ArrayBufferLike`\> \| `undefined`\>
+
+The favicon.
+
+#### Implementation of
+
+`IInformationComponent.favicon`
+
+***
+
+### spec() {#spec}
 
 > **spec**(): `Promise`\<`unknown`\>
 
@@ -102,82 +144,36 @@ The OpenAPI spec.
 
 ***
 
-### health()
+### livez() {#livez}
 
-> **health**(): `Promise`\<`IHealthInfo`\>
+> **livez**(): `Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
-Get the server health.
+Is the server live.
 
 #### Returns
 
-`Promise`\<`IHealthInfo`\>
+`Promise`\<\{ `status`: `"alive"` \| `"dead"`; \}\>
 
-The service health.
+The liveness status of the server.
 
 #### Implementation of
 
-`IInformationComponent.health`
+`IInformationComponent.livez`
 
 ***
 
-### setComponentHealth()
+### readyz() {#readyz}
 
-> **setComponentHealth**(`name`, `status`, `details?`): `Promise`\<`void`\>
+> **readyz**(): `Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-Set the status of a component.
-
-#### Parameters
-
-##### name
-
-`string`
-
-The component name.
-
-##### status
-
-`HealthStatus`
-
-The status of the component.
-
-##### details?
-
-`string`
-
-The details for the status.
+Is the server ready.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<\{ `status`: `"ready"` \| `"not ready"`; \}\>
 
-Nothing.
-
-#### Implementation of
-
-`IInformationComponent.setComponentHealth`
-
-***
-
-### removeComponentHealth()
-
-> **removeComponentHealth**(`name`): `Promise`\<`void`\>
-
-Remove the status of a component.
-
-#### Parameters
-
-##### name
-
-`string`
-
-The component name.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
+The readyz status of the server.
 
 #### Implementation of
 
-`IInformationComponent.removeComponentHealth`
+`IInformationComponent.readyz`

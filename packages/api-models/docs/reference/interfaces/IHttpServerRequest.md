@@ -6,6 +6,10 @@ Model for the standard parameters for an http request.
 
 - [`IHttpRequest`](IHttpRequest.md)\<`T`\>
 
+## Extended by
+
+- [`ISocketServerRequest`](ISocketServerRequest.md)
+
 ## Type Parameters
 
 ### T
@@ -14,9 +18,9 @@ Model for the standard parameters for an http request.
 
 ## Properties
 
-### headers?
+### headers? {#headers}
 
-> `optional` **headers**: `IHttpHeaders`
+> `optional` **headers?**: `IHttpHeaders`
 
 Incoming Http Headers.
 
@@ -26,9 +30,9 @@ Incoming Http Headers.
 
 ***
 
-### pathParams?
+### pathParams? {#pathparams}
 
-> `optional` **pathParams**: [`IHttpRequestPathParams`](IHttpRequestPathParams.md)
+> `optional` **pathParams?**: [`IHttpRequestPathParams`](IHttpRequestPathParams.md)
 
 The path parameters.
 
@@ -38,9 +42,9 @@ The path parameters.
 
 ***
 
-### query?
+### query? {#query}
 
-> `optional` **query**: [`IHttpRequestQuery`](IHttpRequestQuery.md)
+> `optional` **query?**: [`IHttpRequestQuery`](IHttpRequestQuery.md)
 
 The query parameters.
 
@@ -50,9 +54,9 @@ The query parameters.
 
 ***
 
-### body?
+### body? {#body}
 
-> `optional` **body**: `T`
+> `optional` **body?**: `T`
 
 Data to return send as the body.
 
@@ -62,16 +66,16 @@ Data to return send as the body.
 
 ***
 
-### method?
+### url {#url}
 
-> `optional` **method**: `HttpMethod`
+> **url**: `string`
 
-The request method.
+The request url.
 
 ***
 
-### url?
+### method? {#method}
 
-> `optional` **url**: `string`
+> `optional` **method?**: `HttpMethod`
 
-The request url.
+The request method.

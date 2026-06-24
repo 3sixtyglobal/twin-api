@@ -4,7 +4,7 @@ The resource you tried to access does not exist, see the content for more detail
 
 ## Properties
 
-### statusCode
+### statusCode {#statuscode}
 
 > **statusCode**: `404`
 
@@ -12,16 +12,16 @@ Response status code.
 
 ***
 
-### body
+### body {#body}
 
 > **body**: `IError` & `object`
 
 The body which contains the error.
 
-#### Type declaration
+#### Type Declaration
 
 ##### notFoundId?
 
-> `optional` **notFoundId**: `string`
+> `optional` **notFoundId?**: `string`
 
 The id if the item that was not found.

@@ -4,24 +4,24 @@ Interface which defines a REST route response for attachments.
 
 ## Properties
 
-### mimeType?
+### mimeType? {#mimetype}
 
-> `optional` **mimeType**: `string`
+> `optional` **mimeType?**: `string`
 
 The content type to use in the response.
 
 ***
 
-### filename?
+### filename? {#filename}
 
-> `optional` **filename**: `string`
+> `optional` **filename?**: `string`
 
 The filename to use in content disposition.
 
 ***
 
-### inline?
+### inline? {#inline}
 
-> `optional` **inline**: `boolean`
+> `optional` **inline?**: `boolean`
 
 Whether to inline the content.

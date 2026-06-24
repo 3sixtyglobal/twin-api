@@ -1,0 +1,97 @@
+# Class: TenantIdContextIdHandler
+
+Context ID handler that treats a tenant ID as a compact base64url-encoded hex string.
+
+## Implements
+
+- `IContextIdHandler`
+
+## Constructors
+
+### Constructor
+
+> **new TenantIdContextIdHandler**(): `TenantIdContextIdHandler`
+
+#### Returns
+
+`TenantIdContextIdHandler`
+
+## Properties
+
+### CLASS\_NAME {#class_name}
+
+> `readonly` `static` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+## Methods
+
+### className() {#classname}
+
+> **className**(): `string`
+
+The class name of the component.
+
+#### Returns
+
+`string`
+
+The class name.
+
+#### Implementation of
+
+`IContextIdHandler.className`
+
+***
+
+### short() {#short}
+
+> **short**(`value`): `string`
+
+The short form of the tenant id is the base64 version to compact.
+
+#### Parameters
+
+##### value
+
+`string`
+
+The full context id value.
+
+#### Returns
+
+`string`
+
+Short form string.
+
+#### Implementation of
+
+`IContextIdHandler.short`
+
+***
+
+### guard() {#guard}
+
+> **guard**(`value`): `void`
+
+Guard the value ensuring length.
+
+#### Parameters
+
+##### value
+
+`string`
+
+The value to guard.
+
+#### Returns
+
+`void`
+
+#### Throws
+
+GeneralError if the value is too short.
+
+#### Implementation of
+
+`IContextIdHandler.guard`

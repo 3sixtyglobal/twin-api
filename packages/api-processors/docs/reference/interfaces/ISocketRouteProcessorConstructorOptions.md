@@ -4,8 +4,8 @@ Options for the SocketRouteProcessor constructor.
 
 ## Properties
 
-### config?
+### config? {#config}
 
-> `optional` **config**: [`IRouteProcessorConfig`](IRouteProcessorConfig.md)
+> `optional` **config?**: [`IRouteProcessorConfig`](IRouteProcessorConfig.md)
 
 The configuration for the processor.

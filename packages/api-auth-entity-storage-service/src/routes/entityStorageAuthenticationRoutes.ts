@@ -6,7 +6,8 @@ import type {
 	ILoginResponse,
 	ILogoutRequest,
 	IRefreshTokenRequest,
-	IRefreshTokenResponse
+	IRefreshTokenResponse,
+	IUpdatePasswordRequest
 } from "@twin.org/api-auth-entity-storage-models";
 import type {
 	IHttpRequestContext,
@@ -77,7 +78,6 @@ export function generateRestRoutesAuthentication(
 						description: "The response for the login request.",
 						response: {
 							body: {
-								token: "eyJhbGciOiJIU...sw5c",
 								expiry: 1722514341067
 							}
 						}
@@ -95,7 +95,7 @@ export function generateRestRoutesAuthentication(
 		operationId: "authenticationLogout",
 		summary: "Logout from the server",
 		tag: tagsAuthentication[0].name,
-		method: "GET",
+		method: "POST",
 		path: `${baseRouteName}/logout`,
 		handler: async (httpRequestContext, request) =>
 			authenticationLogout(httpRequestContext, componentName, request),
@@ -106,7 +106,7 @@ export function generateRestRoutesAuthentication(
 					id: "logoutRequestExample",
 					description: "The request to logout from the server.",
 					request: {
-						query: {
+						body: {
 							token: "eyJhbGciOiJIU...sw5c"
 						}
 					}
@@ -117,15 +117,14 @@ export function generateRestRoutesAuthentication(
 			{
 				type: nameof<INoContentResponse>()
 			}
-		],
-		skipAuth: true
+		]
 	};
 
 	const refreshTokenRoute: IRestRoute<IRefreshTokenRequest, IRefreshTokenResponse> = {
 		operationId: "authenticationRefreshToken",
 		summary: "Refresh an authentication token",
 		tag: tagsAuthentication[0].name,
-		method: "GET",
+		method: "POST",
 		path: `${baseRouteName}/refresh`,
 		handler: async (httpRequestContext, request) =>
 			authenticationRefreshToken(httpRequestContext, componentName, request),
@@ -136,7 +135,7 @@ export function generateRestRoutesAuthentication(
 					id: "refreshTokenRequestExample",
 					description: "The request to refresh an auth token.",
 					request: {
-						query: {
+						body: {
 							token: "eyJhbGciOiJIU...sw5c"
 						}
 					}
@@ -152,7 +151,6 @@ export function generateRestRoutesAuthentication(
 						description: "The response for the refresh token request.",
 						response: {
 							body: {
-								token: "eyJhbGciOiJIU...sw5c",
 								expiry: 1722514341067
 							}
 						}
@@ -165,7 +163,40 @@ export function generateRestRoutesAuthentication(
 		]
 	};
 
-	return [loginRoute, logoutRoute, refreshTokenRoute];
+	const updatePasswordRoute: IRestRoute<IUpdatePasswordRequest, INoContentResponse> = {
+		operationId: "authenticationUpdatePassword",
+		summary: "Update the current user's password",
+		tag: tagsAuthentication[0].name,
+		method: "PUT",
+		path: `${baseRouteName}/password`,
+		handler: async (httpRequestContext, request) =>
+			authenticationUpdatePassword(httpRequestContext, componentName, request),
+		requestType: {
+			type: nameof<IUpdatePasswordRequest>(),
+			examples: [
+				{
+					id: "updatePasswordRequestExample",
+					description: "The request to update the current user's password.",
+					request: {
+						body: {
+							currentPassword: "MyNewPassword123!",
+							newPassword: "MyNewPassword123!"
+						}
+					}
+				}
+			]
+		},
+		responseType: [
+			{
+				type: nameof<INoContentResponse>()
+			},
+			{
+				type: nameof<IUnauthorizedResponse>()
+			}
+		]
+	};
+
+	return [loginRoute, logoutRoute, refreshTokenRoute, updatePasswordRoute];
 }
 
 /**
@@ -189,9 +220,12 @@ export async function authenticationLogin(
 	// Need to give a hint to any auth processors about the operation
 	// in case they need to manipulate the response
 	httpRequestContext.processorState.authOperation = "login";
+	httpRequestContext.processorState.authToken = result.token;
 
 	return {
-		body: result
+		body: {
+			expiry: result.expiry
+		}
 	};
 }
 
@@ -210,7 +244,7 @@ export async function authenticationLogout(
 	Guards.object<ILogoutRequest>(ROUTES_SOURCE, nameof(request), request);
 
 	const component = ComponentFactory.get<IAuthenticationComponent>(componentName);
-	await component.logout(request.query?.token);
+	await component.logout(request.body?.token);
 
 	// Need to give a hint to any auth processors about the operation
 	// in case they need to manipulate the response
@@ -237,16 +271,43 @@ export async function authenticationRefreshToken(
 
 	const component = ComponentFactory.get<IAuthenticationComponent>(componentName);
 
-	// If the token is not in the query, then maybe an auth processor has extracted it
+	// If the token is not in the body, then maybe an auth processor has extracted it
 	// and stored it in the processor state
-	const token = request.query?.token ?? (httpRequestContext.processorState.authToken as string);
+	const token = request.body?.token ?? (httpRequestContext.processorState.authToken as string);
 	const result = await component.refresh(token);
 
 	// Need to give a hint to any auth processors about the operation
 	// in case they need to manipulate the response
 	httpRequestContext.processorState.authOperation = "refresh";
+	httpRequestContext.processorState.authToken = result.token;
 
 	return {
-		body: result
+		body: {
+			expiry: result.expiry
+		}
+	};
+}
+
+/**
+ * Update the user's password.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function authenticationUpdatePassword(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: IUpdatePasswordRequest
+): Promise<INoContentResponse> {
+	Guards.object<IUpdatePasswordRequest>(ROUTES_SOURCE, nameof(request), request);
+	Guards.object<IUpdatePasswordRequest["body"]>(ROUTES_SOURCE, nameof(request.body), request.body);
+
+	const component = ComponentFactory.get<IAuthenticationComponent>(componentName);
+
+	await component.updatePassword(request.body.currentPassword, request.body.newPassword);
+
+	return {
+		statusCode: HttpStatusCode.noContent
 	};
 }

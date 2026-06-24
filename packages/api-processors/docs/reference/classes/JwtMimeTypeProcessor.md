@@ -18,27 +18,33 @@ Process the JWT mime type.
 
 ## Properties
 
-### NAMESPACE
+### CLASS\_NAME {#class_name}
 
-> `readonly` `static` **NAMESPACE**: `string` = `"jwt"`
-
-The namespace supported by the processor.
-
-***
-
-### CLASS\_NAME
-
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
 
-#### Implementation of
-
-`IMimeTypeProcessor.CLASS_NAME`
-
 ## Methods
 
-### getTypes()
+### className() {#classname}
+
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`IMimeTypeProcessor.className`
+
+***
+
+### getTypes() {#gettypes}
 
 > **getTypes**(): `string`[]
 
@@ -56,7 +62,7 @@ The MIME types that this handler can handle.
 
 ***
 
-### handle()
+### handle() {#handle}
 
 > **handle**(`body`): `Promise`\<`unknown`\>
 

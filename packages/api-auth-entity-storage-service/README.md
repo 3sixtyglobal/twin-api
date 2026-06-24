@@ -1,6 +1,6 @@
-# TWIN Auth Entity Storage Service
+# TWIN API Auth Entity Storage Service
 
-Auth Entity Storage contract implementation and REST endpoint definitions.
+This package provides an authentication service implementation and REST routes backed by entity storage.
 
 ## Installation
 

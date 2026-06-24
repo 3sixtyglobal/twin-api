@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IServerInfo } from "../services/IServerInfo";
+import type { IServerInfo } from "../services/IServerInfo.js";
 
 /**
  * The information about the server.

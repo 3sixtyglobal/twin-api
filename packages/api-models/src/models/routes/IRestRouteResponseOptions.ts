@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IRestRouteResponseAttachmentOptions } from "./IRestRouteResponseAttachmentOptions";
+import type { IRestRouteResponseAttachmentOptions } from "./IRestRouteResponseAttachmentOptions.js";
 
 /**
  * Interface which defines a REST route response.

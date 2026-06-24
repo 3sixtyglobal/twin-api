@@ -2,4 +2,5 @@
 
 ## Classes
 
-- [InformationClient](classes/InformationClient.md)
+- [HealthRestClient](classes/HealthRestClient.md)
+- [InformationRestClient](classes/InformationRestClient.md)

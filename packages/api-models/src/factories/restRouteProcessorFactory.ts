@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { Factory } from "@twin.org/core";
-import type { IRestRouteProcessor } from "../models/server/IRestRouteProcessor";
+import type { IRestRouteProcessor } from "../models/server/IRestRouteProcessor.js";
 
 /**
  * Factory for creating implementation of REST route processor types.

@@ -1,0 +1,20 @@
+{
+	"error": {
+		"tenantProcessor": {
+			"missingApiKey": "API key \"{keyName}\" is missing",
+			"missingOrganizationId": "Organization ID query parameter \"{paramName}\" is missing",
+			"apiKeyNotFound": "No tenant found for API key \"{key}\".",
+			"organizationIdNotFound": "No tenant found for organization ID \"{organizationId}\"."
+		},
+		"singleTenantProcessor": {
+			"invalidOrganizationId": "Organization ID query parameter \"{paramName}\" value \"{value}\" is not valid for this node"
+		},
+		"tenantAdminService": {
+			"apiKeyAlreadyInUse": "The provided API key is already in use by another tenant.",
+			"tenantAlreadyExists": "Tenant with ID \"{existingId}\" already exists.",
+			"tenantNotFound": "Tenant with ID \"{notFoundId}\" not found.",
+			"organizationIdAlreadyExists": "A tenant with organization ID \"{existingId}\" already exists.",
+			"publicOriginAlreadyExists": "A tenant with public origin \"{existingId}\" already exists."
+		}
+	}
+}

@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IHttpHeaders } from "@twin.org/web";
-import type { IHttpRequestPathParams } from "./IHttpRequestPathParams";
-import type { IHttpRequestQuery } from "./IHttpRequestQuery";
+import type { IHttpRequestPathParams } from "./IHttpRequestPathParams.js";
+import type { IHttpRequestQuery } from "./IHttpRequestQuery.js";
 
 /**
  * Model for the standard parameters for an http request.

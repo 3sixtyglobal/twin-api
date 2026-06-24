@@ -1,4 +1,4 @@
-# Class: `abstract` BaseRestClient
+# Abstract Class: BaseRestClient
 
 Abstract client class for common REST processing.
 
@@ -36,7 +36,7 @@ The default prefix to use if none in configuration.
 
 ## Methods
 
-### getEndpointWithPrefix()
+### getEndpointWithPrefix() {#getendpointwithprefix}
 
 > **getEndpointWithPrefix**(): `string`
 
@@ -50,7 +50,7 @@ The endpoint with namespace prefix attached.
 
 ***
 
-### fetch()
+### fetch() {#fetch}
 
 > **fetch**\<`T`, `U`\>(`route`, `method`, `request?`): `Promise`\<`U`\>
 

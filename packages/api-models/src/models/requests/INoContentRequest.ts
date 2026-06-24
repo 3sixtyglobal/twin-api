@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IHttpRequest } from "../protocol/IHttpRequest";
+import type { IHttpRequest } from "../protocol/IHttpRequest.js";
 
 /**
  * A REST request with no input parameters.

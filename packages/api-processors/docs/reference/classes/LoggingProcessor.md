@@ -28,29 +28,35 @@ Options for the processor.
 
 ## Properties
 
-### NAMESPACE
+### CLASS\_NAME {#class_name}
 
-> `readonly` `static` **NAMESPACE**: `string` = `"logging"`
-
-The namespace supported by the processor.
-
-***
-
-### CLASS\_NAME
-
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` `static` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
 
-#### Implementation of
-
-`IBaseRouteProcessor.CLASS_NAME`
-
 ## Methods
 
-### pre()
+### className() {#classname}
 
-> **pre**(`request`, `response`, `route`, `requestIdentity`, `processorState`): `Promise`\<`void`\>
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`IBaseRouteProcessor.className`
+
+***
+
+### pre() {#pre}
+
+> **pre**(`request`, `response`, `route`, `contextIds`, `processorState`): `Promise`\<`void`\>
 
 Pre process the REST request for the specified route.
 
@@ -70,15 +76,15 @@ The outgoing response.
 
 ##### route
 
+`IBaseRoute` \| `undefined`
+
 The route to process.
 
-`undefined` | `IBaseRoute`
+##### contextIds
 
-##### requestIdentity
+`IContextIds`
 
-`IHttpRequestIdentity`
-
-The identity context for the request.
+The context IDs of the request.
 
 ##### processorState
 
@@ -88,15 +94,17 @@ The state handed through the processors.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the pre-processing log entry has been written.
+
 #### Implementation of
 
 `IBaseRouteProcessor.pre`
 
 ***
 
-### post()
+### post() {#post}
 
-> **post**(`request`, `response`, `route`, `requestIdentity`, `processorState`): `Promise`\<`void`\>
+> **post**(`request`, `response`, `route`, `contextIds`, `processorState`): `Promise`\<`void`\>
 
 Post process the REST request for the specified route.
 
@@ -116,15 +124,15 @@ The outgoing response.
 
 ##### route
 
+`IBaseRoute` \| `undefined`
+
 The route to process.
 
-`undefined` | `IBaseRoute`
+##### contextIds
 
-##### requestIdentity
+`IContextIds`
 
-`IHttpRequestIdentity`
-
-The identity context for the request.
+The context IDs of the request.
 
 ##### processorState
 
@@ -133,6 +141,8 @@ The state handed through the processors.
 #### Returns
 
 `Promise`\<`void`\>
+
+A promise that resolves when the post-processing log entry has been written.
 
 #### Implementation of
 

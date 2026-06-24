@@ -8,7 +8,7 @@ The definition for a handler for a specific MIME type.
 
 ## Methods
 
-### getTypes()
+### getTypes() {#gettypes}
 
 > **getTypes**(): `string`[]
 
@@ -22,7 +22,7 @@ The MIME types that this handler can handle.
 
 ***
 
-### handle()
+### handle() {#handle}
 
 > **handle**(`body`): `Promise`\<`unknown`\>
 

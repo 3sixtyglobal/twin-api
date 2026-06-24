@@ -4,9 +4,9 @@ Options for the web server.
 
 ## Properties
 
-### port?
+### port? {#port}
 
-> `optional` **port**: `number`
+> `optional` **port?**: `number`
 
 The port to bind the web server to.
 
@@ -18,9 +18,9 @@ The port to bind the web server to.
 
 ***
 
-### host?
+### host? {#host}
 
-> `optional` **host**: `string`
+> `optional` **host?**: `string`
 
 The address to bind the web server to.
 
@@ -32,9 +32,9 @@ localhost
 
 ***
 
-### methods?
+### methods? {#methods}
 
-> `optional` **methods**: `HttpMethod`[]
+> `optional` **methods?**: `HttpMethod`[]
 
 The methods that the server accepts.
 
@@ -46,25 +46,25 @@ The methods that the server accepts.
 
 ***
 
-### allowedHeaders?
+### allowedHeaders? {#allowedheaders}
 
-> `optional` **allowedHeaders**: `string`[]
+> `optional` **allowedHeaders?**: `string`[]
 
 Any additional allowed headers.
 
 ***
 
-### exposedHeaders?
+### exposedHeaders? {#exposedheaders}
 
-> `optional` **exposedHeaders**: `string`[]
+> `optional` **exposedHeaders?**: `string`[]
 
 And additional exposed headers.
 
 ***
 
-### corsOrigins?
+### corsOrigins? {#corsorigins}
 
-> `optional` **corsOrigins**: `string` \| `string`[]
+> `optional` **corsOrigins?**: `string` \| `string`[]
 
 The allowed CORS domains.
 
@@ -73,3 +73,12 @@ The allowed CORS domains.
 ```ts
 ["*"]
 ```
+
+***
+
+### publicOrigin? {#publicorigin}
+
+> `optional` **publicOrigin?**: `string`
+
+The public origin of the server, used for constructing the request URL.
+If not provided, it will be determined from the incoming request.

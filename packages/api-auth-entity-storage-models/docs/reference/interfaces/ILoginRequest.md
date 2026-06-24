@@ -4,7 +4,7 @@ Perform a login on the server.
 
 ## Properties
 
-### body
+### body {#body}
 
 > **body**: `object`
 

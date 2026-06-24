@@ -1,8 +1,17 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IBaseRestClientConfig, IHttpRequest, IHttpResponse } from "@twin.org/api-models";
-import { BaseError, Coerce, Guards, Is, StringHelper, type IKeyValue } from "@twin.org/core";
-import { nameof } from "@twin.org/nameof";
+import { HttpUrlHelper } from "@twin.org/api-models";
+import {
+	BaseError,
+	Coerce,
+	Guards,
+	type IError,
+	Is,
+	StringHelper,
+	type IKeyValue
+} from "@twin.org/core";
+import { nameof, nameofCamelCase } from "@twin.org/nameof";
 import {
 	FetchError,
 	FetchHelper,
@@ -18,13 +27,6 @@ import {
  */
 export abstract class BaseRestClient {
 	/**
-	 * Runtime name for the class.
-	 * @internal
-	 */
-	private static readonly _CLASS_NAME_CAMEL_CASE: string =
-		StringHelper.camelCase(nameof<BaseRestClient>());
-
-	/**
 	 * The name of the class implementation REST calls.
 	 * @internal
 	 */
@@ -35,6 +37,15 @@ export abstract class BaseRestClient {
 	 * @internal
 	 */
 	private readonly _endpointWithPrefix: string;
+
+	/**
+	 * Query parameters parsed from the configured endpoint URL. Preserved on every
+	 * outbound request so that callers using endpoints like
+	 * `https://host?tenant-token=…` don't lose routing data when the route+query are
+	 * appended to the base URL.
+	 * @internal
+	 */
+	private readonly _endpointQuery: IKeyValue<string>[];
 
 	/**
 	 * The headers to include in requests.
@@ -55,6 +66,24 @@ export abstract class BaseRestClient {
 	private readonly _includeCredentials: boolean;
 
 	/**
+	 * Hook to provide headers asynchronously.
+	 * @internal
+	 */
+	private readonly _customHeaders?: () => Promise<IHttpHeaders>;
+
+	/**
+	 * Hook to provide auth header asynchronously.
+	 * @internal
+	 */
+	private readonly _customAuthHeader?: () => Promise<string>;
+
+	/**
+	 * Hook to handle authorization failures asynchronously.
+	 * @internal
+	 */
+	private readonly _onAuthFailure?: (error: IError) => Promise<void>;
+
+	/**
 	 * Create a new instance of BaseRestClient.
 	 * @param implementationName The name of the class implementation REST calls.
 	 * @param config The configuration for the client.
@@ -70,12 +99,33 @@ export abstract class BaseRestClient {
 		this._includeCredentials = config.includeCredentials ?? true;
 
 		this._implementationName = implementationName;
-		this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
+
+		// Parse the endpoint as a URL so any query string the caller embedded is preserved
+		// rather than concatenated as part of the path.
+		this._endpointQuery = [];
+		let parsedEndpoint: URL | undefined;
+		try {
+			parsedEndpoint = new URL(config.endpoint);
+		} catch {}
+
+		if (Is.empty(parsedEndpoint)) {
+			this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
+		} else {
+			for (const [key, value] of parsedEndpoint.searchParams.entries()) {
+				this._endpointQuery.push({ key, value });
+			}
+			parsedEndpoint.search = "";
+			this._endpointWithPrefix = StringHelper.trimTrailingSlashes(parsedEndpoint.toString());
+		}
 
 		const finalPathPrefix = config.pathPrefix ?? pathPrefix;
 		if (Is.stringValue(finalPathPrefix)) {
 			this._endpointWithPrefix += `/${finalPathPrefix}`;
 		}
+
+		this._customAuthHeader = config.customAuthHeader;
+		this._customHeaders = config.customHeaders;
+		this._onAuthFailure = config.onAuthFailure;
 	}
 
 	/**
@@ -113,7 +163,7 @@ export abstract class BaseRestClient {
 				} else {
 					throw new FetchError(
 						this._implementationName,
-						`${BaseRestClient._CLASS_NAME_CAMEL_CASE}.missingRouteProp`,
+						`${nameofCamelCase<BaseRestClient>()}.missingRouteProp`,
 						HttpStatusCode.badRequest,
 						{ route, routeProp }
 					);
@@ -121,7 +171,9 @@ export abstract class BaseRestClient {
 			}
 		}
 
-		const queryKeyPairs: IKeyValue<string>[] = [];
+		// Preserve endpoint-level query params (parsed once in the constructor)
+		// alongside any per-request query params.
+		const queryKeyPairs: IKeyValue<string>[] = [...this._endpointQuery];
 
 		const isHttpRequest = Is.notEmpty(request);
 
@@ -131,6 +183,10 @@ export abstract class BaseRestClient {
 				for (const qp in query) {
 					const propValue = query[qp];
 					if (Is.stringValue(propValue) || Is.number(propValue) || Is.boolean(propValue)) {
+						const ids = queryKeyPairs.findIndex(q => q.key === qp);
+						if (ids !== -1) {
+							queryKeyPairs.splice(ids, 1);
+						}
 						queryKeyPairs.push({
 							key: qp,
 							value: propValue.toString()
@@ -141,7 +197,7 @@ export abstract class BaseRestClient {
 			}
 		}
 
-		let finalRoute = routeParts.join("/");
+		let finalRoute = routeParts.map(rp => HttpUrlHelper.encodeUriPathSegment(rp)).join("/");
 		if (finalRoute === "/") {
 			finalRoute = "";
 		}
@@ -161,6 +217,24 @@ export abstract class BaseRestClient {
 
 		if (Is.object(this._headers)) {
 			requestHeaders = { ...requestHeaders, ...this._headers };
+		}
+
+		if (Is.object(request?.headers)) {
+			requestHeaders = { ...requestHeaders, ...request.headers };
+		}
+
+		if (Is.function(this._customHeaders)) {
+			const customHeaders = await this._customHeaders();
+			if (Is.object(customHeaders)) {
+				requestHeaders = { ...requestHeaders, ...customHeaders };
+			}
+		}
+
+		if (Is.function(this._customAuthHeader)) {
+			const authHeader = await this._customAuthHeader();
+			if (Is.stringValue(authHeader)) {
+				requestHeaders[HeaderTypes.Authorization] = authHeader;
+			}
 		}
 
 		const response = await FetchHelper.fetch(
@@ -206,6 +280,16 @@ export abstract class BaseRestClient {
 				}
 
 				if (Object.keys(responseHeaders).length > 0) {
+					if (response.status === HttpStatusCode.created) {
+						// If there is a location header and it is a plain id then decode it
+						// as we encoded it on the way out to avoid problems with embedded colons and other characters
+						// if it contains slashes then we assume it is already encoded correctly and leave it as is
+						const location = responseHeaders[HeaderTypes.Location];
+						if (Is.stringValue(location) && !location.includes("/")) {
+							responseHeaders[HeaderTypes.Location] = decodeURIComponent(location);
+						}
+					}
+
 					httpResponse.headers = responseHeaders;
 				}
 
@@ -217,7 +301,7 @@ export abstract class BaseRestClient {
 			} catch (err) {
 				throw new FetchError(
 					this._implementationName,
-					`${BaseRestClient._CLASS_NAME_CAMEL_CASE}.decodingFailed`,
+					`${nameofCamelCase<BaseRestClient>()}.decodingFailed`,
 					response.status as HttpStatusCode,
 					{
 						route
@@ -237,17 +321,24 @@ export abstract class BaseRestClient {
 			err = BaseError.fromError(errResponse);
 		}
 
-		if (!err) {
-			err = new FetchError(
-				this._implementationName,
-				`${BaseRestClient._CLASS_NAME_CAMEL_CASE}.failureStatusText`,
-				response.status as HttpStatusCode,
-				{
-					statusText: response.statusText ?? response.status,
-					route: finalRoute,
-					response: errResponse
-				}
-			);
+		err ??= new FetchError(
+			this._implementationName,
+			`${nameofCamelCase<BaseRestClient>()}.failureStatusText`,
+			response.status as HttpStatusCode,
+			{
+				statusText: response.statusText ?? response.status,
+				route: finalRoute,
+				response: errResponse
+			}
+		);
+
+		if (response.status === HttpStatusCode.unauthorized && Is.function(this._onAuthFailure)) {
+			try {
+				await this._onAuthFailure(err);
+			} catch {
+				// Silently ignore errors from the auth failure handler as we want to throw the original error
+				// in this case to preserve the original failure context for logging and handling by callers
+			}
 		}
 
 		throw err;

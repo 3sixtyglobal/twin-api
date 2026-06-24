@@ -3,9 +3,11 @@
 import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
+	HttpContextIdKeys,
 	HttpErrorHelper,
+	type IBaseRoute,
+	type IBaseRouteProcessor,
 	type IHttpRequest,
-	type IHttpRequestIdentity,
 	type IHttpRequestPathParams,
 	type IHttpRequestQuery,
 	type IHttpResponse,
@@ -15,28 +17,51 @@ import {
 	type IRestRouteProcessor,
 	type ISocketRoute,
 	type ISocketRouteProcessor,
+	type ISocketServerRequest,
 	type IWebServer,
 	type IWebServerOptions
 } from "@twin.org/api-models";
-import { BaseError, GeneralError, type IError, Is, StringHelper } from "@twin.org/core";
-import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
+import { JsonLdMimeTypeProcessor } from "@twin.org/api-processors";
+import { ContextIdStore, type IContextIds } from "@twin.org/context";
+import {
+	BaseError,
+	ComponentFactory,
+	GeneralError,
+	HealthStatus,
+	type IError,
+	type IHealth,
+	Is,
+	RandomHelper,
+	StringHelper,
+	Url
+} from "@twin.org/core";
+import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
-import { HeaderTypes, HttpMethod, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
-import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
+import {
+	HeaderTypes,
+	HttpMethod,
+	HttpStatusCode,
+	type IHttpHeaders,
+	HeaderHelper
+} from "@twin.org/web";
+import Fastify, {
+	type FastifyInstance,
+	type FastifyReply,
+	type FastifyRequest,
+	type FastifyServerOptions
+} from "fastify";
 import type { Server, ServerOptions, Socket } from "socket.io";
-import FastifySocketIO from "./fastifySocketIo";
-import type { IFastifyWebServerConstructorOptions } from "./models/IFastifyWebServerConstructorOptions";
+import FastifySocketIO from "./fastifySocketIo.js";
+import type { IFastifyWebServerConstructorOptions } from "./models/IFastifyWebServerConstructorOptions.js";
 
 /**
  * Implementation of the web server using Fastify.
  */
 export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	/**
-	 * Runtime name for the class in camel case.
-	 * @internal
+	 * Runtime name for the class.
 	 */
-	private static readonly _CLASS_NAME_CAMEL_CASE: string =
-		StringHelper.camelCase(nameof<FastifyWebServer>());
+	public static readonly CLASS_NAME: string = nameof<FastifyWebServer>();
 
 	/**
 	 * Default port for running the server.
@@ -51,15 +76,16 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	private static readonly _DEFAULT_HOST: string = "localhost";
 
 	/**
-	 * Runtime name for the class.
-	 */
-	public readonly CLASS_NAME: string = nameof<FastifyWebServer>();
-
-	/**
-	 * The logging connector.
+	 * The logging component type.
 	 * @internal
 	 */
-	private readonly _loggingConnector?: ILoggingConnector;
+	private readonly _loggingComponentType?: string;
+
+	/**
+	 * The logging component.
+	 * @internal
+	 */
+	private readonly _logging?: ILoggingComponent;
 
 	/**
 	 * The options for the server.
@@ -98,17 +124,32 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	private readonly _includeErrorStack: boolean;
 
 	/**
+	 * The public origin of the server, used for constructing the request URL and for CORS.
+	 * @internal
+	 */
+	private _publicOrigin?: string;
+
+	/**
+	 * The local origin of the server, used for constructing the request URL and for CORS.
+	 * @internal
+	 */
+	private _localOrigin?: string;
+
+	/**
 	 * Create a new instance of FastifyWebServer.
 	 * @param options The options for the server.
 	 */
 	constructor(options?: IFastifyWebServerConstructorOptions) {
-		this._loggingConnector = Is.stringValue(options?.loggingConnectorType)
-			? LoggingConnectorFactory.get(options.loggingConnectorType)
-			: undefined;
+		this._loggingComponentType = options?.loggingComponentType;
+		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType);
 		this._fastify = Fastify({
-			maxParamLength: 2000,
+			routerOptions: {
+				maxParamLength: 2000
+			},
 			...options?.config?.web
-		});
+			// Need this cast for now as maxParamLength has moved in to routerOptions
+			// but the TS defs has not been updated yet
+		} as unknown as FastifyServerOptions);
 		this._socketConfig = {
 			path: "/socket",
 			...options?.config?.socket
@@ -116,7 +157,23 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		this._started = false;
 
 		this._mimeTypeProcessors = options?.mimeTypeProcessors ?? [];
+
+		const hasJsonLd = this._mimeTypeProcessors.find(
+			processor => processor.className() === "json-ld"
+		);
+		if (!hasJsonLd) {
+			this._mimeTypeProcessors.push(new JsonLdMimeTypeProcessor());
+		}
+
 		this._includeErrorStack = options?.config?.includeErrorStack ?? false;
+	}
+
+	/**
+	 * Returns the class name of the component.
+	 * @returns The class name of the component.
+	 */
+	public className(): string {
+		return FastifyWebServer.CLASS_NAME;
 	}
 
 	/**
@@ -134,7 +191,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param socketRouteProcessors The processors for incoming requests over Sockets.
 	 * @param socketRoutes The socket routes.
 	 * @param options Options for building the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server is fully built and ready to start.
 	 */
 	public async build(
 		restRouteProcessors?: IRestRouteProcessor[],
@@ -144,17 +201,31 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		options?: IWebServerOptions
 	): Promise<void> {
 		if (Is.arrayValue(restRoutes) && !Is.arrayValue(restRouteProcessors)) {
-			throw new GeneralError(this.CLASS_NAME, "noRestProcessors");
+			throw new GeneralError(FastifyWebServer.CLASS_NAME, "noRestProcessors");
 		}
 		if (Is.arrayValue(socketRoutes) && !Is.arrayValue(socketRouteProcessors)) {
-			throw new GeneralError(this.CLASS_NAME, "noSocketProcessors");
+			throw new GeneralError(FastifyWebServer.CLASS_NAME, "noSocketProcessors");
 		}
-		await this._loggingConnector?.log({
+		await this._logging?.log({
 			level: "info",
 			ts: Date.now(),
-			source: this.CLASS_NAME,
-			message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.building`
+			source: FastifyWebServer.CLASS_NAME,
+			message: "building"
 		});
+
+		this._localOrigin = `http://${options?.host ?? "localhost"}:${options?.port ?? 3000}`;
+
+		if (Is.stringValue(options?.publicOrigin)) {
+			const publicUrl = Url.tryParseExact(options.publicOrigin);
+			if (!Is.empty(publicUrl)) {
+				const urlParts = publicUrl.parts();
+				this._publicOrigin = `${urlParts.schema}://${urlParts.host}${Is.integer(urlParts.port) ? `:${urlParts.port}` : ""}`;
+			} else {
+				throw new GeneralError(FastifyWebServer.CLASS_NAME, "invalidPublicOrigin", {
+					publicOrigin: options.publicOrigin
+				});
+			}
+		}
 
 		this._options = options;
 
@@ -189,36 +260,45 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			this.handleRequestRest(restRouteProcessors ?? [], request, reply)
 		);
 
-		this._fastify.setErrorHandler(async (error, request, reply) => {
-			// If code property is set this is a fastify error
-			// otherwise it's from our framework
-			let httpStatusCode: HttpStatusCode;
-			let err: IError;
-			if (Is.number(error.code)) {
-				err = {
-					source: this.CLASS_NAME,
-					name: error.name,
-					message: `${error.code}: ${error.message}`
-				};
-				httpStatusCode = (error.statusCode as HttpStatusCode) ?? HttpStatusCode.badRequest;
-			} else {
-				const errorAndCode = HttpErrorHelper.processError(error);
-				err = errorAndCode.error;
-				httpStatusCode = errorAndCode.httpStatusCode;
+		this._fastify.setErrorHandler(
+			async (
+				error: Error & {
+					code?: number | string;
+					statusCode?: number | string;
+				},
+				request,
+				reply
+			) => {
+				// If code property is set this is a fastify error
+				// otherwise it's from our framework
+				let httpStatusCode: HttpStatusCode;
+				let err: IError;
+				if (Is.number(error.code) || Is.string(error.code)) {
+					err = {
+						source: FastifyWebServer.CLASS_NAME,
+						name: error.name,
+						message: `${error.code}: ${error.message}`
+					};
+					httpStatusCode = (error.statusCode as HttpStatusCode) ?? HttpStatusCode.badRequest;
+				} else {
+					const errorAndCode = HttpErrorHelper.processError(error);
+					err = errorAndCode.error;
+					httpStatusCode = errorAndCode.httpStatusCode;
+				}
+
+				await this._logging?.log({
+					level: "error",
+					ts: Date.now(),
+					source: FastifyWebServer.CLASS_NAME,
+					message: "badRequest",
+					error: err
+				});
+
+				return reply.status(httpStatusCode).send({
+					error: err
+				});
 			}
-
-			await this._loggingConnector?.log({
-				level: "error",
-				ts: Date.now(),
-				source: this.CLASS_NAME,
-				message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.badRequest`,
-				error: err
-			});
-
-			return reply.status(httpStatusCode).send({
-				error: err
-			});
-		});
+		);
 
 		await this.addRoutesRest(restRouteProcessors, restRoutes);
 		await this.addRoutesSocket(socketRouteProcessors, socketRoutes);
@@ -226,17 +306,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 	/**
 	 * Start the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server is listening for connections.
 	 */
 	public async start(): Promise<void> {
 		const host = this._options?.host ?? FastifyWebServer._DEFAULT_HOST;
 		const port = this._options?.port ?? FastifyWebServer._DEFAULT_PORT;
 
-		await this._loggingConnector?.log({
+		await this._logging?.log({
 			level: "info",
 			ts: Date.now(),
-			source: this.CLASS_NAME,
-			message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.starting`,
+			source: FastifyWebServer.CLASS_NAME,
+			message: "starting",
 			data: {
 				host,
 				port
@@ -249,11 +329,11 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const addresses = this._fastify.addresses();
 
 				const protocol = Is.object(this._fastify.initialConfig.https) ? "https://" : "http://";
-				await this._loggingConnector?.log({
+				await this._logging?.log({
 					level: "info",
 					ts: Date.now(),
-					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.started`,
+					source: FastifyWebServer.CLASS_NAME,
+					message: "started",
 					data: {
 						addresses: addresses
 							.map(
@@ -265,11 +345,11 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				});
 				this._started = true;
 			} catch (err) {
-				await this._loggingConnector?.log({
+				await this._logging?.log({
 					level: "error",
 					ts: Date.now(),
-					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.startFailed`,
+					source: FastifyWebServer.CLASS_NAME,
+					message: "startFailed",
 					error: BaseError.fromError(err)
 				});
 			}
@@ -278,7 +358,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 	/**
 	 * Stop the server.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the server has shut down all connections.
 	 */
 	public async stop(): Promise<void> {
 		if (this._started) {
@@ -286,13 +366,38 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 			await this._fastify.close();
 
-			await this._loggingConnector?.log({
+			await this._logging?.log({
 				level: "info",
 				ts: Date.now(),
-				source: this.CLASS_NAME,
-				message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.stopped`
+				source: FastifyWebServer.CLASS_NAME,
+				message: "stopped"
 			});
 		}
+	}
+
+	/**
+	 * Perform a health check on the server by fetching its own root endpoint.
+	 * @returns The health status of the server.
+	 */
+	public async health(): Promise<IHealth[]> {
+		let healthCheck: IHealth | undefined;
+		if (this._fastify?.server?.listening) {
+			healthCheck = {
+				source: FastifyWebServer.CLASS_NAME,
+				status: HealthStatus.Ok,
+				description: "description",
+				message: "reachable"
+			};
+		} else {
+			healthCheck = {
+				source: FastifyWebServer.CLASS_NAME,
+				status: HealthStatus.Error,
+				description: "description",
+				message: "unreachable"
+			};
+		}
+
+		return [healthCheck];
 	}
 
 	/**
@@ -311,11 +416,11 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				if (!path.startsWith("/")) {
 					path = `/${path}`;
 				}
-				await this._loggingConnector?.log({
+				await this._logging?.log({
 					level: "info",
 					ts: Date.now(),
-					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.restRouteAdded`,
+					source: FastifyWebServer.CLASS_NAME,
+					message: "restRouteAdded",
 					data: { route: path, method: restRoute.method }
 				});
 				const method = restRoute.method.toLowerCase() as
@@ -353,36 +458,41 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					StringHelper.trimTrailingSlashes(socketRoute.path)
 				);
 				const pathParts = path.split("/");
-				await this._loggingConnector?.log({
-					level: "info",
-					ts: Date.now(),
-					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.socketRouteAdded`,
-					data: { route: `/${path}` }
-				});
 
-				const socketNamespace = io.of(`/${pathParts[0]}`);
+				const namespace = `/${pathParts[0]}`;
 				const topic = pathParts.slice(1).join("/");
 
+				await this._logging?.log({
+					level: "info",
+					ts: Date.now(),
+					source: FastifyWebServer.CLASS_NAME,
+					message: "socketRouteAdded",
+					data: {
+						handshakePath: this._socketConfig.path,
+						namespace,
+						eventName: topic
+					}
+				});
+
+				const socketNamespace = io.of(namespace);
+
 				socketNamespace.on("connection", async socket => {
-					const httpServerRequest: IHttpServerRequest = {
+					const socketServerRequest: ISocketServerRequest = {
 						method: HttpMethod.GET,
 						url: socket.handshake.url,
 						query: socket.handshake.query as IHttpRequestQuery,
-						headers: socket.handshake.headers as IHttpHeaders
+						headers: socket.handshake.headers as IHttpHeaders,
+						socketId: socket.id
 					};
 
 					// Pass the connected information on to any processors
 					try {
-						const processorState = {
-							socketId: socket.id
-						};
 						for (const socketRouteProcessor of socketRouteProcessors) {
-							if (Is.function(socketRouteProcessor.connected)) {
+							if (socketRouteProcessor.connected) {
 								await socketRouteProcessor.connected(
-									httpServerRequest,
+									socketServerRequest,
 									socketRoute,
-									processorState
+									this._loggingComponentType
 								);
 							}
 						}
@@ -398,16 +508,13 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 					socket.on("disconnect", async () => {
 						try {
-							const processorState = {
-								socketId: socket.id
-							};
 							// The socket disconnected so notify any processors
 							for (const socketRouteProcessor of socketRouteProcessors) {
-								if (Is.function(socketRouteProcessor.disconnected)) {
+								if (socketRouteProcessor.disconnected) {
 									await socketRouteProcessor.disconnected(
-										httpServerRequest,
+										socketServerRequest,
 										socketRoute,
-										processorState
+										this._loggingComponentType
 									);
 								}
 							}
@@ -438,6 +545,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param request The incoming request.
 	 * @param reply The outgoing response.
 	 * @param restRoute The REST route to handle.
+	 * @returns The Fastify reply with the response.
 	 * @internal
 	 */
 	private async handleRequestRest(
@@ -446,24 +554,57 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		reply: FastifyReply,
 		restRoute?: IRestRoute
 	): Promise<FastifyReply> {
+		const port =
+			(request.port === 80 && request.protocol === "http") ||
+			(request.port === 443 && request.protocol === "https") ||
+			!Is.integer(request.port)
+				? ""
+				: `:${request.port}`;
+
+		const requestOrigin = `${request.protocol}://${request.hostname}${port}`;
+
 		const httpServerRequest: IHttpServerRequest = {
 			method: request.method.toUpperCase() as HttpMethod,
-			url: `${request.protocol}://${request.hostname}${request.url}`,
+			url: `${requestOrigin}${request.url}`,
 			body: request.body,
 			query: request.query as IHttpRequestQuery,
 			pathParams: request.params as IHttpRequestPathParams,
 			headers: request.headers as IHttpHeaders
 		};
+
 		const httpResponse: IHttpResponse = {};
-		const httpRequestIdentity: IHttpRequestIdentity = {};
-		const processorState = {};
+		const contextIds: IContextIds = {
+			[HttpContextIdKeys.IpAddress]: HeaderHelper.extractClientIps(httpServerRequest.headers).join(
+				"|"
+			),
+			[HttpContextIdKeys.UserAgent]: HeaderHelper.extractUserAgent(httpServerRequest.headers),
+			[HttpContextIdKeys.CorrelationId]: HeaderHelper.extractCorrelationId(
+				httpServerRequest.headers
+			),
+			[HttpContextIdKeys.RemoteRequest]: RandomHelper.generateUuidV7("compact"),
+			[HttpContextIdKeys.LocalOrigin]: this._localOrigin,
+			// This can be overridden by a processor if needed, for example a tenant processor
+			[HttpContextIdKeys.PublicOrigin]: this._publicOrigin ?? requestOrigin ?? this._localOrigin
+		};
+		const processorState = restRoute?.processorData ?? {};
+
+		if (Is.object(httpServerRequest.pathParams)) {
+			for (const key of Object.keys(httpServerRequest.pathParams)) {
+				httpServerRequest.pathParams[key] = decodeURIComponent(httpServerRequest.pathParams[key]);
+			}
+		}
+		if (Is.object(httpServerRequest.query)) {
+			for (const key of Object.keys(httpServerRequest.query)) {
+				httpServerRequest.query[key] = decodeURIComponent(httpServerRequest.query[key]);
+			}
+		}
 
 		await this.runProcessorsRest(
 			restRouteProcessors,
 			restRoute,
 			httpServerRequest,
 			httpResponse,
-			httpRequestIdentity,
+			contextIds,
 			processorState
 		);
 
@@ -472,9 +613,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				reply.header(header, httpResponse.headers[header]);
 			}
 		}
-		return reply
-			.status((httpResponse.statusCode ?? HttpStatusCode.ok) as number)
-			.send(httpResponse.body);
+		return reply.status(httpResponse.statusCode ?? HttpStatusCode.ok).send(httpResponse.body);
 	}
 
 	/**
@@ -483,7 +622,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param restRoute The route to process.
 	 * @param httpServerRequest The incoming request.
 	 * @param httpResponse The outgoing response.
-	 * @param httpRequestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @internal
 	 */
 	private async runProcessorsRest(
@@ -491,51 +630,128 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		restRoute: IRestRoute | undefined,
 		httpServerRequest: IHttpServerRequest,
 		httpResponse: IHttpResponse,
-		httpRequestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: {
 			[id: string]: unknown;
 		}
 	): Promise<void> {
+		let hasPreError = false;
+		const filteredProcessors = this.filterRouteProcessors(restRoute, restRouteProcessors);
+
 		try {
-			for (const routeProcessor of restRouteProcessors) {
-				if (Is.function(routeProcessor.pre)) {
-					await routeProcessor.pre(
-						httpServerRequest,
-						httpResponse,
-						restRoute,
-						httpRequestIdentity,
-						processorState
-					);
+			// Run inside ContextIdStore.run so pre-processors can do tenant-scoped storage lookups.
+			await ContextIdStore.run(contextIds, async () => {
+				for (const routeProcessor of filteredProcessors) {
+					const pre = routeProcessor.pre?.bind(routeProcessor);
+					if (Is.function(pre)) {
+						await pre(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
+							loggingComponentType: this._loggingComponentType
+						});
+					}
 				}
-			}
-
-			for (const routeProcessor of restRouteProcessors) {
-				if (Is.function(routeProcessor.process)) {
-					await routeProcessor.process(
-						httpServerRequest,
-						httpResponse,
-						restRoute,
-						httpRequestIdentity,
-						processorState
-					);
-				}
-			}
-
-			for (const routeProcessor of restRouteProcessors) {
-				if (Is.function(routeProcessor.post)) {
-					await routeProcessor.post(
-						httpServerRequest,
-						httpResponse,
-						restRoute,
-						httpRequestIdentity,
-						processorState
-					);
-				}
-			}
+			});
 		} catch (err) {
 			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
 			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			hasPreError = true;
 		}
+
+		// A pre-processor may set an error response without throwing; treat that as halt.
+		if (
+			!hasPreError &&
+			Is.integer(httpResponse.statusCode) &&
+			httpResponse.statusCode >= HttpStatusCode.badRequest
+		) {
+			hasPreError = true;
+		}
+
+		// Don't run the main processing if there was an error in the pre processing
+		// As this is likely to perform tasks such as authentication which may have failed
+		if (!hasPreError) {
+			try {
+				// Run the processors within an async context
+				// so that any services can access the context ids
+				await ContextIdStore.run(contextIds, async () => {
+					for (const routeProcessor of filteredProcessors) {
+						const process = routeProcessor.process?.bind(routeProcessor);
+						if (Is.function(process)) {
+							await process(httpServerRequest, httpResponse, restRoute, processorState, {
+								loggingComponentType: this._loggingComponentType
+							});
+						}
+					}
+				});
+			} catch (err) {
+				const { error, httpStatusCode } = HttpErrorHelper.processError(
+					err,
+					this._includeErrorStack
+				);
+				HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			}
+		}
+
+		try {
+			// Always run the post processors, even if there was an error earlier
+			// as they may perform cleanup tasks, or logging etc
+			await ContextIdStore.run(contextIds, async () => {
+				for (const routeProcessor of filteredProcessors) {
+					const post = routeProcessor.post?.bind(routeProcessor);
+					if (Is.function(post)) {
+						await post(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
+							loggingComponentType: this._loggingComponentType
+						});
+					}
+				}
+			});
+		} catch (err) {
+			// Just log post processor errors
+			await this._logging?.log({
+				level: "error",
+				ts: Date.now(),
+				source: FastifyWebServer.CLASS_NAME,
+				message: "postProcessorError",
+				error: BaseError.fromError(err),
+				data: {
+					route: restRoute?.path ?? ""
+				}
+			});
+		}
+	}
+
+	/**
+	 * Filter the route processors based on the requested features.
+	 * @param route The route to process.
+	 * @param routeProcessors The processors to filter.
+	 * @returns The filtered list of route processor.
+	 * @internal
+	 */
+	private filterRouteProcessors<T extends IBaseRouteProcessor>(
+		route: IBaseRoute | undefined,
+		routeProcessors: T[]
+	): T[] {
+		const requestedFeatures = route?.processorFeatures ?? [];
+
+		if (!Is.arrayValue(requestedFeatures)) {
+			// If there are no requested features, we just return all the processors
+			return routeProcessors;
+		}
+
+		// Reduce the list of route processors to just those in the requested features list
+		const reducedProcessors = routeProcessors.filter(routeProcessor => {
+			// Processors that do not define any features always get run
+			// If the route processor has features defined, then we only run it
+			// if the route has at least one of those features required
+			let runRouteProcessor = true;
+			if (routeProcessor.features) {
+				const routeProcessorFeatures = routeProcessor.features();
+				runRouteProcessor = routeProcessorFeatures.some(feature =>
+					requestedFeatures.includes(feature)
+				);
+			}
+			return runRouteProcessor;
+		});
+
+		return reducedProcessors;
 	}
 
 	/**
@@ -545,7 +761,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @param socket The socket to handle.
 	 * @param fullPath The full path of the socket route.
 	 * @param emitTopic The topic to emit the response on.
-	 * @param data The incoming data.
+	 * @param request The incoming request.
 	 * @internal
 	 */
 	private async handleRequestSocket(
@@ -556,32 +772,31 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		emitTopic: string,
 		request: IHttpRequest
 	): Promise<void> {
-		const httpServerRequest: IHttpServerRequest = {
+		const socketServerRequest: ISocketServerRequest = {
 			method: HttpMethod.GET,
 			url: fullPath,
 			query: socket.handshake.query as IHttpRequestQuery,
 			headers: socket.handshake.headers as IHttpHeaders,
-			body: request.body
-		};
-		const httpResponse: IHttpResponse = {};
-		const httpRequestIdentity: IHttpRequestIdentity = {};
-		const processorState = {
+			body: request.body,
 			socketId: socket.id
 		};
+		const httpResponse: IHttpResponse = {};
+		const contextIds: IContextIds = {};
+		const processorState = {};
 
-		delete httpServerRequest.query?.EIO;
-		delete httpServerRequest.query?.transport;
+		delete socketServerRequest.query?.EIO;
+		delete socketServerRequest.query?.transport;
 
 		await this.runProcessorsSocket(
 			socketRouteProcessors,
 			socketRoute,
-			httpServerRequest,
+			socketServerRequest,
 			httpResponse,
-			httpRequestIdentity,
+			contextIds,
 			processorState,
 			emitTopic,
 			async (topic, response) => {
-				await socket.emit(topic, response);
+				socket.emit(topic, response);
 			}
 		);
 	}
@@ -590,25 +805,28 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * Run the socket processors for the route.
 	 * @param socketRouteProcessors The processors to run.
 	 * @param socketRoute The route to process.
-	 * @param httpServerRequest The incoming request.
+	 * @param socketServerRequest The incoming request.
 	 * @param httpResponse The outgoing response.
-	 * @param httpRequestIdentity The identity context for the request.
+	 * @param contextIds The context IDs of the request.
 	 * @param processorState The state handed through the processors.
 	 * @param requestTopic The topic of the request.
+	 * @param responseEmitter The emitter to send the response on.
 	 * @internal
 	 */
 	private async runProcessorsSocket(
 		socketRouteProcessors: ISocketRouteProcessor[],
 		socketRoute: ISocketRoute,
-		httpServerRequest: IHttpServerRequest,
+		socketServerRequest: ISocketServerRequest,
 		httpResponse: IHttpResponse,
-		httpRequestIdentity: IHttpRequestIdentity,
+		contextIds: IContextIds,
 		processorState: {
 			[id: string]: unknown;
 		},
 		requestTopic: string,
 		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>
 	): Promise<void> {
+		const filteredProcessors = this.filterRouteProcessors(socketRoute, socketRouteProcessors);
+
 		// Custom emit method which will also call the post processors
 		const postProcessEmit = async (
 			topic: string,
@@ -621,23 +839,27 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 			try {
 				// The post processors are called after the response has been emitted
-				for (const postSocketRouteProcessor of socketRouteProcessors) {
-					if (Is.function(postSocketRouteProcessor.post)) {
-						await postSocketRouteProcessor.post(
-							httpServerRequest,
+				for (const postSocketRouteProcessor of filteredProcessors) {
+					const post = postSocketRouteProcessor.post?.bind(postSocketRouteProcessor);
+					if (Is.function(post)) {
+						await post(
+							socketServerRequest,
 							response,
 							socketRoute,
-							httpRequestIdentity,
-							responseProcessorState
+							contextIds,
+							responseProcessorState,
+							{
+								loggingComponentType: this._loggingComponentType
+							}
 						);
 					}
 				}
 			} catch (err) {
-				this._loggingConnector?.log({
+				await this._logging?.log({
 					level: "error",
 					ts: Date.now(),
-					source: this.CLASS_NAME,
-					message: `${FastifyWebServer._CLASS_NAME_CAMEL_CASE}.postProcessorError`,
+					source: FastifyWebServer.CLASS_NAME,
+					message: "postProcessorError",
 					error: BaseError.fromError(err),
 					data: {
 						route: socketRoute.path
@@ -647,15 +869,12 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		};
 
 		try {
-			for (const socketRouteProcessor of socketRouteProcessors) {
-				if (Is.function(socketRouteProcessor.pre)) {
-					await socketRouteProcessor.pre(
-						httpServerRequest,
-						httpResponse,
-						socketRoute,
-						httpRequestIdentity,
-						processorState
-					);
+			for (const socketRouteProcessor of filteredProcessors) {
+				const pre = socketRouteProcessor.pre?.bind(socketRouteProcessor);
+				if (Is.function(pre)) {
+					await pre(socketServerRequest, httpResponse, socketRoute, contextIds, processorState, {
+						loggingComponentType: this._loggingComponentType
+					});
 				}
 			}
 
@@ -666,20 +885,23 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				await postProcessEmit(requestTopic, httpResponse, processorState);
 			}
 
-			for (const socketRouteProcessor of socketRouteProcessors) {
-				if (Is.function(socketRouteProcessor.process)) {
-					await socketRouteProcessor.process(
-						httpServerRequest,
-						httpResponse,
-						socketRoute,
-						httpRequestIdentity,
-						processorState,
-						async (topic: string, processResponse: IHttpResponse) => {
-							await postProcessEmit(topic, processResponse, processorState);
-						}
-					);
+			await ContextIdStore.run(contextIds, async () => {
+				for (const socketRouteProcessor of filteredProcessors) {
+					const process = socketRouteProcessor.process?.bind(socketRouteProcessor);
+					if (Is.function(process)) {
+						await process(
+							socketServerRequest,
+							httpResponse,
+							socketRoute,
+							processorState,
+							async (topic: string, processResponse: IHttpResponse) => {
+								await postProcessEmit(topic, processResponse, processorState);
+							},
+							this._loggingComponentType
+						);
+					}
 				}
-			}
+			});
 
 			// If the processors set the status to any kind of error then we should emit this manually
 			if (

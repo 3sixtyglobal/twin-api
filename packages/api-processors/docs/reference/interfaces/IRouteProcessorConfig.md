@@ -4,8 +4,8 @@ Configuration for the route processor.
 
 ## Properties
 
-### includeErrorStack?
+### includeErrorStack? {#includeerrorstack}
 
-> `optional` **includeErrorStack**: `boolean`
+> `optional` **includeErrorStack?**: `boolean`
 
 Include the stack with errors.

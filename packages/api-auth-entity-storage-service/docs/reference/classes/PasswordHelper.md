@@ -12,30 +12,63 @@ Helper class for password operations.
 
 `PasswordHelper`
 
+## Properties
+
+### CLASS\_NAME {#class_name}
+
+> `readonly` `static` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
 ## Methods
 
-### hashPassword()
+### updatePassword() {#updatepassword}
 
-> `static` **hashPassword**(`passwordBytes`, `saltBytes`): `Promise`\<`string`\>
+> `static` **updatePassword**(`userEntityStorage`, `authenticationAuditService`, `user`, `newPassword`, `currentPassword?`, `minPasswordLength?`): `Promise`\<`void`\>
 
-Hash the password for the user.
+Update the password for a user.
+Validates password strength, verifies the current password if provided, then hashes and stores the new password and raises an audit event.
 
 #### Parameters
 
-##### passwordBytes
+##### userEntityStorage
 
-`Uint8Array`
+`IEntityStorageConnector`\<[`AuthenticationUser`](AuthenticationUser.md)\>
 
-The password bytes.
+The entity storage for users.
 
-##### saltBytes
+##### authenticationAuditService
 
-`Uint8Array`
+`IAuthenticationAuditComponent` \| `undefined`
 
-The salt bytes.
+The optional audit service.
+
+##### user
+
+[`AuthenticationUser`](AuthenticationUser.md)
+
+The user whose password is being updated.
+
+##### newPassword
+
+`string`
+
+The new password to set.
+
+##### currentPassword?
+
+`string`
+
+The current password to verify against, if supplied.
+
+##### minPasswordLength?
+
+`number`
+
+Optional minimum password length for validation.
 
 #### Returns
 
-`Promise`\<`string`\>
+`Promise`\<`void`\>
 
-The hashed password.
+A promise that resolves when the new password has been stored and the audit entry recorded.

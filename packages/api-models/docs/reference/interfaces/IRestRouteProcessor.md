@@ -8,9 +8,29 @@ The definition for a processor for handling REST routes.
 
 ## Methods
 
-### pre()?
+### features()? {#features}
 
-> `optional` **pre**(`request`, `response`, `route`, `requestIdentity`, `processorState`): `Promise`\<`void`\>
+> `optional` **features**(): `string`[]
+
+Features supported by this processor.
+If a route has any of these features listed, this processor will be run for that route.
+If this is not implemented, the processor will run for all routes.
+
+#### Returns
+
+`string`[]
+
+The features supported by this processor.
+
+#### Inherited from
+
+[`IBaseRouteProcessor`](IBaseRouteProcessor.md).[`features`](IBaseRouteProcessor.md#features)
+
+***
+
+### pre()? {#pre}
+
+> `optional` **pre**(`request`, `response`, `route`, `contextIds`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
 Pre process the REST request for the specified route.
 
@@ -30,19 +50,29 @@ The response data to send if any.
 
 ##### route
 
+[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> \| `undefined`
+
 The route being requested, if a matching one was found.
 
-`undefined` | [`IRestRoute`](IRestRoute.md)\<`any`, `any`\>
+##### contextIds
 
-##### requestIdentity
+`IContextIds`
 
-[`IHttpRequestIdentity`](IHttpRequestIdentity.md)
-
-The identity context for the request.
+The context IDs of the request.
 
 ##### processorState
 
 The state handed through the processors.
+
+##### componentTypes?
+
+The component types for the request.
+
+###### loggingComponentType?
+
+`string`
+
+The logging component type.
 
 #### Returns
 
@@ -56,9 +86,9 @@ Promise that resolves when the request is processed.
 
 ***
 
-### post()?
+### post()? {#post}
 
-> `optional` **post**(`request`, `response`, `route`, `requestIdentity`, `processorState`): `Promise`\<`void`\>
+> `optional` **post**(`request`, `response`, `route`, `contextIds`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
 Post process the REST request for the specified route.
 
@@ -78,19 +108,29 @@ The response data to send if any.
 
 ##### route
 
+[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> \| `undefined`
+
 The route being requested, if a matching one was found.
 
-`undefined` | [`IRestRoute`](IRestRoute.md)\<`any`, `any`\>
+##### contextIds
 
-##### requestIdentity
+`IContextIds`
 
-[`IHttpRequestIdentity`](IHttpRequestIdentity.md)
-
-The identity context for the request.
+The context IDs of the request.
 
 ##### processorState
 
 The state handed through the processors.
+
+##### componentTypes?
+
+The component types for the request.
+
+###### loggingComponentType?
+
+`string`
+
+The logging component type.
 
 #### Returns
 
@@ -104,9 +144,9 @@ Promise that resolves when the request is processed.
 
 ***
 
-### process()?
+### process()? {#process}
 
-> `optional` **process**(`request`, `response`, `route`, `requestIdentity`, `processorState`): `Promise`\<`void`\>
+> `optional` **process**(`request`, `response`, `route`, `processorState`, `componentTypes?`): `Promise`\<`void`\>
 
 Process the REST request for the specified route.
 
@@ -126,19 +166,23 @@ The response data to send if any.
 
 ##### route
 
+[`IRestRoute`](IRestRoute.md)\<`any`, `any`\> \| `undefined`
+
 The route being requested, if a matching one was found.
-
-`undefined` | [`IRestRoute`](IRestRoute.md)\<`any`, `any`\>
-
-##### requestIdentity
-
-[`IHttpRequestIdentity`](IHttpRequestIdentity.md)
-
-The identity context for the request.
 
 ##### processorState
 
 The state handed through the processors.
+
+##### componentTypes?
+
+The component types for the request.
+
+###### loggingComponentType?
+
+`string`
+
+The logging component type.
 
 #### Returns
 

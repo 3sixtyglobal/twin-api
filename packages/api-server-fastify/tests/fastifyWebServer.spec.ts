@@ -2,17 +2,20 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { JwtMimeTypeProcessor, LoggingProcessor } from "@twin.org/api-processors";
-import { NotImplementedError } from "@twin.org/core";
-import {
-	type ILoggingConnector,
-	type ILogEntry,
-	LoggingConnectorFactory
-} from "@twin.org/logging-models";
+import { ComponentFactory, HealthStatus, Mutex, NotImplementedError } from "@twin.org/core";
+import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode } from "@twin.org/web";
 import { io } from "socket.io-client";
-import { FastifyWebServer } from "../src/fastifyWebServer";
+import { FastifyWebServer } from "../src/fastifyWebServer.js";
+
+const basePort = Math.floor(Math.random() * 1000);
+let port = 13000 + basePort;
 
 describe("api-server-fastify", () => {
+	beforeEach(async () => {
+		port++;
+	});
+
 	test("Can create an instance of the server", () => {
 		const server = new FastifyWebServer();
 		expect(server).toBeDefined();
@@ -54,8 +57,8 @@ describe("api-server-fastify", () => {
 		await server.build(
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, processorState) => {
 						counter++;
 						const req = {
 							pathParams: request.pathParams,
@@ -64,7 +67,6 @@ describe("api-server-fastify", () => {
 						};
 						const socketRouteResponse = await route?.handler(
 							{
-								...requestIdentity,
 								serverRequest: request,
 								processorState
 							},
@@ -87,12 +89,15 @@ describe("api-server-fastify", () => {
 						body: { data: "bar" }
 					})
 				}
-			]
+			],
+			undefined,
+			undefined,
+			{ port }
 		);
 
 		await server.start();
 
-		const response = await fetch("http://localhost:3000/");
+		const response = await fetch(`http://localhost:${port}/`);
 		const json = await response.json();
 
 		expect(counter).toEqual(1);
@@ -107,8 +112,8 @@ describe("api-server-fastify", () => {
 		await server.build(
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, contextIds, processorState) => {
 						HttpErrorHelper.buildResponse(
 							response,
 							{ name: "Error", message: "AuthError" },
@@ -128,12 +133,15 @@ describe("api-server-fastify", () => {
 						body: { data: "bar" }
 					})
 				}
-			]
+			],
+			undefined,
+			undefined,
+			{ port }
 		);
 
 		await server.start();
 
-		const response = await fetch("http://localhost:3000/");
+		const response = await fetch(`http://localhost:${port}/`);
 		const json = await response.json();
 
 		expect(response.status).toEqual(HttpStatusCode.unauthorized);
@@ -185,8 +193,8 @@ describe("api-server-fastify", () => {
 		await server.build(
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, contextIds, processorState) => {
 						response.headers ??= {};
 						response.headers[HeaderTypes.SetCookie] =
 							"foo=bar; Max-Age=1000; Domain=localhost; Path=/; Expires=Tue, 01 Jul 2025 10:01:11 GMT; HttpOnly; Secure; SameSite=strict";
@@ -205,36 +213,29 @@ describe("api-server-fastify", () => {
 			],
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					connected: async (request, route, processorState) => {
-						connectedSocketId = processorState.socketId as string;
+					className: () => "RouteProcessor",
+					connected: async (request, route) => {
+						connectedSocketId = request.socketId;
 						connectedCookie = request.headers?.[HeaderTypes.Cookie] as string;
 					},
-					disconnected: async (request, route, processorState) => {
-						disconnectedSocketId = processorState.socketId as string;
+					disconnected: async (request, route) => {
+						disconnectedSocketId = request.socketId;
 						disconnectedCookie = request.headers?.[HeaderTypes.Cookie] as string;
 					},
-					pre: async (request, response, route, requestIdentity, processorState) => {
-						preSocketId = processorState.socketId as string;
+					pre: async (request, response, route, contextIds, processorState) => {
+						preSocketId = request.socketId;
 						preCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						preData = request.body?.data as number;
 					},
-					process: async (
-						request,
-						response,
-						route,
-						requestIdentity,
-						processorState,
-						responseEmitter
-					) => {
-						processSocketId = processorState.socketId as string;
+					process: async (request, response, route, processorState, responseEmitter) => {
+						processSocketId = request.socketId;
 						processCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						processData = request.body?.data as number;
-						await route?.handler(
+						route?.handler(
 							{
-								...requestIdentity,
 								serverRequest: request,
-								processorState
+								processorState,
+								socketId: request.socketId
 							},
 							{
 								pathParams: request.pathParams,
@@ -250,7 +251,7 @@ describe("api-server-fastify", () => {
 						);
 					},
 					post: async (request, response, route, requestIdentity, processorState) => {
-						postSocketId = processorState.socketId as string;
+						postSocketId = request.socketId;
 						postCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						postData = request.body?.data as number;
 					}
@@ -266,17 +267,18 @@ describe("api-server-fastify", () => {
 						});
 					}
 				}
-			]
+			],
+			{ port }
 		);
 
 		await server.start();
 
 		// Need to manually get and set the cookie as we are not using a browser which would
 		// automatically handle this.
-		const fetchResponse = await fetch("http://localhost:3000/cookie");
+		const fetchResponse = await fetch(`http://localhost:${port}/cookie`);
 		const cookie = fetchResponse.headers.get("set-cookie") ?? "";
 
-		const socket = io("http://localhost:3000/test-namespace", {
+		const socket = io(`http://localhost:${port}/test-namespace`, {
 			path: "/my-sockets",
 			withCredentials: true,
 			transports: ["websocket"],
@@ -348,8 +350,8 @@ describe("api-server-fastify", () => {
 			undefined,
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, contextIds, processorState) => {
 						HttpErrorHelper.buildResponse(
 							response,
 							{ name: "Error", message: "AuthError" },
@@ -368,12 +370,13 @@ describe("api-server-fastify", () => {
 						});
 					}
 				}
-			]
+			],
+			{ port }
 		);
 
 		await server.start();
 
-		const socket = io("http://localhost:3000/test-namespace", {
+		const socket = io(`http://localhost:${port}/test-namespace`, {
 			transports: ["websocket"],
 			path: "/socket"
 		});
@@ -410,20 +413,13 @@ describe("api-server-fastify", () => {
 			undefined,
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (
-						request,
-						response,
-						route,
-						requestIdentity,
-						processorState,
-						responseEmitter
-					) => {
-						await route?.handler(
+					className: () => "RouteProcessor",
+					process: async (request, response, route, processorState, responseEmitter) => {
+						route?.handler(
 							{
-								...requestIdentity,
 								serverRequest: request,
-								processorState
+								processorState,
+								socketId: request.socketId
 							},
 							{
 								pathParams: request.pathParams,
@@ -450,12 +446,13 @@ describe("api-server-fastify", () => {
 						});
 					}
 				}
-			]
+			],
+			{ port }
 		);
 
 		await server.start();
 
-		const socket = io("http://localhost:3000/test-namespace", {
+		const socket = io(`http://localhost:${port}/test-namespace`, {
 			transports: ["websocket"],
 			path: "/socket"
 		});
@@ -483,16 +480,155 @@ describe("api-server-fastify", () => {
 		await server.stop();
 	});
 
+	test("Can return healthy status when server is running", async () => {
+		const server = new FastifyWebServer();
+		await server.build(undefined, undefined, undefined, undefined, { port });
+		await server.start();
+
+		const result = await server.health();
+
+		await server.stop();
+
+		expect(result).toEqual([
+			{
+				source: "FastifyWebServer",
+				description: "description",
+				status: HealthStatus.Ok,
+				message: "reachable"
+			}
+		]);
+	});
+
+	test("Can return error status when server is not running", async () => {
+		const server = new FastifyWebServer();
+		await server.build(undefined, undefined, undefined, undefined, { port });
+
+		const result = await server.health();
+
+		expect(result).toEqual([
+			{
+				source: "FastifyWebServer",
+				description: "description",
+				message: "unreachable",
+				status: HealthStatus.Error
+			}
+		]);
+	});
+
+	test("Can serialize same-id requests with Mutex while different ids proceed in parallel", async () => {
+		const server = new FastifyWebServer();
+		const handlerDelayMs = 100;
+		const requestCount = 25;
+
+		// Concurrency counters — incremented only while the lock is held, so any
+		// value above 1 for the same key is direct proof the mutex was bypassed.
+		const activeConcurrentPerKey: { [key: string]: number } = {};
+		const peakConcurrentPerKey: { [key: string]: number } = {};
+		let globalActive = 0;
+		let peakGlobalActive = 0;
+
+		await server.build(
+			[
+				{
+					className: () => "RouteProcessor",
+					process: async (request, response, route, processorState) => {
+						const res = await route?.handler(
+							{ serverRequest: request, processorState },
+							{ pathParams: request.pathParams, query: request.query, body: request.body }
+						);
+						response.statusCode = res?.statusCode ?? HttpStatusCode.ok;
+						response.body = res?.body;
+					}
+				}
+			],
+			[
+				{
+					operationId: "test",
+					path: "/:id",
+					method: HttpMethod.GET,
+					tag: "test",
+					summary: "",
+					handler: async (httpRequestContext, request) => {
+						const id = request.pathParams?.id;
+						const acquired = await Mutex.lock(id);
+						if (!acquired) {
+							return { statusCode: HttpStatusCode.conflict, body: { data: "timeout" } };
+						}
+
+						activeConcurrentPerKey[id] = (activeConcurrentPerKey[id] ?? 0) + 1;
+						peakConcurrentPerKey[id] = Math.max(
+							peakConcurrentPerKey[id] ?? 0,
+							activeConcurrentPerKey[id]
+						);
+						globalActive++;
+						peakGlobalActive = Math.max(peakGlobalActive, globalActive);
+
+						try {
+							await new Promise(resolve => setTimeout(resolve, handlerDelayMs));
+							return { body: { data: "ok" } };
+						} finally {
+							activeConcurrentPerKey[id]--;
+							globalActive--;
+							Mutex.unlock(id);
+						}
+					}
+				}
+			],
+			undefined,
+			undefined,
+			{ port }
+		);
+
+		await server.start();
+
+		// requestCount requests with the same id — serialized by the mutex.
+		const sameIdStart = Date.now();
+		const sameIdResponses = await Promise.all(
+			Array.from({ length: requestCount }, async () => fetch(`http://localhost:${port}/abc`))
+		);
+		const sameIdDuration = Date.now() - sameIdStart;
+
+		for (const r of sameIdResponses) {
+			expect(r.status).toEqual(HttpStatusCode.ok);
+		}
+		// Direct proof the lock was never bypassed: no two handlers held it simultaneously.
+		expect(peakConcurrentPerKey.abc).toEqual(1);
+		// Timing confirms serialization.
+		expect(sameIdDuration).toBeGreaterThanOrEqual((requestCount - 1) * handlerDelayMs);
+
+		// Reset global tracking before the parallel batch.
+		globalActive = 0;
+		peakGlobalActive = 0;
+
+		// requestCount requests each with a unique id — independent locks, run in parallel.
+		const differentIdStart = Date.now();
+		const differentIdResponses = await Promise.all(
+			[...new Array(requestCount).keys()].map(async i => fetch(`http://localhost:${port}/${i}`))
+		);
+		const differentIdDuration = Date.now() - differentIdStart;
+
+		for (const r of differentIdResponses) {
+			expect(r.status).toEqual(HttpStatusCode.ok);
+		}
+		// Direct proof that different-id requests overlapped in the critical section.
+		expect(peakGlobalActive).toBeGreaterThan(1);
+		// Timing confirms parallelism.
+		expect(differentIdDuration).toBeLessThan((requestCount - 1) * handlerDelayMs);
+
+		await server.stop();
+	});
+
 	test("Can add a custom content type processor", async () => {
 		const server = new FastifyWebServer({
-			mimeTypeProcessors: [new JwtMimeTypeProcessor()]
+			mimeTypeProcessors: [new JwtMimeTypeProcessor()],
+			loggingComponentType: "logging"
 		});
 
 		const logEntries: ILogEntry[] = [];
 		let body = "";
 
-		const logger: ILoggingConnector = {
-			CLASS_NAME: "logger",
+		const logger: ILoggingComponent = {
+			className: () => "logger",
 			log: async (logEntry: ILogEntry) => {
 				logEntries.push(logEntry);
 			},
@@ -501,17 +637,17 @@ describe("api-server-fastify", () => {
 			}
 		};
 
-		LoggingConnectorFactory.register("logging", () => logger);
+		ComponentFactory.register("logging", () => logger);
 
 		await server.build(
 			[
 				{
-					CLASS_NAME: "RouteProcessor",
-					process: async (request, response, route, requestIdentity, processorState) => {
+					className: () => "RouteProcessor",
+					process: async (request, response, route, contextIds, processorState) => {
 						body = request.body;
 					}
 				},
-				new LoggingProcessor()
+				new LoggingProcessor({ loggingComponentType: "logging" })
 			],
 			[
 				{
@@ -522,12 +658,15 @@ describe("api-server-fastify", () => {
 					summary: "",
 					handler: async (httpRequestContext, request) => {}
 				}
-			]
+			],
+			undefined,
+			undefined,
+			{ port }
 		);
 
 		await server.start();
 
-		await fetch("http://localhost:3000/", {
+		await fetch(`http://localhost:${port}/`, {
 			method: "POST",
 			headers: { "Content-Type": "application/jwt" },
 			body: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ"
@@ -537,8 +676,8 @@ describe("api-server-fastify", () => {
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ"
 		);
 		expect(logEntries.length).toEqual(2);
-		expect(logEntries[0].message.startsWith("===> POST /")).toEqual(true);
-		expect(logEntries[1].message.startsWith("<===  POST")).toEqual(true);
+		expect(logEntries[0].message.startsWith("requestMessage")).toEqual(true);
+		expect(logEntries[1].message.startsWith("responseMessage")).toEqual(true);
 
 		await server.stop();
 	});

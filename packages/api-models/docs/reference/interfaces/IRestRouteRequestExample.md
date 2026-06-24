@@ -14,7 +14,7 @@ Interface which defines a REST route request example.
 
 ## Properties
 
-### id
+### id {#id}
 
 > **id**: `string`
 
@@ -26,9 +26,9 @@ Example objects for the request.
 
 ***
 
-### description?
+### description? {#description}
 
-> `optional` **description**: `string`
+> `optional` **description?**: `string`
 
 Description of the example.
 
@@ -38,7 +38,7 @@ Description of the example.
 
 ***
 
-### request
+### request {#request}
 
 > **request**: `T`
 

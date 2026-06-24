@@ -16,7 +16,29 @@ export interface IBaseRoute {
 	path: string;
 
 	/**
-	 * Skips the authentication for this route.
+	 * Skips the authentication requirement for this route.
 	 */
 	skipAuth?: boolean;
+
+	/**
+	 * Skips the tenant requirement for this route.
+	 */
+	skipTenant?: boolean;
+
+	/**
+	 * The user must have one of the specified scopes to access the route.
+	 */
+	requiredScope?: string[];
+
+	/**
+	 * The features supported by additional processors to run for this route.
+	 */
+	processorFeatures?: string[];
+
+	/**
+	 * The data for additional processors to run for this route.
+	 */
+	processorData?: {
+		[key: string]: unknown;
+	};
 }
