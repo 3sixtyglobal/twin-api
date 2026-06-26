@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.1-next.2](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.1-next.1...api-core-v0.9.1-next.2) (2026-06-26)
+
+
+### Features
+
+* allow prefix override in fetch calls ([16d1543](https://github.com/iotaledger/twin-api/commit/16d1543354ab40534108661af204ffe3442d6f0d))
+* update components ([dbf4639](https://github.com/iotaledger/twin-api/commit/dbf4639049f6631acbddaccaed1ecfaab807d343))
+* update components ([206a3dd](https://github.com/iotaledger/twin-api/commit/206a3dd082b7f0159777af5e020c2c0e9de836e5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.1-next.1 to 0.9.1-next.2
+
 ## [0.9.1-next.1](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.1-next.0...api-core-v0.9.1-next.1) (2026-06-26)
 
 
