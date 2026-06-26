@@ -52,7 +52,7 @@ The endpoint with namespace prefix attached.
 
 ### fetch() {#fetch}
 
-> **fetch**\<`T`, `U`\>(`route`, `method`, `request?`): `Promise`\<`U`\>
+> **fetch**\<`T`, `U`\>(`route`, `method`, `request?`, `options?`): `Promise`\<`U`\>
 
 Perform a request in json format.
 
@@ -85,6 +85,16 @@ The http method.
 `T`
 
 Request to send to the endpoint.
+
+##### options?
+
+Optional override options for the request.
+
+###### overridePrefix?
+
+`string`
+
+Optional override prefix to use for this request instead of the default prefix.
 
 #### Returns
 
