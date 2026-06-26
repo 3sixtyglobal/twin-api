@@ -148,6 +148,8 @@ export abstract class BaseRestClient {
 	 * @param route The route of the request.
 	 * @param method The http method.
 	 * @param request Request to send to the endpoint.
+	 * @param options Optional override options for the request.
+	 * @param options.overridePrefix Optional override prefix to use for this request instead of the default prefix.
 	 * @returns The response.
 	 */
 	public async fetch<T extends IHttpRequest, U extends IHttpResponse>(
