@@ -266,6 +266,78 @@ describe("BaseRestClient", () => {
 		);
 	});
 
+	test("overridePrefix replaces the default prefix in the outgoing URL", async () => {
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.ok,
+			headers: new Headers({ [HeaderTypes.ContentType]: MimeTypes.Json }),
+			json: async () => ({})
+		});
+
+		const client = new TestRestClient({ endpoint: "http://localhost:8080" });
+
+		await client.fetch<IHttpRequest, IHttpResponse>("/resource", "GET", undefined, {
+			overridePrefix: "alt-prefix"
+		});
+
+		const [outgoingUrl] = fetchMock.mock.calls[0];
+		expect(outgoingUrl).toBe("http://localhost:8080/alt-prefix/resource");
+	});
+
+	test("empty string overridePrefix strips the prefix entirely", async () => {
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.ok,
+			headers: new Headers({ [HeaderTypes.ContentType]: MimeTypes.Json }),
+			json: async () => ({})
+		});
+
+		const client = new TestRestClient({ endpoint: "http://localhost:8080" });
+
+		await client.fetch<IHttpRequest, IHttpResponse>("/resource", "GET", undefined, {
+			overridePrefix: ""
+		});
+
+		const [outgoingUrl] = fetchMock.mock.calls[0];
+		expect(outgoingUrl).toBe("http://localhost:8080/resource");
+	});
+
+	test("omitting overridePrefix uses the default prefix", async () => {
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.ok,
+			headers: new Headers({ [HeaderTypes.ContentType]: MimeTypes.Json }),
+			json: async () => ({})
+		});
+
+		const client = new TestRestClient({ endpoint: "http://localhost:8080" });
+
+		await client.fetch<IHttpRequest, IHttpResponse>("/resource", "GET");
+
+		const [outgoingUrl] = fetchMock.mock.calls[0];
+		expect(outgoingUrl).toBe("http://localhost:8080/test-prefix/resource");
+	});
+
+	test("overridePrefix works alongside endpoint query params", async () => {
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.ok,
+			headers: new Headers({ [HeaderTypes.ContentType]: MimeTypes.Json }),
+			json: async () => ({})
+		});
+
+		const client = new TestRestClient({
+			endpoint: "http://localhost:8080?tenant-token=abc123"
+		});
+
+		await client.fetch<IHttpRequest, IHttpResponse>("/resource", "GET", undefined, {
+			overridePrefix: "alt-prefix"
+		});
+
+		const [outgoingUrl] = fetchMock.mock.calls[0];
+		expect(outgoingUrl).toBe("http://localhost:8080/alt-prefix/resource?tenant-token=abc123");
+	});
+
 	test("endpoint query params are merged with per-request query params", async () => {
 		fetchMock.mockResolvedValueOnce({
 			ok: true,

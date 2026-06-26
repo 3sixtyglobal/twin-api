@@ -33,6 +33,12 @@ export abstract class BaseRestClient {
 	private readonly _implementationName: string;
 
 	/**
+	 * The endpoint origin without prefix.
+	 * @internal
+	 */
+	private readonly _endpointOrigin: string;
+
+	/**
 	 * The endpoint with prefix to send the requests to.
 	 * @internal
 	 */
@@ -109,15 +115,16 @@ export abstract class BaseRestClient {
 		} catch {}
 
 		if (Is.empty(parsedEndpoint)) {
-			this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
+			this._endpointOrigin = StringHelper.trimTrailingSlashes(config.endpoint);
 		} else {
 			for (const [key, value] of parsedEndpoint.searchParams.entries()) {
 				this._endpointQuery.push({ key, value });
 			}
 			parsedEndpoint.search = "";
-			this._endpointWithPrefix = StringHelper.trimTrailingSlashes(parsedEndpoint.toString());
+			this._endpointOrigin = StringHelper.trimTrailingSlashes(parsedEndpoint.toString());
 		}
 
+		this._endpointWithPrefix = this._endpointOrigin;
 		const finalPathPrefix = config.pathPrefix ?? pathPrefix;
 		if (Is.stringValue(finalPathPrefix)) {
 			this._endpointWithPrefix += `/${finalPathPrefix}`;
@@ -146,7 +153,8 @@ export abstract class BaseRestClient {
 	public async fetch<T extends IHttpRequest, U extends IHttpResponse>(
 		route: string,
 		method: HttpMethod,
-		request?: T
+		request?: T,
+		options?: { overridePrefix?: string }
 	): Promise<U> {
 		Guards.stringValue(this._implementationName, nameof(route), route);
 		Guards.arrayOneOf(this._implementationName, nameof(method), method, Object.values(HttpMethod));
@@ -237,9 +245,15 @@ export abstract class BaseRestClient {
 			}
 		}
 
+		const baseUrl = Is.string(options?.overridePrefix)
+			? options.overridePrefix.length > 0
+				? `${this._endpointOrigin}/${options.overridePrefix}`
+				: this._endpointOrigin
+			: this._endpointWithPrefix;
+
 		const response = await FetchHelper.fetch(
 			this._implementationName,
-			`${this._endpointWithPrefix}${finalRoute}`,
+			`${baseUrl}${finalRoute}`,
 			method,
 			body,
 			{
