@@ -247,11 +247,16 @@ export abstract class BaseRestClient {
 			}
 		}
 
-		const baseUrl = Is.string(options?.overridePrefix)
-			? options.overridePrefix.length > 0
-				? `${this._endpointOrigin}/${options.overridePrefix}`
-				: this._endpointOrigin
-			: this._endpointWithPrefix;
+		let baseUrl;
+
+		if (Is.string(options?.overridePrefix)) {
+			baseUrl =
+				options.overridePrefix.length > 0
+					? `${this._endpointOrigin}/${options.overridePrefix}`
+					: this._endpointOrigin;
+		} else {
+			baseUrl = this._endpointWithPrefix;
+		}
 
 		const response = await FetchHelper.fetch(
 			this._implementationName,
