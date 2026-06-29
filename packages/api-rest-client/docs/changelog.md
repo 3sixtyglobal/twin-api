@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.9.1-next.3](https://github.com/iotaledger/twin-api/compare/api-rest-client-v0.9.1-next.2...api-rest-client-v0.9.1-next.3) (2026-06-29)
+
+
+### Features
+
+* enhanced rest handling ([#208](https://github.com/iotaledger/twin-api/issues/208)) ([99d5f3f](https://github.com/iotaledger/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.9.1-next.2 to 0.9.1-next.3
+    * @twin.org/api-models bumped from 0.9.1-next.2 to 0.9.1-next.3
+
 ## [0.9.1-next.2](https://github.com/iotaledger/twin-api/compare/api-rest-client-v0.9.1-next.1...api-rest-client-v0.9.1-next.2) (2026-06-26)
 
 
