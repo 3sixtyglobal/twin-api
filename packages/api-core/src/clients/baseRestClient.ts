@@ -301,16 +301,6 @@ export abstract class BaseRestClient {
 				}
 
 				if (Object.keys(responseHeaders).length > 0) {
-					if (response.status === HttpStatusCode.created) {
-						// If there is a location header and it is a plain id then decode it
-						// as we encoded it on the way out to avoid problems with embedded colons and other characters
-						// if it contains slashes then we assume it is already encoded correctly and leave it as is
-						const location = responseHeaders[HeaderTypes.Location];
-						if (Is.stringValue(location) && !location.includes("/")) {
-							responseHeaders[HeaderTypes.Location] = decodeURIComponent(location);
-						}
-					}
-
 					httpResponse.headers = responseHeaders;
 				}
 

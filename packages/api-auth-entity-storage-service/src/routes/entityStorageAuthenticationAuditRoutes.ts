@@ -6,16 +6,17 @@ import type {
 	IAuditQueryResponse,
 	IAuthenticationAuditComponent
 } from "@twin.org/api-auth-entity-storage-models";
-import type {
-	ICreatedResponse,
-	IHttpRequestContext,
-	IRestRoute,
-	ITag,
-	IUnauthorizedResponse
+import {
+	HttpHeaderHelper,
+	type ICreatedResponse,
+	type IHttpRequestContext,
+	type IRestRoute,
+	type ITag,
+	type IUnauthorizedResponse
 } from "@twin.org/api-models";
 import { Coerce, ComponentFactory, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
+import { HeaderTypes, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
 
 /**
  * The source used when communicating about these routes.
@@ -171,11 +172,12 @@ export async function authenticationAuditCreate(
 	const component = ComponentFactory.get<IAuthenticationAuditComponent>(componentName);
 	const id = await component.create(request.body);
 
+	const headers: IHttpHeaders = {};
+	HttpHeaderHelper.buildId(headers, id);
+
 	return {
 		statusCode: HttpStatusCode.created,
-		headers: {
-			[HeaderTypes.Location]: id
-		}
+		headers
 	};
 }
 

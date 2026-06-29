@@ -1,1 +1,9 @@
-{}
+{
+	"error": {
+		"httpHeaderHelper": {
+			"locationMissing": "The Location response header is missing or empty",
+			"idNotFound": "The resource ID could not be extracted from the Location header",
+			"templateNoPlaceholder": "The URL template contains no colon-prefixed placeholder segment"
+		}
+	}
+}

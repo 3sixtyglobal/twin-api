@@ -10,17 +10,18 @@ import type {
 	IAdminUserUpdateRequest,
 	IAuthenticationAdminComponent
 } from "@twin.org/api-auth-entity-storage-models";
-import type {
-	ICreatedResponse,
-	IHttpRequestContext,
-	INoContentResponse,
-	IRestRoute,
-	ITag,
-	IUnauthorizedResponse
+import {
+	HttpHeaderHelper,
+	type ICreatedResponse,
+	type IHttpRequestContext,
+	type INoContentResponse,
+	type IRestRoute,
+	type ITag,
+	type IUnauthorizedResponse
 } from "@twin.org/api-models";
 import { ComponentFactory, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
+import { HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
 
 /**
  * The source used when communicating about these routes.
@@ -314,11 +315,12 @@ export async function authenticationAdminCreateUser(
 	const component = ComponentFactory.get<IAuthenticationAdminComponent>(componentName);
 	await component.create(request.body);
 
+	const headers: IHttpHeaders = {};
+	HttpHeaderHelper.buildId(headers, request.body.email);
+
 	return {
 		statusCode: HttpStatusCode.created,
-		headers: {
-			[HeaderTypes.Location]: request.body.email
-		}
+		headers
 	};
 }
 

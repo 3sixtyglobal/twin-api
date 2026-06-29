@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	HttpContextIdKeys,
+	HttpHeaderHelper,
 	HttpParameterHelper,
-	HttpUrlHelper,
 	type ICreatedResponse,
 	type IHttpRequestContext,
 	type INoContentResponse,
@@ -14,7 +14,7 @@ import {
 import { ContextIdStore } from "@twin.org/context";
 import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { HeaderHelper, HeaderTypes, HttpStatusCode } from "@twin.org/web";
+import { HeaderTypes, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
 import type { ITenantCreateRequest } from "./models/api/ITenantCreateRequest.js";
 import type { ITenantGetByApiKeyRequest } from "./models/api/ITenantGetByApiKeyRequest.js";
 import type { ITenantGetByIdRequest } from "./models/api/ITenantGetByIdRequest.js";
@@ -333,13 +333,12 @@ export async function tenantList(
 	const contextIds = await ContextIdStore.getContextIds();
 	const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
 
-	if (Is.stringValue(result.cursor)) {
-		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			HttpUrlHelper.replaceOrigin(httpRequestContext.serverRequest.url, publicOrigin),
-			{ cursor: result.cursor },
-			"next"
-		);
-	}
+	HttpHeaderHelper.buildCursor(
+		headers,
+		httpRequestContext.serverRequest.url,
+		publicOrigin,
+		result.cursor
+	);
 
 	return {
 		headers,
@@ -478,11 +477,12 @@ export async function tenantCreate(
 
 	const createdId = await component.create(request.body);
 
+	const headers: IHttpHeaders = {};
+	HttpHeaderHelper.buildId(headers, createdId);
+
 	return {
 		statusCode: HttpStatusCode.created,
-		headers: {
-			[HeaderTypes.Location]: createdId
-		}
+		headers
 	};
 }
 

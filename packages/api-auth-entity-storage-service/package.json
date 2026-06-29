@@ -23,7 +23,8 @@
 		"test:coverage": "vitest --run --coverage --config ./vitest.config.ts --no-cache",
 		"docs:clean": "rimraf docs/reference",
 		"docs:generate": "typedoc --options typedoc.config.mjs",
-		"docs": "npm run docs:clean && npm run docs:generate",
+		"docs:api": "ts-to-openapi ./ts-to-openapi.json ./docs/open-api/spec.json",
+		"docs": "npm run docs:clean && npm run docs:generate && npm run docs:api",
 		"dist": "npm run clean && npm run build && npm run validate-locales && npm run test:build && npm run test",
 		"dist:no-test": "npm run clean && npm run build && npm run test:build"
 	},
@@ -46,6 +47,7 @@
 		"@twin.org/entity-storage-connector-memory": "next",
 		"@twin.org/nameof-transformer": "next",
 		"@twin.org/nameof-vitest-plugin": "next",
+		"@twin.org/ts-to-openapi": "next",
 		"@twin.org/validate-locales": "next",
 		"@vitest/coverage-v8": "4.1.9",
 		"@types/node": "26.0.0",

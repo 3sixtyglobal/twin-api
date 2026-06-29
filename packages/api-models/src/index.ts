@@ -6,6 +6,7 @@ export * from "./factories/mimeTypeProcessorFactory.js";
 export * from "./factories/restRouteProcessorFactory.js";
 export * from "./factories/socketRouteProcessorFactory.js";
 export * from "./helpers/httpErrorHelper.js";
+export * from "./helpers/httpHeaderHelper.js";
 export * from "./helpers/httpParameterHelper.js";
 export * from "./helpers/httpUrlHelper.js";
 export * from "./models/api/IServerFavIconResponse.js";

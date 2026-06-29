@@ -9,10 +9,10 @@ import type {
 	IAuthenticationAuditEntry
 } from "@twin.org/api-auth-entity-storage-models";
 import { BaseRestClient } from "@twin.org/api-core";
+import { HttpHeaderHelper } from "@twin.org/api-models";
 import type { IBaseRestClientConfig, ICreatedResponse } from "@twin.org/api-models";
 import { Coerce, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { HeaderTypes } from "@twin.org/web";
 
 /**
  * The client to connect to the authentication audit service.
@@ -57,11 +57,11 @@ export class EntityStorageAuthenticationAuditRestClient
 			entry.event
 		);
 
-		const response = await this.fetch<IAuditCreateRequest, ICreatedResponse>("", "POST", {
+		const response = await this.fetch<IAuditCreateRequest, ICreatedResponse>("/", "POST", {
 			body: entry
 		});
 
-		return response.headers?.[HeaderTypes.Location] ?? "";
+		return HttpHeaderHelper.extractId(response.headers);
 	}
 
 	/**
@@ -94,7 +94,7 @@ export class EntityStorageAuthenticationAuditRestClient
 		entries: IAuthenticationAuditEntry[];
 		cursor?: string;
 	}> {
-		const response = await this.fetch<IAuditQueryRequest, IAuditQueryResponse>("", "GET", {
+		const response = await this.fetch<IAuditQueryRequest, IAuditQueryResponse>("/", "GET", {
 			query: {
 				actorId: options?.actorId,
 				organizationId: options?.organizationId,
