@@ -27,6 +27,29 @@ describe("BaseRestClient", () => {
 		fetchMock.mockReset();
 	});
 
+	describe("getPathPrefix", () => {
+		test("returns the default path prefix with a leading slash", () => {
+			const client = new TestRestClient({ endpoint: "http://localhost:8080" });
+			expect(client.getPathPrefix()).toBe("test-prefix");
+		});
+
+		test("returns the config pathPrefix with a leading slash when provided", () => {
+			const client = new TestRestClient({
+				endpoint: "http://localhost:8080",
+				pathPrefix: "override-prefix"
+			});
+			expect(client.getPathPrefix()).toBe("override-prefix");
+		});
+
+		test("returns an empty string when the config pathPrefix is empty", () => {
+			const client = new TestRestClient({
+				endpoint: "http://localhost:8080",
+				pathPrefix: ""
+			});
+			expect(client.getPathPrefix()).toBe("");
+		});
+	});
+
 	test("can merge per-request headers into outgoing request", async () => {
 		fetchMock.mockResolvedValueOnce({
 			ok: true,

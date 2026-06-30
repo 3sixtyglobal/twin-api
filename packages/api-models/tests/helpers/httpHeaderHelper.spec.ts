@@ -118,14 +118,35 @@ describe("HttpHeaderHelper", () => {
 			expect(HttpHeaderHelper.extractId(headers, "/path1/:id/path2")).toBe("hello world");
 		});
 
-		it("should throw when the template has no colon-prefixed placeholder", () => {
+		it("should fall back to last-segment extraction when the template has no ':id' placeholder", () => {
 			const headers = { location: "/path1/my-id/path2" };
-			expect(() => HttpHeaderHelper.extractId(headers, "/path1/id/path2")).toThrow(GeneralError);
+			expect(HttpHeaderHelper.extractId(headers, "/path1/id/path2")).toBe("path2");
 		});
 
 		it("should throw when the location has no segment at the placeholder position", () => {
 			const headers = { location: "/path1" };
 			expect(() => HttpHeaderHelper.extractId(headers, "/path1/:id/path2")).toThrow(GeneralError);
+		});
+
+		it("should extract the ID using a full absolute URL as the template", () => {
+			const headers = { location: "https://host.local/path1/my-id/path2" };
+			expect(HttpHeaderHelper.extractId(headers, "https://host.local/path1/:id/path2")).toBe(
+				"my-id"
+			);
+		});
+
+		it("should extract the ID using a path-only template against a full URL location", () => {
+			const headers = {
+				location: "http://localhost:8080/authentication/audit/018f0b53d5d5704fa3a06d6ed2478575"
+			};
+			expect(HttpHeaderHelper.extractId(headers, "/authentication/audit/:id")).toBe(
+				"018f0b53d5d5704fa3a06d6ed2478575"
+			);
+		});
+
+		it("should extract the ID when ':id' appears as a query parameter value in the template", () => {
+			const headers = { location: "https://host.local/path?id=my-id" };
+			expect(HttpHeaderHelper.extractId(headers, "/path?id=:id")).toBe("my-id");
 		});
 
 		it("should roundtrip with buildId", () => {
@@ -153,31 +174,13 @@ describe("HttpHeaderHelper", () => {
 			expect(() => HttpHeaderHelper.buildId({}, "")).toThrow();
 		});
 
-		it("should set the Location header to the bare encoded ID when no baseUrl is provided", () => {
+		it("should set the Location header to the bare encoded ID when no urlTemplate is provided", () => {
 			const headers: IHttpHeaders = {};
 			HttpHeaderHelper.buildId(headers, "my-id");
 			expect(headers.location).toBe("my-id");
 		});
 
-		it("should append the ID to an absolute baseUrl", () => {
-			const headers: IHttpHeaders = {};
-			HttpHeaderHelper.buildId(headers, "my-id", "https://example.com/path");
-			expect(headers.location).toBe("https://example.com/path/my-id");
-		});
-
-		it("should append the ID to a relative baseUrl", () => {
-			const headers: IHttpHeaders = {};
-			HttpHeaderHelper.buildId(headers, "my-id", "/segment");
-			expect(headers.location).toBe("/segment/my-id");
-		});
-
-		it("should trim a trailing slash from baseUrl before appending", () => {
-			const headers: IHttpHeaders = {};
-			HttpHeaderHelper.buildId(headers, "my-id", "https://example.com/path/");
-			expect(headers.location).toBe("https://example.com/path/my-id");
-		});
-
-		it("should set the bare ID when baseUrl is an empty string", () => {
+		it("should set the bare ID when urlTemplate is an empty string", () => {
 			const headers: IHttpHeaders = {};
 			HttpHeaderHelper.buildId(headers, "my-id", "");
 			expect(headers.location).toBe("my-id");
@@ -189,22 +192,40 @@ describe("HttpHeaderHelper", () => {
 			expect(headers.location).toBe("hello%20world");
 		});
 
-		it("should percent-encode the ID when appended to a baseUrl", () => {
+		it("should append the ID to an absolute urlTemplate", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildId(headers, "my-id", "https://example.com/path");
+			expect(headers.location).toBe("https://example.com/path/my-id");
+		});
+
+		it("should append the ID to a relative urlTemplate", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildId(headers, "my-id", "/segment");
+			expect(headers.location).toBe("/segment/my-id");
+		});
+
+		it("should trim a trailing slash from urlTemplate before appending", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildId(headers, "my-id", "https://example.com/path/");
+			expect(headers.location).toBe("https://example.com/path/my-id");
+		});
+
+		it("should percent-encode the ID when appended to a urlTemplate", () => {
 			const headers: IHttpHeaders = {};
 			HttpHeaderHelper.buildId(headers, "hello world", "/path");
 			expect(headers.location).toBe("/path/hello%20world");
 		});
 
-		it("should substitute the ID at the placeholder position in a template", () => {
+		it("should substitute the ID at the ':id' placeholder position in a template", () => {
 			const headers: IHttpHeaders = {};
 			HttpHeaderHelper.buildId(headers, "my-id", "/path1/:id/path2");
 			expect(headers.location).toBe("/path1/my-id/path2");
 		});
 
-		it("should substitute the ID when the placeholder is any colon-prefixed name", () => {
+		it("should not substitute when the placeholder name is not ':id'", () => {
 			const headers: IHttpHeaders = {};
 			HttpHeaderHelper.buildId(headers, "my-id", "/path1/:resourceId/path2");
-			expect(headers.location).toBe("/path1/my-id/path2");
+			expect(headers.location).toBe("/path1/:resourceId/path2/my-id");
 		});
 
 		it("should substitute the ID in an absolute URL template", () => {
@@ -213,16 +234,22 @@ describe("HttpHeaderHelper", () => {
 			expect(headers.location).toBe("https://example.com/path1/my-id/path2");
 		});
 
+		it("should substitute the ID when ':id' appears as a query parameter value", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildId(headers, "my-id", "/path?param=:id");
+			expect(headers.location).toBe("/path?param=my-id");
+		});
+
 		it("should percent-encode the ID when substituting into a template", () => {
 			const headers: IHttpHeaders = {};
 			HttpHeaderHelper.buildId(headers, "hello world", "/path1/:id/path2");
 			expect(headers.location).toBe("/path1/hello%20world/path2");
 		});
 
-		it("should only replace the first placeholder in a template", () => {
+		it("should only replace the first ':id' placeholder when multiple exist", () => {
 			const headers: IHttpHeaders = {};
-			HttpHeaderHelper.buildId(headers, "my-id", "/path/:a/:b");
-			expect(headers.location).toBe("/path/my-id/:b");
+			HttpHeaderHelper.buildId(headers, "my-id", "/path/:id/sub/:id");
+			expect(headers.location).toBe("/path/my-id/sub/:id");
 		});
 	});
 

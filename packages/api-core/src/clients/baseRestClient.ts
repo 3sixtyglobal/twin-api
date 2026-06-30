@@ -45,6 +45,12 @@ export abstract class BaseRestClient {
 	private readonly _endpointWithPrefix: string;
 
 	/**
+	 * The path prefix without origin, e.g. "authentication/audit".
+	 * @internal
+	 */
+	private readonly _pathPrefix: string;
+
+	/**
 	 * Query parameters parsed from the configured endpoint URL. Preserved on every
 	 * outbound request so that callers using endpoints like
 	 * `https://host?tenant-token=…` don't lose routing data when the route+query are
@@ -126,8 +132,9 @@ export abstract class BaseRestClient {
 
 		this._endpointWithPrefix = this._endpointOrigin;
 		const finalPathPrefix = config.pathPrefix ?? pathPrefix;
-		if (Is.stringValue(finalPathPrefix)) {
-			this._endpointWithPrefix += `/${finalPathPrefix}`;
+		this._pathPrefix = Is.stringValue(finalPathPrefix) ? finalPathPrefix : "";
+		if (Is.stringValue(this._pathPrefix)) {
+			this._endpointWithPrefix += `/${this._pathPrefix}`;
 		}
 
 		this._customAuthHeader = config.customAuthHeader;
@@ -141,6 +148,14 @@ export abstract class BaseRestClient {
 	 */
 	public getEndpointWithPrefix(): string {
 		return this._endpointWithPrefix;
+	}
+
+	/**
+	 * Get the path prefix as a URL path string provided in the constructor.
+	 * @returns The path prefix.
+	 */
+	public getPathPrefix(): string {
+		return this._pathPrefix;
 	}
 
 	/**

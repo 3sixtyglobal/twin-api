@@ -11,7 +11,9 @@ import type {
 	IAuthenticationAdminComponent
 } from "@twin.org/api-auth-entity-storage-models";
 import {
+	HttpContextIdKeys,
 	HttpHeaderHelper,
+	HttpUrlHelper,
 	type ICreatedResponse,
 	type IHttpRequestContext,
 	type INoContentResponse,
@@ -19,6 +21,7 @@ import {
 	type ITag,
 	type IUnauthorizedResponse
 } from "@twin.org/api-models";
+import { ContextIdStore } from "@twin.org/context";
 import { ComponentFactory, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
@@ -55,7 +58,7 @@ export function generateRestRoutesAuthenticationAdmin(
 		method: "POST",
 		path: `${baseRouteName}/users`,
 		handler: async (httpRequestContext, request) =>
-			authenticationAdminCreateUser(httpRequestContext, componentName, request),
+			authenticationAdminCreateUser(httpRequestContext, componentName, request, baseRouteName),
 		requestType: {
 			type: nameof<IAdminUserCreateRequest>(),
 			examples: [
@@ -302,12 +305,14 @@ export function generateRestRoutesAuthenticationAdmin(
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
+ * @param baseRouteName The base route name to use for the location header.
  * @returns The response object with additional http response properties.
  */
 export async function authenticationAdminCreateUser(
 	httpRequestContext: IHttpRequestContext,
 	componentName: string,
-	request: IAdminUserCreateRequest
+	request: IAdminUserCreateRequest,
+	baseRouteName: string
 ): Promise<ICreatedResponse> {
 	Guards.object<IAdminUserCreateRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<IAdminUserCreateRequest["body"]>(ROUTES_SOURCE, nameof(request.body), request.body);
@@ -315,8 +320,15 @@ export async function authenticationAdminCreateUser(
 	const component = ComponentFactory.get<IAuthenticationAdminComponent>(componentName);
 	await component.create(request.body);
 
+	const contextIds = await ContextIdStore.getContextIds();
+	const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
+
 	const headers: IHttpHeaders = {};
-	HttpHeaderHelper.buildId(headers, request.body.email);
+	HttpHeaderHelper.buildId(
+		headers,
+		request.body.email,
+		HttpUrlHelper.combineOriginPath(publicOrigin, `${baseRouteName}/users/:id`)
+	);
 
 	return {
 		statusCode: HttpStatusCode.created,

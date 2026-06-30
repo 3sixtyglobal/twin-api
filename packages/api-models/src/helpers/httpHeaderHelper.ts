@@ -37,27 +37,30 @@ export class HttpHeaderHelper {
 	}
 
 	/**
-	 * Set the Location header to the encoded ID, optionally placed within a base URL or template.
-	 * When baseUrl contains a colon-prefixed placeholder (e.g. "/path1/:id/path2") the
+	 * Set the Location header to the encoded ID, optionally placed within a URL template.
+	 * When the template contains `:id` (e.g. "/path1/:id/path2" or "/path?p=:id") the
 	 * encoded ID is substituted at that position; otherwise it is appended.
-	 * The base URL may be an absolute URL or a relative path. When omitted the bare
-	 * encoded ID is used.
+	 * When no template is provided the bare encoded ID is used.
+	 * Callers that need to combine a public origin with a path should use
+	 * HttpUrlHelper.combineOriginPath to build the template before calling this method.
 	 * @param headers The response headers to mutate.
 	 * @param id The resource ID to encode and place.
-	 * @param baseUrl The optional base URL, relative path, or URL template.
+	 * @param urlTemplate The optional URL template (absolute or relative).
 	 */
 	public static buildId(
 		headers: IHttpHeaders,
 		id: string,
-		baseUrl?: string
+		urlTemplate?: string
 	): asserts headers is IHttpHeaders & { [HeaderTypes.Location]: string } {
 		Guards.stringValue(HttpHeaderHelper.CLASS_NAME, nameof(id), id);
 		const encodedId = encodeURIComponent(id);
-		if (Is.stringValue(baseUrl)) {
-			if (baseUrl.includes("/:")) {
-				headers[HeaderTypes.Location] = baseUrl.replace(/\/:[^/?#]+/, `/${encodedId}`);
+
+		if (Is.stringValue(urlTemplate)) {
+			if (urlTemplate.includes(":id")) {
+				headers[HeaderTypes.Location] = urlTemplate.replace(/:id/, encodedId);
 			} else {
-				headers[HeaderTypes.Location] = `${StringHelper.trimTrailingSlashes(baseUrl)}/${encodedId}`;
+				headers[HeaderTypes.Location] =
+					`${StringHelper.trimTrailingSlashes(urlTemplate)}/${encodedId}`;
 			}
 		} else {
 			headers[HeaderTypes.Location] = encodedId;
@@ -105,17 +108,16 @@ export class HttpHeaderHelper {
 
 	/**
 	 * Extract the resource ID from the Location response header.
-	 * Handles absolute URLs (http://host/path/:id, http://host/path/:id?foo=bar),
-	 * relative paths (/segment/:id, ./segment/:id), and bare ID values.
-	 * When a URL template such as "/path1/:id/path2" is supplied the ID is extracted
-	 * from the segment position marked by the first colon-prefixed placeholder.
-	 * Without a template the last path segment is returned.
+	 * Handles absolute URLs, relative paths, and bare ID values.
+	 * When a templateUrl containing ':id' is supplied (e.g. "/path1/:id/path2" or
+	 * "https://host/path/:id") the ID is extracted via pattern matching at the ':id'
+	 * position. Without a matching template the last path segment is returned.
 	 * @param headers The response headers containing the Location header.
-	 * @param template Optional URL template with a colon-prefixed placeholder marking the ID position, e.g. "/path1/:id/path2".
+	 * @param templateUrl Optional URL template containing the ':id' placeholder, e.g. "/path1/:id/path2".
 	 * @returns The extracted ID string.
-	 * @throws GeneralError If the Location header is missing, the template has no placeholder, or the ID cannot be extracted.
+	 * @throws GeneralError If the Location header is missing or the ID cannot be extracted.
 	 */
-	public static extractId(headers?: IHttpHeaders, template?: string): string {
+	public static extractId(headers?: IHttpHeaders, templateUrl?: string): string {
 		const location = headers?.[HeaderTypes.Location];
 		if (!Is.stringValue(location)) {
 			throw new GeneralError(HttpHeaderHelper.CLASS_NAME, "locationMissing");
@@ -123,25 +125,14 @@ export class HttpHeaderHelper {
 
 		const withoutQuery = location.split("?")[0];
 
-		if (Is.stringValue(template)) {
-			const templateSegments = template.split("/").filter(s => s.length > 0);
-			const placeholderIndex = templateSegments.findIndex(s => s.startsWith(":"));
-			if (placeholderIndex === -1) {
-				throw new GeneralError(HttpHeaderHelper.CLASS_NAME, "templateNoPlaceholder");
-			}
-
-			let path = withoutQuery;
-			try {
-				path = new URL(withoutQuery).pathname;
-			} catch {}
-
-			const locationSegments = path.split("/").filter(s => s.length > 0 && s !== ".");
-			const id = locationSegments[placeholderIndex];
-
-			if (!Is.stringValue(id)) {
+		if (Is.stringValue(templateUrl) && templateUrl.includes(":id")) {
+			const escaped = templateUrl.replace(/[.+^${}()|[\]\\?]/g, "\\$&");
+			const pattern = new RegExp(escaped.replace(":id", "([^/?#]+)"));
+			const match = pattern.exec(location);
+			if (!Is.stringValue(match?.[1])) {
 				throw new GeneralError(HttpHeaderHelper.CLASS_NAME, "idNotFound");
 			}
-			return decodeURIComponent(id);
+			return decodeURIComponent(match[1]);
 		}
 
 		const id = withoutQuery.includes("/") ? withoutQuery.split("/").pop() : withoutQuery;

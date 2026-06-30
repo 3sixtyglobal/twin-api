@@ -3,16 +3,25 @@
 import type {
 	AuthAuditEvent,
 	IAuditCreateRequest,
+	IAuditGetRequest,
+	IAuditGetResponse,
 	IAuditQueryRequest,
 	IAuditQueryResponse,
+	IAuditRemoveRequest,
+	IAuditUpdateRequest,
 	IAuthenticationAuditComponent,
 	IAuthenticationAuditEntry
 } from "@twin.org/api-auth-entity-storage-models";
 import { BaseRestClient } from "@twin.org/api-core";
 import { HttpHeaderHelper } from "@twin.org/api-models";
-import type { IBaseRestClientConfig, ICreatedResponse } from "@twin.org/api-models";
+import type {
+	IBaseRestClientConfig,
+	ICreatedResponse,
+	INoContentResponse
+} from "@twin.org/api-models";
 import { Coerce, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
+import { HttpMethod } from "@twin.org/web";
 
 /**
  * The client to connect to the authentication audit service.
@@ -61,7 +70,54 @@ export class EntityStorageAuthenticationAuditRestClient
 			body: entry
 		});
 
-		return HttpHeaderHelper.extractId(response.headers);
+		return HttpHeaderHelper.extractId(response.headers, `${this.getPathPrefix()}/:id`);
+	}
+
+	/**
+	 * Get an audit entry by id.
+	 * @param id The unique identifier of the audit entry.
+	 * @returns The audit entry.
+	 */
+	public async get(id: string): Promise<IAuthenticationAuditEntry> {
+		Guards.stringValue(EntityStorageAuthenticationAuditRestClient.CLASS_NAME, nameof(id), id);
+
+		const response = await this.fetch<IAuditGetRequest, IAuditGetResponse>("/:id", HttpMethod.GET, {
+			pathParams: { id }
+		});
+
+		return response.body;
+	}
+
+	/**
+	 * Update an audit entry.
+	 * @param id The unique identifier of the audit entry to update.
+	 * @param entry The fields to update on the audit entry.
+	 * @returns A promise that resolves when the audit entry has been updated.
+	 */
+	public async update(
+		id: string,
+		entry: Partial<Omit<IAuthenticationAuditEntry, "id" | "dateCreated">>
+	): Promise<void> {
+		Guards.stringValue(EntityStorageAuthenticationAuditRestClient.CLASS_NAME, nameof(id), id);
+		Guards.object(EntityStorageAuthenticationAuditRestClient.CLASS_NAME, nameof(entry), entry);
+
+		await this.fetch<IAuditUpdateRequest, INoContentResponse>("/:id", HttpMethod.PUT, {
+			pathParams: { id },
+			body: entry
+		});
+	}
+
+	/**
+	 * Remove an audit entry.
+	 * @param id The unique identifier of the audit entry to remove.
+	 * @returns A promise that resolves when the audit entry has been removed.
+	 */
+	public async remove(id: string): Promise<void> {
+		Guards.stringValue(EntityStorageAuthenticationAuditRestClient.CLASS_NAME, nameof(id), id);
+
+		await this.fetch<IAuditRemoveRequest, INoContentResponse>("/:id", HttpMethod.DELETE, {
+			pathParams: { id }
+		});
 	}
 
 	/**

@@ -12,20 +12,26 @@ import {
 import { EntityStorageAuthenticationAuditService } from "../../src/services/entityStorageAuthenticationAuditService.js";
 
 describe("EntityStorageAuthenticationAuditService", () => {
+	let getMock: ReturnType<typeof vi.fn>;
 	let queryMock: ReturnType<typeof vi.fn>;
 	let setMock: ReturnType<typeof vi.fn>;
+	let removeMock: ReturnType<typeof vi.fn>;
 	let mockAuditEntryEntityStorage: IEntityStorageConnector;
 	let service: EntityStorageAuthenticationAuditService;
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
 
+		getMock = vi.fn();
 		queryMock = vi.fn();
 		setMock = vi.fn();
+		removeMock = vi.fn();
 
 		mockAuditEntryEntityStorage = {
+			get: getMock,
 			query: queryMock,
-			set: setMock
+			set: setMock,
+			remove: removeMock
 		} as unknown as IEntityStorageConnector;
 
 		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockAuditEntryEntityStorage);
@@ -152,6 +158,71 @@ describe("EntityStorageAuthenticationAuditService", () => {
 				ipAddressHashes: [expectedIpAddressHash1, expectedIpAddressHash2]
 			})
 		);
+	});
+
+	it("should get an audit entry by id", async () => {
+		const entry = {
+			id: "audit-entry-id",
+			actorId: "user@example.com",
+			dateCreated: "2026-04-13T10:11:12.000Z",
+			event: "login-success"
+		};
+		getMock.mockResolvedValue(entry);
+
+		const result = await service.get("audit-entry-id");
+
+		expect(getMock).toHaveBeenCalledWith("audit-entry-id");
+		expect(result).toEqual(entry);
+	});
+
+	it("should throw when get entry is not found", async () => {
+		getMock.mockResolvedValue(undefined);
+
+		await expect(service.get("missing-id")).rejects.toThrow();
+	});
+
+	it("should update an audit entry", async () => {
+		const existing = {
+			id: "audit-entry-id",
+			dateCreated: "2026-04-13T10:11:12.000Z",
+			event: "login-success",
+			actorId: "user@example.com"
+		};
+		getMock.mockResolvedValue(existing);
+
+		await service.update("audit-entry-id", { event: "login-failure" });
+
+		expect(setMock).toHaveBeenCalledWith({
+			...existing,
+			event: "login-failure",
+			id: "audit-entry-id",
+			dateCreated: "2026-04-13T10:11:12.000Z"
+		});
+	});
+
+	it("should throw when updating a non-existent entry", async () => {
+		getMock.mockResolvedValue(undefined);
+
+		await expect(service.update("missing-id", { event: "login-failure" })).rejects.toThrow();
+	});
+
+	it("should remove an audit entry", async () => {
+		const existing = {
+			id: "audit-entry-id",
+			dateCreated: "2026-04-13T10:11:12.000Z",
+			event: "login-success"
+		};
+		getMock.mockResolvedValue(existing);
+
+		await service.remove("audit-entry-id");
+
+		expect(removeMock).toHaveBeenCalledWith("audit-entry-id");
+	});
+
+	it("should throw when removing a non-existent entry", async () => {
+		getMock.mockResolvedValue(undefined);
+
+		await expect(service.remove("missing-id")).rejects.toThrow();
 	});
 
 	it("should query audit entries with filters and pagination", async () => {

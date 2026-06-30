@@ -58,14 +58,26 @@ export class HttpUrlHelper {
 	}
 
 	/**
-	 * Combine the urls parts.
-	 * @param origin The origin to combine.
-	 * @param pathAndSearch The path and search to combine.
-	 * @returns The combined parts.
+	 * Combine an optional origin and an optional path into a single URL string.
+	 * Relative paths (no protocol, no leading slash) have a leading slash prepended.
+	 * Trailing slashes are trimmed from the origin before joining.
+	 * Returns undefined when both arguments are absent or empty.
+	 * @param origin The optional origin (e.g. "https://example.com").
+	 * @param path The optional path or URL template (e.g. "/api/items" or "api/items").
+	 * @returns The combined string, or undefined when both are absent.
 	 */
-	public static combineParts(origin: string, pathAndSearch: string): string | undefined {
-		if (Is.string(origin) && Is.string(pathAndSearch)) {
-			return `${StringHelper.trimTrailingSlashes(origin)}/${StringHelper.trimLeadingSlashes(pathAndSearch)}`;
+	public static combineOriginPath(origin?: string, path?: string): string | undefined {
+		const normalizedPath =
+			Is.stringValue(path) && !path.includes("://")
+				? `/${StringHelper.trimLeadingSlashes(path)}`
+				: path;
+
+		if (Is.stringValue(origin) && Is.stringValue(normalizedPath)) {
+			return `${StringHelper.trimTrailingSlashes(origin)}${normalizedPath}`;
+		} else if (Is.stringValue(origin)) {
+			return origin;
+		} else if (Is.stringValue(normalizedPath)) {
+			return normalizedPath;
 		}
 	}
 

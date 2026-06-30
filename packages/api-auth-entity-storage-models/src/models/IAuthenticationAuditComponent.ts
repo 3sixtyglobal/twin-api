@@ -16,6 +16,31 @@ export interface IAuthenticationAuditComponent extends IComponent {
 	create(entry: Omit<IAuthenticationAuditEntry, "id" | "dateCreated">): Promise<string>;
 
 	/**
+	 * Get an audit entry by id.
+	 * @param id The unique identifier of the audit entry.
+	 * @returns The audit entry.
+	 */
+	get(id: string): Promise<IAuthenticationAuditEntry>;
+
+	/**
+	 * Update an audit entry.
+	 * @param id The unique identifier of the audit entry to update.
+	 * @param entry The fields to update on the audit entry.
+	 * @returns A promise that resolves when the audit entry has been updated.
+	 */
+	update(
+		id: string,
+		entry: Partial<Omit<IAuthenticationAuditEntry, "id" | "dateCreated">>
+	): Promise<void>;
+
+	/**
+	 * Remove an audit entry.
+	 * @param id The unique identifier of the audit entry to remove.
+	 * @returns A promise that resolves when the audit entry has been removed.
+	 */
+	remove(id: string): Promise<void>;
+
+	/**
 	 * Query the audit entries.
 	 * @param options The query options.
 	 * @param options.actorId The actor identifier to filter the audit entries, optional.

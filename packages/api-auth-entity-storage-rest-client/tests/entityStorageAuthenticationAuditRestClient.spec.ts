@@ -6,6 +6,7 @@ import { EntityStorageAuthenticationAuditRestClient } from "../src/entityStorage
 import {
 	createdResponse,
 	jsonResponse,
+	noContentResponse,
 	setupFetchMock,
 	teardownFetchMock
 } from "./helpers/restClientTestHelpers.js";
@@ -59,7 +60,9 @@ describe("EntityStorageAuthenticationAuditRestClient", () => {
 		});
 
 		test("sends POST to the resource root", async () => {
-			fetchMock.mockResolvedValueOnce(createdResponse("018f0b53d5d5704fa3a06d6ed2478575"));
+			fetchMock.mockResolvedValueOnce(
+				createdResponse(`${ENDPOINT}/${PREFIX}/018f0b53d5d5704fa3a06d6ed2478575`)
+			);
 
 			await client.create(TEST_ENTRY);
 
@@ -69,7 +72,9 @@ describe("EntityStorageAuthenticationAuditRestClient", () => {
 		});
 
 		test("sends the audit entry as the request body", async () => {
-			fetchMock.mockResolvedValueOnce(createdResponse("018f0b53d5d5704fa3a06d6ed2478575"));
+			fetchMock.mockResolvedValueOnce(
+				createdResponse(`${ENDPOINT}/${PREFIX}/018f0b53d5d5704fa3a06d6ed2478575`)
+			);
 
 			await client.create(TEST_ENTRY);
 
@@ -77,12 +82,97 @@ describe("EntityStorageAuthenticationAuditRestClient", () => {
 			expect(JSON.parse(options.body)).toEqual(TEST_ENTRY);
 		});
 
-		test("returns the id from the Location response header", async () => {
-			fetchMock.mockResolvedValueOnce(createdResponse("018f0b53d5d5704fa3a06d6ed2478575"));
+		test("returns the id stripped from a full Location URL", async () => {
+			fetchMock.mockResolvedValueOnce(
+				createdResponse(`${ENDPOINT}/${PREFIX}/018f0b53d5d5704fa3a06d6ed2478575`)
+			);
 
 			const result = await client.create(TEST_ENTRY);
 
 			expect(result).toBe("018f0b53d5d5704fa3a06d6ed2478575");
+		});
+	});
+
+	describe("get", () => {
+		test("throws when id is empty", async () => {
+			await expect(client.get("")).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.stringEmpty"
+			});
+		});
+
+		test("sends GET to the resource id path", async () => {
+			fetchMock.mockResolvedValueOnce(jsonResponse(TEST_AUDIT_ENTRIES[0]));
+
+			await client.get("018f0b53d5d5704fa3a06d6ed2478575");
+
+			const [url, options] = fetchMock.mock.calls[0];
+			expect(url).toBe(`${ENDPOINT}/${PREFIX}/018f0b53d5d5704fa3a06d6ed2478575`);
+			expect(options.method).toBe(HttpMethod.GET);
+		});
+
+		test("returns the audit entry from the response body", async () => {
+			fetchMock.mockResolvedValueOnce(jsonResponse(TEST_AUDIT_ENTRIES[0]));
+
+			const result = await client.get("018f0b53d5d5704fa3a06d6ed2478575");
+
+			expect(result).toEqual(TEST_AUDIT_ENTRIES[0]);
+		});
+	});
+
+	describe("update", () => {
+		test("throws when id is empty", async () => {
+			await expect(client.update("", { event: "login-failure" })).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.stringEmpty"
+			});
+		});
+
+		test("throws when entry is undefined", async () => {
+			await expect(
+				client.update("018f0b53d5d5704fa3a06d6ed2478575", undefined as never)
+			).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.objectUndefined"
+			});
+		});
+
+		test("sends PUT to the resource id path", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
+
+			await client.update("018f0b53d5d5704fa3a06d6ed2478575", { event: "login-failure" });
+
+			const [url, options] = fetchMock.mock.calls[0];
+			expect(url).toBe(`${ENDPOINT}/${PREFIX}/018f0b53d5d5704fa3a06d6ed2478575`);
+			expect(options.method).toBe(HttpMethod.PUT);
+		});
+
+		test("sends the update fields as the request body", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
+
+			await client.update("018f0b53d5d5704fa3a06d6ed2478575", { event: "login-failure" });
+
+			const [, options] = fetchMock.mock.calls[0];
+			expect(JSON.parse(options.body)).toEqual({ event: "login-failure" });
+		});
+	});
+
+	describe("remove", () => {
+		test("throws when id is empty", async () => {
+			await expect(client.remove("")).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.stringEmpty"
+			});
+		});
+
+		test("sends DELETE to the resource id path", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
+
+			await client.remove("018f0b53d5d5704fa3a06d6ed2478575");
+
+			const [url, options] = fetchMock.mock.calls[0];
+			expect(url).toBe(`${ENDPOINT}/${PREFIX}/018f0b53d5d5704fa3a06d6ed2478575`);
+			expect(options.method).toBe(HttpMethod.DELETE);
 		});
 	});
 
