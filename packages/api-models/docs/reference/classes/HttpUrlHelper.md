@@ -114,31 +114,34 @@ The extracted path and search.
 
 ***
 
-### combineParts() {#combineparts}
+### combineOriginPath() {#combineoriginpath}
 
-> `static` **combineParts**(`origin`, `pathAndSearch`): `string` \| `undefined`
+> `static` **combineOriginPath**(`origin?`, `path?`): `string` \| `undefined`
 
-Combine the urls parts.
+Combine an optional origin and an optional path into a single URL string.
+Relative paths (no protocol, no leading slash) have a leading slash prepended.
+Trailing slashes are trimmed from the origin before joining.
+Returns undefined when both arguments are absent or empty.
 
 #### Parameters
 
-##### origin
+##### origin?
 
 `string`
 
-The origin to combine.
+The optional origin (e.g. "https://example.com").
 
-##### pathAndSearch
+##### path?
 
 `string`
 
-The path and search to combine.
+The optional path or URL template (e.g. "/api/items" or "api/items").
 
 #### Returns
 
 `string` \| `undefined`
 
-The combined parts.
+The combined string, or undefined when both are absent.
 
 ***
 

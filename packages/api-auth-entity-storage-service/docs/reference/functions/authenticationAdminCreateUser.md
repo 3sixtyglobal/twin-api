@@ -1,6 +1,6 @@
 # Function: authenticationAdminCreateUser()
 
-> **authenticationAdminCreateUser**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`ICreatedResponse`\>
+> **authenticationAdminCreateUser**(`httpRequestContext`, `componentName`, `request`, `baseRouteName`): `Promise`\<`ICreatedResponse`\>
 
 Create a new user.
 
@@ -23,6 +23,12 @@ The name of the component to use in the routes.
 `IAdminUserCreateRequest`
 
 The request.
+
+### baseRouteName
+
+`string`
+
+The base route name to use for the location header.
 
 ## Returns
 

@@ -62,6 +62,24 @@ The endpoint with namespace prefix attached.
 
 ***
 
+### getPathPrefix() {#getpathprefix}
+
+> **getPathPrefix**(): `string`
+
+Get the path prefix as a URL path string provided in the constructor.
+
+#### Returns
+
+`string`
+
+The path prefix.
+
+#### Inherited from
+
+`BaseRestClient.getPathPrefix`
+
+***
+
 ### fetch() {#fetch}
 
 > **fetch**\<`T`, `U`\>(`route`, `method`, `request?`, `options?`): `Promise`\<`U`\>

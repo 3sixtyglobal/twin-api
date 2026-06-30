@@ -62,13 +62,14 @@ asserts headers is IHttpHeaders & \{ link: string \| undefined \}
 
 ### buildId() {#buildid}
 
-> `static` **buildId**(`headers`, `id`, `baseUrl?`): `asserts headers is IHttpHeaders & { location: string }`
+> `static` **buildId**(`headers`, `id`, `urlTemplate?`): `asserts headers is IHttpHeaders & { location: string }`
 
-Set the Location header to the encoded ID, optionally placed within a base URL or template.
-When baseUrl contains a colon-prefixed placeholder (e.g. "/path1/:id/path2") the
+Set the Location header to the encoded ID, optionally placed within a URL template.
+When the template contains `:id` (e.g. "/path1/:id/path2" or "/path?p=:id") the
 encoded ID is substituted at that position; otherwise it is appended.
-The base URL may be an absolute URL or a relative path. When omitted the bare
-encoded ID is used.
+When no template is provided the bare encoded ID is used.
+Callers that need to combine a public origin with a path should use
+HttpUrlHelper.combineOriginPath to build the template before calling this method.
 
 #### Parameters
 
@@ -84,11 +85,11 @@ The response headers to mutate.
 
 The resource ID to encode and place.
 
-##### baseUrl?
+##### urlTemplate?
 
 `string`
 
-The optional base URL, relative path, or URL template.
+The optional URL template (absolute or relative).
 
 #### Returns
 
@@ -148,14 +149,13 @@ The cursor value or undefined if not present.
 
 ### extractId() {#extractid}
 
-> `static` **extractId**(`headers?`, `template?`): `string`
+> `static` **extractId**(`headers?`, `templateUrl?`): `string`
 
 Extract the resource ID from the Location response header.
-Handles absolute URLs (http://host/path/:id, http://host/path/:id?foo=bar),
-relative paths (/segment/:id, ./segment/:id), and bare ID values.
-When a URL template such as "/path1/:id/path2" is supplied the ID is extracted
-from the segment position marked by the first colon-prefixed placeholder.
-Without a template the last path segment is returned.
+Handles absolute URLs, relative paths, and bare ID values.
+When a templateUrl containing ':id' is supplied (e.g. "/path1/:id/path2" or
+"https://host/path/:id") the ID is extracted via pattern matching at the ':id'
+position. Without a matching template the last path segment is returned.
 
 #### Parameters
 
@@ -165,11 +165,11 @@ Without a template the last path segment is returned.
 
 The response headers containing the Location header.
 
-##### template?
+##### templateUrl?
 
 `string`
 
-Optional URL template with a colon-prefixed placeholder marking the ID position, e.g. "/path1/:id/path2".
+Optional URL template containing the ':id' placeholder, e.g. "/path1/:id/path2".
 
 #### Returns
 
@@ -179,4 +179,4 @@ The extracted ID string.
 
 #### Throws
 
-GeneralError If the Location header is missing, the template has no placeholder, or the ID cannot be extracted.
+GeneralError If the Location header is missing or the ID cannot be extracted.
