@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.1-next.4](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.1-next.3...api-core-v0.9.1-next.4) (2026-06-30)
+
+
+### Features
+
+* improved rest handling ([#211](https://github.com/iotaledger/twin-api/issues/211)) ([12c50ea](https://github.com/iotaledger/twin-api/commit/12c50ea7655276eed7a73d311ac5286476c98201))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.1-next.3 to 0.9.1-next.4
+
 ## [0.9.1-next.3](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.1-next.2...api-core-v0.9.1-next.3) (2026-06-29)
 
 

@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-service",
-	"version": "0.9.1-next.3",
+	"version": "0.9.1-next.4",
 	"description": "Information and hosting service implementations with generated REST route handlers.",
 	"repository": {
 		"type": "git",
@@ -29,7 +29,7 @@
 		"dist:no-test": "npm run clean && npm run build && npm run test:build"
 	},
 	"dependencies": {
-		"@twin.org/api-models": "0.9.1-next.3",
+		"@twin.org/api-models": "0.9.1-next.4",
 		"@twin.org/core": "next",
 		"@twin.org/context": "next",
 		"@twin.org/engine-models": "next",

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1-next.4](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.1-next.3...api-models-v0.9.1-next.4) (2026-06-30)
+
+
+### Features
+
+* improved rest handling ([#211](https://github.com/iotaledger/twin-api/issues/211)) ([12c50ea](https://github.com/iotaledger/twin-api/commit/12c50ea7655276eed7a73d311ac5286476c98201))
+
 ## [0.9.1-next.3](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.1-next.2...api-models-v0.9.1-next.3) (2026-06-29)
 
 
