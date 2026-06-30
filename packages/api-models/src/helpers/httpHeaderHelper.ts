@@ -127,7 +127,9 @@ export class HttpHeaderHelper {
 
 		if (Is.stringValue(templateUrl) && templateUrl.includes(":id")) {
 			const escaped = templateUrl.replace(/[.+^${}()|[\]\\?]/g, "\\$&");
-			const pattern = new RegExp(escaped.replace(":id", "([^/?#]+)"));
+			const pattern = new RegExp(
+				escaped.replace(/:[a-zA-Z][a-zA-Z0-9]*/g, m => (m === ":id" ? "([^/?#]+)" : "[^/?#]+"))
+			);
 			const match = pattern.exec(location);
 			if (!Is.stringValue(match?.[1])) {
 				throw new GeneralError(HttpHeaderHelper.CLASS_NAME, "idNotFound");
