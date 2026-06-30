@@ -4,6 +4,7 @@ import {
 	HttpContextIdKeys,
 	HttpHeaderHelper,
 	HttpParameterHelper,
+	HttpUrlHelper,
 	type ICreatedResponse,
 	type IHttpRequestContext,
 	type INoContentResponse,
@@ -235,7 +236,7 @@ export function generateRestRoutesTenants(
 		method: "POST",
 		path: `${baseRouteName}/`,
 		handler: async (httpRequestContext, request) =>
-			tenantCreate(httpRequestContext, componentName, request),
+			tenantCreate(httpRequestContext, componentName, request, baseRouteName),
 		requestType: {
 			type: nameof<ITenantCreateRequest>(),
 			examples: [
@@ -465,20 +466,29 @@ export async function tenantRemove(
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
+ * @param baseRouteName The base route name for the tenant.
  * @returns The response object with additional http response properties.
  */
 export async function tenantCreate(
 	httpRequestContext: IHttpRequestContext,
 	componentName: string,
-	request: ITenantCreateRequest
+	request: ITenantCreateRequest,
+	baseRouteName: string
 ): Promise<ICreatedResponse> {
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.body), request.body);
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
 	const createdId = await component.create(request.body);
 
+	const contextIds = await ContextIdStore.getContextIds();
+	const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
+
 	const headers: IHttpHeaders = {};
-	HttpHeaderHelper.buildId(headers, createdId);
+	HttpHeaderHelper.buildId(
+		headers,
+		createdId,
+		HttpUrlHelper.combineOriginPath(publicOrigin, `${baseRouteName}/:id`)
+	);
 
 	return {
 		statusCode: HttpStatusCode.created,
