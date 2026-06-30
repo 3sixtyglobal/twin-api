@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.1-next.6](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.1-next.5...api-tenant-processor-v0.9.1-next.6) (2026-06-30)
+
+
+### Features
+
+* tenant create REST return id ([b2754ad](https://github.com/iotaledger/twin-api/commit/b2754ade2e8ed0296bc6a92202d3c935316a6d4c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.1-next.5 to 0.9.1-next.6
+
 ## [0.9.1-next.5](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.1-next.4...api-tenant-processor-v0.9.1-next.5) (2026-06-30)
 
 

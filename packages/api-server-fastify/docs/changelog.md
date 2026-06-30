@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.1-next.6](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.9.1-next.5...api-server-fastify-v0.9.1-next.6) (2026-06-30)
+
+
+### Miscellaneous Chores
+
+* **api-server-fastify:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.9.1-next.5 to 0.9.1-next.6
+    * @twin.org/api-models bumped from 0.9.1-next.5 to 0.9.1-next.6
+    * @twin.org/api-processors bumped from 0.9.1-next.5 to 0.9.1-next.6
+
 ## [0.9.1-next.5](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.9.1-next.4...api-server-fastify-v0.9.1-next.5) (2026-06-30)
 
 
