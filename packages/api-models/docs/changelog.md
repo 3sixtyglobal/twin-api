@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1-next.5](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.1-next.4...api-models-v0.9.1-next.5) (2026-06-30)
+
+
+### Features
+
+* allow dynamic segments in extractId ([2377c98](https://github.com/iotaledger/twin-api/commit/2377c9846f85b1cc05869c4d73fbf5de26e14f44))
+
 ## [0.9.1-next.4](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.1-next.3...api-models-v0.9.1-next.4) (2026-06-30)
 
 
