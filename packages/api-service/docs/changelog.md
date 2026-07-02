@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.1-next.7](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.6...api-service-v0.9.1-next.7) (2026-07-02)
+
+
+### Bug Fixes
+
+* update health service timer state machine ([f0c0700](https://github.com/iotaledger/twin-api/commit/f0c0700722390395d3b8e042ae68123613f22dbf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.1-next.6 to 0.9.1-next.7
+
 ## [0.9.1-next.6](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.5...api-service-v0.9.1-next.6) (2026-06-30)
 
 

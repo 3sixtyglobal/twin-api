@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1-next.7](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.1-next.6...api-models-v0.9.1-next.7) (2026-07-02)
+
+
+### Bug Fixes
+
+* socket.io cleanup ([554324c](https://github.com/iotaledger/twin-api/commit/554324c0349a79b6722e32f042fc0a77572b4c9b))
+
 ## [0.9.1-next.6](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.1-next.5...api-models-v0.9.1-next.6) (2026-06-30)
 
 

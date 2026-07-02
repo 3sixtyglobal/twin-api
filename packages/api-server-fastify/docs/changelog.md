@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.1-next.7](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.9.1-next.6...api-server-fastify-v0.9.1-next.7) (2026-07-02)
+
+
+### Bug Fixes
+
+* socket.io cleanup ([554324c](https://github.com/iotaledger/twin-api/commit/554324c0349a79b6722e32f042fc0a77572b4c9b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.9.1-next.6 to 0.9.1-next.7
+    * @twin.org/api-models bumped from 0.9.1-next.6 to 0.9.1-next.7
+    * @twin.org/api-processors bumped from 0.9.1-next.6 to 0.9.1-next.7
+
 ## [0.9.1-next.6](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.9.1-next.5...api-server-fastify-v0.9.1-next.6) (2026-06-30)
 
 
