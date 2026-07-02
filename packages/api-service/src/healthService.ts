@@ -43,7 +43,13 @@ export class HealthService implements IHealthComponent {
 	 * Interval for checking the health of the components and setting it in the health service.
 	 * @internal
 	 */
-	private _healthTimer: NodeJS.Timeout | undefined;
+	private _healthTimer: ReturnType<typeof globalThis.setTimeout> | undefined;
+
+	/**
+	 * Whether the service has been started.
+	 * @internal
+	 */
+	private _started: boolean;
 
 	/**
 	 * Create a new instance of HealthService.
@@ -53,6 +59,7 @@ export class HealthService implements IHealthComponent {
 		this._healthInfo = { status: HealthStatus.Ok, components: [] };
 		this._healthCheckInterval = options?.config?.healthCheckInterval ?? 60000;
 		this._initialInterval = options?.config?.initialInterval ?? 2000;
+		this._started = false;
 	}
 
 	/**
@@ -71,14 +78,13 @@ export class HealthService implements IHealthComponent {
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		const engineCore = EngineCoreFactory.getIfExists("engine");
 
-		if (!Is.empty(engineCore) && Is.empty(this._healthTimer)) {
+		if (!Is.empty(engineCore) && !this._started) {
+			this._started = true;
+
 			// Immediately check health after a startup settling period
 			// the interval for the next checks are trigger on success of the current
 			// check to prevent overlapping checks in case of long running health checks
-			this._healthTimer = globalThis.setTimeout(
-				async () => this.checkHealth(engineCore, nodeLoggingComponentType),
-				this._initialInterval
-			);
+			this.startTimer(engineCore, nodeLoggingComponentType, this._initialInterval);
 		}
 	}
 
@@ -88,9 +94,9 @@ export class HealthService implements IHealthComponent {
 	 * @returns A promise that resolves when the health check timer has been cancelled.
 	 */
 	public async stop(nodeLoggingComponentType?: string): Promise<void> {
-		if (this._healthTimer) {
-			clearTimeout(this._healthTimer);
-			this._healthTimer = undefined;
+		if (this._started) {
+			this._started = false;
+			this.stopTimer();
 		}
 	}
 
@@ -113,6 +119,8 @@ export class HealthService implements IHealthComponent {
 		engineCore: IEngineCore,
 		nodeLoggingComponentType?: string
 	): Promise<void> {
+		this.stopTimer();
+
 		await ContextIdStore.run(engineCore.getContextIds() ?? {}, async () => {
 			const allHealth: IHealth[] = [];
 
@@ -143,11 +151,7 @@ export class HealthService implements IHealthComponent {
 			this.groupHealthByName(allHealth);
 		});
 
-		// Queue the next health check.
-		this._healthTimer = globalThis.setTimeout(
-			async () => this.checkHealth(engineCore, nodeLoggingComponentType),
-			this._healthCheckInterval
-		);
+		this.startTimer(engineCore, nodeLoggingComponentType, this._healthCheckInterval);
 	}
 
 	/**
@@ -188,5 +192,36 @@ export class HealthService implements IHealthComponent {
 		}
 
 		this._healthInfo = { status: finalStatus, components: result };
+	}
+
+	/**
+	 * Start the timer.
+	 * @param engineCore The engine core to get the registered components from.
+	 * @param nodeLoggingComponentType The node logging component type.
+	 * @param interval The interval for checking the health of the components and setting it in the health service.
+	 * @internal
+	 */
+	private startTimer(
+		engineCore: IEngineCore,
+		nodeLoggingComponentType: string | undefined,
+		interval: number
+	): void {
+		if (this._started) {
+			this._healthTimer = globalThis.setTimeout(
+				async () => this.checkHealth(engineCore, nodeLoggingComponentType),
+				interval
+			);
+		}
+	}
+
+	/**
+	 * Stop the timer.
+	 * @internal
+	 */
+	private stopTimer(): void {
+		if (this._healthTimer) {
+			globalThis.clearTimeout(this._healthTimer);
+			this._healthTimer = undefined;
+		}
 	}
 }
