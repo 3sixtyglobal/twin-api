@@ -146,17 +146,23 @@ describe("HttpHeaderHelper", () => {
 
 		it("should extract the ID when the template has a dynamic segment before ':id'", () => {
 			const headers = { location: "/metric/container-abc/value/item-xyz" };
-			expect(HttpHeaderHelper.extractId(headers, "/metric/:containerId/value/:id")).toBe("item-xyz");
+			expect(HttpHeaderHelper.extractId(headers, "/metric/:containerId/value/:id")).toBe(
+				"item-xyz"
+			);
 		});
 
 		it("should extract the ID from a full URL when the template has a dynamic segment before ':id'", () => {
 			const headers = { location: "https://host.local/metric/container-abc/value/item-xyz" };
-			expect(HttpHeaderHelper.extractId(headers, "/metric/:containerId/value/:id")).toBe("item-xyz");
+			expect(HttpHeaderHelper.extractId(headers, "/metric/:containerId/value/:id")).toBe(
+				"item-xyz"
+			);
 		});
 
 		it("should extract the ID when the template has multiple dynamic segments", () => {
 			const headers = { location: "/api/tenant-1/collection-2/item-3" };
-			expect(HttpHeaderHelper.extractId(headers, "/api/:tenantId/:collectionId/:id")).toBe("item-3");
+			expect(HttpHeaderHelper.extractId(headers, "/api/:tenantId/:collectionId/:id")).toBe(
+				"item-3"
+			);
 		});
 
 		it("should extract the ID when a dynamic segment follows ':id'", () => {
@@ -166,9 +172,9 @@ describe("HttpHeaderHelper", () => {
 
 		it("should decode a percent-encoded ID when the template has a dynamic segment before ':id'", () => {
 			const headers = { location: "/metric/container-abc/value/hello%20world" };
-			expect(
-				HttpHeaderHelper.extractId(headers, "/metric/:containerId/value/:id")
-			).toBe("hello world");
+			expect(HttpHeaderHelper.extractId(headers, "/metric/:containerId/value/:id")).toBe(
+				"hello world"
+			);
 		});
 
 		it("should extract the ID when ':id' appears as a query parameter value in the template", () => {
