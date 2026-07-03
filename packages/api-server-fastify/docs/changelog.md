@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.1-next.8](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.9.1-next.7...api-server-fastify-v0.9.1-next.8) (2026-07-03)
+
+
+### Features
+
+* async socket closedown ([e35f628](https://github.com/iotaledger/twin-api/commit/e35f62874c75f6c8dc175bd9713db9c2d062f697))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.9.1-next.7 to 0.9.1-next.8
+    * @twin.org/api-models bumped from 0.9.1-next.7 to 0.9.1-next.8
+    * @twin.org/api-processors bumped from 0.9.1-next.7 to 0.9.1-next.8
+
 ## [0.9.1-next.7](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.9.1-next.6...api-server-fastify-v0.9.1-next.7) (2026-07-02)
 
 
