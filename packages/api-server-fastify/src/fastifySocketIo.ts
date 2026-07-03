@@ -13,19 +13,10 @@ const fastifySocketIO: FastifyPluginAsync<Partial<ServerOptions>> = fp(
 		const ioServer = new Server(fastify.server, opts);
 
 		fastify.decorate("io", ioServer);
-		fastify.addHook("preClose", done => {
-			// Close transports immediately rather than waiting for clients to ack,
-			// so shutdown is not held up by unresponsive connections.
-			ioServer.disconnectSockets(true);
+		fastify.addHook("preClose", async () => {
+			ioServer.disconnectSockets();
 
-			// Safety net: if ioServer.close() never resolves (e.g. a socket hangs),
-			// call done() after 2.5s so Fastify shutdown can still complete.
-			const timeout = setTimeout(() => done(), 2500);
-			setTimeout(async () => {
-				await ioServer.close();
-				clearTimeout(timeout);
-				done();
-			}, 0);
+			await ioServer.close();
 		});
 	},
 	{ fastify: ">=5.x.x", name: "socket.io" }
