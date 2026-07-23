@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1-next.9](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-models-v0.9.1-next.8...api-auth-entity-storage-models-v0.9.1-next.9) (2026-07-23)
+
+
+### Miscellaneous Chores
+
+* **api-auth-entity-storage-models:** Synchronize repo versions
+
 ## [0.9.1-next.8](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-models-v0.9.1-next.7...api-auth-entity-storage-models-v0.9.1-next.8) (2026-07-03)
 
 

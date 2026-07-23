@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1-next.9](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.1-next.8...api-models-v0.9.1-next.9) (2026-07-23)
+
+
+### Bug Fixes
+
+* send blank query parameter values instead of silently dropping them in BaseRestClient.fetch() ([#220](https://github.com/iotaledger/twin-api/issues/220)) ([63f3c61](https://github.com/iotaledger/twin-api/commit/63f3c6136f2f6fba951d773b81e6414ad5247c27))
+
 ## [0.9.1-next.8](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.1-next.7...api-models-v0.9.1-next.8) (2026-07-03)
 
 
