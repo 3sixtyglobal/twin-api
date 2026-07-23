@@ -424,13 +424,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					data: { route: path, method: restRoute.method }
 				});
 				const method = restRoute.method.toLowerCase() as
-					| "get"
-					| "post"
-					| "put"
-					| "patch"
-					| "delete"
-					| "options"
-					| "head";
+					"get" | "post" | "put" | "patch" | "delete" | "options" | "head";
 
 				this._fastify[method](path, async (request, reply) =>
 					this.handleRequestRest(restRouteProcessors, request, reply, restRoute)
