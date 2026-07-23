@@ -26,6 +26,10 @@ describe("HttpParameterHelper", () => {
 			expect(HttpParameterHelper.arrayToString(undefined)).toBeUndefined();
 		});
 
+		it("should return undefined for an empty array", () => {
+			expect(HttpParameterHelper.arrayToString([])).toBeUndefined();
+		});
+
 		it("should join array elements with commas", () => {
 			expect(HttpParameterHelper.arrayToString(["a", "b", "c"])).toBe("a,b,c");
 		});

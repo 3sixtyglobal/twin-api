@@ -207,7 +207,7 @@ export abstract class BaseRestClient {
 			if (Is.object(query)) {
 				for (const qp in query) {
 					const propValue = query[qp];
-					if (Is.stringValue(propValue) || Is.number(propValue) || Is.boolean(propValue)) {
+					if (Is.string(propValue) || Is.number(propValue) || Is.boolean(propValue)) {
 						const ids = queryKeyPairs.findIndex(q => q.key === qp);
 						if (ids !== -1) {
 							queryKeyPairs.splice(ids, 1);

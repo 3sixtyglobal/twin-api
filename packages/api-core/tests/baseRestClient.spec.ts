@@ -385,4 +385,67 @@ describe("BaseRestClient", () => {
 			"http://localhost:8080/test-prefix/resource?tenant-token=abc123&page=2"
 		);
 	});
+
+	describe("query parameter values", () => {
+		/**
+		 * Issue a GET request with the given query object and return the outgoing URL.
+		 * The query values are typed loosely here because BaseRestClient.fetch accepts
+		 * number/boolean/undefined/null query values at runtime, even though
+		 * IHttpRequestQuery's type is string-only.
+		 * @param query The query object to pass as the request's query.
+		 * @returns The URL that was passed to the mocked global fetch.
+		 */
+		async function requestWithQuery(query: { [id: string]: unknown }): Promise<string> {
+			fetchMock.mockResolvedValueOnce({
+				ok: true,
+				status: HttpStatusCode.ok,
+				headers: new Headers({
+					[HeaderTypes.ContentType]: MimeTypes.Json
+				}),
+				json: async () => ({ success: true })
+			});
+
+			const client = new TestRestClient({ endpoint: "http://localhost:8080" });
+			await client.fetch<IHttpRequest, IHttpResponse>("/resource", "GET", {
+				query: query as IHttpRequest["query"]
+			});
+
+			const [outgoingUrl] = fetchMock.mock.calls[0];
+			return outgoingUrl as string;
+		}
+
+		test("sends a non-blank string query value as-is", async () => {
+			const url = await requestWithQuery({ id: "abc" });
+			expect(new URL(url).searchParams.get("id")).toEqual("abc");
+		});
+
+		test("sends an empty-string query value instead of dropping it", async () => {
+			const url = await requestWithQuery({ id: "", type: "Consignment" });
+			expect(new URL(url).searchParams.has("id")).toEqual(true);
+			expect(new URL(url).searchParams.get("id")).toEqual("");
+			expect(new URL(url).searchParams.get("type")).toEqual("Consignment");
+		});
+
+		test("sends a whitespace-only query value instead of dropping it", async () => {
+			const url = await requestWithQuery({ id: "   " });
+			expect(new URL(url).searchParams.has("id")).toEqual(true);
+			expect(new URL(url).searchParams.get("id")).toEqual("   ");
+		});
+
+		test("sends a numeric query value", async () => {
+			const url = await requestWithQuery({ limit: 0 });
+			expect(new URL(url).searchParams.get("limit")).toEqual("0");
+		});
+
+		test("sends a boolean query value", async () => {
+			const url = await requestWithQuery({ includeAll: false });
+			expect(new URL(url).searchParams.get("includeAll")).toEqual("false");
+		});
+
+		test("omits undefined and null query values", async () => {
+			const url = await requestWithQuery({ id: undefined, cursor: null });
+			expect(new URL(url).searchParams.has("id")).toEqual(false);
+			expect(new URL(url).searchParams.has("cursor")).toEqual(false);
+		});
+	});
 });
