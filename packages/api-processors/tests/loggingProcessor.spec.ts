@@ -4,7 +4,7 @@ import type { IHttpResponse, IHttpServerRequest } from "@twin.org/api-models";
 import { ComponentFactory } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode, MimeTypes } from "@twin.org/web";
-import { LoggingProcessor } from "../src/index.js";
+import { LoggingProcessor } from "../src/logging/loggingProcessor.js";
 
 function makeLogger(logEntries: ILogEntry[]): ILoggingComponent {
 	return {
