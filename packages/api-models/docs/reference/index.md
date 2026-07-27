@@ -5,6 +5,7 @@
 - [ForbiddenError](classes/ForbiddenError.md)
 - [TooManyRequestsError](classes/TooManyRequestsError.md)
 - [HttpErrorHelper](classes/HttpErrorHelper.md)
+- [HttpHeaderHelper](classes/HttpHeaderHelper.md)
 - [HttpParameterHelper](classes/HttpParameterHelper.md)
 - [HttpUrlHelper](classes/HttpUrlHelper.md)
 

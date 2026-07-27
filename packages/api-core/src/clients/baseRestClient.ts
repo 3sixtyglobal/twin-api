@@ -33,10 +33,22 @@ export abstract class BaseRestClient {
 	private readonly _implementationName: string;
 
 	/**
+	 * The endpoint origin without prefix.
+	 * @internal
+	 */
+	private readonly _endpointOrigin: string;
+
+	/**
 	 * The endpoint with prefix to send the requests to.
 	 * @internal
 	 */
 	private readonly _endpointWithPrefix: string;
+
+	/**
+	 * The path prefix without origin, e.g. "authentication/audit".
+	 * @internal
+	 */
+	private readonly _pathPrefix: string;
 
 	/**
 	 * Query parameters parsed from the configured endpoint URL. Preserved on every
@@ -109,18 +121,20 @@ export abstract class BaseRestClient {
 		} catch {}
 
 		if (Is.empty(parsedEndpoint)) {
-			this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
+			this._endpointOrigin = StringHelper.trimTrailingSlashes(config.endpoint);
 		} else {
 			for (const [key, value] of parsedEndpoint.searchParams.entries()) {
 				this._endpointQuery.push({ key, value });
 			}
 			parsedEndpoint.search = "";
-			this._endpointWithPrefix = StringHelper.trimTrailingSlashes(parsedEndpoint.toString());
+			this._endpointOrigin = StringHelper.trimTrailingSlashes(parsedEndpoint.toString());
 		}
 
+		this._endpointWithPrefix = this._endpointOrigin;
 		const finalPathPrefix = config.pathPrefix ?? pathPrefix;
-		if (Is.stringValue(finalPathPrefix)) {
-			this._endpointWithPrefix += `/${finalPathPrefix}`;
+		this._pathPrefix = Is.stringValue(finalPathPrefix) ? finalPathPrefix : "";
+		if (Is.stringValue(this._pathPrefix)) {
+			this._endpointWithPrefix += `/${this._pathPrefix}`;
 		}
 
 		this._customAuthHeader = config.customAuthHeader;
@@ -137,16 +151,27 @@ export abstract class BaseRestClient {
 	}
 
 	/**
+	 * Get the path prefix as a URL path string provided in the constructor.
+	 * @returns The path prefix.
+	 */
+	public getPathPrefix(): string {
+		return this._pathPrefix;
+	}
+
+	/**
 	 * Perform a request in json format.
 	 * @param route The route of the request.
 	 * @param method The http method.
 	 * @param request Request to send to the endpoint.
+	 * @param options Optional override options for the request.
+	 * @param options.overridePrefix Optional override prefix to use for this request instead of the default prefix.
 	 * @returns The response.
 	 */
 	public async fetch<T extends IHttpRequest, U extends IHttpResponse>(
 		route: string,
 		method: HttpMethod,
-		request?: T
+		request?: T,
+		options?: { overridePrefix?: string }
 	): Promise<U> {
 		Guards.stringValue(this._implementationName, nameof(route), route);
 		Guards.arrayOneOf(this._implementationName, nameof(method), method, Object.values(HttpMethod));
@@ -182,7 +207,7 @@ export abstract class BaseRestClient {
 			if (Is.object(query)) {
 				for (const qp in query) {
 					const propValue = query[qp];
-					if (Is.stringValue(propValue) || Is.number(propValue) || Is.boolean(propValue)) {
+					if (Is.string(propValue) || Is.number(propValue) || Is.boolean(propValue)) {
 						const ids = queryKeyPairs.findIndex(q => q.key === qp);
 						if (ids !== -1) {
 							queryKeyPairs.splice(ids, 1);
@@ -237,9 +262,20 @@ export abstract class BaseRestClient {
 			}
 		}
 
+		let baseUrl;
+
+		if (Is.string(options?.overridePrefix)) {
+			baseUrl =
+				options.overridePrefix.length > 0
+					? `${this._endpointOrigin}/${options.overridePrefix}`
+					: this._endpointOrigin;
+		} else {
+			baseUrl = this._endpointWithPrefix;
+		}
+
 		const response = await FetchHelper.fetch(
 			this._implementationName,
-			`${this._endpointWithPrefix}${finalRoute}`,
+			`${baseUrl}${finalRoute}`,
 			method,
 			body,
 			{
@@ -280,16 +316,6 @@ export abstract class BaseRestClient {
 				}
 
 				if (Object.keys(responseHeaders).length > 0) {
-					if (response.status === HttpStatusCode.created) {
-						// If there is a location header and it is a plain id then decode it
-						// as we encoded it on the way out to avoid problems with embedded colons and other characters
-						// if it contains slashes then we assume it is already encoded correctly and leave it as is
-						const location = responseHeaders[HeaderTypes.Location];
-						if (Is.stringValue(location) && !location.includes("/")) {
-							responseHeaders[HeaderTypes.Location] = decodeURIComponent(location);
-						}
-					}
-
 					httpResponse.headers = responseHeaders;
 				}
 

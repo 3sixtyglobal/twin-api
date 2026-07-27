@@ -1,6 +1,6 @@
 # Function: tenantCreate()
 
-> **tenantCreate**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`ICreatedResponse`\>
+> **tenantCreate**(`httpRequestContext`, `componentName`, `request`, `baseRouteName`): `Promise`\<`ICreatedResponse`\>
 
 Create the tenant.
 
@@ -23,6 +23,12 @@ The name of the component to use in the routes.
 [`ITenantCreateRequest`](../interfaces/ITenantCreateRequest.md)
 
 The request.
+
+### baseRouteName
+
+`string`
+
+The base route name for the tenant.
 
 ## Returns
 

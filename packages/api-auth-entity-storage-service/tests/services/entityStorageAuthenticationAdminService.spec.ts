@@ -24,6 +24,9 @@ describe("EntityStorageAuthenticationAdminService", () => {
 		mockAuthenticationAuditService = {
 			className: vi.fn().mockReturnValue("AuthenticationAuditService"),
 			create: vi.fn(),
+			get: vi.fn(),
+			update: vi.fn(),
+			remove: vi.fn(),
 			query: vi.fn()
 		};
 

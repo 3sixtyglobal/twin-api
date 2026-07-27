@@ -1,6 +1,6 @@
 # Function: authenticationAuditCreate()
 
-> **authenticationAuditCreate**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`ICreatedResponse`\>
+> **authenticationAuditCreate**(`httpRequestContext`, `componentName`, `request`, `baseRouteName`): `Promise`\<`ICreatedResponse`\>
 
 Create an authentication audit entry.
 
@@ -23,6 +23,12 @@ The name of the component to use in the routes.
 `IAuditCreateRequest`
 
 The request.
+
+### baseRouteName
+
+`string`
+
+The base route name to use for the location header.
 
 ## Returns
 

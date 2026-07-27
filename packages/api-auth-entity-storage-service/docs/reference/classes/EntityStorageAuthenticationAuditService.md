@@ -80,6 +80,90 @@ The unique identifier of the created audit entry.
 
 ***
 
+### get() {#get}
+
+> **get**(`id`): `Promise`\<`IAuthenticationAuditEntry`\>
+
+Get an audit entry by id.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The unique identifier of the audit entry.
+
+#### Returns
+
+`Promise`\<`IAuthenticationAuditEntry`\>
+
+The audit entry.
+
+#### Implementation of
+
+`IAuthenticationAuditComponent.get`
+
+***
+
+### update() {#update}
+
+> **update**(`id`, `entry`): `Promise`\<`void`\>
+
+Update an audit entry.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The unique identifier of the audit entry to update.
+
+##### entry
+
+`Partial`\<`Omit`\<`IAuthenticationAuditEntry`, `"id"` \| `"dateCreated"`\>\>
+
+The fields to update on the audit entry.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the audit entry has been updated.
+
+#### Implementation of
+
+`IAuthenticationAuditComponent.update`
+
+***
+
+### remove() {#remove}
+
+> **remove**(`id`): `Promise`\<`void`\>
+
+Remove an audit entry.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The unique identifier of the audit entry to remove.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the audit entry has been removed.
+
+#### Implementation of
+
+`IAuthenticationAuditComponent.remove`
+
+***
+
 ### query() {#query}
 
 > **query**(`options?`, `cursor?`, `limit?`): `Promise`\<\{ `entries`: `IAuthenticationAuditEntry`[]; `cursor?`: `string`; \}\>

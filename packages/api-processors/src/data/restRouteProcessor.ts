@@ -102,18 +102,6 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 
 					const headers = restRouteResponse?.headers ?? {};
 
-					const location = headers[HeaderTypes.Location];
-					if (
-						restRouteResponse.statusCode === HttpStatusCode.created &&
-						Is.stringValue(location) &&
-						!location.includes("/")
-					) {
-						// If this was a create with a location header and its a plain id
-						// then make sure it is encoded to avoid problems such as embedded colons
-						// if it contains slashes then we assume it is already encoded correctly
-						headers[HeaderTypes.Location] = encodeURIComponent(location);
-					}
-
 					if (Is.empty(restRouteResponse?.body)) {
 						// If there is no custom status code and the body is empty
 						// use the no content response and set the length to 0

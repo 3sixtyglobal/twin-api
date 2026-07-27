@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	HttpContextIdKeys,
+	HttpHeaderHelper,
 	HttpParameterHelper,
 	HttpUrlHelper,
 	type ICreatedResponse,
@@ -14,7 +15,7 @@ import {
 import { ContextIdStore } from "@twin.org/context";
 import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import { HeaderHelper, HeaderTypes, HttpStatusCode } from "@twin.org/web";
+import { HeaderTypes, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
 import type { ITenantCreateRequest } from "./models/api/ITenantCreateRequest.js";
 import type { ITenantGetByApiKeyRequest } from "./models/api/ITenantGetByApiKeyRequest.js";
 import type { ITenantGetByIdRequest } from "./models/api/ITenantGetByIdRequest.js";
@@ -235,7 +236,7 @@ export function generateRestRoutesTenants(
 		method: "POST",
 		path: `${baseRouteName}/`,
 		handler: async (httpRequestContext, request) =>
-			tenantCreate(httpRequestContext, componentName, request),
+			tenantCreate(httpRequestContext, componentName, request, baseRouteName),
 		requestType: {
 			type: nameof<ITenantCreateRequest>(),
 			examples: [
@@ -333,13 +334,12 @@ export async function tenantList(
 	const contextIds = await ContextIdStore.getContextIds();
 	const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
 
-	if (Is.stringValue(result.cursor)) {
-		headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-			HttpUrlHelper.replaceOrigin(httpRequestContext.serverRequest.url, publicOrigin),
-			{ cursor: result.cursor },
-			"next"
-		);
-	}
+	HttpHeaderHelper.buildCursor(
+		headers,
+		httpRequestContext.serverRequest.url,
+		publicOrigin,
+		result.cursor
+	);
 
 	return {
 		headers,
@@ -466,23 +466,33 @@ export async function tenantRemove(
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
+ * @param baseRouteName The base route name for the tenant.
  * @returns The response object with additional http response properties.
  */
 export async function tenantCreate(
 	httpRequestContext: IHttpRequestContext,
 	componentName: string,
-	request: ITenantCreateRequest
+	request: ITenantCreateRequest,
+	baseRouteName: string
 ): Promise<ICreatedResponse> {
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.body), request.body);
 	const component = ComponentFactory.get<ITenantAdminComponent>(componentName);
 
 	const createdId = await component.create(request.body);
 
+	const contextIds = await ContextIdStore.getContextIds();
+	const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
+
+	const headers: IHttpHeaders = {};
+	HttpHeaderHelper.buildId(
+		headers,
+		createdId,
+		HttpUrlHelper.combineOriginPath(publicOrigin, `${baseRouteName}/:id`)
+	);
+
 	return {
 		statusCode: HttpStatusCode.created,
-		headers: {
-			[HeaderTypes.Location]: createdId
-		}
+		headers
 	};
 }
 

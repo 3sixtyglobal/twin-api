@@ -61,19 +61,52 @@ describe("HttpUrlHelper", () => {
 		});
 	});
 
-	describe("combineParts", () => {
-		it("should join origin with pathAndSearch using single slash", () => {
-			const origin = "https://example.com/";
-			const pathAndSearch = "/api/v1/resource?x=1";
-			const result = HttpUrlHelper.combineParts(origin, pathAndSearch);
+	describe("combineOriginPath", () => {
+		it("should join origin with path using single slash", () => {
+			const result = HttpUrlHelper.combineOriginPath(
+				"https://example.com/",
+				"/api/v1/resource?x=1"
+			);
 			expect(result).toBe("https://example.com/api/v1/resource?x=1");
 		});
 
 		it("should trim extra slashes from both parts", () => {
-			const origin = "https://example.com///";
-			const pathAndSearch = "///api";
-			const result = HttpUrlHelper.combineParts(origin, pathAndSearch);
+			const result = HttpUrlHelper.combineOriginPath("https://example.com///", "///api");
 			expect(result).toBe("https://example.com/api");
+		});
+
+		it("should return path alone when origin is omitted", () => {
+			expect(HttpUrlHelper.combineOriginPath(undefined, "/api/items")).toBe("/api/items");
+		});
+
+		it("should return path alone when origin is an empty string", () => {
+			expect(HttpUrlHelper.combineOriginPath("", "/api/items")).toBe("/api/items");
+		});
+
+		it("should return origin alone when path is omitted", () => {
+			expect(HttpUrlHelper.combineOriginPath("https://example.com")).toBe("https://example.com");
+		});
+
+		it("should return origin alone when path is an empty string", () => {
+			expect(HttpUrlHelper.combineOriginPath("https://example.com", "")).toBe(
+				"https://example.com"
+			);
+		});
+
+		it("should return undefined when both origin and path are absent", () => {
+			expect(HttpUrlHelper.combineOriginPath()).toBeUndefined();
+			expect(HttpUrlHelper.combineOriginPath(undefined, undefined)).toBeUndefined();
+			expect(HttpUrlHelper.combineOriginPath("", "")).toBeUndefined();
+		});
+
+		it("should prepend a leading slash to a relative path with no leading slash", () => {
+			expect(HttpUrlHelper.combineOriginPath("https://example.com", "api/items")).toBe(
+				"https://example.com/api/items"
+			);
+		});
+
+		it("should prepend a leading slash to a path-only value with no leading slash", () => {
+			expect(HttpUrlHelper.combineOriginPath(undefined, "api/items")).toBe("/api/items");
 		});
 	});
 

@@ -88,6 +88,90 @@ The unique identifier of the created audit entry.
 
 ***
 
+### get() {#get}
+
+> **get**(`id`): `Promise`\<`IAuthenticationAuditEntry`\>
+
+Get an audit entry by id.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The unique identifier of the audit entry.
+
+#### Returns
+
+`Promise`\<`IAuthenticationAuditEntry`\>
+
+The audit entry.
+
+#### Implementation of
+
+`IAuthenticationAuditComponent.get`
+
+***
+
+### update() {#update}
+
+> **update**(`id`, `entry`): `Promise`\<`void`\>
+
+Update an audit entry.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The unique identifier of the audit entry to update.
+
+##### entry
+
+`Partial`\<`Omit`\<`IAuthenticationAuditEntry`, `"id"` \| `"dateCreated"`\>\>
+
+The fields to update on the audit entry.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the audit entry has been updated.
+
+#### Implementation of
+
+`IAuthenticationAuditComponent.update`
+
+***
+
+### remove() {#remove}
+
+> **remove**(`id`): `Promise`\<`void`\>
+
+Remove an audit entry.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The unique identifier of the audit entry to remove.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the audit entry has been removed.
+
+#### Implementation of
+
+`IAuthenticationAuditComponent.remove`
+
+***
+
 ### query() {#query}
 
 > **query**(`options?`, `cursor?`, `limit?`): `Promise`\<\{ `entries`: `IAuthenticationAuditEntry`[]; `cursor?`: `string`; \}\>
@@ -184,9 +268,27 @@ The endpoint with namespace prefix attached.
 
 ***
 
+### getPathPrefix() {#getpathprefix}
+
+> **getPathPrefix**(): `string`
+
+Get the path prefix as a URL path string provided in the constructor.
+
+#### Returns
+
+`string`
+
+The path prefix.
+
+#### Inherited from
+
+`BaseRestClient.getPathPrefix`
+
+***
+
 ### fetch() {#fetch}
 
-> **fetch**\<`T`, `U`\>(`route`, `method`, `request?`): `Promise`\<`U`\>
+> **fetch**\<`T`, `U`\>(`route`, `method`, `request?`, `options?`): `Promise`\<`U`\>
 
 Perform a request in json format.
 
@@ -219,6 +321,16 @@ The http method.
 `T`
 
 Request to send to the endpoint.
+
+##### options?
+
+Optional override options for the request.
+
+###### overridePrefix?
+
+`string`
+
+Optional override prefix to use for this request instead of the default prefix.
 
 #### Returns
 

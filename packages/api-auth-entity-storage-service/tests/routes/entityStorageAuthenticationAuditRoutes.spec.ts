@@ -8,7 +8,10 @@ import { ComponentFactory } from "@twin.org/core";
 import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
 import {
 	authenticationAuditCreate,
+	authenticationAuditGet,
 	authenticationAuditQuery,
+	authenticationAuditRemove,
+	authenticationAuditUpdate,
 	generateRestRoutesAuthenticationAudit,
 	tagsAuthenticationAudit
 } from "../../src/routes/entityStorageAuthenticationAuditRoutes.js";
@@ -22,6 +25,9 @@ describe("entityStorageAuthenticationAuditRoutes", () => {
 		mockAuditComponent = {
 			className: vi.fn().mockReturnValue("AuthenticationAuditService"),
 			create: vi.fn(),
+			get: vi.fn(),
+			update: vi.fn(),
+			remove: vi.fn(),
 			query: vi.fn()
 		};
 
@@ -31,15 +37,20 @@ describe("entityStorageAuthenticationAuditRoutes", () => {
 	it("should create an audit entry and set the location header", async () => {
 		vi.mocked(mockAuditComponent.create).mockResolvedValue("audit-id-1");
 
-		const result = await authenticationAuditCreate({} as never, "authentication-audit", {
-			body: {
-				actorId: "user@example.com",
-				event: "login-success",
-				data: {
-					organizationIdentity: "did:example:org1"
+		const result = await authenticationAuditCreate(
+			{} as never,
+			"authentication-audit",
+			{
+				body: {
+					actorId: "user@example.com",
+					event: "login-success",
+					data: {
+						organizationIdentity: "did:example:org1"
+					}
 				}
-			}
-		});
+			},
+			"authentication/audit"
+		);
 
 		expect(mockAuditComponent.create).toHaveBeenCalledWith({
 			actorId: "user@example.com",
@@ -51,9 +62,51 @@ describe("entityStorageAuthenticationAuditRoutes", () => {
 		expect(result).toEqual({
 			statusCode: HttpStatusCode.created,
 			headers: {
-				[HeaderTypes.Location]: "audit-id-1"
+				[HeaderTypes.Location]: "/authentication/audit/audit-id-1"
 			}
 		});
+	});
+
+	it("should get an audit entry by id", async () => {
+		const entry: IAuthenticationAuditEntry = {
+			id: "audit-id-1",
+			event: "login-success",
+			dateCreated: "2026-01-01T00:00:00.000Z",
+			actorId: "user@example.com"
+		};
+		vi.mocked(mockAuditComponent.get).mockResolvedValue(entry);
+
+		const result = await authenticationAuditGet({} as never, "authentication-audit", {
+			pathParams: { id: "audit-id-1" }
+		});
+
+		expect(mockAuditComponent.get).toHaveBeenCalledWith("audit-id-1");
+		expect(result).toEqual({ body: entry });
+	});
+
+	it("should update an audit entry and return no content", async () => {
+		vi.mocked(mockAuditComponent.update).mockResolvedValue(undefined);
+
+		const result = await authenticationAuditUpdate({} as never, "authentication-audit", {
+			pathParams: { id: "audit-id-1" },
+			body: { event: "login-failure" }
+		});
+
+		expect(mockAuditComponent.update).toHaveBeenCalledWith("audit-id-1", {
+			event: "login-failure"
+		});
+		expect(result).toEqual({ statusCode: HttpStatusCode.noContent });
+	});
+
+	it("should remove an audit entry and return no content", async () => {
+		vi.mocked(mockAuditComponent.remove).mockResolvedValue(undefined);
+
+		const result = await authenticationAuditRemove({} as never, "authentication-audit", {
+			pathParams: { id: "audit-id-1" }
+		});
+
+		expect(mockAuditComponent.remove).toHaveBeenCalledWith("audit-id-1");
+		expect(result).toEqual({ statusCode: HttpStatusCode.noContent });
 	});
 
 	it("should query audit entries with coerced limit", async () => {
@@ -106,10 +159,14 @@ describe("entityStorageAuthenticationAuditRoutes", () => {
 		const routes = generateRestRoutesAuthenticationAudit("authentication/audit", "auth-audit");
 
 		expect(tagsAuthenticationAudit[0].name).toBe("Authentication Audit");
-		expect(routes).toHaveLength(2);
+		expect(routes).toHaveLength(5);
 		expect(routes[0].operationId).toBe("authenticationAuditCreate");
-		expect(routes[1].operationId).toBe("authenticationAuditQuery");
-		expect(routes[0].requiredScope).toEqual(["user-admin"]);
-		expect(routes[1].requiredScope).toEqual(["user-admin"]);
+		expect(routes[1].operationId).toBe("authenticationAuditGet");
+		expect(routes[2].operationId).toBe("authenticationAuditUpdate");
+		expect(routes[3].operationId).toBe("authenticationAuditRemove");
+		expect(routes[4].operationId).toBe("authenticationAuditQuery");
+		for (const route of routes) {
+			expect(route.requiredScope).toEqual(["user-admin"]);
+		}
 	});
 });

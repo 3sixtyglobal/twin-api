@@ -9,8 +9,10 @@ import { HttpContextIdKeys } from "@twin.org/api-models";
 import { ContextIdStore, ContextIdKeys } from "@twin.org/context";
 import {
 	Converter,
+	GeneralError,
 	Guards,
 	Is,
+	NotFoundError,
 	RandomHelper,
 	Validation,
 	type IValidationFailure
@@ -131,6 +133,103 @@ export class EntityStorageAuthenticationAuditService implements IAuthenticationA
 		}
 
 		return newAuditEntry.id;
+	}
+
+	/**
+	 * Get an audit entry by id.
+	 * @param id The unique identifier of the audit entry.
+	 * @returns The audit entry.
+	 */
+	public async get(id: string): Promise<IAuthenticationAuditEntry> {
+		Guards.stringValue(EntityStorageAuthenticationAuditService.CLASS_NAME, nameof(id), id);
+
+		try {
+			const entry = await this._authenticationAuditEntryEntityStorage.get(id);
+			if (Is.empty(entry)) {
+				throw new NotFoundError(
+					EntityStorageAuthenticationAuditService.CLASS_NAME,
+					"auditEntryNotFound",
+					id
+				);
+			}
+
+			return entry;
+		} catch (error) {
+			throw new GeneralError(
+				EntityStorageAuthenticationAuditService.CLASS_NAME,
+				"getAuditEntryFailed",
+				undefined,
+				error
+			);
+		}
+	}
+
+	/**
+	 * Update an audit entry.
+	 * @param id The unique identifier of the audit entry to update.
+	 * @param entry The fields to update on the audit entry.
+	 * @returns A promise that resolves when the audit entry has been updated.
+	 */
+	public async update(
+		id: string,
+		entry: Partial<Omit<IAuthenticationAuditEntry, "id" | "dateCreated">>
+	): Promise<void> {
+		Guards.stringValue(EntityStorageAuthenticationAuditService.CLASS_NAME, nameof(id), id);
+		Guards.object(EntityStorageAuthenticationAuditService.CLASS_NAME, nameof(entry), entry);
+
+		try {
+			const existing = await this._authenticationAuditEntryEntityStorage.get(id);
+			if (Is.empty(existing)) {
+				throw new NotFoundError(
+					EntityStorageAuthenticationAuditService.CLASS_NAME,
+					"auditEntryNotFound",
+					id
+				);
+			}
+
+			await this._authenticationAuditEntryEntityStorage.set({
+				...existing,
+				...entry,
+				id,
+				dateCreated: existing.dateCreated
+			});
+		} catch (error) {
+			throw new GeneralError(
+				EntityStorageAuthenticationAuditService.CLASS_NAME,
+				"updateAuditEntryFailed",
+				undefined,
+				error
+			);
+		}
+	}
+
+	/**
+	 * Remove an audit entry.
+	 * @param id The unique identifier of the audit entry to remove.
+	 * @returns A promise that resolves when the audit entry has been removed.
+	 */
+	public async remove(id: string): Promise<void> {
+		Guards.stringValue(EntityStorageAuthenticationAuditService.CLASS_NAME, nameof(id), id);
+
+		try {
+			const existing = await this._authenticationAuditEntryEntityStorage.get(id);
+			if (Is.empty(existing)) {
+				throw new NotFoundError(
+					EntityStorageAuthenticationAuditService.CLASS_NAME,
+					"auditEntryNotFound",
+					id
+				);
+			}
+
+			await this._authenticationAuditEntryEntityStorage.remove(id);
+		} catch (error) {
+			throw new GeneralError(
+				EntityStorageAuthenticationAuditService.CLASS_NAME,
+				"removeAuditEntryFailed",
+				undefined,
+				error
+			);
+		}
 	}
 
 	/**

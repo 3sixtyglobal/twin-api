@@ -15,6 +15,7 @@ import { BaseRestClient } from "@twin.org/api-core";
 import type { IBaseRestClientConfig, INoContentResponse } from "@twin.org/api-models";
 import { Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
+import { HttpMethod } from "@twin.org/web";
 
 /**
  * The client to connect to the authentication admin service.
@@ -57,7 +58,7 @@ export class EntityStorageAuthenticationAdminRestClient
 			user.email
 		);
 
-		await this.fetch<IAdminUserCreateRequest, INoContentResponse>("/users", "POST", {
+		await this.fetch<IAdminUserCreateRequest, INoContentResponse>("/users", HttpMethod.POST, {
 			body: user
 		});
 	}
@@ -75,7 +76,7 @@ export class EntityStorageAuthenticationAdminRestClient
 			user.email
 		);
 
-		await this.fetch<IAdminUserUpdateRequest, INoContentResponse>("/users/:email", "PUT", {
+		await this.fetch<IAdminUserUpdateRequest, INoContentResponse>("/users/:email", HttpMethod.PUT, {
 			pathParams: {
 				email: user.email
 			},
@@ -93,7 +94,7 @@ export class EntityStorageAuthenticationAdminRestClient
 
 		const response = await this.fetch<IAdminUserGetRequest, IAdminUserGetResponse>(
 			"/users/:email",
-			"GET",
+			HttpMethod.GET,
 			{
 				pathParams: {
 					email
@@ -137,11 +138,15 @@ export class EntityStorageAuthenticationAdminRestClient
 	public async remove(email: string): Promise<void> {
 		Guards.stringValue(EntityStorageAuthenticationAdminRestClient.CLASS_NAME, nameof(email), email);
 
-		await this.fetch<IAdminUserRemoveRequest, INoContentResponse>("/users/:email", "DELETE", {
-			pathParams: {
-				email
+		await this.fetch<IAdminUserRemoveRequest, INoContentResponse>(
+			"/users/:email",
+			HttpMethod.DELETE,
+			{
+				pathParams: {
+					email
+				}
 			}
-		});
+		);
 	}
 
 	/**
@@ -165,7 +170,7 @@ export class EntityStorageAuthenticationAdminRestClient
 
 		await this.fetch<IAdminUserUpdatePasswordRequest, INoContentResponse>(
 			"/users/:email/password",
-			"PUT",
+			HttpMethod.PUT,
 			{
 				pathParams: {
 					email

@@ -13,14 +13,10 @@ const fastifySocketIO: FastifyPluginAsync<Partial<ServerOptions>> = fp(
 		const ioServer = new Server(fastify.server, opts);
 
 		fastify.decorate("io", ioServer);
-		fastify.addHook("preClose", done => {
+		fastify.addHook("preClose", async () => {
 			ioServer.disconnectSockets();
-			ioServer
-				.close()
-				// eslint-disable-next-line promise/prefer-await-to-then, promise/no-callback-in-promise
-				.then(() => done())
-				// eslint-disable-next-line promise/prefer-await-to-then, promise/no-callback-in-promise
-				.catch(() => done());
+
+			await ioServer.close();
 		});
 	},
 	{ fastify: ">=5.x.x", name: "socket.io" }

@@ -21,7 +21,7 @@ export class HttpParameterHelper {
 	 * @returns The combined.
 	 */
 	public static arrayToString<T = string>(values?: T[]): string | undefined {
-		return values?.join(",");
+		return Is.arrayValue(values) ? values.join(",") : undefined;
 	}
 
 	/**
