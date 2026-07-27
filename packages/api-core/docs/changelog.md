@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.1](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.1...api-core-v0.9.1) (2026-07-27)
+
+
+### Features
+
+* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([#195](https://github.com/iotaledger/twin-api/issues/195)) ([a3f5c1f](https://github.com/iotaledger/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
+* release to production ([#197](https://github.com/iotaledger/twin-api/issues/197)) ([f04c156](https://github.com/iotaledger/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
+* release to production ([#201](https://github.com/iotaledger/twin-api/issues/201)) ([e1c46fd](https://github.com/iotaledger/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
+* release to production ([#224](https://github.com/iotaledger/twin-api/issues/224)) ([dffaf08](https://github.com/iotaledger/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
+
 ## [0.9.1-next.9](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.1-next.8...api-core-v0.9.1-next.9) (2026-07-23)
 
 
