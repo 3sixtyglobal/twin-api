@@ -1,8 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { ContextIdStore } from "@twin.org/context";
-import { HealthStatus, type IHealth } from "@twin.org/core";
-import { EngineCoreFactory } from "@twin.org/engine-models";
+import { Factory, HealthStatus, type IHealth } from "@twin.org/core";
 import { HealthService } from "../src/healthService.js";
 
 function makeComponent(...healthEntries: IHealth[]): {
@@ -19,7 +18,11 @@ function makeComponent(...healthEntries: IHealth[]): {
 describe("HealthService", () => {
 	let mockGetContextIds: ReturnType<typeof vi.fn>;
 	let mockGetRegisteredComponents: ReturnType<typeof vi.fn>;
-	let mockEngineCore: NonNullable<ReturnType<typeof EngineCoreFactory.getIfExists>>;
+	let mockEngineCore: {
+		getContextIds: ReturnType<typeof vi.fn>;
+		getRegisteredComponents: ReturnType<typeof vi.fn>;
+	};
+	let mockFactory: Factory<unknown>;
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
@@ -30,9 +33,12 @@ describe("HealthService", () => {
 		mockEngineCore = {
 			getContextIds: mockGetContextIds,
 			getRegisteredComponents: mockGetRegisteredComponents
-		} as unknown as NonNullable<ReturnType<typeof EngineCoreFactory.getIfExists>>;
+		};
+		mockFactory = {
+			getIfExists: vi.fn().mockReturnValue(mockEngineCore)
+		} as unknown as Factory<unknown>;
 
-		vi.spyOn(EngineCoreFactory, "getIfExists").mockReturnValue(mockEngineCore);
+		vi.spyOn(Factory, "getFactory").mockReturnValue(mockFactory);
 		vi.spyOn(ContextIdStore, "run").mockImplementation(async (contextIds, fn) => fn());
 	});
 
@@ -71,8 +77,8 @@ describe("HealthService", () => {
 			await vi.advanceTimersByTimeAsync(30000);
 		}
 
-		test("does not collect health when no engine core is registered", async () => {
-			vi.spyOn(EngineCoreFactory, "getIfExists").mockReturnValue(undefined);
+		test("does not collect health when no engine core factory is registered", async () => {
+			vi.spyOn(Factory, "getFactory").mockReturnValue(undefined);
 			const service = new HealthService();
 			await startAndTick(service);
 			expect((await service.healthStatus()).components).toEqual([]);
