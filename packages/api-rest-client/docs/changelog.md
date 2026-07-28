@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.9.2-next.1](https://github.com/iotaledger/twin-api/compare/api-rest-client-v0.9.2-next.0...api-rest-client-v0.9.2-next.1) (2026-07-28)
+
+
+### Features
+
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* enhanced rest handling ([#208](https://github.com/iotaledger/twin-api/issues/208)) ([99d5f3f](https://github.com/iotaledger/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
+* enhanced rest processing ([4a849ad](https://github.com/iotaledger/twin-api/commit/4a849ad716b54c9591b59fedc9c1b2d38963f6fd))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* remove authentication generators ([#66](https://github.com/iotaledger/twin-api/issues/66)) ([adaa169](https://github.com/iotaledger/twin-api/commit/adaa1698df1c5ccb0ad645a7a7c0d3ef82ef6ac1))
+* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+
+
+### Bug Fixes
+
+* not supported error handling ([5cc1a50](https://github.com/iotaledger/twin-api/commit/5cc1a507243f37fda5855acb622b2a3f4d91080f))
+* use correct format for log messaging ([1d28474](https://github.com/iotaledger/twin-api/commit/1d284744589aa7875327ccc053446f655f2a7f62))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.9.2-next.0 to 0.9.2-next.1
+    * @twin.org/api-models bumped from 0.9.2-next.0 to 0.9.2-next.1
+
 ## [0.9.1](https://github.com/iotaledger/twin-api/compare/api-rest-client-v0.9.1...api-rest-client-v0.9.1) (2026-07-27)
 
 

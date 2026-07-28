@@ -1,5 +1,56 @@
 # Changelog
 
+## [0.9.2-next.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.0...api-service-v0.9.2-next.1) (2026-07-28)
+
+
+### Features
+
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+* add initial interval config for health service ([daf0412](https://github.com/iotaledger/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
+* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add platform isLocalOrigin ([#173](https://github.com/iotaledger/twin-api/issues/173)) ([5e024d5](https://github.com/iotaledger/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
+* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* avoid overlapping health checks ([35150b8](https://github.com/iotaledger/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
+* enhanced rest handling ([#208](https://github.com/iotaledger/twin-api/issues/208)) ([99d5f3f](https://github.com/iotaledger/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* matches local origin ([#148](https://github.com/iotaledger/twin-api/issues/148)) ([7f6d30c](https://github.com/iotaledger/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
+* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* remove engine dependency ([#227](https://github.com/iotaledger/twin-api/issues/227)) ([d29d47b](https://github.com/iotaledger/twin-api/commit/d29d47bddd1fe78e27d27ae5c1820f23f7b5d124))
+* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+* update health service interval defaults ([2c66ae1](https://github.com/iotaledger/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update public origin building ([6c8e042](https://github.com/iotaledger/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+
+
+### Bug Fixes
+
+* docs ([4d7e1d2](https://github.com/iotaledger/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
+* ensure publicOrigin is unique ([1aaf7f5](https://github.com/iotaledger/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
+* resolve local origin context by organization routing param ([#180](https://github.com/iotaledger/twin-api/issues/180)) ([bceb9f1](https://github.com/iotaledger/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+* update health service timer state machine ([f0c0700](https://github.com/iotaledger/twin-api/commit/f0c0700722390395d3b8e042ae68123613f22dbf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.0 to 0.9.2-next.1
+
 ## [0.9.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1...api-service-v0.9.1) (2026-07-27)
 
 
