@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.2-next.2](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.2-next.1...api-tenant-processor-v0.9.2-next.2) (2026-07-29)
+
+
+### Features
+
+* add context id long method ([#229](https://github.com/iotaledger/twin-api/issues/229)) ([d7e8832](https://github.com/iotaledger/twin-api/commit/d7e883249533f0c545e74cbebc6e1f46092e2936))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.1 to 0.9.2-next.2
+
 ## [0.9.2-next.1](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.2-next.0...api-tenant-processor-v0.9.2-next.1) (2026-07-28)
 
 
