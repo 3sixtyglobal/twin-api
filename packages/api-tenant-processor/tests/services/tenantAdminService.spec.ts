@@ -1,6 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { AlreadyExistsError, NotFoundError } from "@twin.org/core";
+import { ComparisonOperator } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -338,6 +339,103 @@ describe("TenantAdminService", () => {
 			const service = new TenantAdminService();
 
 			await expect(service.getTenantByOrganizationId(ORG_ID, true)).rejects.toThrow(NotFoundError);
+		});
+	});
+
+	describe("query", () => {
+		it("should return organizationIdLegacy as a string array rather than a pipe-delimited string", async () => {
+			const tenantWithLegacy: Tenant = {
+				...EXISTING_TENANT,
+				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+			};
+			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [tenantWithLegacy] });
+
+			const service = new TenantAdminService();
+			const result = await service.query();
+
+			expect(result.tenants[0].organizationIdLegacy).toEqual([LEGACY_ORG_ID]);
+		});
+
+		it("should return organizationIdLegacy as undefined when the entity has no legacy ids", async () => {
+			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [EXISTING_TENANT] });
+
+			const service = new TenantAdminService();
+			const result = await service.query();
+
+			expect(result.tenants[0].organizationIdLegacy).toBeUndefined();
+		});
+
+		it("should return multiple legacy ids as separate array elements", async () => {
+			const tenantWithMultipleLegacy: Tenant = {
+				...EXISTING_TENANT,
+				organizationIdLegacy: `|${LEGACY_ORG_ID}|${OTHER_ORG_ID}|`
+			};
+			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [tenantWithMultipleLegacy] });
+
+			const service = new TenantAdminService();
+			const result = await service.query();
+
+			expect(result.tenants[0].organizationIdLegacy).toEqual([LEGACY_ORG_ID, OTHER_ORG_ID]);
+		});
+
+		it("should pass through the cursor returned by the storage connector", async () => {
+			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [], cursor: "nextPage" });
+
+			const service = new TenantAdminService();
+			const result = await service.query();
+
+			expect(result.cursor).toBe("nextPage");
+		});
+
+		it("should return undefined cursor when no further pages exist", async () => {
+			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [] });
+
+			const service = new TenantAdminService();
+			const result = await service.query();
+
+			expect(result.cursor).toBeUndefined();
+		});
+
+		it("should forward conditions, properties, cursor, and limit to the storage connector", async () => {
+			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [] });
+
+			const service = new TenantAdminService();
+			await service.query(
+				{ property: "organizationId", comparison: ComparisonOperator.Equals, value: ORG_ID },
+				["id", "organizationId"],
+				"cursor1",
+				10
+			);
+
+			expect(mockStorage.query).toHaveBeenCalledWith(
+				{ property: "organizationId", comparison: ComparisonOperator.Equals, value: ORG_ID },
+				undefined,
+				["id", "organizationId"],
+				"cursor1",
+				10
+			);
+		});
+
+		it("should apply entityToModel to every entity in the result", async () => {
+			const tenant1: Tenant = {
+				...EXISTING_TENANT,
+				id: TENANT_ID,
+				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+			};
+			const tenant2: Tenant = {
+				...EXISTING_TENANT,
+				id: OTHER_TENANT_ID,
+				organizationId: OTHER_ORG_ID,
+				organizationIdLegacy: undefined
+			};
+			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [tenant1, tenant2] });
+
+			const service = new TenantAdminService();
+			const result = await service.query();
+
+			expect(result.tenants).toHaveLength(2);
+			expect(result.tenants[0].organizationIdLegacy).toEqual([LEGACY_ORG_ID]);
+			expect(result.tenants[1].organizationIdLegacy).toBeUndefined();
 		});
 	});
 });

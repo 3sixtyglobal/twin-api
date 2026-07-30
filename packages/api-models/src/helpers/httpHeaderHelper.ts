@@ -28,11 +28,9 @@ export class HttpHeaderHelper {
 		cursor: string | undefined
 	): asserts headers is IHttpHeaders & { [HeaderTypes.Link]: string | undefined } {
 		if (Is.stringValue(cursor)) {
-			headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(
-				HttpUrlHelper.replaceOrigin(url, publicOrigin),
-				{ cursor },
-				"next"
-			);
+			const baseUrl = HttpUrlHelper.replaceOrigin(url, publicOrigin);
+			const cursorUrl = HttpUrlHelper.addQueryStringParam(baseUrl, "cursor", cursor);
+			headers[HeaderTypes.Link] = HeaderHelper.createLinkHeader(cursorUrl, undefined, "next");
 		}
 	}
 
@@ -56,8 +54,8 @@ export class HttpHeaderHelper {
 		const encodedId = encodeURIComponent(id);
 
 		if (Is.stringValue(urlTemplate)) {
-			if (urlTemplate.includes(":id")) {
-				headers[HeaderTypes.Location] = urlTemplate.replace(/:id/, encodedId);
+			if (/:id(?![a-zA-Z0-9])/.test(urlTemplate)) {
+				headers[HeaderTypes.Location] = urlTemplate.replace(/:id(?![a-zA-Z0-9])/, encodedId);
 			} else {
 				headers[HeaderTypes.Location] =
 					`${StringHelper.trimTrailingSlashes(urlTemplate)}/${encodedId}`;

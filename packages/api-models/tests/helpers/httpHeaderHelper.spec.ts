@@ -284,6 +284,27 @@ describe("HttpHeaderHelper", () => {
 			HttpHeaderHelper.buildId(headers, "my-id", "/path/:id/sub/:id");
 			expect(headers.location).toBe("/path/my-id/sub/:id");
 		});
+
+		it("should substitute only the complete ':id' placeholder and not corrupt an earlier ':idType' placeholder", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildId(headers, "item-123", "/things/:idType/sub/:id");
+			expect(headers.location).toBe("/things/:idType/sub/item-123");
+		});
+
+		it("should append when no standalone ':id' is present and an earlier placeholder starts with 'id'", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildId(headers, "item-123", "/things/:idType");
+			expect(headers.location).toBe("/things/:idType/item-123");
+		});
+
+		it("should roundtrip buildId and extractId when an earlier placeholder starts with 'id'", () => {
+			const original = "item-123";
+			const template = "/things/:idType/sub/:id";
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildId(headers, original, template);
+			expect(headers.location).toBe("/things/:idType/sub/item-123");
+			expect(HttpHeaderHelper.extractId(headers, template)).toBe(original);
+		});
 	});
 
 	describe("buildCursor", () => {
@@ -324,6 +345,48 @@ describe("HttpHeaderHelper", () => {
 			};
 			HttpHeaderHelper.buildCursor(headers, "https://example.com/api", undefined, undefined);
 			expect(headers.link).toContain("old");
+		});
+
+		it("should not produce a duplicate cursor when the URL already contains a cursor parameter", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildCursor(
+				headers,
+				"https://example.com/api?pageSize=2&cursor=cursorPage2",
+				undefined,
+				"cursorPage3"
+			);
+			const link = headers.link as string;
+			const matches = link.match(/cursor=/g);
+			expect(matches?.length).toBe(1);
+			expect(link).toContain("cursorPage3");
+			expect(link).not.toContain("cursorPage2");
+		});
+
+		it("should replace an existing cursor in the URL with the new cursor value", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildCursor(headers, "https://example.com/api?cursor=old", undefined, "new");
+			expect(headers.link).toContain("cursor=new");
+			expect(headers.link).not.toContain("cursor=old");
+		});
+
+		it("should preserve other query parameters when stripping the existing cursor", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildCursor(
+				headers,
+				"https://example.com/api?pageSize=5&cursor=prev",
+				undefined,
+				"next"
+			);
+			expect(headers.link).toContain("pageSize=5");
+			expect(headers.link).toContain("cursor=next");
+			expect(headers.link).not.toContain("cursor=prev");
+		});
+
+		it("should replace an existing cursor for relative URLs", () => {
+			const headers: IHttpHeaders = {};
+			HttpHeaderHelper.buildCursor(headers, "/api/items?pageSize=5&cursor=prev", undefined, "next");
+			expect(headers.link).toContain("/api/items?pageSize=5&cursor=next");
+			expect(headers.link).not.toContain("cursor=prev");
 		});
 	});
 

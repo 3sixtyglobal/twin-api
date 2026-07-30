@@ -381,7 +381,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 		);
 
 		return {
-			tenants: result.entities as ITenant[],
+			tenants: (result.entities as Tenant[]).map(e => this.entityToModel(e)),
 			cursor: result.cursor
 		};
 	}

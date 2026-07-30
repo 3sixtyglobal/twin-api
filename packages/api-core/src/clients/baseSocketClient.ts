@@ -55,6 +55,18 @@ export abstract class BaseSocketClient {
 			autoConnect: false,
 			query: config.headers
 		});
+
+		this._socket.on("reconnect_attempt", () => {
+			this._socket.io.opts.transports = ["polling", "websocket"];
+		});
+
+		this._socket.on("connect_error", async err => {
+			await this.handleError(BaseError.fromError(err));
+		});
+
+		this._socket.on("connect", async () => {
+			await this.handleConnected();
+		});
 	}
 
 	/**
@@ -99,20 +111,6 @@ export abstract class BaseSocketClient {
 	protected socketConnect(): boolean {
 		if (!this._socket.connected) {
 			this._socket.connect();
-
-			// If reconnect fails then also try polling mode.
-			this._socket.on("reconnect_attempt", () => {
-				this._socket.io.opts.transports = ["polling", "websocket"];
-			});
-
-			this._socket.on("connect_error", async err => {
-				await this.handleError(BaseError.fromError(err));
-			});
-
-			this._socket.on("connect", async () => {
-				await this.handleConnected();
-			});
-
 			return false;
 		}
 

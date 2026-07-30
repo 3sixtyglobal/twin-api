@@ -131,9 +131,12 @@ export class HttpUrlHelper {
 		}
 
 		try {
-			const parsedUrl = new URL(url);
+			const isRelative = url.startsWith("/");
+			const parsedUrl = new URL(isRelative ? `http://placeholder${url}` : url);
 			parsedUrl.searchParams.set(key, value);
-			return parsedUrl.toString();
+			return isRelative
+				? `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`
+				: parsedUrl.toString();
 		} catch {}
 
 		return url;
