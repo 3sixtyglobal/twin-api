@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2-next.3](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.2...api-models-v0.9.2-next.3) (2026-07-30)
+
+
+### Bug Fixes
+
+* url handling ([#235](https://github.com/iotaledger/twin-api/issues/235)) ([7e91d97](https://github.com/iotaledger/twin-api/commit/7e91d970a619e4515d5a809883a97624d45eba59))
+
 ## [0.9.2-next.2](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.1...api-models-v0.9.2-next.2) (2026-07-29)
 
 
