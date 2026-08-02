@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2-next.4](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.3...api-models-v0.9.2-next.4) (2026-08-02)
+
+
+### Bug Fixes
+
+* preserve error stack in error responses when includeErrorStack is enabled ([#238](https://github.com/iotaledger/twin-api/issues/238)) ([7abc9b7](https://github.com/iotaledger/twin-api/commit/7abc9b79d07724abb68b2c06467cbdb54c880083))
+
 ## [0.9.2-next.3](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.2...api-models-v0.9.2-next.3) (2026-07-30)
 
 
