@@ -4,5 +4,9 @@
 /**
  * Configuration for the single tenant processor
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ISingleTenantProcessorConfig {}
+export interface ISingleTenantProcessorConfig {
+	/**
+	 * Include the stack with errors.
+	 */
+	includeErrorStack?: boolean;
+}

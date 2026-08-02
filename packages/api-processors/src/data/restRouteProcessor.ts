@@ -77,7 +77,8 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 							notFoundId: request.url
 						}
 					},
-					HttpStatusCode.notFound
+					HttpStatusCode.notFound,
+					this._includeErrorStack
 				);
 			} else {
 				try {
@@ -151,7 +152,7 @@ export class RestRouteProcessor implements IRestRouteProcessor {
 						this._includeErrorStack
 					);
 
-					HttpErrorHelper.buildResponse(response, error, httpStatusCode);
+					HttpErrorHelper.buildResponse(response, error, httpStatusCode, this._includeErrorStack);
 				}
 			}
 		}

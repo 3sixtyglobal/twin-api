@@ -89,16 +89,18 @@ export class HttpErrorHelper {
 	 * @param response The response to build the error into.
 	 * @param error The error to build the response for.
 	 * @param statusCode The status code to use for the error.
+	 * @param includeStack Should the stack be included in the error.
 	 */
 	public static buildResponse(
 		response: IHttpResponse,
 		error: IError,
-		statusCode: HttpStatusCode
+		statusCode: HttpStatusCode,
+		includeStack: boolean
 	): void {
 		response.headers ??= {};
 		response.headers[HeaderTypes.ContentType] = `${MimeTypes.Json}; charset=utf-8`;
 		// Fastify treats an Error-typed body as a framework error and overrides the status with 500.
-		response.body = BaseError.fromError(error).toJsonObject();
+		response.body = BaseError.fromError(error).toJsonObject(includeStack);
 		response.statusCode = statusCode;
 	}
 }

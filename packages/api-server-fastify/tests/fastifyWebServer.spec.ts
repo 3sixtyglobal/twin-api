@@ -117,7 +117,8 @@ describe("api-server-fastify", () => {
 						HttpErrorHelper.buildResponse(
 							response,
 							{ name: "Error", message: "AuthError" },
-							HttpStatusCode.unauthorized
+							HttpStatusCode.unauthorized,
+							false
 						);
 					}
 				}
@@ -355,7 +356,8 @@ describe("api-server-fastify", () => {
 						HttpErrorHelper.buildResponse(
 							response,
 							{ name: "Error", message: "AuthError" },
-							HttpStatusCode.unauthorized
+							HttpStatusCode.unauthorized,
+							false
 						);
 					}
 				}

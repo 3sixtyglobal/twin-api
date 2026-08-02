@@ -73,6 +73,12 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	private readonly _cookieName: string;
 
 	/**
+	 * Include the stack with errors.
+	 * @internal
+	 */
+	private readonly _includeErrorStack: boolean;
+
+	/**
 	 * The node identity.
 	 * @internal
 	 */
@@ -99,6 +105,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 
 		this._signingKeyName = options?.config?.signingKeyName ?? "auth-signing";
 		this._cookieName = options?.config?.cookieName ?? AuthHeaderProcessor.DEFAULT_COOKIE_NAME;
+		this._includeErrorStack = options?.config?.includeErrorStack ?? false;
 	}
 
 	/**
@@ -217,7 +224,12 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				processorState.authTokenLocation = tokenAndLocation?.location;
 			} catch (err) {
 				const error = BaseError.fromError(err);
-				HttpErrorHelper.buildResponse(response, error, HttpStatusCode.unauthorized);
+				HttpErrorHelper.buildResponse(
+					response,
+					error,
+					HttpStatusCode.unauthorized,
+					this._includeErrorStack
+				);
 			}
 		}
 	}

@@ -23,3 +23,11 @@ x-api-key
 > `optional` **apiKeyEndpoints?**: `string`[]
 
 The list of endpoint paths that should be checked for an api key header, can be regexp strings. Defaults to ["/login$"].
+
+***
+
+### includeErrorStack? {#includeerrorstack}
+
+> `optional` **includeErrorStack?**: `boolean`
+
+Include the stack with errors.

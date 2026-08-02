@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
+import type { IError } from "@twin.org/core";
 import { HttpStatusCode } from "@twin.org/web";
 import { SingleTenantProcessor } from "../../src/singleTenantProcessor.js";
 
@@ -152,7 +153,8 @@ describe("SingleTenantProcessor", () => {
 			expect(buildResponseSpy).toHaveBeenCalledWith(
 				expect.anything(),
 				expect.objectContaining({ message: "singleTenantProcessor.invalidOrganizationId" }),
-				HttpStatusCode.unauthorized
+				HttpStatusCode.unauthorized,
+				false
 			);
 		});
 
@@ -173,8 +175,26 @@ describe("SingleTenantProcessor", () => {
 			expect(buildResponseSpy).toHaveBeenCalledWith(
 				expect.anything(),
 				expect.objectContaining({ message: "singleTenantProcessor.invalidOrganizationId" }),
-				HttpStatusCode.unauthorized
+				HttpStatusCode.unauthorized,
+				false
 			);
+		});
+
+		it("returns the error stack in the 401 response when includeErrorStack is enabled", async () => {
+			const processor = new SingleTenantProcessor({ config: { includeErrorStack: true } });
+			await processor.start();
+			const response: IHttpResponse = {};
+
+			await processor.pre(
+				{ url: "/api/test", headers: {}, query: { organization: "other-org" } } as never,
+				response,
+				{} as never,
+				{},
+				{}
+			);
+
+			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+			expect((response.body as IError).stack).toBeDefined();
 		});
 	});
 });

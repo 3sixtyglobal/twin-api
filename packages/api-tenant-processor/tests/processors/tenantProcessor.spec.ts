@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
+import type { IError } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -73,9 +74,20 @@ describe("TenantProcessor", () => {
 			expect(buildResponseSpy).toHaveBeenCalledWith(
 				expect.anything(),
 				expect.objectContaining({ message: "tenantProcessor.missingApiKey" }),
-				HttpStatusCode.unauthorized
+				HttpStatusCode.unauthorized,
+				false
 			);
 			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+		});
+
+		it("should include the error stack in the 401 response when includeErrorStack is enabled", async () => {
+			const processor = new TenantProcessor({ config: { includeErrorStack: true } });
+			const response: IHttpResponse = {};
+
+			await processor.pre({ url: LOGIN_URL, headers: {} } as never, response, {} as never, {}, {});
+
+			expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+			expect((response.body as IError).stack).toBeDefined();
 		});
 
 		it("should skip when route opts out via skipTenant", async () => {
@@ -113,7 +125,8 @@ describe("TenantProcessor", () => {
 			expect(buildResponseSpy).toHaveBeenCalledWith(
 				expect.anything(),
 				expect.objectContaining({ message: "tenantProcessor.apiKeyNotFound" }),
-				HttpStatusCode.unauthorized
+				HttpStatusCode.unauthorized,
+				false
 			);
 		});
 	});
@@ -194,7 +207,8 @@ describe("TenantProcessor", () => {
 			expect(buildResponseSpy).toHaveBeenCalledWith(
 				expect.anything(),
 				expect.objectContaining({ message: "tenantProcessor.organizationIdNotFound" }),
-				HttpStatusCode.unauthorized
+				HttpStatusCode.unauthorized,
+				false
 			);
 		});
 
@@ -215,7 +229,8 @@ describe("TenantProcessor", () => {
 			expect(buildResponseSpy).toHaveBeenCalledWith(
 				expect.anything(),
 				expect.objectContaining({ message: "tenantProcessor.missingOrganizationId" }),
-				HttpStatusCode.unauthorized
+				HttpStatusCode.unauthorized,
+				false
 			);
 			expect(mockTenantStorage.get).not.toHaveBeenCalled();
 		});

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
-import { ComponentFactory, UnauthorizedError } from "@twin.org/core";
+import { ComponentFactory, type IError, UnauthorizedError } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -188,6 +188,34 @@ describe("AuthHeaderProcessor", () => {
 		expect(buildResponseSpy).toHaveBeenCalled();
 		expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
 		expect(contextIds[ContextIdKeys.User]).toBeUndefined();
+	});
+
+	it("should include the error stack in the unauthorized response when includeErrorStack is enabled", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+			token: "jwt",
+			location: "authorization"
+		});
+		vi.spyOn(TokenHelper, "verify").mockRejectedValue(
+			new UnauthorizedError(TokenHelper.CLASS_NAME, "invalidToken")
+		);
+		const stackProcessor = new AuthHeaderProcessor({ config: { includeErrorStack: true } });
+
+		await stackProcessor.start();
+
+		const response: IHttpResponse = {};
+		await stackProcessor.pre(
+			{ headers: {} } as never,
+			response,
+			{ requiredScope: ["user-admin"] } as never,
+			{ [ContextIdKeys.Tenant]: "tenant-1" },
+			{}
+		);
+
+		expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+		expect((response.body as IError).stack).toBeDefined();
 	});
 
 	it("should return unauthorized when token passwordVersion is stale after a password change", async () => {

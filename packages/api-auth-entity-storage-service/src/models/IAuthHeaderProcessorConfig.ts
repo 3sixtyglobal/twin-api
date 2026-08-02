@@ -16,4 +16,9 @@ export interface IAuthHeaderProcessorConfig {
 	 * @default access_token
 	 */
 	cookieName?: string;
+
+	/**
+	 * Include the stack with errors.
+	 */
+	includeErrorStack?: boolean;
 }

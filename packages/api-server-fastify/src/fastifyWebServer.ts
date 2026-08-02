@@ -496,7 +496,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 							this._includeErrorStack
 						);
 						const response: IHttpResponse = {};
-						HttpErrorHelper.buildResponse(response, error, httpStatusCode);
+						HttpErrorHelper.buildResponse(response, error, httpStatusCode, this._includeErrorStack);
 						socket.emit(topic, response);
 					}
 
@@ -646,7 +646,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			});
 		} catch (err) {
 			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
-			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode, this._includeErrorStack);
 			hasPreError = true;
 		}
 
@@ -680,7 +680,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					err,
 					this._includeErrorStack
 				);
-				HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+				HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode, this._includeErrorStack);
 			}
 		}
 
@@ -907,7 +907,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		} catch (err) {
 			// Emit any unhandled errors manually
 			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
-			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode, this._includeErrorStack);
 			await postProcessEmit(requestTopic, httpResponse, processorState);
 		}
 	}
