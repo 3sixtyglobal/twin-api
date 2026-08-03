@@ -11,6 +11,7 @@
 
 ## Interfaces
 
+- [IHealth](interfaces/IHealth.md)
 - [IServerFavIconResponse](interfaces/IServerFavIconResponse.md)
 - [IServerHealthResponse](interfaces/IServerHealthResponse.md)
 - [IServerInfoResponse](interfaces/IServerInfoResponse.md)
@@ -59,6 +60,7 @@
 - [IWebServer](interfaces/IWebServer.md)
 - [IWebServerOptions](interfaces/IWebServerOptions.md)
 - [IHealthComponent](interfaces/IHealthComponent.md)
+- [IHealthProviderComponent](interfaces/IHealthProviderComponent.md)
 - [IInformationComponent](interfaces/IInformationComponent.md)
 - [IPlatformComponent](interfaces/IPlatformComponent.md)
 - [IServerInfo](interfaces/IServerInfo.md)
@@ -67,6 +69,8 @@
 
 ## Type Aliases
 
+- [HealthCategory](type-aliases/HealthCategory.md)
+- [HealthStatus](type-aliases/HealthStatus.md)
 - [HttpContextIdKeys](type-aliases/HttpContextIdKeys.md)
 - [IRestRouteEntryPoint](type-aliases/IRestRouteEntryPoint.md)
 - [ISocketRouteEntryPoint](type-aliases/ISocketRouteEntryPoint.md)
@@ -76,4 +80,6 @@
 - [MimeTypeProcessorFactory](variables/MimeTypeProcessorFactory.md)
 - [RestRouteProcessorFactory](variables/RestRouteProcessorFactory.md)
 - [SocketRouteProcessorFactory](variables/SocketRouteProcessorFactory.md)
+- [HealthCategory](variables/HealthCategory.md)
+- [HealthStatus](variables/HealthStatus.md)
 - [HttpContextIdKeys](variables/HttpContextIdKeys.md)

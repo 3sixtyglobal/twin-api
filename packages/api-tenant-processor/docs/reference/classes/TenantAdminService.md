@@ -5,6 +5,7 @@ Service for performing tenant administration operations.
 ## Implements
 
 - `ITenantAdminComponent`
+- `IHealthProviderComponent`
 
 ## Constructors
 
@@ -299,3 +300,92 @@ The tenants and the next cursor if more tenants are available.
 #### Implementation of
 
 `ITenantAdminComponent.query`
+
+***
+
+### healthInit() {#healthinit}
+
+> **healthInit**(`lastTimestamp`, `contextIds`): `Promise`\<`void`\>
+
+Provision a temporary tenant for the health cycle.
+Skipped when the health interval has not elapsed since the last run.
+
+#### Parameters
+
+##### lastTimestamp
+
+`number`
+
+The Unix timestamp (ms) from the start of the previous health cycle.
+
+##### contextIds
+
+`IContextIds`
+
+Accumulated context IDs; receives the provisional tenant ID.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when provisioning is complete.
+
+#### Implementation of
+
+`IHealthProviderComponent.healthInit`
+
+***
+
+### health() {#health}
+
+> **health**(`lastTimestamp`): `Promise`\<`IHealth`[]\>
+
+Verify the provisioned tenant can be retrieved.
+The tenant ID is read from the active context set by the init pass.
+Returns the cached result when no tenant ID is present (interval not yet elapsed).
+
+#### Parameters
+
+##### lastTimestamp
+
+`number`
+
+The Unix timestamp (ms) from the start of the previous health cycle.
+
+#### Returns
+
+`Promise`\<`IHealth`[]\>
+
+The health entries for this component.
+
+#### Implementation of
+
+`IHealthProviderComponent.health`
+
+***
+
+### healthTeardown() {#healthteardown}
+
+> **healthTeardown**(`lastTimestamp`): `Promise`\<`void`\>
+
+Remove the temporary tenant provisioned during init.
+The tenant ID is read from the active context set by the init pass.
+Does nothing when no tenant ID is present (interval not yet elapsed).
+
+#### Parameters
+
+##### lastTimestamp
+
+`number`
+
+The Unix timestamp (ms) from the start of the previous health cycle.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when teardown is complete.
+
+#### Implementation of
+
+`IHealthProviderComponent.healthTeardown`

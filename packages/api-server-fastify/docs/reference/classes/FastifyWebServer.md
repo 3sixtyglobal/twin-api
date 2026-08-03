@@ -5,6 +5,7 @@ Implementation of the web server using Fastify.
 ## Implements
 
 - `IWebServer`\<`FastifyInstance`\>
+- `IHealthProviderComponent`
 
 ## Constructors
 
@@ -160,16 +161,24 @@ A promise that resolves when the server has shut down all connections.
 
 ### health() {#health}
 
-> **health**(): `Promise`\<`IHealth`[]\>
+> **health**(`lastTimestamp`): `Promise`\<`IHealth`[]\>
 
-Perform a health check on the server by fetching its own root endpoint.
+Returns the health status of the component, the context IDs from init are set in the current context.
+
+#### Parameters
+
+##### lastTimestamp
+
+`number`
+
+The Unix timestamp (ms) recorded at the start of the previous cycle.
 
 #### Returns
 
 `Promise`\<`IHealth`[]\>
 
-The health status of the server.
+The health status of the component, can return multiple entries for elements within the component.
 
 #### Implementation of
 
-`IWebServer.health`
+`IHealthProviderComponent.health`

@@ -10,12 +10,12 @@ The health component for the server.
 
 ### healthStatus() {#healthstatus}
 
-> **healthStatus**(): `Promise`\<\{ `status`: `HealthStatus`; `components`: `IHealth`[]; \}\>
+> **healthStatus**(): `Promise`\<\{ `status`: [`HealthStatus`](../type-aliases/HealthStatus.md); `components`: [`IHealth`](IHealth.md)[]; \}\>
 
 Get the server health.
 
 #### Returns
 
-`Promise`\<\{ `status`: `HealthStatus`; `components`: `IHealth`[]; \}\>
+`Promise`\<\{ `status`: [`HealthStatus`](../type-aliases/HealthStatus.md); `components`: [`IHealth`](IHealth.md)[]; \}\>
 
 The service health.

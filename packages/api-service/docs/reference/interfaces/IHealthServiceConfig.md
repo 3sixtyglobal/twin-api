@@ -30,3 +30,17 @@ This is used to check the health of the components immediately after the service
 ```ts
 2000
 ```
+
+***
+
+### includeErrorStack? {#includeerrorstack}
+
+> `optional` **includeErrorStack?**: `boolean`
+
+Whether to include stack traces in health check error details.
+
+#### Default
+
+```ts
+false
+```
