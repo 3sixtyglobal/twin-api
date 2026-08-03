@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.9.2-next.5](https://github.com/iotaledger/twin-api/compare/api-rest-client-v0.9.2-next.4...api-rest-client-v0.9.2-next.5) (2026-08-03)
+
+
+### Features
+
+* health application checks ([#240](https://github.com/iotaledger/twin-api/issues/240)) ([68ec8b2](https://github.com/iotaledger/twin-api/commit/68ec8b29dae396928aa874826565efa6ad5d18c9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.9.2-next.4 to 0.9.2-next.5
+    * @twin.org/api-models bumped from 0.9.2-next.4 to 0.9.2-next.5
+
 ## [0.9.2-next.4](https://github.com/iotaledger/twin-api/compare/api-rest-client-v0.9.2-next.3...api-rest-client-v0.9.2-next.4) (2026-08-02)
 
 

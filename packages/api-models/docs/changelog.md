@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2-next.5](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.4...api-models-v0.9.2-next.5) (2026-08-03)
+
+
+### Features
+
+* health application checks ([#240](https://github.com/iotaledger/twin-api/issues/240)) ([68ec8b2](https://github.com/iotaledger/twin-api/commit/68ec8b29dae396928aa874826565efa6ad5d18c9))
+
 ## [0.9.2-next.4](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.3...api-models-v0.9.2-next.4) (2026-08-02)
 
 
