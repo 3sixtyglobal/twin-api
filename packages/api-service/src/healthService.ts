@@ -1,17 +1,14 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IHealthComponent } from "@twin.org/api-models";
-import type { IContextIds } from "@twin.org/context";
-import { ContextIdStore } from "@twin.org/context";
 import {
-	BaseError,
-	ComponentFactory,
-	Factory,
-	HealthStatus,
-	type IComponent,
 	type IHealth,
-	Is
-} from "@twin.org/core";
+	type IHealthComponent,
+	HealthStatus,
+	type IHealthProviderComponent
+} from "@twin.org/api-models";
+import type { IContextIds } from "@twin.org/context";
+import { ContextIdStore, ContextIdKeys } from "@twin.org/context";
+import { BaseError, ComponentFactory, Factory, type IComponent, Is } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { IHealthServiceConstructorOptions } from "./models/IHealthServiceConstructorOptions.js";
@@ -60,6 +57,19 @@ export class HealthService implements IHealthComponent {
 	private _started: boolean;
 
 	/**
+	 * The Unix timestamp (ms) recorded at the start of the most recently completed health cycle.
+	 * Passed to providers on the next cycle so they can compute deltas.
+	 * @internal
+	 */
+	private _lastTimestamp: number;
+
+	/**
+	 * Whether to include stack traces in health check error details.
+	 * @internal
+	 */
+	private readonly _includeErrorStack: boolean | undefined;
+
+	/**
 	 * Create a new instance of HealthService.
 	 * @param options The constructor options.
 	 */
@@ -67,7 +77,9 @@ export class HealthService implements IHealthComponent {
 		this._healthInfo = { status: HealthStatus.Ok, components: [] };
 		this._healthCheckInterval = options?.config?.healthCheckInterval ?? 60000;
 		this._initialInterval = options?.config?.initialInterval ?? 2000;
+		this._includeErrorStack = options?.config?.includeErrorStack;
 		this._started = false;
+		this._lastTimestamp = 0;
 	}
 
 	/**
@@ -138,35 +150,95 @@ export class HealthService implements IHealthComponent {
 			}>("engine");
 
 			if (engineCore) {
-				await ContextIdStore.run(engineCore.getContextIds() ?? {}, async () => {
-					const allHealth: IHealth[] = [];
+				const lastTimestamp = this._lastTimestamp;
+				this._lastTimestamp = Date.now();
+				const engineContextIds = engineCore.getContextIds() ?? {};
+				const registeredInstances = await engineCore.getRegisteredComponents();
 
-					const registeredInstances = await engineCore.getRegisteredComponents();
-					for (const registeredInstance of registeredInstances) {
-						const healthMethod = registeredInstance.component.health?.bind(
+				// Pass 1: Init — providers populate initContextIds with any IDs they establish
+				const healthContextIds: IContextIds = {
+					// Only use Node from the main engine context
+					// All other keys should be provided by the healthInit methods of the components
+					// as we don't want to use real ids
+					[ContextIdKeys.Node]: engineContextIds[ContextIdKeys.Node]
+				};
+				for (const registeredInstance of registeredInstances) {
+					if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
+						const initMethod = registeredInstance.component.healthInit?.bind(
 							registeredInstance.component
 						);
-						if (Is.function(healthMethod)) {
+						if (Is.function(initMethod)) {
 							try {
-								allHealth.push(...(await healthMethod()));
+								await initMethod(lastTimestamp, healthContextIds);
 							} catch (error) {
 								const nodeLogging =
 									ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
 								await nodeLogging?.log({
 									level: "error",
 									source: HealthService.CLASS_NAME,
-									message: "componentHealthCheckFailed",
-									data: {
-										className: registeredInstance.component.className()
-									},
+									message: "componentHealthInitFailed",
+									data: { className: registeredInstance.component.className() },
 									error: BaseError.fromError(error)
 								});
 							}
 						}
 					}
+				}
 
-					this.groupHealthByName(allHealth);
+				// Pass 2: Health check wrapped in combined engine + init context
+				const allHealth: IHealth[] = [];
+				await ContextIdStore.run(healthContextIds, async () => {
+					for (const registeredInstance of registeredInstances) {
+						if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
+							const healthMethod = registeredInstance.component.health?.bind(
+								registeredInstance.component
+							);
+							if (Is.function(healthMethod)) {
+								try {
+									allHealth.push(...(await healthMethod(lastTimestamp)));
+								} catch (error) {
+									const nodeLogging =
+										ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
+									await nodeLogging?.log({
+										level: "error",
+										source: HealthService.CLASS_NAME,
+										message: "componentHealthCheckFailed",
+										data: { className: registeredInstance.component.className() },
+										error: BaseError.fromError(error)
+									});
+								}
+							}
+						}
+					}
 				});
+
+				// Pass 3: Teardown wrapped in combined engine + init context
+				await ContextIdStore.run(healthContextIds, async () => {
+					for (const registeredInstance of registeredInstances) {
+						if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
+							const teardownMethod = registeredInstance.component.healthTeardown?.bind(
+								registeredInstance.component
+							);
+							if (Is.function(teardownMethod)) {
+								try {
+									await teardownMethod(lastTimestamp);
+								} catch (error) {
+									const nodeLogging =
+										ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
+									await nodeLogging?.log({
+										level: "error",
+										source: HealthService.CLASS_NAME,
+										message: "componentHealthTeardownFailed",
+										data: { className: registeredInstance.component.className() },
+										error: BaseError.fromError(error)
+									});
+								}
+							}
+						}
+					}
+				});
+
+				this.groupHealthByName(allHealth);
 
 				this.startTimer(nodeLoggingComponentType, this._healthCheckInterval);
 			}
@@ -182,7 +254,12 @@ export class HealthService implements IHealthComponent {
 		const bySource = new Map<string, IHealth[]>();
 		for (const entry of entries) {
 			const existing = bySource.get(entry.source) ?? [];
-			existing.push(entry);
+			existing.push({
+				...entry,
+				error: !Is.empty(entry.error)
+					? BaseError.fromError(entry.error).toJsonObject(this._includeErrorStack)
+					: undefined
+			});
 			bySource.set(entry.source, existing);
 		}
 

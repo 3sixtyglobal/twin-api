@@ -1,5 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { HealthCategory, HealthStatus } from "@twin.org/api-models";
+import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
 import { AlreadyExistsError, NotFoundError } from "@twin.org/core";
 import { ComparisonOperator } from "@twin.org/entity";
 import {
@@ -436,6 +438,164 @@ describe("TenantAdminService", () => {
 			expect(result.tenants).toHaveLength(2);
 			expect(result.tenants[0].organizationIdLegacy).toEqual([LEGACY_ORG_ID]);
 			expect(result.tenants[1].organizationIdLegacy).toBeUndefined();
+		});
+	});
+
+	describe("health lifecycle", () => {
+		const HEALTH_ORG_ID = "org-health-check";
+		let createdTenant: Tenant | undefined;
+
+		beforeEach(() => {
+			createdTenant = undefined;
+
+			vi.mocked(mockStorage.set).mockImplementation(async entity => {
+				createdTenant = entity as Tenant;
+			});
+
+			vi.mocked(mockStorage.get).mockImplementation(async (id: string, index?: string) => {
+				if (!index && id === createdTenant?.id) {
+					return createdTenant;
+				}
+				return undefined;
+			});
+
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(undefined);
+		});
+
+		it("healthInit creates a tenant using the organization ID from contextIds", async () => {
+			const service = new TenantAdminService();
+			const contextIds: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+
+			await service.healthInit(0, contextIds);
+
+			expect(mockStorage.set).toHaveBeenCalledOnce();
+			expect(mockStorage.set).toHaveBeenCalledWith(
+				expect.objectContaining({ organizationId: HEALTH_ORG_ID })
+			);
+			expect(contextIds[ContextIdKeys.Tenant]).toBeDefined();
+			expect(typeof contextIds[ContextIdKeys.Tenant]).toBe("string");
+		});
+
+		it("healthInit skips provisioning when organization ID is absent from context", async () => {
+			const service = new TenantAdminService();
+			const contextIds: IContextIds = {};
+
+			await service.healthInit(0, contextIds);
+
+			expect(mockStorage.set).not.toHaveBeenCalled();
+			expect(contextIds[ContextIdKeys.Tenant]).toBeUndefined();
+		});
+
+		it("healthInit skips provisioning when the interval has not elapsed", async () => {
+			const service = new TenantAdminService({ config: { healthIntervalMs: 300_000 } });
+			const contextIds1: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+
+			await service.healthInit(0, contextIds1);
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds1);
+			await service.health(0);
+
+			const contextIds2: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+			await service.healthInit(1000, contextIds2);
+
+			expect(mockStorage.set).toHaveBeenCalledOnce();
+			expect(contextIds2[ContextIdKeys.Tenant]).toBeUndefined();
+		});
+
+		it("health returns Ok when the provisioned tenant is retrieved", async () => {
+			const service = new TenantAdminService();
+			const contextIds: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+
+			await service.healthInit(0, contextIds);
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds);
+			const result = await service.health(0);
+
+			expect(result).toHaveLength(1);
+			expect(result[0].status).toBe(HealthStatus.Ok);
+			expect(result[0].category).toBe(HealthCategory.Application);
+			expect(result[0].source).toBe(TenantAdminService.CLASS_NAME);
+		});
+
+		it("health returns Error when the provisioned tenant cannot be retrieved", async () => {
+			const service = new TenantAdminService();
+			const contextIds: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+
+			await service.healthInit(0, contextIds);
+			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds);
+			const result = await service.health(0);
+
+			expect(result[0].status).toBe(HealthStatus.Error);
+			expect(result[0].category).toBe(HealthCategory.Application);
+		});
+
+		it("health returns the cached result when the interval has not elapsed", async () => {
+			const service = new TenantAdminService({ config: { healthIntervalMs: 300_000 } });
+			const contextIds: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+
+			await service.healthInit(0, contextIds);
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds);
+			const first = await service.health(0);
+
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(undefined);
+			const second = await service.health(1000);
+
+			expect(second).toBe(first);
+		});
+
+		it("health runs again when the interval has elapsed", async () => {
+			const service = new TenantAdminService({ config: { healthIntervalMs: 300_000 } });
+			const contextIds1: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+
+			await service.healthInit(0, contextIds1);
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds1);
+			await service.health(0);
+
+			createdTenant = undefined;
+			const contextIds2: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+			const nextTimestamp = Date.now() + 300_001;
+			await service.healthInit(nextTimestamp, contextIds2);
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds2);
+			const second = await service.health(nextTimestamp);
+
+			expect(mockStorage.set).toHaveBeenCalledTimes(2);
+			expect(second[0].status).toBe(HealthStatus.Ok);
+		});
+
+		it("healthTeardown removes the provisioned tenant", async () => {
+			const service = new TenantAdminService();
+			const contextIds: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+
+			await service.healthInit(0, contextIds);
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds);
+			await service.health(0);
+			await service.healthTeardown(0);
+
+			expect(mockStorage.remove).toHaveBeenCalledWith(contextIds[ContextIdKeys.Tenant]);
+		});
+
+		it("healthTeardown does nothing when no tenant was provisioned", async () => {
+			const service = new TenantAdminService();
+
+			await service.healthTeardown(0);
+
+			expect(mockStorage.remove).not.toHaveBeenCalled();
+		});
+
+		it("healthTeardown clears the tenant ID so the next cycle can provision afresh", async () => {
+			const service = new TenantAdminService();
+			const contextIds1: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+
+			await service.healthInit(0, contextIds1);
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue(contextIds1);
+			await service.health(0);
+			await service.healthTeardown(0);
+
+			const nextTimestamp = Date.now() + 300_001;
+			const contextIds2: IContextIds = { [ContextIdKeys.Organization]: HEALTH_ORG_ID };
+			await service.healthInit(nextTimestamp, contextIds2);
+
+			expect(mockStorage.set).toHaveBeenCalledTimes(2);
+			expect(contextIds2[ContextIdKeys.Tenant]).toBeDefined();
 		});
 	});
 });

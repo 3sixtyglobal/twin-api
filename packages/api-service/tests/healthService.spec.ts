@@ -1,11 +1,13 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { ContextIdStore } from "@twin.org/context";
-import { Factory, HealthStatus, type IHealth } from "@twin.org/core";
+import { HealthStatus, type IHealth } from "@twin.org/api-models";
+import type { IContextIds } from "@twin.org/context";
+import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
+import { Factory } from "@twin.org/core";
 import { HealthService } from "../src/healthService.js";
 
 function makeComponent(...healthEntries: IHealth[]): {
-	component: { className: () => string; health: () => Promise<IHealth[]> };
+	component: { className: () => string; health: (lastTimestamp: number) => Promise<IHealth[]> };
 } {
 	return {
 		component: {
@@ -230,6 +232,182 @@ describe("HealthService", () => {
 			await startAndTick(service);
 
 			expect((await service.healthStatus()).status).toBe(HealthStatus.Warning);
+		});
+
+		describe("three-pass cycle", () => {
+			test("calls healthInit, health, healthTeardown in order", async () => {
+				const callOrder: string[] = [];
+				mockGetRegisteredComponents.mockResolvedValue([
+					{
+						component: {
+							className: vi.fn().mockReturnValue("MockComponent"),
+							healthInit: vi.fn().mockImplementation(async () => {
+								callOrder.push("init");
+							}),
+							health: vi.fn().mockImplementation(async () => {
+								callOrder.push("health");
+								return [];
+							}),
+							healthTeardown: vi.fn().mockImplementation(async () => {
+								callOrder.push("teardown");
+							})
+						}
+					}
+				]);
+
+				const service = new HealthService();
+				await startAndTick(service);
+
+				expect(callOrder).toEqual(["init", "health", "teardown"]);
+			});
+
+			test("passes 0 as lastTimestamp on the first cycle", async () => {
+				const healthInit = vi.fn().mockResolvedValue(undefined);
+				const health = vi.fn().mockResolvedValue([]);
+				const healthTeardown = vi.fn().mockResolvedValue(undefined);
+				mockGetRegisteredComponents.mockResolvedValue([
+					{
+						component: {
+							className: vi.fn().mockReturnValue("MockComponent"),
+							healthInit,
+							health,
+							healthTeardown
+						}
+					}
+				]);
+
+				const service = new HealthService();
+				await startAndTick(service);
+
+				expect(healthInit).toHaveBeenCalledWith(0, expect.any(Object));
+				expect(health).toHaveBeenCalledWith(0);
+				expect(healthTeardown).toHaveBeenCalledWith(0);
+			});
+
+			test("passes the timestamp of the previous cycle on subsequent cycles", async () => {
+				vi.setSystemTime(new Date(1000));
+				const healthInit = vi.fn().mockResolvedValue(undefined);
+				const health = vi.fn().mockResolvedValue([]);
+				const healthTeardown = vi.fn().mockResolvedValue(undefined);
+				mockGetRegisteredComponents.mockResolvedValue([
+					{
+						component: {
+							className: vi.fn().mockReturnValue("MockComponent"),
+							healthInit,
+							health,
+							healthTeardown
+						}
+					}
+				]);
+
+				const service = new HealthService();
+				// First cycle fires at t=1000+2000=3000, records _lastTimestamp=3000
+				await service.start();
+				await vi.advanceTimersByTimeAsync(3000);
+				expect(healthInit).toHaveBeenNthCalledWith(1, 0, expect.any(Object));
+				expect(health).toHaveBeenNthCalledWith(1, 0);
+				expect(healthTeardown).toHaveBeenNthCalledWith(1, 0);
+
+				// Second cycle fires at t=3000+60000=63000, receives lastTimestamp=3000
+				await vi.advanceTimersByTimeAsync(60000);
+				expect(healthInit).toHaveBeenNthCalledWith(2, 3000, expect.any(Object));
+				expect(health).toHaveBeenNthCalledWith(2, 3000);
+				expect(healthTeardown).toHaveBeenNthCalledWith(2, 3000);
+			});
+
+			test("combines engine context IDs with those gathered during init", async () => {
+				mockGetContextIds.mockReturnValue({ [ContextIdKeys.Node]: "n1" });
+				mockGetRegisteredComponents.mockResolvedValue([
+					{
+						component: {
+							className: vi.fn().mockReturnValue("MockComponent"),
+							healthInit: vi.fn().mockImplementation(async (...args: [number, IContextIds]) => {
+								args[1].session = "s1";
+							}),
+							health: vi.fn().mockResolvedValue([])
+						}
+					}
+				]);
+
+				const service = new HealthService();
+				await startAndTick(service);
+
+				expect(ContextIdStore.run).toHaveBeenCalledWith(
+					{ [ContextIdKeys.Node]: "n1", session: "s1" },
+					expect.any(Function)
+				);
+			});
+
+			test("wraps teardown in the same combined context as health", async () => {
+				mockGetContextIds.mockReturnValue({ [ContextIdKeys.Node]: "n1" });
+				mockGetRegisteredComponents.mockResolvedValue([
+					{
+						component: {
+							className: vi.fn().mockReturnValue("MockComponent"),
+							healthInit: vi.fn().mockImplementation(async (...args: [number, IContextIds]) => {
+								args[1].session = "s1";
+							}),
+							health: vi.fn().mockResolvedValue([]),
+							healthTeardown: vi.fn().mockResolvedValue(undefined)
+						}
+					}
+				]);
+
+				const service = new HealthService();
+				await startAndTick(service);
+
+				const runCalls = vi.mocked(ContextIdStore.run).mock.calls;
+				expect(runCalls).toHaveLength(2);
+				expect(runCalls[0][0]).toEqual({ [ContextIdKeys.Node]: "n1", session: "s1" });
+				expect(runCalls[1][0]).toEqual({ [ContextIdKeys.Node]: "n1", session: "s1" });
+			});
+
+			test("healthInit error does not prevent health from running", async () => {
+				const health = vi.fn().mockResolvedValue([{ source: "db", status: HealthStatus.Ok }]);
+				mockGetRegisteredComponents.mockResolvedValue([
+					{
+						component: {
+							className: vi.fn().mockReturnValue("MockComponent"),
+							healthInit: vi.fn().mockRejectedValue(new Error("init failed")),
+							health
+						}
+					}
+				]);
+
+				const service = new HealthService();
+				await startAndTick(service);
+
+				expect(health).toHaveBeenCalled();
+				expect((await service.healthStatus()).components[0].source).toBe("db");
+			});
+
+			test("healthTeardown error does not affect the collected health result", async () => {
+				mockGetRegisteredComponents.mockResolvedValue([
+					{
+						component: {
+							className: vi.fn().mockReturnValue("MockComponent"),
+							health: vi.fn().mockResolvedValue([{ source: "db", status: HealthStatus.Ok }]),
+							healthTeardown: vi.fn().mockRejectedValue(new Error("teardown failed"))
+						}
+					}
+				]);
+
+				const service = new HealthService();
+				await startAndTick(service);
+
+				expect((await service.healthStatus()).components[0].source).toBe("db");
+			});
+
+			test("health runs when component has no healthInit or healthTeardown", async () => {
+				mockGetRegisteredComponents.mockResolvedValue([
+					makeComponent({ source: "db", status: HealthStatus.Ok })
+				]);
+
+				const service = new HealthService();
+				await startAndTick(service);
+
+				expect((await service.healthStatus()).components[0].source).toBe("db");
+			});
 		});
 	});
 

@@ -1,7 +1,9 @@
 {
 	"error": {
 		"healthService": {
-			"componentHealthCheckFailed": "Health check failed for component \"{className}\""
+			"componentHealthInitFailed": "Health check init failed for component \"{className}\"",
+			"componentHealthCheckFailed": "Health check failed for component \"{className}\"",
+			"componentHealthTeardownFailed": "Health check teardown failed for component \"{className}\""
 		}
 	}
 }

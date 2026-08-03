@@ -3,10 +3,13 @@
 import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
+	HealthStatus,
 	HttpContextIdKeys,
 	HttpErrorHelper,
+	type IHealthProviderComponent,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
+	type IHealth,
 	type IHttpRequest,
 	type IHttpRequestPathParams,
 	type IHttpRequestQuery,
@@ -19,7 +22,8 @@ import {
 	type ISocketRouteProcessor,
 	type ISocketServerRequest,
 	type IWebServer,
-	type IWebServerOptions
+	type IWebServerOptions,
+	HealthCategory
 } from "@twin.org/api-models";
 import { JsonLdMimeTypeProcessor } from "@twin.org/api-processors";
 import { ContextIdStore, type IContextIds } from "@twin.org/context";
@@ -27,9 +31,7 @@ import {
 	BaseError,
 	ComponentFactory,
 	GeneralError,
-	HealthStatus,
 	type IError,
-	type IHealth,
 	Is,
 	RandomHelper,
 	StringHelper,
@@ -57,7 +59,7 @@ import type { IFastifyWebServerConstructorOptions } from "./models/IFastifyWebSe
 /**
  * Implementation of the web server using Fastify.
  */
-export class FastifyWebServer implements IWebServer<FastifyInstance> {
+export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthProviderComponent {
 	/**
 	 * Runtime name for the class.
 	 */
@@ -376,15 +378,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	}
 
 	/**
-	 * Perform a health check on the server by fetching its own root endpoint.
-	 * @returns The health status of the server.
+	 * Returns the health status of the component, the context IDs from init are set in the current context.
+	 * @param lastTimestamp The Unix timestamp (ms) recorded at the start of the previous cycle.
+	 * @returns The health status of the component, can return multiple entries for elements within the component.
 	 */
-	public async health(): Promise<IHealth[]> {
+	public async health(lastTimestamp: number): Promise<IHealth[]> {
 		let healthCheck: IHealth | undefined;
 		if (this._fastify?.server?.listening) {
 			healthCheck = {
 				source: FastifyWebServer.CLASS_NAME,
 				status: HealthStatus.Ok,
+				category: HealthCategory.Connectivity,
 				description: "description",
 				message: "reachable"
 			};
@@ -392,6 +396,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			healthCheck = {
 				source: FastifyWebServer.CLASS_NAME,
 				status: HealthStatus.Error,
+				category: HealthCategory.Connectivity,
 				description: "description",
 				message: "unreachable"
 			};

@@ -17,4 +17,10 @@ export interface IHealthServiceConfig {
 	 * @default 2000
 	 */
 	initialInterval?: number;
+
+	/**
+	 * Whether to include stack traces in health check error details.
+	 * @default false
+	 */
+	includeErrorStack?: boolean;
 }

@@ -1,7 +1,24 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { ITenant, ITenantAdminComponent } from "@twin.org/api-models";
-import { AlreadyExistsError, GeneralError, Guards, Is, NotFoundError, Url } from "@twin.org/core";
+import {
+	HealthCategory,
+	HealthStatus,
+	type IHealth,
+	type IHealthProviderComponent,
+	type ITenant,
+	type ITenantAdminComponent
+} from "@twin.org/api-models";
+import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
+import {
+	AlreadyExistsError,
+	BaseError,
+	GeneralError,
+	Guards,
+	type IError,
+	Is,
+	NotFoundError,
+	Url
+} from "@twin.org/core";
 import { ComparisonOperator, type EntityCondition } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -15,17 +32,42 @@ import { TenantIdHelper } from "./utils/tenantIdHelper.js";
 /**
  * Service for performing tenant administration operations.
  */
-export class TenantAdminService implements ITenantAdminComponent {
+export class TenantAdminService implements ITenantAdminComponent, IHealthProviderComponent {
 	/**
 	 * Runtime name for the class.
 	 */
 	public static readonly CLASS_NAME: string = nameof<TenantAdminService>();
 
 	/**
+	 * Default health check interval in milliseconds (5 minutes).
+	 * @internal
+	 */
+	private static readonly _DEFAULT_HEALTH_INTERVAL: number = 300_000;
+
+	/**
 	 * Entity storage connector used by the service.
 	 * @internal
 	 */
 	private readonly _entityStorageConnector: IEntityStorageConnector<Tenant>;
+
+	/**
+	 * How often the full health lifecycle runs in milliseconds.
+	 * @internal
+	 */
+	private readonly _healthInterval: number;
+
+	/**
+	 * The cached health result from the most recent health pass.
+	 * @internal
+	 */
+	private _lastHealthResult: IHealth[];
+
+	/**
+	 * The lastTimestamp value recorded when the health pass last ran.
+	 * Zero means the pass has never run.
+	 * @internal
+	 */
+	private _lastHealthTime: number;
 
 	/**
 	 * Create a new instance of TenantAdminService.
@@ -35,6 +77,10 @@ export class TenantAdminService implements ITenantAdminComponent {
 		this._entityStorageConnector = EntityStorageConnectorFactory.get(
 			options?.tenantEntityStorageType ?? "tenant"
 		);
+		this._healthInterval =
+			options?.config?.healthIntervalMs ?? TenantAdminService._DEFAULT_HEALTH_INTERVAL;
+		this._lastHealthResult = [];
+		this._lastHealthTime = 0;
 	}
 
 	/**
@@ -384,6 +430,82 @@ export class TenantAdminService implements ITenantAdminComponent {
 			tenants: (result.entities as Tenant[]).map(e => this.entityToModel(e)),
 			cursor: result.cursor
 		};
+	}
+
+	/**
+	 * Provision a temporary tenant for the health cycle.
+	 * Skipped when the health interval has not elapsed since the last run.
+	 * @param lastTimestamp The Unix timestamp (ms) from the start of the previous health cycle.
+	 * @param contextIds Accumulated context IDs; receives the provisional tenant ID.
+	 * @returns A promise that resolves when provisioning is complete.
+	 */
+	public async healthInit(lastTimestamp: number, contextIds: IContextIds): Promise<void> {
+		if (this._lastHealthTime > 0 && lastTimestamp - this._lastHealthTime < this._healthInterval) {
+			return;
+		}
+		const organizationId = contextIds[ContextIdKeys.Organization];
+		if (!Is.stringValue(organizationId)) {
+			return;
+		}
+		const tenantId = await this.create({
+			apiKey: TenantIdHelper.generateApiKey(),
+			organizationId,
+			label: "health-check"
+		});
+		contextIds[ContextIdKeys.Tenant] = tenantId;
+	}
+
+	/**
+	 * Verify the provisioned tenant can be retrieved.
+	 * The tenant ID is read from the active context set by the init pass.
+	 * Returns the cached result when no tenant ID is present (interval not yet elapsed).
+	 * @param lastTimestamp The Unix timestamp (ms) from the start of the previous health cycle.
+	 * @returns The health entries for this component.
+	 */
+	public async health(lastTimestamp: number): Promise<IHealth[]> {
+		const contextIds = await ContextIdStore.getContextIds();
+		const tenantId = contextIds?.[ContextIdKeys.Tenant];
+
+		if (!Is.stringValue(tenantId)) {
+			return this._lastHealthResult;
+		}
+
+		let status: HealthStatus = HealthStatus.Ok;
+		let healthError: IError | undefined;
+
+		try {
+			await this.get(tenantId);
+		} catch (err) {
+			status = HealthStatus.Error;
+			healthError = BaseError.fromError(err);
+		}
+
+		this._lastHealthTime = lastTimestamp > 0 ? lastTimestamp : Date.now();
+		this._lastHealthResult = [
+			{
+				source: TenantAdminService.CLASS_NAME,
+				category: HealthCategory.Application,
+				status,
+				error: healthError
+			}
+		];
+		return this._lastHealthResult;
+	}
+
+	/**
+	 * Remove the temporary tenant provisioned during init.
+	 * The tenant ID is read from the active context set by the init pass.
+	 * Does nothing when no tenant ID is present (interval not yet elapsed).
+	 * @param lastTimestamp The Unix timestamp (ms) from the start of the previous health cycle.
+	 * @returns A promise that resolves when teardown is complete.
+	 */
+	public async healthTeardown(lastTimestamp: number): Promise<void> {
+		const contextIds = await ContextIdStore.getContextIds();
+		const tenantId = contextIds?.[ContextIdKeys.Tenant];
+
+		if (Is.stringValue(tenantId)) {
+			await this.remove(tenantId);
+		}
 	}
 
 	/**

@@ -30,7 +30,8 @@
 		"readyz",
 		"requestor",
 		"Stiftung",
-		"pver"
+		"pver",
+		"teardown"
 	],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",

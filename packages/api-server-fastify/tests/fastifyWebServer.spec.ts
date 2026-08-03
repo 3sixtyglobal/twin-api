@@ -1,8 +1,13 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
+import {
+	HealthCategory,
+	HealthStatus,
+	HttpErrorHelper,
+	type IHttpResponse
+} from "@twin.org/api-models";
 import { JwtMimeTypeProcessor, LoggingProcessor } from "@twin.org/api-processors";
-import { ComponentFactory, HealthStatus, Mutex, NotImplementedError } from "@twin.org/core";
+import { ComponentFactory, Mutex, NotImplementedError } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode } from "@twin.org/web";
 import { io } from "socket.io-client";
@@ -487,7 +492,7 @@ describe("api-server-fastify", () => {
 		await server.build(undefined, undefined, undefined, undefined, { port });
 		await server.start();
 
-		const result = await server.health();
+		const result = await server.health(0);
 
 		await server.stop();
 
@@ -496,6 +501,7 @@ describe("api-server-fastify", () => {
 				source: "FastifyWebServer",
 				description: "description",
 				status: HealthStatus.Ok,
+				category: HealthCategory.Connectivity,
 				message: "reachable"
 			}
 		]);
@@ -505,14 +511,15 @@ describe("api-server-fastify", () => {
 		const server = new FastifyWebServer();
 		await server.build(undefined, undefined, undefined, undefined, { port });
 
-		const result = await server.health();
+		const result = await server.health(0);
 
 		expect(result).toEqual([
 			{
 				source: "FastifyWebServer",
 				description: "description",
 				message: "unreachable",
-				status: HealthStatus.Error
+				status: HealthStatus.Error,
+				category: HealthCategory.Connectivity
 			}
 		]);
 	});
