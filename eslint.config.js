@@ -463,6 +463,19 @@ const importRules = {
 			groups: ['builtin', 'external', 'internal', ['sibling', 'parent'], 'index', 'unknown'],
 			alphabetize: { order: 'asc', caseInsensitive: true }
 		}
+	],
+	'import/no-extraneous-dependencies': [
+		'error',
+		{
+			devDependencies: [
+				'**/tests/**/*.ts',
+				'**/scripts/**/*.mjs',
+				'**/*.config.js',
+				'**/*.config.cjs',
+				'**/*.config.mjs',
+				'**/*.config.ts'
+			]
+		}
 	]
 };
 

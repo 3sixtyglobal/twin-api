@@ -2,30 +2,36 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IContextIds } from "@twin.org/context";
 import type { IHealth } from "../IHealth.js";
+import type { HealthApplicationCallback } from "./IHealthApplicationCallback.js";
 
 /**
  * The health provider component for the server.
  */
 export interface IHealthProviderComponent {
 	/**
-	 * Initialize the health processing for a component.
-	 * @param lastTimestamp The Unix timestamp (ms) recorded at the start of the previous cycle.
+	 * Returns the health status of the component.
+	 * @returns The health status of the component, can return multiple entries for elements within the component.
+	 */
+	health?(): Promise<IHealth[]>;
+
+	/**
+	 * Initialize the application health processing for a component.
 	 * @param contextIds The context IDs provisioned during the init pass.
 	 * @returns A promise that resolves when the initialization is complete.
 	 */
-	healthInit?(lastTimestamp: number, contextIds: IContextIds): Promise<void>;
+	healthApplicationInit?(contextIds: IContextIds): Promise<void>;
 
 	/**
-	 * Returns the health status of the component, the context IDs from init are set in the current context.
-	 * @param lastTimestamp The Unix timestamp (ms) recorded at the start of the previous cycle.
-	 * @returns The health status of the component, can return multiple entries for elements within the component.
+	 * Returns the application health status of the component, context IDs from init are set in the current context.
+	 * Returns undefined when the result will be provided asynchronously via the callback.
+	 * @param callback The callback to invoke when a deferred health result is ready.
+	 * @returns The health status, or undefined if the result will be provided via the callback.
 	 */
-	health?(lastTimestamp: number): Promise<IHealth[]>;
+	healthApplication?(callback: HealthApplicationCallback): Promise<IHealth[] | undefined>;
 
 	/**
-	 * Teardown the health processing for a component.
-	 * @param lastTimestamp The Unix timestamp (ms) recorded at the start of the previous cycle.
+	 * Teardown the application health processing for a component.
 	 * @returns A promise that resolves when the teardown is complete.
 	 */
-	healthTeardown?(lastTimestamp: number): Promise<void>;
+	healthApplicationTeardown?(): Promise<void>;
 }

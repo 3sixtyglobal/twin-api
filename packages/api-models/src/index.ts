@@ -62,6 +62,7 @@ export * from "./models/server/IRestRouteProcessor.js";
 export * from "./models/server/ISocketRouteProcessor.js";
 export * from "./models/server/IWebServer.js";
 export * from "./models/server/IWebServerOptions.js";
+export * from "./models/services/IHealthApplicationCallback.js";
 export * from "./models/services/IHealthComponent.js";
 export * from "./models/services/IHealthProviderComponent.js";
 export * from "./models/services/IInformationComponent.js";

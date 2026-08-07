@@ -158,7 +158,7 @@ describe("EntityStorageAuthenticationRateService", () => {
 	});
 
 	it("should prune expired timestamps and allow a new attempt", async () => {
-		// The stored timestamp is outside the 15-minute window — it should be discarded,
+		// The stored timestamp is outside the 15-minute window - it should be discarded,
 		// leaving zero active attempts so the check succeeds.
 		const expectedHashedIdentifier = Converter.bytesToHex(
 			Sha256.sum256(Converter.utf8ToBytes("user@example.com"))

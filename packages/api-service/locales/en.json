@@ -1,9 +1,10 @@
 {
 	"error": {
 		"healthService": {
-			"componentHealthInitFailed": "Health check init failed for component \"{className}\"",
 			"componentHealthCheckFailed": "Health check failed for component \"{className}\"",
-			"componentHealthTeardownFailed": "Health check teardown failed for component \"{className}\""
+			"componentHealthApplicationInitFailed": "Application health check init failed for component \"{className}\"",
+			"componentHealthApplicationCheckFailed": "Application health check failed for component \"{className}\"",
+			"componentHealthApplicationTeardownFailed": "Application health check teardown failed for component \"{className}\""
 		}
 	}
 }

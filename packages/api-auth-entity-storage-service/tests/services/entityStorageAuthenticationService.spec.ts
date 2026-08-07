@@ -499,7 +499,7 @@ describe("EntityStorageAuthenticationService", () => {
 		const createTokenSpy = vi.spyOn(TokenHelper, "createToken");
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
-				// pver=1 in token but user has passwordVersion=2 — simulate stale token
+				// pver=1 in token but user has passwordVersion=2 - simulate stale token
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 1);
 				if (!verified?.includes("user")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");

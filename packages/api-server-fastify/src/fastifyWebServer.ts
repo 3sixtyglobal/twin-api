@@ -3,6 +3,7 @@
 import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
+	type HealthApplicationCallback,
 	HealthStatus,
 	HttpContextIdKeys,
 	HttpErrorHelper,
@@ -215,7 +216,12 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 			message: "building"
 		});
 
-		this._localOrigin = `http://${options?.host ?? "localhost"}:${options?.port ?? 3000}`;
+		let localHost = options?.host ?? "127.0.0.1";
+		if (localHost === "0.0.0.0") {
+			localHost = "127.0.0.1";
+		}
+
+		this._localOrigin = `http://${localHost}:${options?.port ?? 3000}`;
 
 		if (Is.stringValue(options?.publicOrigin)) {
 			const publicUrl = Url.tryParseExact(options.publicOrigin);
@@ -331,18 +337,63 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 				const addresses = this._fastify.addresses();
 
 				const protocol = Is.object(this._fastify.initialConfig.https) ? "https://" : "http://";
+				const normalizeAnyHost = (address: string): string => {
+					if (address === "0.0.0.0") {
+						return "127.0.0.1";
+					}
+					if (address === "::") {
+						return "::1";
+					}
+
+					return address;
+				};
+
+				const formatAddress = (
+					address: string,
+					family?: string,
+					forceProtocol?: string
+				): string => {
+					const displayAddress = normalizeAnyHost(address);
+					const isIPv6 =
+						family === "IPv6" || (Is.stringValue(displayAddress) && displayAddress.includes(":"));
+
+					return `${forceProtocol ?? protocol}${isIPv6 ? "[" : ""}${displayAddress}${isIPv6 ? "]" : ""}`;
+				};
+
+				const startupAddresses = addresses.map(a => {
+					const formatted = formatAddress(a.address, a.family, protocol);
+
+					return `${formatted}:${a.port}`;
+				});
+
+				for (const origin of [this._localOrigin, this._publicOrigin]) {
+					if (Is.stringValue(origin)) {
+						const originUrl = Url.tryParseExact(origin);
+						if (!Is.empty(originUrl)) {
+							const originParts = originUrl.parts();
+							const formatted = formatAddress(
+								originParts.host,
+								undefined,
+								`${originParts.schema}://`
+							);
+							startupAddresses.push(
+								`${formatted}${Is.integer(originParts.port) ? `:${originParts.port}` : ""}`
+							);
+						} else {
+							startupAddresses.push(origin);
+						}
+					}
+				}
+
+				const distinctStartupAddresses = [...new Set(startupAddresses)];
+
 				await this._logging?.log({
 					level: "info",
 					ts: Date.now(),
 					source: FastifyWebServer.CLASS_NAME,
 					message: "started",
 					data: {
-						addresses: addresses
-							.map(
-								a =>
-									`${protocol}${a.family === "IPv6" ? "[" : ""}${a.address}${a.family === "IPv6" ? "]" : ""}:${a.port}`
-							)
-							.join(", ")
+						addresses: distinctStartupAddresses.join(", ")
 					}
 				});
 				this._started = true;
@@ -378,18 +429,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 	}
 
 	/**
-	 * Returns the health status of the component, the context IDs from init are set in the current context.
-	 * @param lastTimestamp The Unix timestamp (ms) recorded at the start of the previous cycle.
+	 * Returns the health status of the component.
 	 * @returns The health status of the component, can return multiple entries for elements within the component.
 	 */
-	public async health(lastTimestamp: number): Promise<IHealth[]> {
+	public async health(): Promise<IHealth[]> {
 		let healthCheck: IHealth | undefined;
 		if (this._fastify?.server?.listening) {
 			healthCheck = {
 				source: FastifyWebServer.CLASS_NAME,
 				status: HealthStatus.Ok,
 				category: HealthCategory.Connectivity,
-				description: "description",
+				description: "healthConnectivityDescription",
 				message: "reachable"
 			};
 		} else {
@@ -397,12 +447,75 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 				source: FastifyWebServer.CLASS_NAME,
 				status: HealthStatus.Error,
 				category: HealthCategory.Connectivity,
-				description: "description",
+				description: "healthConnectivityDescription",
 				message: "unreachable"
 			};
 		}
 
 		return [healthCheck];
+	}
+
+	/**
+	 * Verify the root endpoint is reachable and returns a body by making a real HTTP request.
+	 * Skipped when GET / is not registered on this server instance.
+	 * @param callback The callback to invoke when a deferred health result is ready.
+	 * @returns The application health status of the component.
+	 */
+	public async healthApplication(
+		callback: HealthApplicationCallback
+	): Promise<IHealth[] | undefined> {
+		if (!this._fastify.hasRoute({ method: "GET", url: "/" })) {
+			return [];
+		}
+
+		if (!Is.stringValue(this._localOrigin)) {
+			return [
+				{
+					source: FastifyWebServer.CLASS_NAME,
+					status: HealthStatus.Error,
+					category: HealthCategory.Application,
+					description: "healthApplicationDescription",
+					message: "serverNotBuilt"
+				}
+			];
+		}
+
+		try {
+			const response = await fetch(`${this._localOrigin}/`);
+			const body = await response.text();
+
+			if (response.ok && Is.stringValue(body)) {
+				return [
+					{
+						source: FastifyWebServer.CLASS_NAME,
+						status: HealthStatus.Ok,
+						category: HealthCategory.Application,
+						description: "healthApplicationDescription",
+						message: "rootEndpointReachable"
+					}
+				];
+			}
+
+			return [
+				{
+					source: FastifyWebServer.CLASS_NAME,
+					status: HealthStatus.Error,
+					category: HealthCategory.Application,
+					description: "healthApplicationDescription",
+					message: "rootEndpointError"
+				}
+			];
+		} catch (error) {
+			return [
+				{
+					source: FastifyWebServer.CLASS_NAME,
+					status: HealthStatus.Error,
+					category: HealthCategory.Application,
+					description: "healthApplicationDescription",
+					error: BaseError.fromError(error)
+				}
+			];
+		}
 	}
 
 	/**

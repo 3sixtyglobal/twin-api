@@ -125,7 +125,7 @@ describe("LoggingProcessor", () => {
 				config: { excludePaths: ["/custom-logs"] }
 			});
 
-			// /custom-logs is excluded — nothing logged
+			// /custom-logs is excluded - nothing logged
 			const req1 = makeRequest("/custom-logs");
 			const res1 = makeResponse();
 			const state1: { [id: string]: unknown } = {};
@@ -133,7 +133,7 @@ describe("LoggingProcessor", () => {
 			await processor.post(req1, res1, undefined, {}, state1);
 			expect(logEntries).toHaveLength(0);
 
-			// /logging is no longer excluded — should be logged
+			// /logging is no longer excluded - should be logged
 			const req2 = makeRequest("/logging");
 			const res2 = makeResponse();
 			const state2: { [id: string]: unknown } = {};

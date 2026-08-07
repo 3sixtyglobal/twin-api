@@ -492,14 +492,14 @@ describe("api-server-fastify", () => {
 		await server.build(undefined, undefined, undefined, undefined, { port });
 		await server.start();
 
-		const result = await server.health(0);
+		const result = await server.health();
 
 		await server.stop();
 
 		expect(result).toEqual([
 			{
 				source: "FastifyWebServer",
-				description: "description",
+				description: "healthConnectivityDescription",
 				status: HealthStatus.Ok,
 				category: HealthCategory.Connectivity,
 				message: "reachable"
@@ -511,12 +511,12 @@ describe("api-server-fastify", () => {
 		const server = new FastifyWebServer();
 		await server.build(undefined, undefined, undefined, undefined, { port });
 
-		const result = await server.health(0);
+		const result = await server.health();
 
 		expect(result).toEqual([
 			{
 				source: "FastifyWebServer",
-				description: "description",
+				description: "healthConnectivityDescription",
 				message: "unreachable",
 				status: HealthStatus.Error,
 				category: HealthCategory.Connectivity
@@ -524,12 +524,70 @@ describe("api-server-fastify", () => {
 		]);
 	});
 
+	test("Can return healthy application status when root endpoint responds with a body", async () => {
+		const server = new FastifyWebServer();
+		server.getInstance().get("/", async () => "root content");
+		await server.build(undefined, undefined, undefined, undefined, { port });
+		await server.start();
+
+		const result = await server.healthApplication(vi.fn());
+
+		await server.stop();
+
+		expect(result).toEqual([
+			{
+				source: "FastifyWebServer",
+				status: HealthStatus.Ok,
+				category: HealthCategory.Application,
+				description: "healthApplicationDescription",
+				message: "rootEndpointReachable"
+			}
+		]);
+	});
+
+	test("Can return error application status when server is not listening", async () => {
+		const server = new FastifyWebServer();
+		server.getInstance().get("/", async () => "root content");
+		await server.build(undefined, undefined, undefined, undefined, { port });
+
+		const result = await server.healthApplication(vi.fn());
+
+		expect(result?.[0]?.status).toBe(HealthStatus.Error);
+		expect(result?.[0]?.category).toBe(HealthCategory.Application);
+		expect(result?.[0]?.error).toBeDefined();
+	});
+
+	test("Can return error application status when server is not built", async () => {
+		const server = new FastifyWebServer();
+		server.getInstance().get("/", async () => "root content");
+
+		const result = await server.healthApplication(vi.fn());
+
+		expect(result).toEqual([
+			{
+				source: "FastifyWebServer",
+				status: HealthStatus.Error,
+				category: HealthCategory.Application,
+				description: "healthApplicationDescription",
+				message: "serverNotBuilt"
+			}
+		]);
+	});
+
+	test("Returns empty health when GET / is not registered", async () => {
+		const server = new FastifyWebServer();
+
+		const result = await server.healthApplication(vi.fn());
+
+		expect(result).toEqual([]);
+	});
+
 	test("Can serialize same-id requests with Mutex while different ids proceed in parallel", async () => {
 		const server = new FastifyWebServer();
 		const handlerDelayMs = 100;
 		const requestCount = 25;
 
-		// Concurrency counters — incremented only while the lock is held, so any
+		// Concurrency counters - incremented only while the lock is held, so any
 		// value above 1 for the same key is direct proof the mutex was bypassed.
 		const activeConcurrentPerKey: { [key: string]: number } = {};
 		const peakConcurrentPerKey: { [key: string]: number } = {};
@@ -590,7 +648,7 @@ describe("api-server-fastify", () => {
 
 		await server.start();
 
-		// requestCount requests with the same id — serialized by the mutex.
+		// requestCount requests with the same id - serialized by the mutex.
 		const sameIdStart = Date.now();
 		const sameIdResponses = await Promise.all(
 			Array.from({ length: requestCount }, async () => fetch(`http://localhost:${port}/abc`))
@@ -609,7 +667,7 @@ describe("api-server-fastify", () => {
 		globalActive = 0;
 		peakGlobalActive = 0;
 
-		// requestCount requests each with a unique id — independent locks, run in parallel.
+		// requestCount requests each with a unique id - independent locks, run in parallel.
 		const differentIdStart = Date.now();
 		const differentIdResponses = await Promise.all(
 			[...new Array(requestCount).keys()].map(async i => fetch(`http://localhost:${port}/${i}`))

@@ -391,7 +391,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 
 				// We use the tenant id from the token, if the user is not in that
 				// partition then the get will fail. Only override the tenant key when
-				// tid is present — setting it to undefined would drop the active partition.
+				// tid is present - setting it to undefined would drop the active partition.
 				const baseContext = (await ContextIdStore.getContextIds()) ?? {};
 				const contextIdsForUserLookup = Is.stringValue(tid)
 					? { ...baseContext, [ContextIdKeys.Tenant]: tid }

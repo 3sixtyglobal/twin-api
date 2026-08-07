@@ -52,7 +52,7 @@ describe("SingleTenantProcessor", () => {
 		});
 	});
 
-	describe("pre — organization injection", () => {
+	describe("pre - organization injection", () => {
 		it("always injects the cached node org ID into contextIds, even when route is undefined", async () => {
 			const processor = await startProcessor();
 			const contextIds: IContextIds = {};
@@ -105,7 +105,7 @@ describe("SingleTenantProcessor", () => {
 		});
 	});
 
-	describe("pre — query param validation", () => {
+	describe("pre - query param validation", () => {
 		it("succeeds without error when org query param is absent", async () => {
 			const processor = await startProcessor();
 			const response: IHttpResponse = {};

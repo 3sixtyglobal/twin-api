@@ -125,7 +125,7 @@ export class PlatformService implements IPlatformComponent {
 			const tenantEntityStorageConnector = this.ensureEntityStorageConnector();
 			if (!Is.empty(tenantEntityStorageConnector)) {
 				// Post-#203 organization routing: when the URL carries an ?organization=<org-did>
-				// query param, that param — not the origin — identifies the target tenant. A single
+				// query param, that param - not the origin - identifies the target tenant. A single
 				// node hosts many tenants behind one shared origin, so an origin match alone cannot
 				// distinguish them and would incorrectly return the caller's own context. Resolve the
 				// tenant by its organization id (mirrors TenantProcessor inbound routing); when the

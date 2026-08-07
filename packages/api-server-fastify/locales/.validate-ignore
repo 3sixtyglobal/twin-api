@@ -1,3 +1,5 @@
 # Fastify plugin options in fastifySocketIo.ts — not locale keys
 >=5\.x\.x
 socket\.io
+127.0.0.1
+0.0.0.0
