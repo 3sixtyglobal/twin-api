@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.2-next.6](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.5...api-service-v0.9.2-next.6) (2026-08-07)
+
+
+### Features
+
+* health updates ([#243](https://github.com/iotaledger/twin-api/issues/243)) ([8360945](https://github.com/iotaledger/twin-api/commit/836094547839f63f2309d4bcd8c4d19128c73883))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.5 to 0.9.2-next.6
+
 ## [0.9.2-next.5](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.4...api-service-v0.9.2-next.5) (2026-08-03)
 
 
