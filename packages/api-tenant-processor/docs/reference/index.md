@@ -13,7 +13,6 @@
 
 - [ISingleTenantProcessorConfig](interfaces/ISingleTenantProcessorConfig.md)
 - [ISingleTenantProcessorConstructorOptions](interfaces/ISingleTenantProcessorConstructorOptions.md)
-- [ITenantAdminServiceConfig](interfaces/ITenantAdminServiceConfig.md)
 - [ITenantAdminServiceConstructorOptions](interfaces/ITenantAdminServiceConstructorOptions.md)
 - [ITenantProcessorConfig](interfaces/ITenantProcessorConfig.md)
 - [ITenantProcessorConstructorOptions](interfaces/ITenantProcessorConstructorOptions.md)

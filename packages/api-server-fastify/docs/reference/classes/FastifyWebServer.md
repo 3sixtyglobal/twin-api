@@ -161,17 +161,9 @@ A promise that resolves when the server has shut down all connections.
 
 ### health() {#health}
 
-> **health**(`lastTimestamp`): `Promise`\<`IHealth`[]\>
+> **health**(): `Promise`\<`IHealth`[]\>
 
-Returns the health status of the component, the context IDs from init are set in the current context.
-
-#### Parameters
-
-##### lastTimestamp
-
-`number`
-
-The Unix timestamp (ms) recorded at the start of the previous cycle.
+Returns the health status of the component.
 
 #### Returns
 
@@ -182,3 +174,30 @@ The health status of the component, can return multiple entries for elements wit
 #### Implementation of
 
 `IHealthProviderComponent.health`
+
+***
+
+### healthApplication() {#healthapplication}
+
+> **healthApplication**(`callback`): `Promise`\<`IHealth`[] \| `undefined`\>
+
+Verify the root endpoint is reachable and returns a body by making a real HTTP request.
+Skipped when GET / is not registered on this server instance.
+
+#### Parameters
+
+##### callback
+
+`HealthApplicationCallback`
+
+The callback to invoke when a deferred health result is ready.
+
+#### Returns
+
+`Promise`\<`IHealth`[] \| `undefined`\>
+
+The application health status of the component.
+
+#### Implementation of
+
+`IHealthProviderComponent.healthApplication`

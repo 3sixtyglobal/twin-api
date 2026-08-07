@@ -8,12 +8,26 @@ Configuration for the health service.
 
 > `optional` **healthCheckInterval?**: `number`
 
-The interval for checking the health of the components and setting it in the health service.
+The interval for checking the health of the components.
 
 #### Default
 
 ```ts
 60000
+```
+
+***
+
+### healthCheckApplicationInterval? {#healthcheckapplicationinterval}
+
+> `optional` **healthCheckApplicationInterval?**: `number`
+
+The interval for running the application health lifecycle (init, application, teardown).
+
+#### Default
+
+```ts
+300000
 ```
 
 ***

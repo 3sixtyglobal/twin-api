@@ -72,7 +72,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-A promise that resolves when the initial health check timer has been scheduled.
+A promise that resolves when the initial health check timers have been scheduled.
 
 #### Implementation of
 
@@ -98,7 +98,7 @@ The node logging component type.
 
 `Promise`\<`void`\>
 
-A promise that resolves when the health check timer has been cancelled.
+A promise that resolves when the health check timers have been cancelled.
 
 #### Implementation of
 

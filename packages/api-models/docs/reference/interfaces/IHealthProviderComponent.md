@@ -4,19 +4,27 @@ The health provider component for the server.
 
 ## Methods
 
-### healthInit()? {#healthinit}
+### health()? {#health}
 
-> `optional` **healthInit**(`lastTimestamp`, `contextIds`): `Promise`\<`void`\>
+> `optional` **health**(): `Promise`\<[`IHealth`](IHealth.md)[]\>
 
-Initialize the health processing for a component.
+Returns the health status of the component.
+
+#### Returns
+
+`Promise`\<[`IHealth`](IHealth.md)[]\>
+
+The health status of the component, can return multiple entries for elements within the component.
+
+***
+
+### healthApplicationInit()? {#healthapplicationinit}
+
+> `optional` **healthApplicationInit**(`contextIds`): `Promise`\<`void`\>
+
+Initialize the application health processing for a component.
 
 #### Parameters
-
-##### lastTimestamp
-
-`number`
-
-The Unix timestamp (ms) recorded at the start of the previous cycle.
 
 ##### contextIds
 
@@ -32,41 +40,34 @@ A promise that resolves when the initialization is complete.
 
 ***
 
-### health()? {#health}
+### healthApplication()? {#healthapplication}
 
-> `optional` **health**(`lastTimestamp`): `Promise`\<[`IHealth`](IHealth.md)[]\>
+> `optional` **healthApplication**(`callback`): `Promise`\<[`IHealth`](IHealth.md)[] \| `undefined`\>
 
-Returns the health status of the component, the context IDs from init are set in the current context.
+Returns the application health status of the component, context IDs from init are set in the current context.
+Returns undefined when the result will be provided asynchronously via the callback.
 
 #### Parameters
 
-##### lastTimestamp
+##### callback
 
-`number`
+[`HealthApplicationCallback`](../type-aliases/HealthApplicationCallback.md)
 
-The Unix timestamp (ms) recorded at the start of the previous cycle.
+The callback to invoke when a deferred health result is ready.
 
 #### Returns
 
-`Promise`\<[`IHealth`](IHealth.md)[]\>
+`Promise`\<[`IHealth`](IHealth.md)[] \| `undefined`\>
 
-The health status of the component, can return multiple entries for elements within the component.
+The health status, or undefined if the result will be provided via the callback.
 
 ***
 
-### healthTeardown()? {#healthteardown}
+### healthApplicationTeardown()? {#healthapplicationteardown}
 
-> `optional` **healthTeardown**(`lastTimestamp`): `Promise`\<`void`\>
+> `optional` **healthApplicationTeardown**(): `Promise`\<`void`\>
 
-Teardown the health processing for a component.
-
-#### Parameters
-
-##### lastTimestamp
-
-`number`
-
-The Unix timestamp (ms) recorded at the start of the previous cycle.
+Teardown the application health processing for a component.
 
 #### Returns
 

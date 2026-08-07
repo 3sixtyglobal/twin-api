@@ -74,6 +74,7 @@
 - [HttpContextIdKeys](type-aliases/HttpContextIdKeys.md)
 - [IRestRouteEntryPoint](type-aliases/IRestRouteEntryPoint.md)
 - [ISocketRouteEntryPoint](type-aliases/ISocketRouteEntryPoint.md)
+- [HealthApplicationCallback](type-aliases/HealthApplicationCallback.md)
 
 ## Variables
 

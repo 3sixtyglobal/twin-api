@@ -303,20 +303,13 @@ The tenants and the next cursor if more tenants are available.
 
 ***
 
-### healthInit() {#healthinit}
+### healthApplicationInit() {#healthapplicationinit}
 
-> **healthInit**(`lastTimestamp`, `contextIds`): `Promise`\<`void`\>
+> **healthApplicationInit**(`contextIds`): `Promise`\<`void`\>
 
-Provision a temporary tenant for the health cycle.
-Skipped when the health interval has not elapsed since the last run.
+Provision a temporary tenant for the application health cycle.
 
 #### Parameters
-
-##### lastTimestamp
-
-`number`
-
-The Unix timestamp (ms) from the start of the previous health cycle.
 
 ##### contextIds
 
@@ -332,53 +325,44 @@ A promise that resolves when provisioning is complete.
 
 #### Implementation of
 
-`IHealthProviderComponent.healthInit`
+`IHealthProviderComponent.healthApplicationInit`
 
 ***
 
-### health() {#health}
+### healthApplication() {#healthapplication}
 
-> **health**(`lastTimestamp`): `Promise`\<`IHealth`[]\>
+> **healthApplication**(`callback`): `Promise`\<`IHealth`[] \| `undefined`\>
 
 Verify the provisioned tenant can be retrieved.
 The tenant ID is read from the active context set by the init pass.
-Returns the cached result when no tenant ID is present (interval not yet elapsed).
 
 #### Parameters
 
-##### lastTimestamp
+##### callback
 
-`number`
+`HealthApplicationCallback`
 
-The Unix timestamp (ms) from the start of the previous health cycle.
+The callback to invoke when a deferred health result is ready.
 
 #### Returns
 
-`Promise`\<`IHealth`[]\>
+`Promise`\<`IHealth`[] \| `undefined`\>
 
 The health entries for this component.
 
 #### Implementation of
 
-`IHealthProviderComponent.health`
+`IHealthProviderComponent.healthApplication`
 
 ***
 
-### healthTeardown() {#healthteardown}
+### healthApplicationTeardown() {#healthapplicationteardown}
 
-> **healthTeardown**(`lastTimestamp`): `Promise`\<`void`\>
+> **healthApplicationTeardown**(): `Promise`\<`void`\>
 
 Remove the temporary tenant provisioned during init.
 The tenant ID is read from the active context set by the init pass.
-Does nothing when no tenant ID is present (interval not yet elapsed).
-
-#### Parameters
-
-##### lastTimestamp
-
-`number`
-
-The Unix timestamp (ms) from the start of the previous health cycle.
+Does nothing when no tenant ID is present.
 
 #### Returns
 
@@ -388,4 +372,4 @@ A promise that resolves when teardown is complete.
 
 #### Implementation of
 
-`IHealthProviderComponent.healthTeardown`
+`IHealthProviderComponent.healthApplicationTeardown`
