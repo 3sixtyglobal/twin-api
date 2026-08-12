@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.2-next.7](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.2-next.6...api-tenant-processor-v0.9.2-next.7) (2026-08-12)
+
+
+### Bug Fixes
+
+* tenant admin error handling ([#249](https://github.com/iotaledger/twin-api/issues/249)) ([96e1356](https://github.com/iotaledger/twin-api/commit/96e135665489c96016866a0ff693cd8f3cbea8ce))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.6 to 0.9.2-next.7
+
 ## [0.9.2-next.6](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.2-next.5...api-tenant-processor-v0.9.2-next.6) (2026-08-07)
 
 
