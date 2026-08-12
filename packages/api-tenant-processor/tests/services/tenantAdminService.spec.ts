@@ -291,6 +291,59 @@ describe("TenantAdminService", () => {
 		});
 	});
 
+	describe("lookup error handling", () => {
+		it("should throw NotFoundError from get when no tenant exists", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
+
+			const service = new TenantAdminService();
+
+			await expect(service.get(TENANT_ID)).rejects.toThrow(NotFoundError);
+		});
+
+		it("should rethrow non-NotFound errors from get", async () => {
+			const connectorError = new Error("connector unavailable");
+			vi.mocked(mockStorage.get).mockRejectedValue(connectorError);
+
+			const service = new TenantAdminService();
+
+			await expect(service.get(TENANT_ID)).rejects.toThrow(connectorError);
+		});
+
+		it("should throw NotFoundError from getByApiKey when no tenant exists", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
+
+			const service = new TenantAdminService();
+
+			await expect(service.getByApiKey(API_KEY)).rejects.toThrow(NotFoundError);
+		});
+
+		it("should rethrow non-NotFound errors from getByApiKey", async () => {
+			const connectorError = new Error("connector unavailable");
+			vi.mocked(mockStorage.get).mockRejectedValue(connectorError);
+
+			const service = new TenantAdminService();
+
+			await expect(service.getByApiKey(API_KEY)).rejects.toThrow(connectorError);
+		});
+
+		it("should throw NotFoundError from getByPublicOrigin when no tenant exists", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
+
+			const service = new TenantAdminService();
+
+			await expect(service.getByPublicOrigin(PUBLIC_ORIGIN)).rejects.toThrow(NotFoundError);
+		});
+
+		it("should rethrow non-NotFound errors from getByPublicOrigin", async () => {
+			const connectorError = new Error("connector unavailable");
+			vi.mocked(mockStorage.get).mockRejectedValue(connectorError);
+
+			const service = new TenantAdminService();
+
+			await expect(service.getByPublicOrigin(PUBLIC_ORIGIN)).rejects.toThrow(connectorError);
+		});
+	});
+
 	describe("getTenantByOrganizationId", () => {
 		it("should return the tenant when found by primary organizationId", async () => {
 			vi.mocked(mockStorage.get).mockImplementation(
@@ -341,6 +394,16 @@ describe("TenantAdminService", () => {
 			const service = new TenantAdminService();
 
 			await expect(service.getTenantByOrganizationId(ORG_ID, true)).rejects.toThrow(NotFoundError);
+		});
+
+		it("should rethrow non-NotFound errors from primary organization lookup", async () => {
+			const connectorError = new Error("connector unavailable");
+			vi.mocked(mockStorage.get).mockRejectedValue(connectorError);
+
+			const service = new TenantAdminService();
+
+			await expect(service.getTenantByOrganizationId(ORG_ID, true)).rejects.toThrow(connectorError);
+			expect(mockStorage.query).not.toHaveBeenCalled();
 		});
 	});
 

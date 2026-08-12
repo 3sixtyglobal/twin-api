@@ -72,12 +72,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async get(tenantId: string): Promise<ITenant> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId, 32);
 
-		let tenant;
-
-		try {
-			tenant = await this._entityStorageConnector.get(tenantId);
-		} catch {}
-
+		const tenant = await this._entityStorageConnector.get(tenantId);
 		if (!Is.object(tenant)) {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", tenantId);
 		}
@@ -94,12 +89,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async getByApiKey(apiKey: string): Promise<ITenant> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(apiKey), apiKey, 32);
 
-		let tenant;
-
-		try {
-			tenant = await this._entityStorageConnector.get(apiKey, "apiKey");
-		} catch {}
-
+		const tenant = await this._entityStorageConnector.get(apiKey, "apiKey");
 		if (!Is.object(tenant)) {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", apiKey);
 		}
@@ -116,11 +106,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async getByPublicOrigin(publicOrigin: string): Promise<ITenant> {
 		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(publicOrigin), publicOrigin);
 
-		let tenant;
-
-		try {
-			tenant = await this._entityStorageConnector.get(publicOrigin, "publicOrigin");
-		} catch {}
+		const tenant = await this._entityStorageConnector.get(publicOrigin, "publicOrigin");
 
 		if (!Is.object(tenant)) {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", publicOrigin);
@@ -142,11 +128,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	): Promise<ITenant> {
 		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(organizationId), organizationId);
 
-		let tenant: Tenant | undefined;
-
-		try {
-			tenant = await this._entityStorageConnector.get(organizationId, "organizationId");
-		} catch {}
+		let tenant = await this._entityStorageConnector.get(organizationId, "organizationId");
 
 		if (!Is.object(tenant) && includeLegacy) {
 			const result = await this._entityStorageConnector.query(
