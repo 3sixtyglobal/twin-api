@@ -86,7 +86,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		requiredScope: ["tenant-admin"]
+		defaultAuthorizationRoles: ["tenant-reader"]
 	};
 
 	const tenantGetByIdRoute: IRestRoute<ITenantGetByIdRequest, ITenantGetResponse> = {
@@ -132,7 +132,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		requiredScope: ["tenant-admin"]
+		defaultAuthorizationRoles: ["tenant-reader"]
 	};
 
 	const tenantGetByApiKeyRoute: IRestRoute<ITenantGetByApiKeyRequest, ITenantGetResponse> = {
@@ -165,7 +165,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		requiredScope: ["tenant-admin"]
+		defaultAuthorizationRoles: ["tenant-reader"]
 	};
 
 	const tenantGetByPublicOriginRoute: IRestRoute = {
@@ -196,7 +196,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		requiredScope: ["tenant-admin"]
+		defaultAuthorizationRoles: ["tenant-reader"]
 	};
 
 	const tenantRemoveRoute: IRestRoute<ITenantRemoveRequest, INoContentResponse> = {
@@ -226,7 +226,7 @@ export function generateRestRoutesTenants(
 				type: nameof<INoContentResponse>()
 			}
 		],
-		requiredScope: ["tenant-admin"]
+		defaultAuthorizationRoles: [{ role: "tenant-writer", inherits: ["tenant-reader"] }]
 	};
 
 	const tenantCreateRoute: IRestRoute<ITenantCreateRequest, ICreatedResponse> = {
@@ -259,7 +259,7 @@ export function generateRestRoutesTenants(
 				type: nameof<ICreatedResponse>()
 			}
 		],
-		requiredScope: ["tenant-admin"]
+		defaultAuthorizationRoles: [{ role: "tenant-writer", inherits: ["tenant-reader"] }]
 	};
 
 	const tenantUpdateRoute: IRestRoute<ITenantUpdateRequest, INoContentResponse> = {
@@ -295,7 +295,7 @@ export function generateRestRoutesTenants(
 				type: nameof<INoContentResponse>()
 			}
 		],
-		requiredScope: ["tenant-admin"]
+		defaultAuthorizationRoles: [{ role: "tenant-writer", inherits: ["tenant-reader"] }]
 	};
 
 	return [

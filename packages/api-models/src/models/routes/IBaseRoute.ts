@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IRouteAuthorization } from "./IRouteAuthorization.js";
 
 /**
  * Interface which defines a route.
@@ -26,19 +27,13 @@ export interface IBaseRoute {
 	skipTenant?: boolean;
 
 	/**
-	 * The user must have one of the specified scopes to access the route.
+	 * Requires authorization for this route.
+	 * @default false
 	 */
-	requiredScope?: string[];
+	requiresAuthorization?: boolean;
 
 	/**
-	 * The features supported by additional processors to run for this route.
+	 * The default roles which can access this route, used to bootstrap authorization.
 	 */
-	processorFeatures?: string[];
-
-	/**
-	 * The data for additional processors to run for this route.
-	 */
-	processorData?: {
-		[key: string]: unknown;
-	};
+	defaultAuthorizationRoles?: IRouteAuthorization[];
 }
