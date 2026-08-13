@@ -61,9 +61,6 @@
 		"packages/api-server-fastify",
 		"packages/api-service",
 		"packages/api-rest-client",
-		"packages/api-auth-entity-storage-models",
-		"packages/api-auth-entity-storage-service",
-		"packages/api-auth-entity-storage-rest-client",
 		"packages/api-tenant-processor"
 	],
 	"type": "module",
