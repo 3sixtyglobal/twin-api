@@ -160,7 +160,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				let tenantOrganizationId: string | undefined;
 				let tenantPublicOrigin: string | undefined;
 
-				await TokenHelper.verify(
+				const { payload } = await TokenHelper.verify(
 					this._vaultConnector,
 					this._nodeId,
 					this._signingKeyName,
@@ -214,6 +214,9 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				contextIds[ContextIdKeys.Organization] = tenantOrganizationId ?? this._nodeOrganizationId;
 				contextIds[ContextIdKeys.User] = user?.identity;
 				contextIds[ContextIdKeys.UserOrganization] = user?.organization;
+				contextIds[HttpContextIdKeys.Scope] = Is.stringValue(payload.scope)
+					? payload.scope
+					: undefined;
 
 				// If the tenant has a custom public origin, we set it in the context for downstream processors to use.
 				if (Is.stringValue(tenantPublicOrigin)) {

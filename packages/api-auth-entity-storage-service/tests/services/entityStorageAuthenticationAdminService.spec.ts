@@ -1,6 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IAuthenticationAuditComponent } from "@twin.org/api-auth-entity-storage-models";
+import { ForbiddenError, HttpContextIdKeys } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import { ComponentFactory, GeneralError, RandomHelper } from "@twin.org/core";
 import { PasswordGenerator, PasswordValidator } from "@twin.org/crypto";
@@ -636,6 +637,100 @@ describe("EntityStorageAuthenticationAdminService", () => {
 			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
 				expect(await userEntityStorage.get("user@example.com")).toBeDefined();
 			});
+		});
+
+		it("should reject create when scope contains global-admin but caller lacks escalated privilege", async () => {
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await expect(
+						service.create({
+							email: "user@example.com",
+							password: "correct-horse-battery",
+							userIdentity: "did:user:123",
+							organizationIdentity: "did:org:456",
+							scope: ["user-admin", "global-admin"]
+						})
+					).rejects.toThrow(ForbiddenError);
+				}
+			);
+		});
+
+		it("should allow create when scope contains global-admin and caller holds escalated privilege", async () => {
+			vi.spyOn(PasswordValidator, "validatePassword").mockImplementation(() => {});
+			vi.spyOn(RandomHelper, "generate").mockReturnValue(new Uint8Array([1, 2, 3, 4]));
+			vi.spyOn(PasswordGenerator, "hashPassword").mockResolvedValue("hashed-password");
+
+			await ContextIdStore.run(
+				{
+					[ContextIdKeys.Tenant]: TENANT_A,
+					[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+				},
+				async () => {
+					await expect(
+						service.create({
+							email: "su@example.com",
+							password: "correct-horse-battery",
+							userIdentity: "did:user:su",
+							organizationIdentity: "did:org:456",
+							scope: ["global-admin"]
+						})
+					).resolves.not.toThrow();
+				}
+			);
+		});
+
+		it("should reject update when scope contains global-admin but caller lacks escalated privilege", async () => {
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "user@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:123",
+					organization: "did:org:456",
+					scope: "read"
+				});
+			});
+
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await expect(
+						service.update({
+							email: "user@example.com",
+							scope: ["user-admin", "global-admin"]
+						})
+					).rejects.toThrow(ForbiddenError);
+				}
+			);
+		});
+
+		it("should allow update when scope contains global-admin and caller holds escalated privilege", async () => {
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "user@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:123",
+					organization: "did:org:456",
+					scope: "read"
+				});
+			});
+
+			await ContextIdStore.run(
+				{
+					[ContextIdKeys.Tenant]: TENANT_A,
+					[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+				},
+				async () => {
+					await expect(
+						service.update({
+							email: "user@example.com",
+							scope: ["global-admin"]
+						})
+					).resolves.not.toThrow();
+				}
+			);
 		});
 
 		it("should not update the password for a user from a different tenant", async () => {

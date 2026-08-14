@@ -1,6 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
+import { HttpContextIdKeys, HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
 import { ComponentFactory, type IError, UnauthorizedError } from "@twin.org/core";
 import {
@@ -428,6 +428,87 @@ describe("AuthHeaderProcessor", () => {
 		expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-a");
 		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
 		expect(contextIds[ContextIdKeys.UserOrganization]).toBe("did:org:456");
+	});
+
+	it("should store the JWT scope claim in HttpContextIdKeys.Scope", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1",
+			[ContextIdKeys.Organization]: "did:org:456"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "hashed",
+			salt: "salt",
+			scope: "user-admin,global-admin",
+			passwordVersion: 0
+		});
+		vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+			token: "jwt",
+			location: "authorization"
+		});
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
+				await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+				return {
+					header: { alg: "EdDSA" },
+					payload: { sub: "did:user:123", org: "did:org:456", scope: "user-admin,global-admin" }
+				};
+			}
+		);
+
+		await processor.start();
+
+		const contextIds: IContextIds = {};
+		const response: IHttpResponse = {};
+		await processor.pre(
+			{ headers: {} } as never,
+			response,
+			{ requiredScope: ["user-admin"] } as never,
+			contextIds,
+			{}
+		);
+
+		expect(response.statusCode).toBeUndefined();
+		expect(contextIds[HttpContextIdKeys.Scope]).toBe("user-admin,global-admin");
+	});
+
+	it("should not set HttpContextIdKeys.Scope when the JWT has no scope claim", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1",
+			[ContextIdKeys.Organization]: "did:org:456"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "hashed",
+			salt: "salt",
+			scope: ""
+		});
+		vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+			token: "jwt",
+			location: "authorization"
+		});
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
+				await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+				return {
+					header: { alg: "EdDSA" },
+					payload: { sub: "did:user:123", org: "did:org:456" }
+				};
+			}
+		);
+
+		await processor.start();
+
+		const contextIds: IContextIds = {};
+		const response: IHttpResponse = {};
+		await processor.pre({ headers: {} } as never, response, {} as never, contextIds, {});
+
+		expect(response.statusCode).toBeUndefined();
+		expect(contextIds[HttpContextIdKeys.Scope]).toBeUndefined();
 	});
 
 	it("should succeed in single-tenant setup when neither context nor token has a tenant", async () => {

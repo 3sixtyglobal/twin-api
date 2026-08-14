@@ -6,6 +6,7 @@ import type {
 	IAuthenticationUser
 } from "@twin.org/api-auth-entity-storage-models";
 import { AuthAuditEvent } from "@twin.org/api-auth-entity-storage-models";
+import { ForbiddenError, HttpContextIdKeys, ScopeHelper } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
 	ComponentFactory,
@@ -36,6 +37,11 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	public static readonly CLASS_NAME: string = nameof<EntityStorageAuthenticationAdminService>();
 
 	/**
+	 * The scope value that grants permission to assign privileged roles.
+	 */
+	public static readonly DEFAULT_ESCALATED_PRIVILEGE_SCOPE: string = "global-admin";
+
+	/**
 	 * The entity storage for users.
 	 * @internal
 	 */
@@ -54,6 +60,12 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 	private readonly _minPasswordLength?: number;
 
 	/**
+	 * The scope value that grants permission to assign privileged roles.
+	 * @internal
+	 */
+	private readonly _escalatedPrivilegeScope: string;
+
+	/**
 	 * Create a new instance of EntityStorageAuthentication.
 	 * @param options The dependencies for the identity connector.
 	 */
@@ -67,6 +79,9 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 		);
 
 		this._minPasswordLength = options?.config?.minPasswordLength;
+		this._escalatedPrivilegeScope = Is.stringValue(options?.config?.escalatedPrivilegeScope)
+			? options?.config?.escalatedPrivilegeScope
+			: EntityStorageAuthenticationAdminService.DEFAULT_ESCALATED_PRIVILEGE_SCOPE;
 	}
 
 	/**
@@ -114,6 +129,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 			user.scope
 		);
 
+		await this.guardEscalatedPrivilegeScopeAssignment(user.scope);
+
 		try {
 			PasswordValidator.validatePassword(user.password, {
 				minLength: this._minPasswordLength
@@ -135,7 +152,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				password: hashedPassword,
 				identity: user.userIdentity,
 				organization: user.organizationIdentity,
-				scope: user.scope.map(s => s.trim().toLocaleLowerCase()).join(","),
+				scope: ScopeHelper.toString(user.scope),
 				passwordVersion: 0
 			};
 
@@ -143,6 +160,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 
 			const contextIds = await ContextIdStore.getContextIds();
 			const requestorTenantId = contextIds?.[ContextIdKeys.Tenant];
+			const originalTenantId = contextIds?.[HttpContextIdKeys.OriginalTenant];
 			await this._authenticationAuditService?.create({
 				actorId: user.email,
 				event: AuthAuditEvent.AccountCreated,
@@ -150,6 +168,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 					userIdentity: user.userIdentity,
 					organizationIdentity: user.organizationIdentity,
 					tenantId: requestorTenantId,
+					originalTenantId,
 					scope: user.scope
 				}
 			});
@@ -200,6 +219,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				nameof(user.scope),
 				user.scope
 			);
+			await this.guardEscalatedPrivilegeScopeAssignment(user.scope);
 		}
 
 		try {
@@ -214,7 +234,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 
 			const updatedFields: string[] = [];
 			const updatedScope = Is.array(user.scope)
-				? user.scope.map(s => s.trim().toLocaleLowerCase()).join(",")
+				? ScopeHelper.toString(user.scope)
 				: existingUser.scope;
 
 			if (user.userIdentity !== undefined && user.userIdentity !== existingUser.identity) {
@@ -238,6 +258,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 
 			const contextIds = await ContextIdStore.getContextIds();
 			const requestorTenantId = contextIds?.[ContextIdKeys.Tenant];
+			const originalTenantId = contextIds?.[HttpContextIdKeys.OriginalTenant];
 			await this._authenticationAuditService?.create({
 				actorId: existingUser.email,
 				event: AuthAuditEvent.AccountUpdated,
@@ -246,7 +267,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 					userIdentity: existingUser.identity,
 					organizationIdentity: existingUser.organization,
 					tenantId: requestorTenantId,
-					scope: existingUser.scope.split(",")
+					originalTenantId,
+					scope: ScopeHelper.toArray(existingUser.scope)
 				}
 			});
 		} catch (error) {
@@ -281,7 +303,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				email: user.email,
 				userIdentity: user.identity,
 				organizationIdentity: user.organization,
-				scope: user.scope.split(",")
+				scope: ScopeHelper.toArray(user.scope)
 			};
 		} catch (error) {
 			throw new GeneralError(
@@ -319,7 +341,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				email: user.email,
 				userIdentity: user.identity,
 				organizationIdentity: user.organization,
-				scope: user.scope.split(",")
+				scope: ScopeHelper.toArray(user.scope)
 			};
 		} catch (error) {
 			throw new GeneralError(
@@ -353,6 +375,7 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 
 			const contextIds = await ContextIdStore.getContextIds();
 			const requestorTenantId = contextIds?.[ContextIdKeys.Tenant];
+			const originalTenantId = contextIds?.[HttpContextIdKeys.OriginalTenant];
 			await this._authenticationAuditService?.create({
 				actorId: email,
 				event: AuthAuditEvent.AccountDeleted,
@@ -360,7 +383,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 					userIdentity: user.identity,
 					organizationIdentity: user.organization,
 					tenantId: requestorTenantId,
-					scope: user.scope.split(",")
+					originalTenantId,
+					scope: ScopeHelper.toArray(user.scope)
 				}
 			});
 		} catch (error) {
@@ -416,6 +440,28 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				"updatePasswordFailed",
 				undefined,
 				error
+			);
+		}
+	}
+
+	/**
+	 * Throws ForbiddenError when the given scope list includes the escalated privilege scope but
+	 * the calling request does not hold that scope itself.
+	 * @param scopeList The scopes being assigned.
+	 * @internal
+	 */
+	private async guardEscalatedPrivilegeScopeAssignment(scopeList: string[]): Promise<void> {
+		if (!ScopeHelper.includes(scopeList, this._escalatedPrivilegeScope)) {
+			return;
+		}
+		const contextIds = await ContextIdStore.getContextIds();
+		if (
+			!ScopeHelper.includes(contextIds?.[HttpContextIdKeys.Scope], this._escalatedPrivilegeScope)
+		) {
+			throw new ForbiddenError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"insufficientScopeForEscalatedPrivilege",
+				{ scopeName: this._escalatedPrivilegeScope }
 			);
 		}
 	}

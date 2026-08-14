@@ -34,7 +34,18 @@ export const HttpContextIdKeys = {
 	/**
 	 * Local Origin of the request.
 	 */
-	LocalOrigin: "localOrigin"
+	LocalOrigin: "localOrigin",
+
+	/**
+	 * The comma-separated scope claim from the verified JWT for the current request.
+	 */
+	Scope: "scope",
+
+	/**
+	 * The caller's original tenant ID before an escalated privilege tenant override was applied.
+	 * Only present when overrideTenant substitution is active for the current request.
+	 */
+	OriginalTenant: "originalTenant"
 } as const;
 
 /**
