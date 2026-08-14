@@ -8,6 +8,7 @@
 - [HttpHeaderHelper](classes/HttpHeaderHelper.md)
 - [HttpParameterHelper](classes/HttpParameterHelper.md)
 - [HttpUrlHelper](classes/HttpUrlHelper.md)
+- [ScopeHelper](classes/ScopeHelper.md)
 
 ## Interfaces
 

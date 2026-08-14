@@ -106,6 +106,19 @@ The data for additional processors to run for this route.
 
 ***
 
+### disableTenantOverride? {#disabletenantoverride}
+
+> `optional` **disableTenantOverride?**: `boolean`
+
+Set to true to prevent callers from using the overrideTenant query parameter on this route.
+Tenant override is allowed by default, but you must hold the escalated privilege scope to use it.
+
+#### Inherited from
+
+[`IBaseRoute`](IBaseRoute.md).[`disableTenantOverride`](IBaseRoute.md#disabletenantoverride)
+
+***
+
 ### handler {#handler}
 
 > **handler**: (`socketRequestContext`, `request`, `emit`) => `void`
