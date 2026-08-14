@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.2-next.8](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.9.2-next.7...api-auth-entity-storage-service-v0.9.2-next.8) (2026-08-14)
+
+
+### Features
+
+* tenant override ([#254](https://github.com/iotaledger/twin-api/issues/254)) ([8c79469](https://github.com/iotaledger/twin-api/commit/8c794698f5983e8927a49454e1c8c9076c54e8f4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.9.2-next.7 to 0.9.2-next.8
+    * @twin.org/api-core bumped from 0.9.2-next.7 to 0.9.2-next.8
+    * @twin.org/api-models bumped from 0.9.2-next.7 to 0.9.2-next.8
+
 ## [0.9.2-next.7](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.9.2-next.6...api-auth-entity-storage-service-v0.9.2-next.7) (2026-08-12)
 
 
