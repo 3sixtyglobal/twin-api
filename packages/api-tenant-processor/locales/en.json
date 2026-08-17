@@ -7,7 +7,7 @@
 			"organizationIdNotFound": "No tenant found for organization ID \"{organizationId}\"."
 		},
 		"tenantOverrideProcessor": {
-			"insufficientScopeForTenantOverride": "Caller does not hold the required scope for tenant override.",
+			"insufficientRoleForTenantOverride": "Caller does not hold the required role for tenant override.",
 			"tenantNotFound": "Tenant \"{notFoundId}\" not found."
 		},
 		"singleTenantProcessor": {

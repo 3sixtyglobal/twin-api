@@ -37,9 +37,9 @@ export const HttpContextIdKeys = {
 	LocalOrigin: "localOrigin",
 
 	/**
-	 * The comma-separated scope claim from the verified JWT for the current request.
+	 * The comma-separated roles for the current user.
 	 */
-	Scope: "scope",
+	Roles: "roles",
 
 	/**
 	 * The caller's original tenant ID before an escalated privilege tenant override was applied.

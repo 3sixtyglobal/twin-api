@@ -4,7 +4,7 @@ import {
 	ForbiddenError,
 	HttpContextIdKeys,
 	HttpErrorHelper,
-	ScopeHelper,
+	RolesHelper,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
 	type IHttpResponse,
@@ -20,7 +20,7 @@ import type { ITenantOverrideProcessorConstructorOptions } from "./models/ITenan
 
 /**
  * Processes the overrideTenant query parameter for routes that allow tenant override.
- * Requires the caller to hold the escalated privilege scope. Runs after AuthHeaderProcessor so
+ * Requires the caller to hold the escalated privilege role. Runs after AuthHeaderProcessor so
  * authentication is always resolved in the caller's own partition first.
  */
 export class TenantOverrideProcessor implements IBaseRouteProcessor {
@@ -30,9 +30,9 @@ export class TenantOverrideProcessor implements IBaseRouteProcessor {
 	public static readonly OVERRIDE_TENANT_PARAM: string = "override-tenant";
 
 	/**
-	 * The scope string required to perform a tenant override.
+	 * The role string required to perform a tenant override.
 	 */
-	public static readonly DEFAULT_ESCALATED_PRIVILEGE_SCOPE: string = "global-admin";
+	public static readonly DEFAULT_ESCALATED_PRIVILEGE_ROLE: string = "global-admin";
 
 	/**
 	 * Runtime name for the class.
@@ -52,10 +52,10 @@ export class TenantOverrideProcessor implements IBaseRouteProcessor {
 	private readonly _includeErrorStack: boolean;
 
 	/**
-	 * The scope value that grants cross-tenant access.
+	 * The role value that grants cross-tenant access.
 	 * @internal
 	 */
-	private readonly _escalatedPrivilegeScope: string;
+	private readonly _escalatedPrivilegeRole: string;
 
 	/**
 	 * Create a new instance of TenantOverrideProcessor.
@@ -66,9 +66,9 @@ export class TenantOverrideProcessor implements IBaseRouteProcessor {
 			options?.tenantEntityStorageType ?? "tenant"
 		);
 		this._includeErrorStack = options?.config?.includeErrorStack ?? false;
-		this._escalatedPrivilegeScope =
-			options?.config?.escalatedPrivilegeScope ??
-			TenantOverrideProcessor.DEFAULT_ESCALATED_PRIVILEGE_SCOPE;
+		this._escalatedPrivilegeRole =
+			options?.config?.escalatedPrivilegeRole ??
+			TenantOverrideProcessor.DEFAULT_ESCALATED_PRIVILEGE_ROLE;
 	}
 
 	/**
@@ -110,13 +110,13 @@ export class TenantOverrideProcessor implements IBaseRouteProcessor {
 		}
 
 		try {
-			// Caller must hold the escalated privilege scope.
+			// Caller must hold the escalated privilege role.
 			if (
-				!ScopeHelper.includes(contextIds[HttpContextIdKeys.Scope], this._escalatedPrivilegeScope)
+				!RolesHelper.includes(contextIds[HttpContextIdKeys.Roles], this._escalatedPrivilegeRole)
 			) {
 				throw new ForbiddenError(
 					TenantOverrideProcessor.CLASS_NAME,
-					"insufficientScopeForTenantOverride"
+					"insufficientRoleForTenantOverride"
 				);
 			}
 

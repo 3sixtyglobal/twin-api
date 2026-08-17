@@ -76,7 +76,7 @@ describe("TenantOverrideProcessor", () => {
 	it("should skip processing when override-tenant query param is absent", async () => {
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: CALLER_TENANT,
-			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+			[HttpContextIdKeys.Roles]: "user-admin,global-admin"
 		};
 		const response: IHttpResponse = {};
 		await processor.pre(
@@ -94,7 +94,7 @@ describe("TenantOverrideProcessor", () => {
 	it("should skip processing when response already has a status code set", async () => {
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: CALLER_TENANT,
-			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+			[HttpContextIdKeys.Roles]: "user-admin,global-admin"
 		};
 		const response: IHttpResponse = { statusCode: HttpStatusCode.unauthorized };
 		await processor.pre(
@@ -113,7 +113,7 @@ describe("TenantOverrideProcessor", () => {
 	it("should return 403 when override-tenant is supplied but caller lacks escalated privilege", async () => {
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: CALLER_TENANT,
-			[HttpContextIdKeys.Scope]: "user-admin"
+			[HttpContextIdKeys.Roles]: "user-admin"
 		};
 		const response: IHttpResponse = {};
 		await processor.pre(
@@ -129,7 +129,7 @@ describe("TenantOverrideProcessor", () => {
 		expect(mockStorage.get).not.toHaveBeenCalled();
 	});
 
-	it("should return 403 when caller has no scope at all", async () => {
+	it("should return 403 when caller has no roles at all", async () => {
 		const contextIds: IContextIds = { [ContextIdKeys.Tenant]: CALLER_TENANT };
 		const response: IHttpResponse = {};
 		await processor.pre(
@@ -149,7 +149,7 @@ describe("TenantOverrideProcessor", () => {
 
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: CALLER_TENANT,
-			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+			[HttpContextIdKeys.Roles]: "user-admin,global-admin"
 		};
 		const response: IHttpResponse = {};
 		await processor.pre(
@@ -169,7 +169,7 @@ describe("TenantOverrideProcessor", () => {
 
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: CALLER_TENANT,
-			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+			[HttpContextIdKeys.Roles]: "user-admin,global-admin"
 		};
 		const response: IHttpResponse = {};
 		await processor.pre(
@@ -187,7 +187,7 @@ describe("TenantOverrideProcessor", () => {
 	it("should substitute the tenant partition and store the original when override is valid", async () => {
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: CALLER_TENANT,
-			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+			[HttpContextIdKeys.Roles]: "user-admin,global-admin"
 		};
 		const response: IHttpResponse = {};
 		await processor.pre(
@@ -207,7 +207,7 @@ describe("TenantOverrideProcessor", () => {
 	it("should respond with 403 body containing the error name", async () => {
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: CALLER_TENANT,
-			[HttpContextIdKeys.Scope]: "user-admin"
+			[HttpContextIdKeys.Roles]: "user-admin"
 		};
 		const response: IHttpResponse = {};
 		await processor.pre(
