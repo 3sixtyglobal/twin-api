@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.9.2-next.9](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.8...api-core-v0.9.2-next.9) (2026-08-17)
+
+
+### Features
+
+* rest client processors ([#252](https://github.com/iotaledger/twin-api/issues/252)) ([b2adac5](https://github.com/iotaledger/twin-api/commit/b2adac56e774ee9586f259ef0280b8ac800b7474))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.8 to 0.9.2-next.9
+
+## [0.9.2-next.8](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.7...api-core-v0.9.2-next.8) (2026-08-14)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.7 to 0.9.2-next.8
+
 ## [0.9.2-next.7](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.6...api-core-v0.9.2-next.7) (2026-08-12)
 
 

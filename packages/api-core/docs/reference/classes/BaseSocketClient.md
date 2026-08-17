@@ -6,13 +6,13 @@ Event bus which publishes using web-sockets.
 
 ### Constructor
 
-> **new BaseSocketClient**(`implementationName`, `config`, `pathPrefix`): `BaseSocketClient`
+> **new BaseSocketClient**(`restClientClassName`, `config`, `pathPrefix`): `BaseSocketClient`
 
 Create a new instance of BaseSocketClient.
 
 #### Parameters
 
-##### implementationName
+##### restClientClassName
 
 `string`
 

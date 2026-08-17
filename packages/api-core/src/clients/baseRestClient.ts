@@ -1,7 +1,13 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IBaseRestClientConfig, IHttpRequest, IHttpResponse } from "@twin.org/api-models";
-import { HttpUrlHelper } from "@twin.org/api-models";
+import type {
+	IBaseRestClientConfig,
+	IHttpRequest,
+	IHttpResponse,
+	IRestClientProcessor,
+	IRestClientProcessorContext
+} from "@twin.org/api-models";
+import { HttpUrlHelper, RestClientProcessorFactory } from "@twin.org/api-models";
 import {
 	BaseError,
 	Coerce,
@@ -30,7 +36,7 @@ export abstract class BaseRestClient {
 	 * The name of the class implementation REST calls.
 	 * @internal
 	 */
-	private readonly _implementationName: string;
+	private readonly _restClientClassName: string;
 
 	/**
 	 * The endpoint origin without prefix.
@@ -90,6 +96,12 @@ export abstract class BaseRestClient {
 	private readonly _customAuthHeader?: () => Promise<string>;
 
 	/**
+	 * The resolved processors.
+	 * @internal
+	 */
+	private readonly _processors: IRestClientProcessor[];
+
+	/**
 	 * Hook to handle authorization failures asynchronously.
 	 * @internal
 	 */
@@ -97,20 +109,20 @@ export abstract class BaseRestClient {
 
 	/**
 	 * Create a new instance of BaseRestClient.
-	 * @param implementationName The name of the class implementation REST calls.
+	 * @param restClientClassName The name of the class implementation REST calls.
 	 * @param config The configuration for the client.
 	 * @param pathPrefix The default prefix to use if none in configuration.
 	 */
-	constructor(implementationName: string, config: IBaseRestClientConfig, pathPrefix: string) {
-		Guards.stringValue(implementationName, nameof(implementationName), implementationName);
-		Guards.object<IBaseRestClientConfig>(implementationName, nameof(config), config);
-		Guards.stringValue(implementationName, nameof(config.endpoint), config.endpoint);
+	constructor(restClientClassName: string, config: IBaseRestClientConfig, pathPrefix: string) {
+		Guards.stringValue(restClientClassName, nameof(restClientClassName), restClientClassName);
+		Guards.object<IBaseRestClientConfig>(restClientClassName, nameof(config), config);
+		Guards.stringValue(restClientClassName, nameof(config.endpoint), config.endpoint);
 
 		this._headers = config.headers;
 		this._timeout = config.timeout;
 		this._includeCredentials = config.includeCredentials ?? true;
 
-		this._implementationName = implementationName;
+		this._restClientClassName = restClientClassName;
 
 		// Parse the endpoint as a URL so any query string the caller embedded is preserved
 		// rather than concatenated as part of the path.
@@ -140,6 +152,9 @@ export abstract class BaseRestClient {
 		this._customAuthHeader = config.customAuthHeader;
 		this._customHeaders = config.customHeaders;
 		this._onAuthFailure = config.onAuthFailure;
+		this._processors = (config.processorTypes ?? []).map(processorType =>
+			RestClientProcessorFactory.get(processorType)
+		);
 	}
 
 	/**
@@ -173,8 +188,8 @@ export abstract class BaseRestClient {
 		request?: T,
 		options?: { overridePrefix?: string }
 	): Promise<U> {
-		Guards.stringValue(this._implementationName, nameof(route), route);
-		Guards.arrayOneOf(this._implementationName, nameof(method), method, Object.values(HttpMethod));
+		Guards.stringValue(this._restClientClassName, nameof(route), route);
+		Guards.arrayOneOf(this._restClientClassName, nameof(method), method, Object.values(HttpMethod));
 
 		const routeParts = route.split("/");
 
@@ -187,7 +202,7 @@ export abstract class BaseRestClient {
 					delete request?.pathParams?.[routeProp];
 				} else {
 					throw new FetchError(
-						this._implementationName,
+						this._restClientClassName,
 						`${nameofCamelCase<BaseRestClient>()}.missingRouteProp`,
 						HttpStatusCode.badRequest,
 						{ route, routeProp }
@@ -273,17 +288,32 @@ export abstract class BaseRestClient {
 			baseUrl = this._endpointWithPrefix;
 		}
 
-		const response = await FetchHelper.fetch(
-			this._implementationName,
-			`${baseUrl}${finalRoute}`,
+		const context: IRestClientProcessorContext = {
+			restClientClassName: this._restClientClassName,
+			baseUrl,
+			route: finalRoute,
 			method,
-			body,
-			{
-				headers: requestHeaders,
-				timeoutMs: this._timeout,
-				includeCredentials: this._includeCredentials
-			}
+			headers: requestHeaders,
+			timeout: this._timeout,
+			includeCredentials: this._includeCredentials,
+			body
+		};
+
+		const rawResponse = await this.runProcessorsPre(context, async () =>
+			FetchHelper.fetch(
+				this._restClientClassName,
+				`${context.baseUrl}${context.route}`,
+				context.method,
+				context.body,
+				{
+					headers: context.headers,
+					timeoutMs: context.timeout,
+					includeCredentials: context.includeCredentials
+				}
+			)
 		);
+
+		const response = await this.runProcessorsPost(context, rawResponse);
 
 		if (response.ok) {
 			try {
@@ -326,7 +356,7 @@ export abstract class BaseRestClient {
 				return httpResponse as U;
 			} catch (err) {
 				throw new FetchError(
-					this._implementationName,
+					this._restClientClassName,
 					`${nameofCamelCase<BaseRestClient>()}.decodingFailed`,
 					response.status as HttpStatusCode,
 					{
@@ -348,7 +378,7 @@ export abstract class BaseRestClient {
 		}
 
 		err ??= new FetchError(
-			this._implementationName,
+			this._restClientClassName,
 			`${nameofCamelCase<BaseRestClient>()}.failureStatusText`,
 			response.status as HttpStatusCode,
 			{
@@ -368,5 +398,69 @@ export abstract class BaseRestClient {
 		}
 
 		throw err;
+	}
+
+	/**
+	 * Run the pre operation for any processors.
+	 * @param context The processor context.
+	 * @param perform Performs the request.
+	 * @returns The response.
+	 * @internal
+	 */
+	private async runProcessorsPre(
+		context: IRestClientProcessorContext,
+		perform: () => Promise<Response>
+	): Promise<Response> {
+		if (this._processors.length === 0) {
+			return perform();
+		}
+
+		// Built from the last processor backwards.
+		// For ["a", "b"] that gives a.pre -> b.pre -> perform.
+		let next = perform;
+		for (let i = this._processors.length - 1; i >= 0; i--) {
+			const processor = this._processors[i];
+			const inner = next;
+			const preFuncBound = processor.pre?.bind(processor);
+			if (Is.function(preFuncBound)) {
+				next = async () => preFuncBound(context, inner);
+			} else {
+				next = inner;
+			}
+		}
+
+		return next();
+	}
+
+	/**
+	 * Run the post operation for any processors.
+	 * @param context The processor context.
+	 * @param response The response from the fetch.
+	 * @returns The response.
+	 * @internal
+	 */
+	private async runProcessorsPost(
+		context: IRestClientProcessorContext,
+		response: Response
+	): Promise<Response> {
+		if (this._processors.length === 0) {
+			return response;
+		}
+
+		// Built from first to last so that the last processor is outermost.
+		// For ["a", "b"] that gives b.post -> a.post -> response (reverse of pre).
+		let next = async (): Promise<Response> => response;
+		for (let i = 0; i < this._processors.length; i++) {
+			const processor = this._processors[i];
+			const inner = next;
+			const postFuncBound = processor.post?.bind(processor);
+			if (Is.function(postFuncBound)) {
+				next = async () => postFuncBound(context, response, inner);
+			} else {
+				next = inner;
+			}
+		}
+
+		return next();
 	}
 }

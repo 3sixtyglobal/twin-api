@@ -6,13 +6,13 @@ Abstract client class for common REST processing.
 
 ### Constructor
 
-> **new BaseRestClient**(`implementationName`, `config`, `pathPrefix`): `BaseRestClient`
+> **new BaseRestClient**(`restClientClassName`, `config`, `pathPrefix`): `BaseRestClient`
 
 Create a new instance of BaseRestClient.
 
 #### Parameters
 
-##### implementationName
+##### restClientClassName
 
 `string`
 

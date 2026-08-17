@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.9.2-next.9](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.2-next.8...api-tenant-processor-v0.9.2-next.9) (2026-08-17)
+
+
+### Miscellaneous Chores
+
+* **api-tenant-processor:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.8 to 0.9.2-next.9
+
+## [0.9.2-next.8](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.2-next.7...api-tenant-processor-v0.9.2-next.8) (2026-08-14)
+
+
+### Features
+
+* tenant override ([#254](https://github.com/iotaledger/twin-api/issues/254)) ([8c79469](https://github.com/iotaledger/twin-api/commit/8c794698f5983e8927a49454e1c8c9076c54e8f4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.7 to 0.9.2-next.8
+
 ## [0.9.2-next.7](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.9.2-next.6...api-tenant-processor-v0.9.2-next.7) (2026-08-12)
 
 

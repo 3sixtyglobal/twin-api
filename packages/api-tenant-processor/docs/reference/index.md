@@ -6,6 +6,7 @@
 - [SingleTenantProcessor](classes/SingleTenantProcessor.md)
 - [TenantAdminService](classes/TenantAdminService.md)
 - [TenantIdContextIdHandler](classes/TenantIdContextIdHandler.md)
+- [TenantOverrideProcessor](classes/TenantOverrideProcessor.md)
 - [TenantProcessor](classes/TenantProcessor.md)
 - [TenantIdHelper](classes/TenantIdHelper.md)
 
@@ -14,6 +15,8 @@
 - [ISingleTenantProcessorConfig](interfaces/ISingleTenantProcessorConfig.md)
 - [ISingleTenantProcessorConstructorOptions](interfaces/ISingleTenantProcessorConstructorOptions.md)
 - [ITenantAdminServiceConstructorOptions](interfaces/ITenantAdminServiceConstructorOptions.md)
+- [ITenantOverrideProcessorConfig](interfaces/ITenantOverrideProcessorConfig.md)
+- [ITenantOverrideProcessorConstructorOptions](interfaces/ITenantOverrideProcessorConstructorOptions.md)
 - [ITenantProcessorConfig](interfaces/ITenantProcessorConfig.md)
 - [ITenantProcessorConstructorOptions](interfaces/ITenantProcessorConstructorOptions.md)
 - [ITenantCreateRequest](interfaces/ITenantCreateRequest.md)
