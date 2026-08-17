@@ -37,11 +37,6 @@ export const HttpContextIdKeys = {
 	LocalOrigin: "localOrigin",
 
 	/**
-	 * The comma-separated roles for the current user.
-	 */
-	Roles: "roles",
-
-	/**
 	 * The caller's original tenant ID before an escalated privilege tenant override was applied.
 	 * Only present when overrideTenant substitution is active for the current request.
 	 */
