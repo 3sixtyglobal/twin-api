@@ -20,6 +20,7 @@
 - [IServerReadyzResponse](interfaces/IServerReadyzResponse.md)
 - [IServerRootResponse](interfaces/IServerRootResponse.md)
 - [IServerSpecResponse](interfaces/IServerSpecResponse.md)
+- [IRestClientProcessor](interfaces/IRestClientProcessor.md)
 - [IBaseRestClientConfig](interfaces/IBaseRestClientConfig.md)
 - [IBaseSocketClientConfig](interfaces/IBaseSocketClientConfig.md)
 - [IHttpRequest](interfaces/IHttpRequest.md)
@@ -80,6 +81,7 @@
 ## Variables
 
 - [MimeTypeProcessorFactory](variables/MimeTypeProcessorFactory.md)
+- [RestClientProcessorFactory](variables/RestClientProcessorFactory.md)
 - [RestRouteProcessorFactory](variables/RestRouteProcessorFactory.md)
 - [SocketRouteProcessorFactory](variables/SocketRouteProcessorFactory.md)
 - [HealthCategory](variables/HealthCategory.md)

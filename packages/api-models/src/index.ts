@@ -3,6 +3,7 @@
 export * from "./errors/forbiddenError.js";
 export * from "./errors/tooManyRequestsError.js";
 export * from "./factories/mimeTypeProcessorFactory.js";
+export * from "./factories/restClientProcessorFactory.js";
 export * from "./factories/restRouteProcessorFactory.js";
 export * from "./factories/socketRouteProcessorFactory.js";
 export * from "./helpers/httpErrorHelper.js";
@@ -17,6 +18,8 @@ export * from "./models/api/IServerLivezResponse.js";
 export * from "./models/api/IServerReadyzResponse.js";
 export * from "./models/api/IServerRootResponse.js";
 export * from "./models/api/IServerSpecResponse.js";
+export * from "./models/client/IRestClientProcessor.js";
+export * from "./models/client/IRestClientProcessorContext.js";
 export * from "./models/config/IBaseRestClientConfig.js";
 export * from "./models/config/IBaseSocketClientConfig.js";
 export * from "./models/healthCategory.js";
