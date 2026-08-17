@@ -32,7 +32,7 @@ import type { ITenantUpdateRequest } from "./models/api/ITenantUpdateRequest.js"
 const ROUTES_SOURCE = "tenantRoutes";
 
 /**
- * The default authorization roles for the routes, use to populate authorization rules.
+ * The default authorization permissions for the routes, use to populate authorization rules.
  */
 const PERMISSIONS_DEFAULT_ROUTE_READER = "tenant:read";
 const PERMISSIONS_DEFAULT_ROUTE_WRITER = {
