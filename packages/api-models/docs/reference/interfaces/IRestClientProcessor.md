@@ -8,56 +8,62 @@ A processor that participates in an outbound REST request.
 
 ## Methods
 
-### wrap() {#wrap}
+### pre()? {#pre}
 
-> **wrap**\<`T`\>(`context`, `next`): `Promise`\<`T`\>
+> `optional` **pre**(`context`, `next`): `Promise`\<`Response`\>
 
-Wrap an outbound request.
-
-#### Type Parameters
-
-##### T
-
-`T`
+Run the processor before the fetch takes place.
 
 #### Parameters
 
 ##### context
 
+[`IRestClientProcessorContext`](IRestClientProcessorContext.md)
+
 The details of the request being made.
-
-###### implementationName
-
-`string`
-
-The name of the client making the request.
-
-###### route
-
-`string`
-
-The route being requested.
-
-###### method
-
-`HttpMethod`
-
-The http method of the request.
-
-###### headers
-
-`IHttpHeaders`
-
-The headers being sent.
 
 ##### next
 
-() => `Promise`\<`T`\>
+() => `Promise`\<`Response`\>
 
 Performs the request, or calls the next processor in the chain.
 
 #### Returns
 
-`Promise`\<`T`\>
+`Promise`\<`Response`\>
+
+The result of next.
+
+***
+
+### post()? {#post}
+
+> `optional` **post**(`context`, `response`, `next`): `Promise`\<`Response`\>
+
+Run the processor after the fetch completes.
+
+#### Parameters
+
+##### context
+
+[`IRestClientProcessorContext`](IRestClientProcessorContext.md)
+
+The details of the request that was made.
+
+##### response
+
+`Response`
+
+The response from the request.
+
+##### next
+
+() => `Promise`\<`Response`\>
+
+Performs the post processing, or calls the next processor in the chain.
+
+#### Returns
+
+`Promise`\<`Response`\>
 
 The result of next.

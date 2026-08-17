@@ -21,6 +21,7 @@
 - [IServerRootResponse](interfaces/IServerRootResponse.md)
 - [IServerSpecResponse](interfaces/IServerSpecResponse.md)
 - [IRestClientProcessor](interfaces/IRestClientProcessor.md)
+- [IRestClientProcessorContext](interfaces/IRestClientProcessorContext.md)
 - [IBaseRestClientConfig](interfaces/IBaseRestClientConfig.md)
 - [IBaseSocketClientConfig](interfaces/IBaseSocketClientConfig.md)
 - [IHttpRequest](interfaces/IHttpRequest.md)

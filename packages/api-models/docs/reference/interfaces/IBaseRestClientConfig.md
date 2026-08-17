@@ -48,7 +48,7 @@ Include credentials in the request, defaults to true.
 
 > `optional` **processorTypes?**: `string`[]
 
-The types of the processors to run around each request.
+The types of the processors to run around each request, resolved from the `RestClientProcessorFactory`.
 
 ***
 
