@@ -291,6 +291,7 @@ export abstract class BaseRestClient {
 		const context: IRestClientProcessorContext = {
 			restClientClassName: this._restClientClassName,
 			baseUrl,
+			routeTemplate: route,
 			route: finalRoute,
 			method,
 			headers: requestHeaders,
