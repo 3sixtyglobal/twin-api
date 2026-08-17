@@ -10,7 +10,6 @@ export * from "./helpers/httpErrorHelper.js";
 export * from "./helpers/httpHeaderHelper.js";
 export * from "./helpers/httpParameterHelper.js";
 export * from "./helpers/httpUrlHelper.js";
-export * from "./helpers/rolesHelper.js";
 export * from "./models/api/IServerFavIconResponse.js";
 export * from "./models/api/IServerHealthResponse.js";
 export * from "./models/api/IServerInfoResponse.js";
