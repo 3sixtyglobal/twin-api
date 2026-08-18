@@ -20,6 +20,14 @@ The base URL of the request.
 
 ***
 
+### routeTemplate {#routetemplate}
+
+> **routeTemplate**: `string`
+
+The route template before path parameter substitution.
+
+***
+
 ### route {#route}
 
 > **route**: `string`

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2-next.10](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.9...api-models-v0.9.2-next.10) (2026-08-17)
+
+
+### Features
+
+* add route template to IRestClientProcessorContext ([0d731c5](https://github.com/iotaledger/twin-api/commit/0d731c5de4711fd1b43c63ac15cb64f0287d1927))
+
 ## [0.9.2-next.9](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.8...api-models-v0.9.2-next.9) (2026-08-17)
 
 

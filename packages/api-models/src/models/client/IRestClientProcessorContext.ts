@@ -17,6 +17,11 @@ export interface IRestClientProcessorContext {
 	baseUrl: string;
 
 	/**
+	 * The route template before path parameter substitution.
+	 */
+	routeTemplate: string;
+
+	/**
 	 * The route being requested.
 	 */
 	route: string;
