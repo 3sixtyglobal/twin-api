@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.2-next.11](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.10...api-service-v0.9.2-next.11) (2026-08-20)
+
+
+### Features
+
+* application health checks as background task ([#261](https://github.com/iotaledger/twin-api/issues/261)) ([b012f88](https://github.com/iotaledger/twin-api/commit/b012f8857cd19f7eba3e8c721266b620a46634c4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.10 to 0.9.2-next.11
+
 ## [0.9.2-next.10](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.9...api-service-v0.9.2-next.10) (2026-08-17)
 
 
