@@ -77,6 +77,7 @@
 - [HttpContextIdKeys](type-aliases/HttpContextIdKeys.md)
 - [IRestRouteEntryPoint](type-aliases/IRestRouteEntryPoint.md)
 - [ISocketRouteEntryPoint](type-aliases/ISocketRouteEntryPoint.md)
+- [HttpBodyLimit](type-aliases/HttpBodyLimit.md)
 - [HealthApplicationCallback](type-aliases/HealthApplicationCallback.md)
 
 ## Variables
@@ -88,3 +89,4 @@
 - [HealthCategory](variables/HealthCategory.md)
 - [HealthStatus](variables/HealthStatus.md)
 - [HttpContextIdKeys](variables/HttpContextIdKeys.md)
+- [HttpBodyLimit](variables/HttpBodyLimit.md)
