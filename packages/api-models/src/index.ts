@@ -48,6 +48,7 @@ export * from "./models/responses/success/IAcceptedResponse.js";
 export * from "./models/responses/success/ICreatedResponse.js";
 export * from "./models/responses/success/INoContentResponse.js";
 export * from "./models/responses/success/IOkResponse.js";
+export * from "./models/routes/httpBodyLimit.js";
 export * from "./models/routes/IBaseRoute.js";
 export * from "./models/routes/IBaseRouteEntryPoint.js";
 export * from "./models/routes/IRestRoute.js";

@@ -4,6 +4,7 @@ import http from "node:http";
 import {
 	HealthCategory,
 	HealthStatus,
+	HttpBodyLimit,
 	HttpErrorHelper,
 	type IHttpResponse,
 	type IRestRoute,
@@ -853,7 +854,7 @@ describe("api-server-fastify", () => {
 		const server = new FastifyWebServer();
 		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
 			port,
-			bodyLimits: { default: 2048 }
+			bodyLimits: { [HttpBodyLimit.Default]: 2048 }
 		});
 		await server.start();
 
@@ -870,7 +871,7 @@ describe("api-server-fastify", () => {
 		const server = new FastifyWebServer();
 		await server.build(
 			[createOkProcessor()],
-			[createPostRoute("/big", "large"), createPostRoute("/small")],
+			[createPostRoute("/big", HttpBodyLimit.Large), createPostRoute("/small")],
 			undefined,
 			undefined,
 			{ port }
@@ -915,7 +916,7 @@ describe("api-server-fastify", () => {
 		const server = new FastifyWebServer();
 		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
 			port,
-			bodyLimits: { default: 2048 }
+			bodyLimits: { [HttpBodyLimit.Default]: 2048 }
 		});
 		await server.start();
 
@@ -993,13 +994,13 @@ describe("api-server-fastify", () => {
 				undefined,
 				{
 					port,
-					bodyLimits: { default: 0 }
+					bodyLimits: { [HttpBodyLimit.Default]: 0 }
 				}
 			)
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "fastifyWebServer.invalidBodyLimit",
-			properties: { bodyLimit: "default", value: 0 }
+			properties: { bodyLimit: HttpBodyLimit.Default, value: 0 }
 		});
 
 		await expect(

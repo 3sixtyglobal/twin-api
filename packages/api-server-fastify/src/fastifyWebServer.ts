@@ -5,6 +5,7 @@ import FastifyCors from "@fastify/cors";
 import {
 	type HealthApplicationCallback,
 	HealthStatus,
+	HttpBodyLimit,
 	HttpContextIdKeys,
 	HttpErrorHelper,
 	type IHealthProviderComponent,
@@ -84,8 +85,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 	 * @internal
 	 */
 	private static readonly _DEFAULT_BODY_LIMITS: { [name: string]: number } = {
-		default: 1048576,
-		large: 26214400
+		[HttpBodyLimit.Default]: 1048576,
+		[HttpBodyLimit.Large]: 26214400
 	};
 
 	/**
@@ -555,7 +556,9 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 				const method = restRoute.method.toLowerCase() as
 					"get" | "post" | "put" | "patch" | "delete" | "options" | "head";
 
-				const bodyLimitKey = Is.stringValue(restRoute.bodyLimit) ? restRoute.bodyLimit : "default";
+				const bodyLimitKey = Is.stringValue(restRoute.bodyLimit)
+					? restRoute.bodyLimit
+					: HttpBodyLimit.Default;
 				const bodyLimit = bodyLimits[bodyLimitKey];
 				if (Is.empty(bodyLimit)) {
 					throw new GeneralError(FastifyWebServer.CLASS_NAME, "unknownBodyLimit", {
