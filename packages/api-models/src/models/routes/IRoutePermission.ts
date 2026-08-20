@@ -2,6 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Type which defines the authorization permission for a route.
+ * Type which defines the default authorization permission for a route used to seed the RBAC rules.
  */
 export type IRoutePermission = string | { permission: string; inherits?: string[] };
