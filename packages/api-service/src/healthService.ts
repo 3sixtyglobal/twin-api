@@ -3,12 +3,12 @@
 import {
 	type IHealth,
 	type IHealthComponent,
-	type HealthApplicationCallback,
 	HealthStatus,
 	type IHealthProviderComponent
 } from "@twin.org/api-models";
+import type { IBackgroundTask, IBackgroundTaskComponent } from "@twin.org/background-task-models";
+import { TaskStatus } from "@twin.org/background-task-models";
 import type { IContextIds } from "@twin.org/context";
-import { ContextIdStore, ContextIdKeys } from "@twin.org/context";
 import { BaseError, ComponentFactory, Factory, type IComponent, Is } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
@@ -22,6 +22,12 @@ export class HealthService implements IHealthComponent {
 	 * Runtime name for the class.
 	 */
 	public static readonly CLASS_NAME: string = nameof<HealthService>();
+
+	/**
+	 * Task type identifier for the application health background task.
+	 * @internal
+	 */
+	private static readonly _APPLICATION_HEALTH_TASK_TYPE: string = "health-application-check";
 
 	/**
 	 * The server health.
@@ -85,7 +91,19 @@ export class HealthService implements IHealthComponent {
 	 * Whether to include stack traces in health check error details.
 	 * @internal
 	 */
-	private readonly _includeErrorStack: boolean | undefined;
+	private readonly _includeErrorStack?: boolean;
+
+	/**
+	 * The background task component for running application health checks.
+	 * @internal
+	 */
+	private readonly _backgroundTaskComponent: IBackgroundTaskComponent;
+
+	/**
+	 * The URL of the module to use for the application health background task.
+	 * @internal
+	 */
+	private readonly _applicationHealthTaskHandler: string;
 
 	/**
 	 * Create a new instance of HealthService.
@@ -98,6 +116,12 @@ export class HealthService implements IHealthComponent {
 			options?.config?.healthCheckApplicationInterval ?? 300000;
 		this._initialInterval = options?.config?.initialInterval ?? 2000;
 		this._includeErrorStack = options?.config?.includeErrorStack;
+		this._backgroundTaskComponent = ComponentFactory.get<IBackgroundTaskComponent>(
+			options?.backgroundTaskComponentType ?? "background-task"
+		);
+		this._applicationHealthTaskHandler =
+			options?.config?.overrideApplicationHealthTaskHandler ??
+			new URL("./healthApplicationTask.js", import.meta.url).href;
 		this._started = false;
 		this._regularComponents = [];
 		this._applicationComponents = [];
@@ -120,11 +144,39 @@ export class HealthService implements IHealthComponent {
 		if (!this._started) {
 			this._started = true;
 
+			await this._backgroundTaskComponent.registerHandler<undefined, IHealth[]>(
+				HealthService._APPLICATION_HEALTH_TASK_TYPE,
+				this._applicationHealthTaskHandler,
+				"checkApplicationHealth",
+				async (task: IBackgroundTask<undefined, IHealth[]>) => {
+					if (
+						task.status === TaskStatus.Success ||
+						task.status === TaskStatus.Failed ||
+						task.status === TaskStatus.Cancelled
+					) {
+						if (task.status === TaskStatus.Success && Is.array(task.result)) {
+							this._applicationComponents = task.result;
+							this.groupHealthByName([...this._regularComponents, ...this._applicationComponents]);
+						} else if (task.status === TaskStatus.Failed) {
+							const nodeLogging =
+								ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
+							await nodeLogging?.log({
+								level: "error",
+								source: HealthService.CLASS_NAME,
+								message: "applicationHealthCheckTaskFailed",
+								error: Is.object(task.error) ? BaseError.fromError(task.error) : undefined
+							});
+						}
+						this.startApplicationTimer(this._healthApplicationCheckInterval);
+					}
+				}
+			);
+
 			// Immediately check health after a startup settling period.
 			// The interval for the next checks are triggered on success of the current
 			// check to prevent overlapping checks in case of long running health checks.
 			this.startTimer(nodeLoggingComponentType, this._initialInterval);
-			this.startApplicationTimer(nodeLoggingComponentType, this._initialInterval);
+			this.startApplicationTimer(this._initialInterval);
 		}
 	}
 
@@ -138,6 +190,10 @@ export class HealthService implements IHealthComponent {
 			this._started = false;
 			this.stopTimer();
 			this.stopApplicationTimer();
+
+			await this._backgroundTaskComponent.unregisterHandler(
+				HealthService._APPLICATION_HEALTH_TASK_TYPE
+			);
 		}
 	}
 
@@ -202,149 +258,6 @@ export class HealthService implements IHealthComponent {
 				this._regularComponents = allHealth;
 				this.groupHealthByName([...this._regularComponents, ...this._applicationComponents]);
 				this.startTimer(nodeLoggingComponentType, this._healthCheckInterval);
-			}
-		}
-	}
-
-	/**
-	 * Run the application health lifecycle (init, application, teardown) across all registered components.
-	 * @param nodeLoggingComponentType The node logging component type to log any errors that occur.
-	 * @returns A promise that resolves when the lifecycle is complete and the next check is scheduled.
-	 * @internal
-	 */
-	private async checkApplicationHealth(nodeLoggingComponentType?: string): Promise<void> {
-		this.stopApplicationTimer();
-
-		const engineCoreFactory = Factory.getFactory("engine-core");
-
-		if (engineCoreFactory) {
-			// Use a replica of the IEngineCore interface to avoid a circular dependency on the engine-core package.
-			const engineCore = engineCoreFactory.getIfExists<{
-				getContextIds: () => IContextIds | undefined;
-				getRegisteredComponents: () => Promise<
-					{
-						instanceType: string;
-						component: IComponent;
-					}[]
-				>;
-			}>("engine");
-
-			if (engineCore) {
-				const engineContextIds = engineCore.getContextIds() ?? {};
-				const registeredInstances = await engineCore.getRegisteredComponents();
-
-				// Pass 1: Init - providers populate healthContextIds with any IDs they establish
-				const healthContextIds: IContextIds = {
-					// Only use Node from the main engine context.
-					// All other keys should be provided by healthApplicationInit of each component
-					// as we don't want to use real ids.
-					[ContextIdKeys.Node]: engineContextIds[ContextIdKeys.Node]
-				};
-				for (const registeredInstance of registeredInstances) {
-					if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
-						const initMethod = registeredInstance.component.healthApplicationInit?.bind(
-							registeredInstance.component
-						);
-						if (Is.function(initMethod)) {
-							try {
-								await initMethod(healthContextIds);
-							} catch (error) {
-								const nodeLogging =
-									ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
-								await nodeLogging?.log({
-									level: "error",
-									source: HealthService.CLASS_NAME,
-									message: "componentHealthApplicationInitFailed",
-									data: { className: registeredInstance.component.className() },
-									error: BaseError.fromError(error)
-								});
-							}
-						}
-					}
-				}
-
-				// Pass 2: Application health check wrapped in combined engine + init context
-				const allHealth: IHealth[] = [];
-				const lazyPromises: Promise<void>[] = [];
-
-				await ContextIdStore.run(healthContextIds, async () => {
-					for (const registeredInstance of registeredInstances) {
-						if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
-							const healthMethod = registeredInstance.component.healthApplication?.bind(
-								registeredInstance.component
-							);
-							if (Is.function(healthMethod)) {
-								let fired = false;
-								let callback: HealthApplicationCallback = async () => {};
-								const lazyPromise = new Promise<void>(resolve => {
-									callback = async (result: IHealth[]) => {
-										if (!fired) {
-											fired = true;
-											allHealth.push(...result);
-											resolve();
-										}
-									};
-								});
-
-								try {
-									const result = await healthMethod(callback);
-									// undefined result indicates that the component will provide the
-									// result asynchronously via the callback
-									if (Is.undefined(result)) {
-										lazyPromises.push(lazyPromise);
-									} else {
-										allHealth.push(...result);
-									}
-								} catch (error) {
-									const nodeLogging =
-										ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
-									await nodeLogging?.log({
-										level: "error",
-										source: HealthService.CLASS_NAME,
-										message: "componentHealthApplicationCheckFailed",
-										data: { className: registeredInstance.component.className() },
-										error: BaseError.fromError(error)
-									});
-								}
-							}
-						}
-					}
-				});
-
-				// Wait for all deferred callbacks before proceeding to teardown
-				if (lazyPromises.length > 0) {
-					await Promise.allSettled(lazyPromises);
-				}
-
-				// Pass 3: Teardown wrapped in combined engine + init context
-				await ContextIdStore.run(healthContextIds, async () => {
-					for (const registeredInstance of registeredInstances.slice().reverse()) {
-						if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
-							const teardownMethod = registeredInstance.component.healthApplicationTeardown?.bind(
-								registeredInstance.component
-							);
-							if (Is.function(teardownMethod)) {
-								try {
-									await teardownMethod();
-								} catch (error) {
-									const nodeLogging =
-										ComponentFactory.getIfExists<ILoggingComponent>(nodeLoggingComponentType);
-									await nodeLogging?.log({
-										level: "error",
-										source: HealthService.CLASS_NAME,
-										message: "componentHealthApplicationTeardownFailed",
-										data: { className: registeredInstance.component.className() },
-										error: BaseError.fromError(error)
-									});
-								}
-							}
-						}
-					}
-				});
-
-				this._applicationComponents = allHealth;
-				this.groupHealthByName([...this._regularComponents, ...this._applicationComponents]);
-				this.startApplicationTimer(nodeLoggingComponentType, this._healthApplicationCheckInterval);
 			}
 		}
 	}
@@ -422,19 +335,16 @@ export class HealthService implements IHealthComponent {
 
 	/**
 	 * Start the application health lifecycle timer.
-	 * @param nodeLoggingComponentType The node logging component type.
 	 * @param interval The interval for the timer.
 	 * @internal
 	 */
-	private startApplicationTimer(
-		nodeLoggingComponentType: string | undefined,
-		interval: number
-	): void {
+	private startApplicationTimer(interval: number): void {
 		if (this._started) {
-			this._healthApplicationTimer = globalThis.setTimeout(
-				async () => this.checkApplicationHealth(nodeLoggingComponentType),
-				interval
-			);
+			this._healthApplicationTimer = globalThis.setTimeout(async () => {
+				this.stopApplicationTimer();
+
+				await this._backgroundTaskComponent.create(HealthService._APPLICATION_HEALTH_TASK_TYPE);
+			}, interval);
 		}
 	}
 

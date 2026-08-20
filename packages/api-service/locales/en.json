@@ -2,9 +2,7 @@
 	"error": {
 		"healthService": {
 			"componentHealthCheckFailed": "Health check failed for component \"{className}\"",
-			"componentHealthApplicationInitFailed": "Application health check init failed for component \"{className}\"",
-			"componentHealthApplicationCheckFailed": "Application health check failed for component \"{className}\"",
-			"componentHealthApplicationTeardownFailed": "Application health check teardown failed for component \"{className}\""
+			"applicationHealthCheckTaskFailed": "Application health check background task failed"
 		}
 	}
 }
