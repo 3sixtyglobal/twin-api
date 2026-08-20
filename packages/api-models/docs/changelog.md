@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2-next.12](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.11...api-models-v0.9.2-next.12) (2026-08-20)
+
+
+### Features
+
+* configurable request body limits per route ([#266](https://github.com/iotaledger/twin-api/issues/266)) ([50bfca5](https://github.com/iotaledger/twin-api/commit/50bfca5238c25af6c687a1cd003ca3d70a97d477))
+
 ## [0.9.2-next.11](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.10...api-models-v0.9.2-next.11) (2026-08-20)
 
 

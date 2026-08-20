@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.2-next.12](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.9.2-next.11...api-server-fastify-v0.9.2-next.12) (2026-08-20)
+
+
+### Features
+
+* configurable request body limits per route ([#266](https://github.com/iotaledger/twin-api/issues/266)) ([50bfca5](https://github.com/iotaledger/twin-api/commit/50bfca5238c25af6c687a1cd003ca3d70a97d477))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.9.2-next.11 to 0.9.2-next.12
+    * @twin.org/api-models bumped from 0.9.2-next.11 to 0.9.2-next.12
+    * @twin.org/api-processors bumped from 0.9.2-next.11 to 0.9.2-next.12
+
 ## [0.9.2-next.11](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.9.2-next.10...api-server-fastify-v0.9.2-next.11) (2026-08-20)
 
 
