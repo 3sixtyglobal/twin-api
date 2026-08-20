@@ -29,4 +29,10 @@ export interface IHealthServiceConfig {
 	 * @default false
 	 */
 	includeErrorStack?: boolean;
+
+	/**
+	 * The URL of the module to use for the application health background task.
+	 * If not provided, the default healthApplicationTask module will be used.
+	 */
+	overrideApplicationHealthTaskHandler?: string;
 }

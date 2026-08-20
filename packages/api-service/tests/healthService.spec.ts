@@ -1,9 +1,10 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { HealthStatus, type IHealth } from "@twin.org/api-models";
-import type { IContextIds } from "@twin.org/context";
-import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
-import { Factory } from "@twin.org/core";
+import type { IBackgroundTask } from "@twin.org/background-task-models";
+import { TaskStatus } from "@twin.org/background-task-models";
+import { ContextIdStore } from "@twin.org/context";
+import { ComponentFactory, Factory } from "@twin.org/core";
 import { HealthService } from "../src/healthService.js";
 
 function makeComponent(...healthEntries: IHealth[]): {
@@ -25,6 +26,12 @@ describe("HealthService", () => {
 		getRegisteredComponents: ReturnType<typeof vi.fn>;
 	};
 	let mockFactory: Factory<unknown>;
+	let mockBackgroundTaskComponent: {
+		className: () => string;
+		registerHandler: ReturnType<typeof vi.fn>;
+		create: ReturnType<typeof vi.fn>;
+		unregisterHandler: ReturnType<typeof vi.fn>;
+	};
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
@@ -42,6 +49,14 @@ describe("HealthService", () => {
 
 		vi.spyOn(Factory, "getFactory").mockReturnValue(mockFactory);
 		vi.spyOn(ContextIdStore, "run").mockImplementation(async (contextIds, fn) => fn());
+
+		mockBackgroundTaskComponent = {
+			className: (): string => "MockBackgroundTask",
+			registerHandler: vi.fn().mockResolvedValue(undefined),
+			create: vi.fn().mockResolvedValue("task-id"),
+			unregisterHandler: vi.fn().mockResolvedValue(undefined)
+		};
+		vi.spyOn(ComponentFactory, "get").mockReturnValue(mockBackgroundTaskComponent);
 	});
 
 	afterEach(() => {
@@ -241,230 +256,98 @@ describe("HealthService", () => {
 		});
 
 		describe("application health cycle", () => {
-			test("calls healthApplicationInit, healthApplication, healthApplicationTeardown in order", async () => {
-				const callOrder: string[] = [];
-				mockGetRegisteredComponents.mockResolvedValue([
-					{
-						component: {
-							className: vi.fn().mockReturnValue("MockComponent"),
-							healthApplicationInit: vi.fn().mockImplementation(async () => {
-								callOrder.push("init");
-							}),
-							healthApplication: vi.fn().mockImplementation(async () => {
-								callOrder.push("application");
-								return [];
-							}),
-							healthApplicationTeardown: vi.fn().mockImplementation(async () => {
-								callOrder.push("teardown");
-							})
+			let capturedCallback:
+				((task: IBackgroundTask<undefined, IHealth[]>) => Promise<void>) | undefined;
+			let mockRegisterHandler: ReturnType<typeof vi.fn>;
+			let mockCreate: ReturnType<typeof vi.fn>;
+
+			beforeEach(() => {
+				capturedCallback = undefined;
+				mockRegisterHandler = vi
+					.fn()
+					.mockImplementation(
+						async (
+							taskType: string,
+							module: string,
+							method: string,
+							callback: (task: IBackgroundTask<undefined, IHealth[]>) => Promise<void>
+						) => {
+							capturedCallback = callback;
 						}
-					}
-				]);
+					);
+				mockCreate = vi.fn().mockResolvedValue("task-id-1");
 
-				const service = new HealthService();
-				await startAndTick(service);
-
-				expect(callOrder).toEqual(["init", "application", "teardown"]);
+				const bgTaskComponent = {
+					className: (): string => "MockBackgroundTask",
+					registerHandler: mockRegisterHandler,
+					create: mockCreate,
+					unregisterHandler: vi.fn().mockResolvedValue(undefined)
+				};
+				vi.spyOn(ComponentFactory, "get").mockReturnValue(bgTaskComponent);
 			});
 
-			test("calls healthApplicationTeardown in reverse registration order", async () => {
-				const teardownOrder: string[] = [];
-				mockGetRegisteredComponents.mockResolvedValue(
-					["A", "B", "C"].map(name => ({
-						component: {
-							className: vi.fn().mockReturnValue(name),
-							healthApplication: vi.fn().mockResolvedValue([]),
-							healthApplicationTeardown: vi.fn().mockImplementation(async () => {
-								teardownOrder.push(name);
-							})
-						}
-					}))
-				);
+			async function completeTask(
+				result: IHealth[],
+				status: TaskStatus = TaskStatus.Success
+			): Promise<void> {
+				await capturedCallback?.({
+					id: "urn:task:1",
+					type: "health-application-check",
+					threadId: "t1",
+					dateCreated: "",
+					dateModified: "",
+					status,
+					result: status === TaskStatus.Success ? result : undefined
+				});
+			}
 
+			test("registers handler on start", async () => {
 				const service = new HealthService();
-				await startAndTick(service);
-
-				expect(teardownOrder).toEqual(["C", "B", "A"]);
-			});
-
-			test("combines engine context IDs with those gathered during init", async () => {
-				mockGetContextIds.mockReturnValue({ [ContextIdKeys.Node]: "n1" });
-				mockGetRegisteredComponents.mockResolvedValue([
-					{
-						component: {
-							className: vi.fn().mockReturnValue("MockComponent"),
-							healthApplicationInit: vi.fn().mockImplementation(async (...args: [IContextIds]) => {
-								args[0].session = "s1";
-							}),
-							healthApplication: vi.fn().mockResolvedValue([])
-						}
-					}
-				]);
-
-				const service = new HealthService();
-				await startAndTick(service);
-
-				expect(ContextIdStore.run).toHaveBeenCalledWith(
-					{ [ContextIdKeys.Node]: "n1", session: "s1" },
+				await service.start();
+				expect(mockRegisterHandler).toHaveBeenCalledWith(
+					"health-application-check",
+					expect.stringContaining("healthApplicationTask.js"),
+					"checkApplicationHealth",
 					expect.any(Function)
 				);
 			});
 
-			test("wraps teardown in the same combined context as application health", async () => {
-				mockGetContextIds.mockReturnValue({ [ContextIdKeys.Node]: "n1" });
-				mockGetRegisteredComponents.mockResolvedValue([
-					{
-						component: {
-							className: vi.fn().mockReturnValue("MockComponent"),
-							healthApplicationInit: vi.fn().mockImplementation(async (...args: [IContextIds]) => {
-								args[0].session = "s1";
-							}),
-							healthApplication: vi.fn().mockResolvedValue([]),
-							healthApplicationTeardown: vi.fn().mockResolvedValue(undefined)
-						}
-					}
-				]);
-
+			test("creates a task when the application health timer fires", async () => {
 				const service = new HealthService();
 				await startAndTick(service);
-
-				const runCalls = vi.mocked(ContextIdStore.run).mock.calls;
-				expect(runCalls).toHaveLength(2);
-				expect(runCalls[0][0]).toEqual({ [ContextIdKeys.Node]: "n1", session: "s1" });
-				expect(runCalls[1][0]).toEqual({ [ContextIdKeys.Node]: "n1", session: "s1" });
+				expect(mockCreate).toHaveBeenCalledWith("health-application-check");
 			});
 
-			test("healthApplicationInit error does not prevent healthApplication from running", async () => {
-				const healthApplication = vi
-					.fn()
-					.mockResolvedValue([{ source: "db", status: HealthStatus.Ok }]);
-				mockGetRegisteredComponents.mockResolvedValue([
-					{
-						component: {
-							className: vi.fn().mockReturnValue("MockComponent"),
-							healthApplicationInit: vi.fn().mockRejectedValue(new Error("init failed")),
-							healthApplication
-						}
-					}
-				]);
-
+			test("merges application health result into overall health on task success", async () => {
 				const service = new HealthService();
 				await startAndTick(service);
-
-				expect(healthApplication).toHaveBeenCalled();
-				expect((await service.healthStatus()).components[0].source).toBe("db");
+				await completeTask([{ source: "application", status: HealthStatus.Ok }]);
+				const { components } = await service.healthStatus();
+				expect(components.some(c => c.source === "application")).toBe(true);
 			});
 
-			test("healthApplicationTeardown error does not affect the collected health result", async () => {
-				mockGetRegisteredComponents.mockResolvedValue([
-					{
-						component: {
-							className: vi.fn().mockReturnValue("MockComponent"),
-							healthApplication: vi
-								.fn()
-								.mockResolvedValue([{ source: "db", status: HealthStatus.Ok }]),
-							healthApplicationTeardown: vi.fn().mockRejectedValue(new Error("teardown failed"))
-						}
-					}
-				]);
-
+			test("does not update application health components on task failure", async () => {
 				const service = new HealthService();
 				await startAndTick(service);
-
-				expect((await service.healthStatus()).components[0].source).toBe("db");
+				await completeTask([], TaskStatus.Failed);
+				const { components } = await service.healthStatus();
+				expect(components).toEqual([]);
 			});
 
-			test("healthApplication runs when component has no healthApplicationInit or healthApplicationTeardown", async () => {
-				mockGetRegisteredComponents.mockResolvedValue([
-					{
-						component: {
-							className: vi.fn().mockReturnValue("MockComponent"),
-							healthApplication: vi
-								.fn()
-								.mockResolvedValue([{ source: "db", status: HealthStatus.Ok }])
-						}
-					}
-				]);
-
+			test("restarts the application timer after task success", async () => {
 				const service = new HealthService();
 				await startAndTick(service);
-
-				expect((await service.healthStatus()).components[0].source).toBe("db");
+				await completeTask([]);
+				await vi.advanceTimersByTimeAsync(300000);
+				expect(mockCreate).toHaveBeenCalledTimes(2);
 			});
 
-			describe("lazy healthApplication (returns undefined, uses callback)", () => {
-				test("result from lazy callback is included in the health status", async () => {
-					mockGetRegisteredComponents.mockResolvedValue([
-						{
-							component: {
-								className: vi.fn().mockReturnValue("MockComponent"),
-								healthApplication: vi
-									.fn()
-									.mockImplementation(async (callback: (r: IHealth[]) => void) => {
-										callback([{ source: "lazy", status: HealthStatus.Ok }]);
-										return undefined;
-									})
-							}
-						}
-					]);
-
-					const service = new HealthService();
-					await startAndTick(service);
-
-					const { components } = await service.healthStatus();
-					expect(components.some(c => c.source === "lazy")).toBe(true);
-				});
-
-				test("teardown runs after the lazy callback fires", async () => {
-					const callOrder: string[] = [];
-
-					mockGetRegisteredComponents.mockResolvedValue([
-						{
-							component: {
-								className: vi.fn().mockReturnValue("MockComponent"),
-								healthApplication: vi
-									.fn()
-									.mockImplementation(async (callback: (r: IHealth[]) => void) => {
-										callback([]);
-										callOrder.push("callback");
-										return undefined;
-									}),
-								healthApplicationTeardown: vi.fn().mockImplementation(async () => {
-									callOrder.push("teardown");
-								})
-							}
-						}
-					]);
-
-					const service = new HealthService();
-					await startAndTick(service);
-
-					expect(callOrder).toEqual(["callback", "teardown"]);
-				});
-
-				test("second and subsequent callback invocations are ignored", async () => {
-					mockGetRegisteredComponents.mockResolvedValue([
-						{
-							component: {
-								className: vi.fn().mockReturnValue("MockComponent"),
-								healthApplication: vi
-									.fn()
-									.mockImplementation(async (callback: (r: IHealth[]) => void) => {
-										callback([{ source: "first", status: HealthStatus.Ok }]);
-										callback([{ source: "second", status: HealthStatus.Ok }]);
-										return undefined;
-									})
-							}
-						}
-					]);
-
-					const service = new HealthService();
-					await startAndTick(service);
-
-					const { components } = await service.healthStatus();
-					expect(components.some(c => c.source === "first")).toBe(true);
-					expect(components.some(c => c.source === "second")).toBe(false);
-				});
+			test("restarts the application timer after task failure", async () => {
+				const service = new HealthService();
+				await startAndTick(service);
+				await completeTask([], TaskStatus.Failed);
+				await vi.advanceTimersByTimeAsync(300000);
+				expect(mockCreate).toHaveBeenCalledTimes(2);
 			});
 
 			test("combines results from both the regular and application health timers", async () => {
@@ -474,17 +357,13 @@ describe("HealthService", () => {
 							className: vi.fn().mockReturnValue("MockComponent"),
 							health: vi
 								.fn()
-								.mockResolvedValue([{ source: "connectivity", status: HealthStatus.Ok }]),
-							healthApplication: vi
-								.fn()
-								.mockResolvedValue([{ source: "application", status: HealthStatus.Ok }])
+								.mockResolvedValue([{ source: "connectivity", status: HealthStatus.Ok }])
 						}
 					}
 				]);
-
 				const service = new HealthService();
 				await startAndTick(service);
-
+				await completeTask([{ source: "application", status: HealthStatus.Ok }]);
 				const { components } = await service.healthStatus();
 				const sources = components.map(c => c.source);
 				expect(sources).toContain("connectivity");
