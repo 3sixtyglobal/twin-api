@@ -58,3 +58,12 @@ Whether to include stack traces in health check error details.
 ```ts
 false
 ```
+
+***
+
+### overrideApplicationHealthTaskHandler? {#overrideapplicationhealthtaskhandler}
+
+> `optional` **overrideApplicationHealthTaskHandler?**: `string`
+
+The URL of the module to use for the application health background task.
+If not provided, the default healthApplicationTask module will be used.
