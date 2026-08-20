@@ -1,20 +1,103 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import http from "node:http";
 import {
 	HealthCategory,
 	HealthStatus,
 	HttpErrorHelper,
-	type IHttpResponse
+	type IHttpResponse,
+	type IRestRoute,
+	type IRestRouteProcessor
 } from "@twin.org/api-models";
 import { JwtMimeTypeProcessor, LoggingProcessor } from "@twin.org/api-processors";
 import { ComponentFactory, Mutex, NotImplementedError } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
-import { HeaderTypes, HttpMethod, HttpStatusCode } from "@twin.org/web";
+import { HeaderTypes, HttpMethod, HttpStatusCode, MimeTypes } from "@twin.org/web";
 import { io } from "socket.io-client";
 import { FastifyWebServer } from "../src/fastifyWebServer.js";
 
 const basePort = Math.floor(Math.random() * 1000);
 let port = 13000 + basePort;
+
+/**
+ * Create a route processor which returns an ok response.
+ * @returns The processor.
+ */
+function createOkProcessor(): IRestRouteProcessor {
+	return {
+		className: () => "RouteProcessor",
+		process: async (request, response) => {
+			response.statusCode = HttpStatusCode.ok;
+			response.body = {};
+		}
+	};
+}
+
+/**
+ * Create a POST route with an optional body limit name.
+ * @param path The route path.
+ * @param bodyLimit The optional body limit name.
+ * @returns The route.
+ */
+function createPostRoute(path: string, bodyLimit?: string): IRestRoute {
+	return {
+		operationId: "bodyLimitTest",
+		path,
+		method: HttpMethod.POST,
+		tag: "test",
+		summary: "",
+		handler: async () => ({}),
+		bodyLimit
+	};
+}
+
+/**
+ * Post a JSON body with an exact byte length.
+ * @param path The route path to post to.
+ * @param byteLength The total body length in bytes, including the 11 byte JSON wrapper.
+ * @returns The response.
+ */
+async function postJsonBody(path: string, byteLength: number): Promise<Response> {
+	return fetch(`http://localhost:${port}${path}`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ data: "x".repeat(byteLength - 11) })
+	});
+}
+
+/**
+ * Post a request declaring a body byte length without streaming the payload,
+ * so an over limit response can be read before the connection is closed.
+ * @param path The route path to post to.
+ * @param byteLength The declared body length in bytes.
+ * @returns The response status code and body.
+ */
+async function postDeclaredLength(
+	path: string,
+	byteLength: number
+): Promise<{ statusCode?: number; body: string }> {
+	return new Promise((resolve, reject) => {
+		const request = http.request(
+			{
+				host: "localhost",
+				port,
+				path,
+				method: "POST",
+				headers: { "Content-Type": "application/json", "Content-Length": byteLength }
+			},
+			response => {
+				let data = "";
+				response.on("data", chunk => {
+					data += chunk;
+				});
+				response.on("end", () => resolve({ statusCode: response.statusCode, body: data }));
+			}
+		);
+		request.on("error", reject);
+		request.setTimeout(5000, () => request.destroy(new Error("Timed out waiting for response")));
+		request.flushHeaders();
+	});
+}
 
 describe("api-server-fastify", () => {
 	beforeEach(async () => {
@@ -747,5 +830,190 @@ describe("api-server-fastify", () => {
 		expect(logEntries[1].message.startsWith("responseMessage")).toEqual(true);
 
 		await server.stop();
+	});
+
+	test("Can accept a body at the default limit and reject one above it", async () => {
+		const server = new FastifyWebServer();
+		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
+			port
+		});
+		await server.start();
+
+		const withinResponse = await postJsonBody("/", 1048576);
+		const overResponse = await postDeclaredLength("/", 1048577);
+
+		expect(withinResponse.status).toEqual(200);
+		expect(overResponse.statusCode).toEqual(413);
+		expect(overResponse.body).toContain("FST_ERR_CTP_BODY_TOO_LARGE");
+
+		await server.stop();
+	});
+
+	test("Can accept a body at a configured default limit and reject one above it", async () => {
+		const server = new FastifyWebServer();
+		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
+			port,
+			bodyLimits: { default: 2048 }
+		});
+		await server.start();
+
+		const withinResponse = await postJsonBody("/", 2048);
+		const overResponse = await postJsonBody("/", 2049);
+
+		expect(withinResponse.status).toEqual(200);
+		expect(overResponse.status).toEqual(413);
+
+		await server.stop();
+	});
+
+	test("Can raise the limit for a route named large while other routes keep the default", async () => {
+		const server = new FastifyWebServer();
+		await server.build(
+			[createOkProcessor()],
+			[createPostRoute("/big", "large"), createPostRoute("/small")],
+			undefined,
+			undefined,
+			{ port }
+		);
+		await server.start();
+
+		const bigResponse = await postJsonBody("/big", 26214400);
+		const bigOverResponse = await postDeclaredLength("/big", 26214401);
+		const smallResponse = await postDeclaredLength("/small", 1048577);
+
+		expect(bigResponse.status).toEqual(200);
+		expect(bigOverResponse.statusCode).toEqual(413);
+		expect(smallResponse.statusCode).toEqual(413);
+
+		await server.stop();
+	});
+
+	test("Can lower the limit for a route using a configured name", async () => {
+		const server = new FastifyWebServer();
+		await server.build(
+			[createOkProcessor()],
+			[createPostRoute("/", "tiny")],
+			undefined,
+			undefined,
+			{
+				port,
+				bodyLimits: { tiny: 512 }
+			}
+		);
+		await server.start();
+
+		const withinResponse = await postJsonBody("/", 512);
+		const overResponse = await postJsonBody("/", 513);
+
+		expect(withinResponse.status).toEqual(200);
+		expect(overResponse.status).toEqual(413);
+
+		await server.stop();
+	});
+
+	test("Can apply the route limit to the JSON-LD content type processor", async () => {
+		const server = new FastifyWebServer();
+		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
+			port,
+			bodyLimits: { default: 2048 }
+		});
+		await server.start();
+
+		const postJsonLdBody = async (byteLength: number): Promise<Response> => {
+			const wrapperLength = JSON.stringify({ "@context": "https://schema.org", data: "" }).length;
+			return fetch(`http://localhost:${port}/`, {
+				method: "POST",
+				headers: { "Content-Type": MimeTypes.JsonLd },
+				body: JSON.stringify({
+					"@context": "https://schema.org",
+					data: "x".repeat(byteLength - wrapperLength)
+				})
+			});
+		};
+
+		const withinResponse = await postJsonLdBody(2048);
+		const overResponse = await postJsonLdBody(2049);
+
+		expect(withinResponse.status).toEqual(200);
+		expect(overResponse.status).toEqual(413);
+
+		await server.stop();
+	});
+
+	test("Can use a custom JSON-LD mime type processor instead of the built-in one", async () => {
+		let handled = 0;
+		const server = new FastifyWebServer({
+			mimeTypeProcessors: [
+				{
+					className: () => "custom-json-ld",
+					getTypes: () => [MimeTypes.JsonLd],
+					handle: async () => {
+						handled++;
+						return {};
+					}
+				}
+			]
+		});
+		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
+			port
+		});
+		await server.start();
+
+		const response = await fetch(`http://localhost:${port}/`, {
+			method: "POST",
+			headers: { "Content-Type": MimeTypes.JsonLd },
+			body: JSON.stringify({ "@context": "https://schema.org" })
+		});
+
+		expect(response.status).toEqual(200);
+		expect(handled).toEqual(1);
+
+		await server.stop();
+	});
+
+	test("Can fail to build when a route names an unknown body limit", async () => {
+		const server = new FastifyWebServer();
+		await expect(
+			server.build([createOkProcessor()], [createPostRoute("/", "huge")], undefined, undefined, {
+				port
+			})
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fastifyWebServer.unknownBodyLimit",
+			properties: { route: "/", bodyLimit: "huge" }
+		});
+	});
+
+	test("Can fail to build when a body limit value is not a positive integer", async () => {
+		await expect(
+			new FastifyWebServer().build(
+				[createOkProcessor()],
+				[createPostRoute("/")],
+				undefined,
+				undefined,
+				{
+					port,
+					bodyLimits: { default: 0 }
+				}
+			)
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fastifyWebServer.invalidBodyLimit",
+			properties: { bodyLimit: "default", value: 0 }
+		});
+
+		await expect(
+			new FastifyWebServer().build(
+				[createOkProcessor()],
+				[createPostRoute("/", "tiny")],
+				undefined,
+				undefined,
+				{ port, bodyLimits: { tiny: 1.5 } }
+			)
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fastifyWebServer.invalidBodyLimit",
+			properties: { bodyLimit: "tiny", value: 1.5 }
+		});
 	});
 });

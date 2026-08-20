@@ -92,4 +92,10 @@ export interface IRestRoute<
 	 * Exclude the route from being included in the spec file.
 	 */
 	excludeFromSpec?: boolean;
+
+	/**
+	 * The name of the body size limit to apply to the route, only used by methods that carry a body.
+	 * If not provided, the default body size limit will be used. The body size limits are defined in the web server options.
+	 */
+	bodyLimit?: string;
 }
