@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2-next.13](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.12...api-models-v0.9.2-next.13) (2026-08-20)
+
+
+### Features
+
+* add hardcoded keys ([296a6a3](https://github.com/iotaledger/twin-api/commit/296a6a3ae55d29b54526defdf28ab774735243c9))
+
 ## [0.9.2-next.12](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.2-next.11...api-models-v0.9.2-next.12) (2026-08-20)
 
 
