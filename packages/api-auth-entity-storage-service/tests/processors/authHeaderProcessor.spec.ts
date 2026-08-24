@@ -1,8 +1,8 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
+import { HttpContextIdKeys, HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
-import { ComponentFactory, UnauthorizedError } from "@twin.org/core";
+import { ComponentFactory, type IError, UnauthorizedError } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -66,7 +66,7 @@ describe("AuthHeaderProcessor", () => {
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
-				// No tid — single-tenant or tenant-free token; only user+org verified.
+				// No tid - single-tenant or tenant-free token; only user+org verified.
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				expect(verified).toEqual(["user", "organization"]);
 				return {
@@ -190,6 +190,34 @@ describe("AuthHeaderProcessor", () => {
 		expect(contextIds[ContextIdKeys.User]).toBeUndefined();
 	});
 
+	it("should include the error stack in the unauthorized response when includeErrorStack is enabled", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+			token: "jwt",
+			location: "authorization"
+		});
+		vi.spyOn(TokenHelper, "verify").mockRejectedValue(
+			new UnauthorizedError(TokenHelper.CLASS_NAME, "invalidToken")
+		);
+		const stackProcessor = new AuthHeaderProcessor({ config: { includeErrorStack: true } });
+
+		await stackProcessor.start();
+
+		const response: IHttpResponse = {};
+		await stackProcessor.pre(
+			{ headers: {} } as never,
+			response,
+			{ requiredScope: ["user-admin"] } as never,
+			{ [ContextIdKeys.Tenant]: "tenant-1" },
+			{}
+		);
+
+		expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
+		expect((response.body as IError).stack).toBeDefined();
+	});
+
 	it("should return unauthorized when token passwordVersion is stale after a password change", async () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
 			[ContextIdKeys.Node]: "node-1"
@@ -210,7 +238,7 @@ describe("AuthHeaderProcessor", () => {
 		const encryptedTenantId = "encrypted:tenant-1";
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
-				// pver=0 in token but user has passwordVersion=1 — simulate stale token
+				// pver=0 in token but user has passwordVersion=1 - simulate stale token
 				const verified = await verifyUser?.("did:user:123", "did:org:456", encryptedTenantId, 0);
 				if (!verified?.includes("user")) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "userNotVerified");
@@ -262,7 +290,7 @@ describe("AuthHeaderProcessor", () => {
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
-				// No tid — pver behaviour is the focus here.
+				// No tid - pver behaviour is the focus here.
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, undefined);
 				expect(verified).toEqual(["user", "organization"]);
 				return {
@@ -383,7 +411,7 @@ describe("AuthHeaderProcessor", () => {
 
 		await processor.start();
 
-		// Context had a different tenant — the token is the authoritative source.
+		// Context had a different tenant - the token is the authoritative source.
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: "tenant-b"
 		};
@@ -400,6 +428,87 @@ describe("AuthHeaderProcessor", () => {
 		expect(contextIds[ContextIdKeys.Tenant]).toBe("tenant-a");
 		expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
 		expect(contextIds[ContextIdKeys.UserOrganization]).toBe("did:org:456");
+	});
+
+	it("should store the JWT scope claim in HttpContextIdKeys.Scope", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1",
+			[ContextIdKeys.Organization]: "did:org:456"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "hashed",
+			salt: "salt",
+			scope: "user-admin,global-admin",
+			passwordVersion: 0
+		});
+		vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+			token: "jwt",
+			location: "authorization"
+		});
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
+				await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+				return {
+					header: { alg: "EdDSA" },
+					payload: { sub: "did:user:123", org: "did:org:456", scope: "user-admin,global-admin" }
+				};
+			}
+		);
+
+		await processor.start();
+
+		const contextIds: IContextIds = {};
+		const response: IHttpResponse = {};
+		await processor.pre(
+			{ headers: {} } as never,
+			response,
+			{ requiredScope: ["user-admin"] } as never,
+			contextIds,
+			{}
+		);
+
+		expect(response.statusCode).toBeUndefined();
+		expect(contextIds[HttpContextIdKeys.Scope]).toBe("user-admin,global-admin");
+	});
+
+	it("should not set HttpContextIdKeys.Scope when the JWT has no scope claim", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1",
+			[ContextIdKeys.Organization]: "did:org:456"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "hashed",
+			salt: "salt",
+			scope: ""
+		});
+		vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+			token: "jwt",
+			location: "authorization"
+		});
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
+				await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+				return {
+					header: { alg: "EdDSA" },
+					payload: { sub: "did:user:123", org: "did:org:456" }
+				};
+			}
+		);
+
+		await processor.start();
+
+		const contextIds: IContextIds = {};
+		const response: IHttpResponse = {};
+		await processor.pre({ headers: {} } as never, response, {} as never, contextIds, {});
+
+		expect(response.statusCode).toBeUndefined();
+		expect(contextIds[HttpContextIdKeys.Scope]).toBeUndefined();
 	});
 
 	it("should succeed in single-tenant setup when neither context nor token has a tenant", async () => {
@@ -422,7 +531,7 @@ describe("AuthHeaderProcessor", () => {
 		});
 		vi.spyOn(TokenHelper, "verify").mockImplementation(
 			async (vault, nodeId, key, token, requiredScope, verifyUser) => {
-				// No tid in token — single-tenant system, no tenant verification required.
+				// No tid in token - single-tenant system, no tenant verification required.
 				const verified = await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
 				expect(verified).toEqual(["user", "organization"]);
 				return {
@@ -434,7 +543,7 @@ describe("AuthHeaderProcessor", () => {
 
 		await processor.start();
 
-		// No tenant in context — single-tenant system.
+		// No tenant in context - single-tenant system.
 		const contextIds: IContextIds = {};
 		const response: IHttpResponse = {};
 		await processor.pre(

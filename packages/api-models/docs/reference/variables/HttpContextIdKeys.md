@@ -41,3 +41,16 @@ Public Origin of the request.
 > `readonly` **LocalOrigin**: `"localOrigin"` = `"localOrigin"`
 
 Local Origin of the request.
+
+### Scope {#scope}
+
+> `readonly` **Scope**: `"scope"` = `"scope"`
+
+The comma-separated scope claim from the verified JWT for the current request.
+
+### OriginalTenant {#originaltenant}
+
+> `readonly` **OriginalTenant**: `"originalTenant"` = `"originalTenant"`
+
+The caller's original tenant ID before an escalated privilege tenant override was applied.
+Only present when overrideTenant substitution is active for the current request.

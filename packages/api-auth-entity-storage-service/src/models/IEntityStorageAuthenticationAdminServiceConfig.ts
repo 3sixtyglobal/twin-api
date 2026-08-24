@@ -10,4 +10,9 @@ export interface IEntityStorageAuthenticationAdminServiceConfig {
 	 * @default 8
 	 */
 	minPasswordLength?: number;
+
+	/**
+	 * The scope value that grants escalated privilege to assign privileged roles. Defaults to "global-admin".
+	 */
+	escalatedPrivilegeScope?: string;
 }

@@ -45,4 +45,10 @@ export interface IWebServerOptions {
 	 * If not provided, it will be determined from the incoming request.
 	 */
 	publicOrigin?: string;
+
+	/**
+	 * Named body size limits in bytes for REST routes, referenced by a route's bodyLimit name.
+	 * Merged over the server's built-in limits; the "default" entry applies to routes with no bodyLimit name.
+	 */
+	bodyLimits?: { [name: string]: number };
 }

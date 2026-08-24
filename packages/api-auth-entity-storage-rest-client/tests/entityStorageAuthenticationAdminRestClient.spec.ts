@@ -1,5 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IAuthenticationUser } from "@twin.org/api-auth-entity-storage-models";
 import { GuardError } from "@twin.org/core";
 import { HttpMethod } from "@twin.org/web";
 import { EntityStorageAuthenticationAdminRestClient } from "../src/entityStorageAuthenticationAdminRestClient.js";
@@ -37,7 +38,9 @@ describe("EntityStorageAuthenticationAdminRestClient", () => {
 
 	describe("create", () => {
 		test("throws when user is undefined", async () => {
-			await expect(client.create(undefined as never)).rejects.toMatchObject({
+			await expect(
+				client.create(undefined as unknown as IAuthenticationUser & { password: string })
+			).rejects.toMatchObject({
 				name: GuardError.CLASS_NAME,
 				message: "guard.objectUndefined"
 			});
@@ -82,7 +85,9 @@ describe("EntityStorageAuthenticationAdminRestClient", () => {
 
 	describe("update", () => {
 		test("throws when user is undefined", async () => {
-			await expect(client.update(undefined as never)).rejects.toMatchObject({
+			await expect(
+				client.update(undefined as unknown as IAuthenticationUser)
+			).rejects.toMatchObject({
 				name: GuardError.CLASS_NAME,
 				message: "guard.objectUndefined"
 			});

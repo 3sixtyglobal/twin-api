@@ -7,6 +7,12 @@ import type { IHealthServiceConfig } from "./IHealthServiceConfig.js";
  */
 export interface IHealthServiceConstructorOptions {
 	/**
+	 * The background task component type to use for running application health checks.
+	 * @default background-task
+	 */
+	backgroundTaskComponentType?: string;
+
+	/**
 	 * The configuration for the service.
 	 */
 	config?: IHealthServiceConfig;

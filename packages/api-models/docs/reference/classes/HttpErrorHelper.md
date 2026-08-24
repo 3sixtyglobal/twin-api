@@ -64,7 +64,7 @@ The status code and additional error data.
 
 ### buildResponse() {#buildresponse}
 
-> `static` **buildResponse**(`response`, `error`, `statusCode`): `void`
+> `static` **buildResponse**(`response`, `error`, `statusCode`, `includeStack`): `void`
 
 Build an error response.
 
@@ -87,6 +87,12 @@ The error to build the response for.
 `HttpStatusCode`
 
 The status code to use for the error.
+
+##### includeStack
+
+`boolean`
+
+Should the stack be included in the error.
 
 #### Returns
 

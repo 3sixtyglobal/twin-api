@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { readFile } from "node:fs/promises";
 import type { IInformationComponent, IServerInfo } from "@twin.org/api-models";
-import { Guards, Is } from "@twin.org/core";
-import { EngineCoreFactory } from "@twin.org/engine-models";
+import { Factory, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import type { IInformationServiceConstructorOptions } from "./models/IInformationServiceConstructorOptions.js";
 
@@ -138,10 +137,15 @@ export class InformationService implements IInformationComponent {
 	public async readyz(): Promise<{
 		status: "ready" | "not ready";
 	}> {
-		const engine = EngineCoreFactory.getIfExists("engine");
+		const engineCoreFactory = Factory.getFactory("engine-core");
 
-		if (engine?.isStarted()) {
-			return { status: "ready" };
+		if (engineCoreFactory) {
+			// Use a replica of the IEngineCore interface to avoid a circular dependency on the engine-core package.
+			const engine = engineCoreFactory.getIfExists<{ isStarted: () => boolean }>("engine");
+
+			if (engine?.isStarted()) {
+				return { status: "ready" };
+			}
 		}
 
 		return { status: "not ready" };

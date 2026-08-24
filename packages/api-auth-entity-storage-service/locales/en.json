@@ -13,7 +13,8 @@
 			"updateUserFailed": "Updating the user failed",
 			"removeUserFailed": "Removing the user failed",
 			"updatePasswordFailed": "Updating the user's password failed",
-			"userNotFound": "The user with the specified e-mail could not be found \"{notFoundId}\""
+			"userNotFound": "The user with the specified e-mail could not be found \"{notFoundId}\"",
+			"insufficientScopeForEscalatedPrivilege": "Caller does not hold the required scope \"{scopeName}\" to assign a role with escalated privilege."
 		},
 		"authHeaderProcessor": {
 			"nodeIdNotSet": "The node ID has not been set"

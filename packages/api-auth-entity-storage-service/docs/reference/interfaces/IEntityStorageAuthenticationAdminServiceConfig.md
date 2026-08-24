@@ -15,3 +15,11 @@ The minimum password length.
 ```ts
 8
 ```
+
+***
+
+### escalatedPrivilegeScope? {#escalatedprivilegescope}
+
+> `optional` **escalatedPrivilegeScope?**: `string`
+
+The scope value that grants escalated privilege to assign privileged roles. Defaults to "global-admin".

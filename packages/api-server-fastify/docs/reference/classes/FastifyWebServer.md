@@ -5,6 +5,7 @@ Implementation of the web server using Fastify.
 ## Implements
 
 - `IWebServer`\<`FastifyInstance`\>
+- `IHealthProviderComponent`
 
 ## Constructors
 
@@ -162,14 +163,41 @@ A promise that resolves when the server has shut down all connections.
 
 > **health**(): `Promise`\<`IHealth`[]\>
 
-Perform a health check on the server by fetching its own root endpoint.
+Returns the health status of the component.
 
 #### Returns
 
 `Promise`\<`IHealth`[]\>
 
-The health status of the server.
+The health status of the component, can return multiple entries for elements within the component.
 
 #### Implementation of
 
-`IWebServer.health`
+`IHealthProviderComponent.health`
+
+***
+
+### healthApplication() {#healthapplication}
+
+> **healthApplication**(`callback`): `Promise`\<`IHealth`[] \| `undefined`\>
+
+Verify the root endpoint is reachable and returns a body by making a real HTTP request.
+Skipped when GET / is not registered on this server instance.
+
+#### Parameters
+
+##### callback
+
+`HealthApplicationCallback`
+
+The callback to invoke when a deferred health result is ready.
+
+#### Returns
+
+`Promise`\<`IHealth`[] \| `undefined`\>
+
+The application health status of the component.
+
+#### Implementation of
+
+`IHealthProviderComponent.healthApplication`

@@ -172,6 +172,11 @@ describe("HttpUrlHelper", () => {
 			expect(params[0]).toBe("consumerOrg");
 		});
 
+		it("should add or replace a parameter on a relative url", () => {
+			const result = HttpUrlHelper.addQueryStringParam("/api/items?cursor=old", "cursor", "new");
+			expect(result).toBe("/api/items?cursor=new");
+		});
+
 		it("should return the url unchanged when url is empty", () => {
 			const result = HttpUrlHelper.addQueryStringParam("", "page", "1");
 			expect(result).toBe("");

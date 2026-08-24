@@ -34,6 +34,14 @@ The dependencies for the identity connector.
 
 Runtime name for the class.
 
+***
+
+### DEFAULT\_ESCALATED\_PRIVILEGE\_SCOPE {#default_escalated_privilege_scope}
+
+> `readonly` `static` **DEFAULT\_ESCALATED\_PRIVILEGE\_SCOPE**: `string` = `"global-admin"`
+
+The scope value that grants permission to assign privileged roles.
+
 ## Methods
 
 ### className() {#classname}

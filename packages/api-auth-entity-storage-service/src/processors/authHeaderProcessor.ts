@@ -73,6 +73,12 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 	private readonly _cookieName: string;
 
 	/**
+	 * Include the stack with errors.
+	 * @internal
+	 */
+	private readonly _includeErrorStack: boolean;
+
+	/**
 	 * The node identity.
 	 * @internal
 	 */
@@ -99,6 +105,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 
 		this._signingKeyName = options?.config?.signingKeyName ?? "auth-signing";
 		this._cookieName = options?.config?.cookieName ?? AuthHeaderProcessor.DEFAULT_COOKIE_NAME;
+		this._includeErrorStack = options?.config?.includeErrorStack ?? false;
 	}
 
 	/**
@@ -153,7 +160,7 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				let tenantOrganizationId: string | undefined;
 				let tenantPublicOrigin: string | undefined;
 
-				await TokenHelper.verify(
+				const { payload } = await TokenHelper.verify(
 					this._vaultConnector,
 					this._nodeId,
 					this._signingKeyName,
@@ -207,6 +214,9 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				contextIds[ContextIdKeys.Organization] = tenantOrganizationId ?? this._nodeOrganizationId;
 				contextIds[ContextIdKeys.User] = user?.identity;
 				contextIds[ContextIdKeys.UserOrganization] = user?.organization;
+				contextIds[HttpContextIdKeys.Scope] = Is.stringValue(payload.scope)
+					? payload.scope
+					: undefined;
 
 				// If the tenant has a custom public origin, we set it in the context for downstream processors to use.
 				if (Is.stringValue(tenantPublicOrigin)) {
@@ -217,7 +227,12 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 				processorState.authTokenLocation = tokenAndLocation?.location;
 			} catch (err) {
 				const error = BaseError.fromError(err);
-				HttpErrorHelper.buildResponse(response, error, HttpStatusCode.unauthorized);
+				HttpErrorHelper.buildResponse(
+					response,
+					error,
+					HttpStatusCode.unauthorized,
+					this._includeErrorStack
+				);
 			}
 		}
 	}

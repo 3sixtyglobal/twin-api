@@ -34,11 +34,18 @@ export class SingleTenantProcessor implements IBaseRouteProcessor {
 	private _nodeOrganizationId?: string;
 
 	/**
+	 * Include the stack with errors.
+	 * @internal
+	 */
+	private readonly _includeErrorStack: boolean;
+
+	/**
 	 * Create a new instance of SingleTenantProcessor.
 	 * @param options Options for the processor.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-useless-constructor
-	constructor(options?: ISingleTenantProcessorConstructorOptions) {}
+	constructor(options?: ISingleTenantProcessorConstructorOptions) {
+		this._includeErrorStack = options?.config?.includeErrorStack ?? false;
+	}
 
 	/**
 	 * Returns the class name of the component.
@@ -97,7 +104,8 @@ export class SingleTenantProcessor implements IBaseRouteProcessor {
 				HttpErrorHelper.buildResponse(
 					response,
 					BaseError.fromError(err),
-					HttpStatusCode.unauthorized
+					HttpStatusCode.unauthorized,
+					this._includeErrorStack
 				);
 			}
 		}

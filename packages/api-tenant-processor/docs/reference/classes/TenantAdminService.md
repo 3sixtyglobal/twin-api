@@ -5,6 +5,7 @@ Service for performing tenant administration operations.
 ## Implements
 
 - `ITenantAdminComponent`
+- `IHealthProviderComponent`
 
 ## Constructors
 
@@ -299,3 +300,76 @@ The tenants and the next cursor if more tenants are available.
 #### Implementation of
 
 `ITenantAdminComponent.query`
+
+***
+
+### healthApplicationInit() {#healthapplicationinit}
+
+> **healthApplicationInit**(`contextIds`): `Promise`\<`void`\>
+
+Provision a temporary tenant for the application health cycle.
+
+#### Parameters
+
+##### contextIds
+
+`IContextIds`
+
+Accumulated context IDs; receives the provisional tenant ID.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when provisioning is complete.
+
+#### Implementation of
+
+`IHealthProviderComponent.healthApplicationInit`
+
+***
+
+### healthApplication() {#healthapplication}
+
+> **healthApplication**(`callback`): `Promise`\<`IHealth`[] \| `undefined`\>
+
+Verify the provisioned tenant can be retrieved.
+The tenant ID is read from the active context set by the init pass.
+
+#### Parameters
+
+##### callback
+
+`HealthApplicationCallback`
+
+The callback to invoke when a deferred health result is ready.
+
+#### Returns
+
+`Promise`\<`IHealth`[] \| `undefined`\>
+
+The health entries for this component.
+
+#### Implementation of
+
+`IHealthProviderComponent.healthApplication`
+
+***
+
+### healthApplicationTeardown() {#healthapplicationteardown}
+
+> **healthApplicationTeardown**(): `Promise`\<`void`\>
+
+Remove the temporary tenant provisioned during init.
+The tenant ID is read from the active context set by the init pass.
+Does nothing when no tenant ID is present.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when teardown is complete.
+
+#### Implementation of
+
+`IHealthProviderComponent.healthApplicationTeardown`

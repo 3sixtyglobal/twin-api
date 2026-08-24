@@ -1,7 +1,25 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { ITenant, ITenantAdminComponent } from "@twin.org/api-models";
-import { AlreadyExistsError, GeneralError, Guards, Is, NotFoundError, Url } from "@twin.org/core";
+import {
+	type HealthApplicationCallback,
+	HealthCategory,
+	HealthStatus,
+	type IHealth,
+	type IHealthProviderComponent,
+	type ITenant,
+	type ITenantAdminComponent
+} from "@twin.org/api-models";
+import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
+import {
+	AlreadyExistsError,
+	BaseError,
+	GeneralError,
+	Guards,
+	type IError,
+	Is,
+	NotFoundError,
+	Url
+} from "@twin.org/core";
 import { ComparisonOperator, type EntityCondition } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -15,7 +33,7 @@ import { TenantIdHelper } from "./utils/tenantIdHelper.js";
 /**
  * Service for performing tenant administration operations.
  */
-export class TenantAdminService implements ITenantAdminComponent {
+export class TenantAdminService implements ITenantAdminComponent, IHealthProviderComponent {
 	/**
 	 * Runtime name for the class.
 	 */
@@ -54,12 +72,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 	public async get(tenantId: string): Promise<ITenant> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId, 32);
 
-		let tenant;
-
-		try {
-			tenant = await this._entityStorageConnector.get(tenantId);
-		} catch {}
-
+		const tenant = await this._entityStorageConnector.get(tenantId);
 		if (!Is.object(tenant)) {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", tenantId);
 		}
@@ -76,12 +89,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 	public async getByApiKey(apiKey: string): Promise<ITenant> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(apiKey), apiKey, 32);
 
-		let tenant;
-
-		try {
-			tenant = await this._entityStorageConnector.get(apiKey, "apiKey");
-		} catch {}
-
+		const tenant = await this._entityStorageConnector.get(apiKey, "apiKey");
 		if (!Is.object(tenant)) {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", apiKey);
 		}
@@ -98,11 +106,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 	public async getByPublicOrigin(publicOrigin: string): Promise<ITenant> {
 		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(publicOrigin), publicOrigin);
 
-		let tenant;
-
-		try {
-			tenant = await this._entityStorageConnector.get(publicOrigin, "publicOrigin");
-		} catch {}
+		const tenant = await this._entityStorageConnector.get(publicOrigin, "publicOrigin");
 
 		if (!Is.object(tenant)) {
 			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", publicOrigin);
@@ -124,11 +128,7 @@ export class TenantAdminService implements ITenantAdminComponent {
 	): Promise<ITenant> {
 		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(organizationId), organizationId);
 
-		let tenant: Tenant | undefined;
-
-		try {
-			tenant = await this._entityStorageConnector.get(organizationId, "organizationId");
-		} catch {}
+		let tenant = await this._entityStorageConnector.get(organizationId, "organizationId");
 
 		if (!Is.object(tenant) && includeLegacy) {
 			const result = await this._entityStorageConnector.query(
@@ -381,9 +381,78 @@ export class TenantAdminService implements ITenantAdminComponent {
 		);
 
 		return {
-			tenants: result.entities as ITenant[],
+			tenants: (result.entities as Tenant[]).map(e => this.entityToModel(e)),
 			cursor: result.cursor
 		};
+	}
+
+	/**
+	 * Provision a temporary tenant for the application health cycle.
+	 * @param contextIds Accumulated context IDs; receives the provisional tenant ID.
+	 * @returns A promise that resolves when provisioning is complete.
+	 */
+	public async healthApplicationInit(contextIds: IContextIds): Promise<void> {
+		const organizationId = contextIds[ContextIdKeys.Organization];
+		if (!Is.stringValue(organizationId)) {
+			return;
+		}
+		const tenantId = await this.create({
+			apiKey: TenantIdHelper.generateApiKey(),
+			organizationId,
+			label: "health-check"
+		});
+		contextIds[ContextIdKeys.Tenant] = tenantId;
+	}
+
+	/**
+	 * Verify the provisioned tenant can be retrieved.
+	 * The tenant ID is read from the active context set by the init pass.
+	 * @param callback The callback to invoke when a deferred health result is ready.
+	 * @returns The health entries for this component.
+	 */
+	public async healthApplication(
+		callback: HealthApplicationCallback
+	): Promise<IHealth[] | undefined> {
+		const contextIds = await ContextIdStore.getContextIds();
+		const tenantId = contextIds?.[ContextIdKeys.Tenant];
+
+		if (!Is.stringValue(tenantId)) {
+			return [];
+		}
+
+		let status: HealthStatus = HealthStatus.Ok;
+		let healthError: IError | undefined;
+
+		try {
+			await this.get(tenantId);
+		} catch (err) {
+			status = HealthStatus.Error;
+			healthError = BaseError.fromError(err);
+		}
+
+		return [
+			{
+				source: TenantAdminService.CLASS_NAME,
+				category: HealthCategory.Application,
+				status,
+				error: healthError
+			}
+		];
+	}
+
+	/**
+	 * Remove the temporary tenant provisioned during init.
+	 * The tenant ID is read from the active context set by the init pass.
+	 * Does nothing when no tenant ID is present.
+	 * @returns A promise that resolves when teardown is complete.
+	 */
+	public async healthApplicationTeardown(): Promise<void> {
+		const contextIds = await ContextIdStore.getContextIds();
+		const tenantId = contextIds?.[ContextIdKeys.Tenant];
+
+		if (Is.stringValue(tenantId)) {
+			await this.remove(tenantId);
+		}
 	}
 
 	/**

@@ -15,4 +15,9 @@ export interface ITenantProcessorConfig {
 	 * The list of endpoint paths that should be checked for an api key header, can be regexp strings. Defaults to ["/login$"].
 	 */
 	apiKeyEndpoints?: string[];
+
+	/**
+	 * Include the stack with errors.
+	 */
+	includeErrorStack?: boolean;
 }

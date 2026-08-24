@@ -60,6 +60,12 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	private readonly _apiKeyEndpoints: RegExp[];
 
 	/**
+	 * Include the stack with errors.
+	 * @internal
+	 */
+	private readonly _includeErrorStack: boolean;
+
+	/**
 	 * Create a new instance of TenantProcessor.
 	 * @param options Options for the processor.
 	 */
@@ -71,6 +77,7 @@ export class TenantProcessor implements IBaseRouteProcessor {
 		this._apiKeyEndpoints = (
 			options?.config?.apiKeyEndpoints ?? TenantProcessor._DEFAULT_API_KEY_ENDPOINTS
 		).map((ep: string) => new RegExp(ep));
+		this._includeErrorStack = options?.config?.includeErrorStack ?? false;
 	}
 
 	/**
@@ -137,7 +144,8 @@ export class TenantProcessor implements IBaseRouteProcessor {
 				HttpErrorHelper.buildResponse(
 					response,
 					BaseError.fromError(err),
-					HttpStatusCode.unauthorized
+					HttpStatusCode.unauthorized,
+					this._includeErrorStack
 				);
 			}
 		}

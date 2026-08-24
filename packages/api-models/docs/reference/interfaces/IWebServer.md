@@ -107,21 +107,3 @@ A promise that resolves when the server has shut down all connections.
 #### Overrides
 
 `IComponent.stop`
-
-***
-
-### health() {#health}
-
-> **health**(): `Promise`\<`IHealth`[]\>
-
-Returns the health status of the component.
-
-#### Returns
-
-`Promise`\<`IHealth`[]\>
-
-The health status of the component, can return multiple entries for elements within the component.
-
-#### Overrides
-
-`IComponent.health`

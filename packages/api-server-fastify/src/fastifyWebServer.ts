@@ -3,10 +3,15 @@
 import FastifyCompress from "@fastify/compress";
 import FastifyCors from "@fastify/cors";
 import {
+	type HealthApplicationCallback,
+	HealthStatus,
+	HttpBodyLimit,
 	HttpContextIdKeys,
 	HttpErrorHelper,
+	type IHealthProviderComponent,
 	type IBaseRoute,
 	type IBaseRouteProcessor,
+	type IHealth,
 	type IHttpRequest,
 	type IHttpRequestPathParams,
 	type IHttpRequestQuery,
@@ -19,7 +24,8 @@ import {
 	type ISocketRouteProcessor,
 	type ISocketServerRequest,
 	type IWebServer,
-	type IWebServerOptions
+	type IWebServerOptions,
+	HealthCategory
 } from "@twin.org/api-models";
 import { JsonLdMimeTypeProcessor } from "@twin.org/api-processors";
 import { ContextIdStore, type IContextIds } from "@twin.org/context";
@@ -27,9 +33,7 @@ import {
 	BaseError,
 	ComponentFactory,
 	GeneralError,
-	HealthStatus,
 	type IError,
-	type IHealth,
 	Is,
 	RandomHelper,
 	StringHelper,
@@ -42,7 +46,8 @@ import {
 	HttpMethod,
 	HttpStatusCode,
 	type IHttpHeaders,
-	HeaderHelper
+	HeaderHelper,
+	MimeTypes
 } from "@twin.org/web";
 import Fastify, {
 	type FastifyInstance,
@@ -57,7 +62,7 @@ import type { IFastifyWebServerConstructorOptions } from "./models/IFastifyWebSe
 /**
  * Implementation of the web server using Fastify.
  */
-export class FastifyWebServer implements IWebServer<FastifyInstance> {
+export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthProviderComponent {
 	/**
 	 * Runtime name for the class.
 	 */
@@ -74,6 +79,15 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	 * @internal
 	 */
 	private static readonly _DEFAULT_HOST: string = "localhost";
+
+	/**
+	 * Default named body size limits for routes.
+	 * @internal
+	 */
+	private static readonly _DEFAULT_BODY_LIMITS: { [name: string]: number } = {
+		[HttpBodyLimit.Default]: 1048576,
+		[HttpBodyLimit.Large]: 26214400
+	};
 
 	/**
 	 * The logging component type.
@@ -158,8 +172,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 
 		this._mimeTypeProcessors = options?.mimeTypeProcessors ?? [];
 
-		const hasJsonLd = this._mimeTypeProcessors.find(
-			processor => processor.className() === "json-ld"
+		const hasJsonLd = this._mimeTypeProcessors.some(processor =>
+			processor.getTypes().includes(MimeTypes.JsonLd)
 		);
 		if (!hasJsonLd) {
 			this._mimeTypeProcessors.push(new JsonLdMimeTypeProcessor());
@@ -213,7 +227,12 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			message: "building"
 		});
 
-		this._localOrigin = `http://${options?.host ?? "localhost"}:${options?.port ?? 3000}`;
+		let localHost = options?.host ?? "127.0.0.1";
+		if (localHost === "0.0.0.0") {
+			localHost = "127.0.0.1";
+		}
+
+		this._localOrigin = `http://${localHost}:${options?.port ?? 3000}`;
 
 		if (Is.stringValue(options?.publicOrigin)) {
 			const publicUrl = Url.tryParseExact(options.publicOrigin);
@@ -329,18 +348,63 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const addresses = this._fastify.addresses();
 
 				const protocol = Is.object(this._fastify.initialConfig.https) ? "https://" : "http://";
+				const normalizeAnyHost = (address: string): string => {
+					if (address === "0.0.0.0") {
+						return "127.0.0.1";
+					}
+					if (address === "::") {
+						return "::1";
+					}
+
+					return address;
+				};
+
+				const formatAddress = (
+					address: string,
+					family?: string,
+					forceProtocol?: string
+				): string => {
+					const displayAddress = normalizeAnyHost(address);
+					const isIPv6 =
+						family === "IPv6" || (Is.stringValue(displayAddress) && displayAddress.includes(":"));
+
+					return `${forceProtocol ?? protocol}${isIPv6 ? "[" : ""}${displayAddress}${isIPv6 ? "]" : ""}`;
+				};
+
+				const startupAddresses = addresses.map(a => {
+					const formatted = formatAddress(a.address, a.family, protocol);
+
+					return `${formatted}:${a.port}`;
+				});
+
+				for (const origin of [this._localOrigin, this._publicOrigin]) {
+					if (Is.stringValue(origin)) {
+						const originUrl = Url.tryParseExact(origin);
+						if (!Is.empty(originUrl)) {
+							const originParts = originUrl.parts();
+							const formatted = formatAddress(
+								originParts.host,
+								undefined,
+								`${originParts.schema}://`
+							);
+							startupAddresses.push(
+								`${formatted}${Is.integer(originParts.port) ? `:${originParts.port}` : ""}`
+							);
+						} else {
+							startupAddresses.push(origin);
+						}
+					}
+				}
+
+				const distinctStartupAddresses = [...new Set(startupAddresses)];
+
 				await this._logging?.log({
 					level: "info",
 					ts: Date.now(),
 					source: FastifyWebServer.CLASS_NAME,
 					message: "started",
 					data: {
-						addresses: addresses
-							.map(
-								a =>
-									`${protocol}${a.family === "IPv6" ? "[" : ""}${a.address}${a.family === "IPv6" ? "]" : ""}:${a.port}`
-							)
-							.join(", ")
+						addresses: distinctStartupAddresses.join(", ")
 					}
 				});
 				this._started = true;
@@ -376,8 +440,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 	}
 
 	/**
-	 * Perform a health check on the server by fetching its own root endpoint.
-	 * @returns The health status of the server.
+	 * Returns the health status of the component.
+	 * @returns The health status of the component, can return multiple entries for elements within the component.
 	 */
 	public async health(): Promise<IHealth[]> {
 		let healthCheck: IHealth | undefined;
@@ -385,19 +449,84 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			healthCheck = {
 				source: FastifyWebServer.CLASS_NAME,
 				status: HealthStatus.Ok,
-				description: "description",
+				category: HealthCategory.Connectivity,
+				description: "healthConnectivityDescription",
 				message: "reachable"
 			};
 		} else {
 			healthCheck = {
 				source: FastifyWebServer.CLASS_NAME,
 				status: HealthStatus.Error,
-				description: "description",
+				category: HealthCategory.Connectivity,
+				description: "healthConnectivityDescription",
 				message: "unreachable"
 			};
 		}
 
 		return [healthCheck];
+	}
+
+	/**
+	 * Verify the root endpoint is reachable and returns a body by making a real HTTP request.
+	 * Skipped when GET / is not registered on this server instance.
+	 * @param callback The callback to invoke when a deferred health result is ready.
+	 * @returns The application health status of the component.
+	 */
+	public async healthApplication(
+		callback: HealthApplicationCallback
+	): Promise<IHealth[] | undefined> {
+		if (!this._fastify.hasRoute({ method: "GET", url: "/" })) {
+			return [];
+		}
+
+		if (!Is.stringValue(this._localOrigin)) {
+			return [
+				{
+					source: FastifyWebServer.CLASS_NAME,
+					status: HealthStatus.Error,
+					category: HealthCategory.Application,
+					description: "healthApplicationDescription",
+					message: "serverNotBuilt"
+				}
+			];
+		}
+
+		try {
+			const response = await fetch(`${this._localOrigin}/`);
+			const body = await response.text();
+
+			if (response.ok && Is.stringValue(body)) {
+				return [
+					{
+						source: FastifyWebServer.CLASS_NAME,
+						status: HealthStatus.Ok,
+						category: HealthCategory.Application,
+						description: "healthApplicationDescription",
+						message: "rootEndpointReachable"
+					}
+				];
+			}
+
+			return [
+				{
+					source: FastifyWebServer.CLASS_NAME,
+					status: HealthStatus.Error,
+					category: HealthCategory.Application,
+					description: "healthApplicationDescription",
+					message: "rootEndpointError"
+				}
+			];
+		} catch (error) {
+			return [
+				{
+					source: FastifyWebServer.CLASS_NAME,
+					status: HealthStatus.Error,
+					category: HealthCategory.Application,
+					description: "healthApplicationDescription",
+					error: BaseError.fromError(error)
+				}
+			];
+		}
 	}
 
 	/**
@@ -411,6 +540,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		restRoutes?: IRestRoute[]
 	): Promise<void> {
 		if (Is.arrayValue(restRouteProcessors) && Is.arrayValue(restRoutes)) {
+			const bodyLimits = this.resolveBodyLimits();
 			for (const restRoute of restRoutes) {
 				let path = StringHelper.trimTrailingSlashes(restRoute.path);
 				if (!path.startsWith("/")) {
@@ -426,11 +556,45 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 				const method = restRoute.method.toLowerCase() as
 					"get" | "post" | "put" | "patch" | "delete" | "options" | "head";
 
-				this._fastify[method](path, async (request, reply) =>
+				const bodyLimitKey = Is.stringValue(restRoute.bodyLimit)
+					? restRoute.bodyLimit
+					: HttpBodyLimit.Default;
+				const bodyLimit = bodyLimits[bodyLimitKey];
+				if (Is.empty(bodyLimit)) {
+					throw new GeneralError(FastifyWebServer.CLASS_NAME, "unknownBodyLimit", {
+						route: path,
+						bodyLimit: bodyLimitKey
+					});
+				}
+
+				this._fastify[method](path, { bodyLimit }, async (request, reply) =>
 					this.handleRequestRest(restRouteProcessors, request, reply, restRoute)
 				);
 			}
 		}
+	}
+
+	/**
+	 * Merge the configured body limits over the built-in ones and validate them.
+	 * @returns The named body limits in bytes.
+	 * @throws GeneralError If a limit is not a positive integer.
+	 * @internal
+	 */
+	private resolveBodyLimits(): { [name: string]: number } {
+		const bodyLimits = {
+			...FastifyWebServer._DEFAULT_BODY_LIMITS,
+			...this._options?.bodyLimits
+		};
+		for (const name of Object.keys(bodyLimits)) {
+			const bodyLimit = bodyLimits[name];
+			if (!Is.integer(bodyLimit) || bodyLimit <= 0) {
+				throw new GeneralError(FastifyWebServer.CLASS_NAME, "invalidBodyLimit", {
+					bodyLimit: name,
+					value: bodyLimit
+				});
+			}
+		}
+		return bodyLimits;
 	}
 
 	/**
@@ -496,7 +660,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 							this._includeErrorStack
 						);
 						const response: IHttpResponse = {};
-						HttpErrorHelper.buildResponse(response, error, httpStatusCode);
+						HttpErrorHelper.buildResponse(response, error, httpStatusCode, this._includeErrorStack);
 						socket.emit(topic, response);
 					}
 
@@ -646,7 +810,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 			});
 		} catch (err) {
 			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
-			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode, this._includeErrorStack);
 			hasPreError = true;
 		}
 
@@ -680,7 +844,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 					err,
 					this._includeErrorStack
 				);
-				HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+				HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode, this._includeErrorStack);
 			}
 		}
 
@@ -907,7 +1071,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance> {
 		} catch (err) {
 			// Emit any unhandled errors manually
 			const { error, httpStatusCode } = HttpErrorHelper.processError(err, this._includeErrorStack);
-			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode);
+			HttpErrorHelper.buildResponse(httpResponse, error, httpStatusCode, this._includeErrorStack);
 			await postProcessEmit(requestTopic, httpResponse, processorState);
 		}
 	}

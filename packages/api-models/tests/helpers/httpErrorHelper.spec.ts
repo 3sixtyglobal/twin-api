@@ -3,7 +3,9 @@
 import {
 	AlreadyExistsError,
 	ConflictError,
+	GeneralError,
 	GuardError,
+	type IError,
 	NotFoundError,
 	NotImplementedError,
 	UnauthorizedError,
@@ -142,9 +144,32 @@ describe("HttpErrorHelper", () => {
 		const failures = [{ property: "testProp", message: "validation error", reason: "invalid" }];
 		const error = new ValidationError("TestClass", "testProp", failures).toJsonObject();
 		const response: IHttpResponse = { headers: {} };
-		HttpErrorHelper.buildResponse(response, error, HttpStatusCode.badRequest);
+		HttpErrorHelper.buildResponse(response, error, HttpStatusCode.badRequest, false);
 		expect(response.statusCode).toBe(HttpStatusCode.badRequest);
 		expect(response.body).toEqual(error);
 		expect(response.headers?.["content-type"]).toContain("application/json");
+	});
+
+	it("should include the stack in the response body when requested", () => {
+		const { error, httpStatusCode } = HttpErrorHelper.processError(new Error("stack error"), true);
+		const response: IHttpResponse = { headers: {} };
+		HttpErrorHelper.buildResponse(response, error, httpStatusCode, true);
+		expect((response.body as IError).stack).toBeDefined();
+	});
+
+	it("should include the stack of the error cause chain in the response body when requested", () => {
+		const err = new GeneralError("TestClass", "testFailed", undefined, new Error("inner error"));
+		const { error, httpStatusCode } = HttpErrorHelper.processError(err, true);
+		const response: IHttpResponse = { headers: {} };
+		HttpErrorHelper.buildResponse(response, error, httpStatusCode, true);
+		expect((response.body as IError).stack).toBeDefined();
+		expect((response.body as IError).cause?.stack).toBeDefined();
+	});
+
+	it("should not include the stack in the response body when not requested", () => {
+		const { error, httpStatusCode } = HttpErrorHelper.processError(new Error("stack error"));
+		const response: IHttpResponse = { headers: {} };
+		HttpErrorHelper.buildResponse(response, error, httpStatusCode, false);
+		expect((response.body as IError).stack).toBeUndefined();
 	});
 });

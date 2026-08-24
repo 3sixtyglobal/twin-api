@@ -15,7 +15,7 @@ export abstract class BaseSocketClient {
 	 * @internal
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-unused-private-class-members
-	private readonly _implementationName: string;
+	private readonly _restClientClassName: string;
 
 	/**
 	 * The endpoint with prefix to send the requests to.
@@ -31,16 +31,16 @@ export abstract class BaseSocketClient {
 
 	/**
 	 * Create a new instance of BaseSocketClient.
-	 * @param implementationName The name of the class implementation socket calls.
+	 * @param restClientClassName The name of the class implementation socket calls.
 	 * @param config The configuration for the client.
 	 * @param pathPrefix The default prefix to use if none in configuration.
 	 */
-	constructor(implementationName: string, config: IBaseSocketClientConfig, pathPrefix: string) {
-		Guards.stringValue(implementationName, nameof(implementationName), implementationName);
-		Guards.object<IBaseSocketClientConfig>(implementationName, nameof(config), config);
-		Guards.stringValue(implementationName, nameof(config.endpoint), config.endpoint);
+	constructor(restClientClassName: string, config: IBaseSocketClientConfig, pathPrefix: string) {
+		Guards.stringValue(restClientClassName, nameof(restClientClassName), restClientClassName);
+		Guards.object<IBaseSocketClientConfig>(restClientClassName, nameof(config), config);
+		Guards.stringValue(restClientClassName, nameof(config.endpoint), config.endpoint);
 
-		this._implementationName = implementationName;
+		this._restClientClassName = restClientClassName;
 		this._endpointWithPrefix = StringHelper.trimTrailingSlashes(config.endpoint);
 
 		const finalPathPrefix = config.pathPrefix ?? pathPrefix;
@@ -54,6 +54,18 @@ export abstract class BaseSocketClient {
 			transports: ["websocket"],
 			autoConnect: false,
 			query: config.headers
+		});
+
+		this._socket.on("reconnect_attempt", () => {
+			this._socket.io.opts.transports = ["polling", "websocket"];
+		});
+
+		this._socket.on("connect_error", async err => {
+			await this.handleError(BaseError.fromError(err));
+		});
+
+		this._socket.on("connect", async () => {
+			await this.handleConnected();
 		});
 	}
 
@@ -99,20 +111,6 @@ export abstract class BaseSocketClient {
 	protected socketConnect(): boolean {
 		if (!this._socket.connected) {
 			this._socket.connect();
-
-			// If reconnect fails then also try polling mode.
-			this._socket.on("reconnect_attempt", () => {
-				this._socket.io.opts.transports = ["polling", "websocket"];
-			});
-
-			this._socket.on("connect_error", async err => {
-				await this.handleError(BaseError.fromError(err));
-			});
-
-			this._socket.on("connect", async () => {
-				await this.handleConnected();
-			});
-
 			return false;
 		}
 

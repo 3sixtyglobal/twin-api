@@ -1,14 +1,16 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type {
-	IHealthComponent,
-	IHttpRequestContext,
-	INoContentRequest,
-	IRestRoute,
-	IServerHealthResponse,
-	ITag
+import {
+	HealthCategory,
+	HealthStatus,
+	type IHealthComponent,
+	type IHttpRequestContext,
+	type INoContentRequest,
+	type IRestRoute,
+	type IServerHealthResponse,
+	type ITag
 } from "@twin.org/api-models";
-import { ComponentFactory, HealthStatus } from "@twin.org/core";
+import { ComponentFactory } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 
 /**
@@ -52,11 +54,13 @@ export function generateRestRoutesHealth(
 								components: [
 									{
 										source: "Database",
-										status: HealthStatus.Ok
+										status: HealthStatus.Ok,
+										category: HealthCategory.Connectivity
 									},
 									{
 										source: "Storage",
-										status: HealthStatus.Ok
+										status: HealthStatus.Ok,
+										category: HealthCategory.Connectivity
 									}
 								]
 							}
@@ -72,11 +76,13 @@ export function generateRestRoutesHealth(
 									{
 										source: "Database",
 										status: HealthStatus.Warning,
-										description: "slowRunning"
+										description: "slowRunning",
+										category: HealthCategory.Connectivity
 									},
 									{
 										source: "Storage",
-										status: HealthStatus.Ok
+										status: HealthStatus.Ok,
+										category: HealthCategory.Connectivity
 									}
 								]
 							}
@@ -91,12 +97,14 @@ export function generateRestRoutesHealth(
 								components: [
 									{
 										source: "Database",
-										status: "ok"
+										status: "ok",
+										category: HealthCategory.Connectivity
 									},
 									{
 										source: "Storage",
 										status: "error",
-										description: "storageFull"
+										description: "storageFull",
+										category: HealthCategory.Connectivity
 									}
 								]
 							}

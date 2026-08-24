@@ -106,6 +106,19 @@ The data for additional processors to run for this route.
 
 ***
 
+### disableTenantOverride? {#disabletenantoverride}
+
+> `optional` **disableTenantOverride?**: `boolean`
+
+Set to true to prevent callers from using the overrideTenant query parameter on this route.
+Tenant override is allowed by default, but you must hold the escalated privilege scope to use it.
+
+#### Inherited from
+
+[`IBaseRoute`](IBaseRoute.md).[`disableTenantOverride`](IBaseRoute.md#disabletenantoverride)
+
+***
+
 ### summary {#summary}
 
 > **summary**: `string`
@@ -213,3 +226,12 @@ Example objects of the response.
 > `optional` **excludeFromSpec?**: `boolean`
 
 Exclude the route from being included in the spec file.
+
+***
+
+### bodyLimit? {#bodylimit}
+
+> `optional` **bodyLimit?**: `string`
+
+The name of the body size limit to apply to the route, only used by methods that carry a body.
+If not provided, the default body size limit will be used. The body size limits are defined in the web server options.

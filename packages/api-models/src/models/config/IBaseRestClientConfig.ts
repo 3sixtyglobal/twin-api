@@ -33,6 +33,11 @@ export interface IBaseRestClientConfig {
 	includeCredentials?: boolean;
 
 	/**
+	 * The types of the processors to run around each request, resolved from the `RestClientProcessorFactory`.
+	 */
+	processorTypes?: string[];
+
+	/**
 	 * Hook to provide headers asynchronously.
 	 * @returns A promise that resolves to the headers.
 	 */

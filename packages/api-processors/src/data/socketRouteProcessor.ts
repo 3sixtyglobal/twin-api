@@ -128,7 +128,8 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 							notFoundId: request.url
 						}
 					},
-					HttpStatusCode.notFound
+					HttpStatusCode.notFound,
+					this._includeErrorStack
 				);
 			} else {
 				try {
@@ -158,7 +159,7 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 						this._includeErrorStack
 					);
 
-					HttpErrorHelper.buildResponse(response, error, httpStatusCode);
+					HttpErrorHelper.buildResponse(response, error, httpStatusCode, this._includeErrorStack);
 				}
 			}
 		}

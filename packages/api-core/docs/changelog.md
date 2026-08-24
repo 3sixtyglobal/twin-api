@@ -1,5 +1,211 @@
 # Changelog
 
+## [0.9.2-next.13](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.12...api-core-v0.9.2-next.13) (2026-08-20)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.12 to 0.9.2-next.13
+
+## [0.9.2-next.12](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.11...api-core-v0.9.2-next.12) (2026-08-20)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.11 to 0.9.2-next.12
+
+## [0.9.2-next.11](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.10...api-core-v0.9.2-next.11) (2026-08-20)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.10 to 0.9.2-next.11
+
+## [0.9.2-next.10](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.9...api-core-v0.9.2-next.10) (2026-08-17)
+
+
+### Features
+
+* add route template to IRestClientProcessorContext ([0d731c5](https://github.com/iotaledger/twin-api/commit/0d731c5de4711fd1b43c63ac15cb64f0287d1927))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.9 to 0.9.2-next.10
+
+## [0.9.2-next.9](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.8...api-core-v0.9.2-next.9) (2026-08-17)
+
+
+### Features
+
+* rest client processors ([#252](https://github.com/iotaledger/twin-api/issues/252)) ([b2adac5](https://github.com/iotaledger/twin-api/commit/b2adac56e774ee9586f259ef0280b8ac800b7474))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.8 to 0.9.2-next.9
+
+## [0.9.2-next.8](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.7...api-core-v0.9.2-next.8) (2026-08-14)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.7 to 0.9.2-next.8
+
+## [0.9.2-next.7](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.6...api-core-v0.9.2-next.7) (2026-08-12)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.6 to 0.9.2-next.7
+
+## [0.9.2-next.6](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.5...api-core-v0.9.2-next.6) (2026-08-07)
+
+
+### Features
+
+* health updates ([#243](https://github.com/iotaledger/twin-api/issues/243)) ([8360945](https://github.com/iotaledger/twin-api/commit/836094547839f63f2309d4bcd8c4d19128c73883))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.5 to 0.9.2-next.6
+
+## [0.9.2-next.5](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.4...api-core-v0.9.2-next.5) (2026-08-03)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.4 to 0.9.2-next.5
+
+## [0.9.2-next.4](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.3...api-core-v0.9.2-next.4) (2026-08-02)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.3 to 0.9.2-next.4
+
+## [0.9.2-next.3](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.2...api-core-v0.9.2-next.3) (2026-07-30)
+
+
+### Bug Fixes
+
+* url handling ([#235](https://github.com/iotaledger/twin-api/issues/235)) ([7e91d97](https://github.com/iotaledger/twin-api/commit/7e91d970a619e4515d5a809883a97624d45eba59))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.2 to 0.9.2-next.3
+
+## [0.9.2-next.2](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.1...api-core-v0.9.2-next.2) (2026-07-29)
+
+
+### Miscellaneous Chores
+
+* **api-core:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.1 to 0.9.2-next.2
+
+## [0.9.2-next.1](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.2-next.0...api-core-v0.9.2-next.1) (2026-07-28)
+
+
+### Features
+
+* add authentication generators and process features option ([a67edf1](https://github.com/iotaledger/twin-api/commit/a67edf1df212bd8ab94a40cddf5338551155696f))
+* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* allow prefix override in fetch calls ([16d1543](https://github.com/iotaledger/twin-api/commit/16d1543354ab40534108661af204ffe3442d6f0d))
+* enhanced rest handling ([#208](https://github.com/iotaledger/twin-api/issues/208)) ([99d5f3f](https://github.com/iotaledger/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
+* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* improved rest handling ([#211](https://github.com/iotaledger/twin-api/issues/211)) ([12c50ea](https://github.com/iotaledger/twin-api/commit/12c50ea7655276eed7a73d311ac5286476c98201))
+* location encoding ([#79](https://github.com/iotaledger/twin-api/issues/79)) ([c684465](https://github.com/iotaledger/twin-api/commit/c684465f2a871376152472bdecb6aa230b1101a1))
+* remove authentication generators ([#66](https://github.com/iotaledger/twin-api/issues/66)) ([adaa169](https://github.com/iotaledger/twin-api/commit/adaa1698df1c5ccb0ad645a7a7c0d3ef82ef6ac1))
+* tenantToken decoder on skipTenant routes + BaseRestClient query-string preservation ([#108](https://github.com/iotaledger/twin-api/issues/108)) ([1435357](https://github.com/iotaledger/twin-api/commit/1435357034b41130fc97238c728265e48f746f1e))
+* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update components ([dbf4639](https://github.com/iotaledger/twin-api/commit/dbf4639049f6631acbddaccaed1ecfaab807d343))
+* update components ([206a3dd](https://github.com/iotaledger/twin-api/commit/206a3dd082b7f0159777af5e020c2c0e9de836e5))
+* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+
+
+### Bug Fixes
+
+* merge per-request headers in BaseRestClient.fetch() ([#82](https://github.com/iotaledger/twin-api/issues/82)) ([57d4190](https://github.com/iotaledger/twin-api/commit/57d419006b1e24f81863a0d33936fcf1dfb0d4d3))
+* send blank query parameter values instead of silently dropping them in BaseRestClient.fetch() ([#220](https://github.com/iotaledger/twin-api/issues/220)) ([63f3c61](https://github.com/iotaledger/twin-api/commit/63f3c6136f2f6fba951d773b81e6414ad5247c27))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.2-next.0 to 0.9.2-next.1
+
 ## [0.9.1](https://github.com/iotaledger/twin-api/compare/api-core-v0.9.1...api-core-v0.9.1) (2026-07-27)
 
 

@@ -12,8 +12,8 @@ The health for the server.
 
 #### status
 
-> **status**: `HealthStatus`
+> **status**: [`HealthStatus`](../type-aliases/HealthStatus.md)
 
 #### components
 
-> **components**: `IHealth`[]
+> **components**: [`IHealth`](IHealth.md)[]

@@ -8,9 +8,11 @@
 - [HttpHeaderHelper](classes/HttpHeaderHelper.md)
 - [HttpParameterHelper](classes/HttpParameterHelper.md)
 - [HttpUrlHelper](classes/HttpUrlHelper.md)
+- [ScopeHelper](classes/ScopeHelper.md)
 
 ## Interfaces
 
+- [IHealth](interfaces/IHealth.md)
 - [IServerFavIconResponse](interfaces/IServerFavIconResponse.md)
 - [IServerHealthResponse](interfaces/IServerHealthResponse.md)
 - [IServerInfoResponse](interfaces/IServerInfoResponse.md)
@@ -18,6 +20,8 @@
 - [IServerReadyzResponse](interfaces/IServerReadyzResponse.md)
 - [IServerRootResponse](interfaces/IServerRootResponse.md)
 - [IServerSpecResponse](interfaces/IServerSpecResponse.md)
+- [IRestClientProcessor](interfaces/IRestClientProcessor.md)
+- [IRestClientProcessorContext](interfaces/IRestClientProcessorContext.md)
 - [IBaseRestClientConfig](interfaces/IBaseRestClientConfig.md)
 - [IBaseSocketClientConfig](interfaces/IBaseSocketClientConfig.md)
 - [IHttpRequest](interfaces/IHttpRequest.md)
@@ -59,6 +63,7 @@
 - [IWebServer](interfaces/IWebServer.md)
 - [IWebServerOptions](interfaces/IWebServerOptions.md)
 - [IHealthComponent](interfaces/IHealthComponent.md)
+- [IHealthProviderComponent](interfaces/IHealthProviderComponent.md)
 - [IInformationComponent](interfaces/IInformationComponent.md)
 - [IPlatformComponent](interfaces/IPlatformComponent.md)
 - [IServerInfo](interfaces/IServerInfo.md)
@@ -67,13 +72,21 @@
 
 ## Type Aliases
 
+- [HealthCategory](type-aliases/HealthCategory.md)
+- [HealthStatus](type-aliases/HealthStatus.md)
 - [HttpContextIdKeys](type-aliases/HttpContextIdKeys.md)
 - [IRestRouteEntryPoint](type-aliases/IRestRouteEntryPoint.md)
 - [ISocketRouteEntryPoint](type-aliases/ISocketRouteEntryPoint.md)
+- [HttpBodyLimit](type-aliases/HttpBodyLimit.md)
+- [HealthApplicationCallback](type-aliases/HealthApplicationCallback.md)
 
 ## Variables
 
 - [MimeTypeProcessorFactory](variables/MimeTypeProcessorFactory.md)
+- [RestClientProcessorFactory](variables/RestClientProcessorFactory.md)
 - [RestRouteProcessorFactory](variables/RestRouteProcessorFactory.md)
 - [SocketRouteProcessorFactory](variables/SocketRouteProcessorFactory.md)
+- [HealthCategory](variables/HealthCategory.md)
+- [HealthStatus](variables/HealthStatus.md)
 - [HttpContextIdKeys](variables/HttpContextIdKeys.md)
+- [HttpBodyLimit](variables/HttpBodyLimit.md)

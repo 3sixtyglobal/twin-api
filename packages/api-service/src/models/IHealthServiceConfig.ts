@@ -6,10 +6,16 @@
  */
 export interface IHealthServiceConfig {
 	/**
-	 * The interval for checking the health of the components and setting it in the health service.
+	 * The interval for checking the health of the components.
 	 * @default 60000
 	 */
 	healthCheckInterval?: number;
+
+	/**
+	 * The interval for running the application health lifecycle (init, application, teardown).
+	 * @default 300000
+	 */
+	healthCheckApplicationInterval?: number;
 
 	/**
 	 * The initial interval for checking the health of the components and setting it in the health service.
@@ -17,4 +23,16 @@ export interface IHealthServiceConfig {
 	 * @default 2000
 	 */
 	initialInterval?: number;
+
+	/**
+	 * Whether to include stack traces in health check error details.
+	 * @default false
+	 */
+	includeErrorStack?: boolean;
+
+	/**
+	 * The URL of the module to use for the application health background task.
+	 * If not provided, the default healthApplicationTask module will be used.
+	 */
+	overrideApplicationHealthTaskHandler?: string;
 }

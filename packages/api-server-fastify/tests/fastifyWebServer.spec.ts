@@ -1,15 +1,104 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
+import http from "node:http";
+import {
+	HealthCategory,
+	HealthStatus,
+	HttpBodyLimit,
+	HttpErrorHelper,
+	type IHttpResponse,
+	type IRestRoute,
+	type IRestRouteProcessor
+} from "@twin.org/api-models";
 import { JwtMimeTypeProcessor, LoggingProcessor } from "@twin.org/api-processors";
-import { ComponentFactory, HealthStatus, Mutex, NotImplementedError } from "@twin.org/core";
+import { ComponentFactory, Mutex, NotImplementedError } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
-import { HeaderTypes, HttpMethod, HttpStatusCode } from "@twin.org/web";
+import { HeaderTypes, HttpMethod, HttpStatusCode, MimeTypes } from "@twin.org/web";
 import { io } from "socket.io-client";
 import { FastifyWebServer } from "../src/fastifyWebServer.js";
 
 const basePort = Math.floor(Math.random() * 1000);
 let port = 13000 + basePort;
+
+/**
+ * Create a route processor which returns an ok response.
+ * @returns The processor.
+ */
+function createOkProcessor(): IRestRouteProcessor {
+	return {
+		className: () => "RouteProcessor",
+		process: async (request, response) => {
+			response.statusCode = HttpStatusCode.ok;
+			response.body = {};
+		}
+	};
+}
+
+/**
+ * Create a POST route with an optional body limit name.
+ * @param path The route path.
+ * @param bodyLimit The optional body limit name.
+ * @returns The route.
+ */
+function createPostRoute(path: string, bodyLimit?: string): IRestRoute {
+	return {
+		operationId: "bodyLimitTest",
+		path,
+		method: HttpMethod.POST,
+		tag: "test",
+		summary: "",
+		handler: async () => ({}),
+		bodyLimit
+	};
+}
+
+/**
+ * Post a JSON body with an exact byte length.
+ * @param path The route path to post to.
+ * @param byteLength The total body length in bytes, including the 11 byte JSON wrapper.
+ * @returns The response.
+ */
+async function postJsonBody(path: string, byteLength: number): Promise<Response> {
+	return fetch(`http://localhost:${port}${path}`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ data: "x".repeat(byteLength - 11) })
+	});
+}
+
+/**
+ * Post a request declaring a body byte length without streaming the payload,
+ * so an over limit response can be read before the connection is closed.
+ * @param path The route path to post to.
+ * @param byteLength The declared body length in bytes.
+ * @returns The response status code and body.
+ */
+async function postDeclaredLength(
+	path: string,
+	byteLength: number
+): Promise<{ statusCode?: number; body: string }> {
+	return new Promise((resolve, reject) => {
+		const request = http.request(
+			{
+				host: "localhost",
+				port,
+				path,
+				method: "POST",
+				headers: { "Content-Type": "application/json", "Content-Length": byteLength }
+			},
+			response => {
+				let data = "";
+				response.on("data", chunk => {
+					data += chunk;
+				});
+				response.on("end", () => resolve({ statusCode: response.statusCode, body: data }));
+			}
+		);
+		request.on("error", reject);
+		request.setTimeout(5000, () => request.destroy(new Error("Timed out waiting for response")));
+		request.flushHeaders();
+	});
+}
 
 describe("api-server-fastify", () => {
 	beforeEach(async () => {
@@ -117,7 +206,8 @@ describe("api-server-fastify", () => {
 						HttpErrorHelper.buildResponse(
 							response,
 							{ name: "Error", message: "AuthError" },
-							HttpStatusCode.unauthorized
+							HttpStatusCode.unauthorized,
+							false
 						);
 					}
 				}
@@ -355,7 +445,8 @@ describe("api-server-fastify", () => {
 						HttpErrorHelper.buildResponse(
 							response,
 							{ name: "Error", message: "AuthError" },
-							HttpStatusCode.unauthorized
+							HttpStatusCode.unauthorized,
+							false
 						);
 					}
 				}
@@ -492,8 +583,9 @@ describe("api-server-fastify", () => {
 		expect(result).toEqual([
 			{
 				source: "FastifyWebServer",
-				description: "description",
+				description: "healthConnectivityDescription",
 				status: HealthStatus.Ok,
+				category: HealthCategory.Connectivity,
 				message: "reachable"
 			}
 		]);
@@ -508,11 +600,70 @@ describe("api-server-fastify", () => {
 		expect(result).toEqual([
 			{
 				source: "FastifyWebServer",
-				description: "description",
+				description: "healthConnectivityDescription",
 				message: "unreachable",
-				status: HealthStatus.Error
+				status: HealthStatus.Error,
+				category: HealthCategory.Connectivity
 			}
 		]);
+	});
+
+	test("Can return healthy application status when root endpoint responds with a body", async () => {
+		const server = new FastifyWebServer();
+		server.getInstance().get("/", async () => "root content");
+		await server.build(undefined, undefined, undefined, undefined, { port });
+		await server.start();
+
+		const result = await server.healthApplication(vi.fn());
+
+		await server.stop();
+
+		expect(result).toEqual([
+			{
+				source: "FastifyWebServer",
+				status: HealthStatus.Ok,
+				category: HealthCategory.Application,
+				description: "healthApplicationDescription",
+				message: "rootEndpointReachable"
+			}
+		]);
+	});
+
+	test("Can return error application status when server is not listening", async () => {
+		const server = new FastifyWebServer();
+		server.getInstance().get("/", async () => "root content");
+		await server.build(undefined, undefined, undefined, undefined, { port });
+
+		const result = await server.healthApplication(vi.fn());
+
+		expect(result?.[0]?.status).toBe(HealthStatus.Error);
+		expect(result?.[0]?.category).toBe(HealthCategory.Application);
+		expect(result?.[0]?.error).toBeDefined();
+	});
+
+	test("Can return error application status when server is not built", async () => {
+		const server = new FastifyWebServer();
+		server.getInstance().get("/", async () => "root content");
+
+		const result = await server.healthApplication(vi.fn());
+
+		expect(result).toEqual([
+			{
+				source: "FastifyWebServer",
+				status: HealthStatus.Error,
+				category: HealthCategory.Application,
+				description: "healthApplicationDescription",
+				message: "serverNotBuilt"
+			}
+		]);
+	});
+
+	test("Returns empty health when GET / is not registered", async () => {
+		const server = new FastifyWebServer();
+
+		const result = await server.healthApplication(vi.fn());
+
+		expect(result).toEqual([]);
 	});
 
 	test("Can serialize same-id requests with Mutex while different ids proceed in parallel", async () => {
@@ -520,7 +671,7 @@ describe("api-server-fastify", () => {
 		const handlerDelayMs = 100;
 		const requestCount = 25;
 
-		// Concurrency counters — incremented only while the lock is held, so any
+		// Concurrency counters - incremented only while the lock is held, so any
 		// value above 1 for the same key is direct proof the mutex was bypassed.
 		const activeConcurrentPerKey: { [key: string]: number } = {};
 		const peakConcurrentPerKey: { [key: string]: number } = {};
@@ -581,7 +732,7 @@ describe("api-server-fastify", () => {
 
 		await server.start();
 
-		// requestCount requests with the same id — serialized by the mutex.
+		// requestCount requests with the same id - serialized by the mutex.
 		const sameIdStart = Date.now();
 		const sameIdResponses = await Promise.all(
 			Array.from({ length: requestCount }, async () => fetch(`http://localhost:${port}/abc`))
@@ -600,7 +751,7 @@ describe("api-server-fastify", () => {
 		globalActive = 0;
 		peakGlobalActive = 0;
 
-		// requestCount requests each with a unique id — independent locks, run in parallel.
+		// requestCount requests each with a unique id - independent locks, run in parallel.
 		const differentIdStart = Date.now();
 		const differentIdResponses = await Promise.all(
 			[...new Array(requestCount).keys()].map(async i => fetch(`http://localhost:${port}/${i}`))
@@ -680,5 +831,190 @@ describe("api-server-fastify", () => {
 		expect(logEntries[1].message.startsWith("responseMessage")).toEqual(true);
 
 		await server.stop();
+	});
+
+	test("Can accept a body at the default limit and reject one above it", async () => {
+		const server = new FastifyWebServer();
+		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
+			port
+		});
+		await server.start();
+
+		const withinResponse = await postJsonBody("/", 1048576);
+		const overResponse = await postDeclaredLength("/", 1048577);
+
+		expect(withinResponse.status).toEqual(200);
+		expect(overResponse.statusCode).toEqual(413);
+		expect(overResponse.body).toContain("FST_ERR_CTP_BODY_TOO_LARGE");
+
+		await server.stop();
+	});
+
+	test("Can accept a body at a configured default limit and reject one above it", async () => {
+		const server = new FastifyWebServer();
+		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
+			port,
+			bodyLimits: { [HttpBodyLimit.Default]: 2048 }
+		});
+		await server.start();
+
+		const withinResponse = await postJsonBody("/", 2048);
+		const overResponse = await postJsonBody("/", 2049);
+
+		expect(withinResponse.status).toEqual(200);
+		expect(overResponse.status).toEqual(413);
+
+		await server.stop();
+	});
+
+	test("Can raise the limit for a route named large while other routes keep the default", async () => {
+		const server = new FastifyWebServer();
+		await server.build(
+			[createOkProcessor()],
+			[createPostRoute("/big", HttpBodyLimit.Large), createPostRoute("/small")],
+			undefined,
+			undefined,
+			{ port }
+		);
+		await server.start();
+
+		const bigResponse = await postJsonBody("/big", 26214400);
+		const bigOverResponse = await postDeclaredLength("/big", 26214401);
+		const smallResponse = await postDeclaredLength("/small", 1048577);
+
+		expect(bigResponse.status).toEqual(200);
+		expect(bigOverResponse.statusCode).toEqual(413);
+		expect(smallResponse.statusCode).toEqual(413);
+
+		await server.stop();
+	});
+
+	test("Can lower the limit for a route using a configured name", async () => {
+		const server = new FastifyWebServer();
+		await server.build(
+			[createOkProcessor()],
+			[createPostRoute("/", "tiny")],
+			undefined,
+			undefined,
+			{
+				port,
+				bodyLimits: { tiny: 512 }
+			}
+		);
+		await server.start();
+
+		const withinResponse = await postJsonBody("/", 512);
+		const overResponse = await postJsonBody("/", 513);
+
+		expect(withinResponse.status).toEqual(200);
+		expect(overResponse.status).toEqual(413);
+
+		await server.stop();
+	});
+
+	test("Can apply the route limit to the JSON-LD content type processor", async () => {
+		const server = new FastifyWebServer();
+		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
+			port,
+			bodyLimits: { [HttpBodyLimit.Default]: 2048 }
+		});
+		await server.start();
+
+		const postJsonLdBody = async (byteLength: number): Promise<Response> => {
+			const wrapperLength = JSON.stringify({ "@context": "https://schema.org", data: "" }).length;
+			return fetch(`http://localhost:${port}/`, {
+				method: "POST",
+				headers: { "Content-Type": MimeTypes.JsonLd },
+				body: JSON.stringify({
+					"@context": "https://schema.org",
+					data: "x".repeat(byteLength - wrapperLength)
+				})
+			});
+		};
+
+		const withinResponse = await postJsonLdBody(2048);
+		const overResponse = await postJsonLdBody(2049);
+
+		expect(withinResponse.status).toEqual(200);
+		expect(overResponse.status).toEqual(413);
+
+		await server.stop();
+	});
+
+	test("Can use a custom JSON-LD mime type processor instead of the built-in one", async () => {
+		let handled = 0;
+		const server = new FastifyWebServer({
+			mimeTypeProcessors: [
+				{
+					className: () => "custom-json-ld",
+					getTypes: () => [MimeTypes.JsonLd],
+					handle: async () => {
+						handled++;
+						return {};
+					}
+				}
+			]
+		});
+		await server.build([createOkProcessor()], [createPostRoute("/")], undefined, undefined, {
+			port
+		});
+		await server.start();
+
+		const response = await fetch(`http://localhost:${port}/`, {
+			method: "POST",
+			headers: { "Content-Type": MimeTypes.JsonLd },
+			body: JSON.stringify({ "@context": "https://schema.org" })
+		});
+
+		expect(response.status).toEqual(200);
+		expect(handled).toEqual(1);
+
+		await server.stop();
+	});
+
+	test("Can fail to build when a route names an unknown body limit", async () => {
+		const server = new FastifyWebServer();
+		await expect(
+			server.build([createOkProcessor()], [createPostRoute("/", "huge")], undefined, undefined, {
+				port
+			})
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fastifyWebServer.unknownBodyLimit",
+			properties: { route: "/", bodyLimit: "huge" }
+		});
+	});
+
+	test("Can fail to build when a body limit value is not a positive integer", async () => {
+		await expect(
+			new FastifyWebServer().build(
+				[createOkProcessor()],
+				[createPostRoute("/")],
+				undefined,
+				undefined,
+				{
+					port,
+					bodyLimits: { [HttpBodyLimit.Default]: 0 }
+				}
+			)
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fastifyWebServer.invalidBodyLimit",
+			properties: { bodyLimit: HttpBodyLimit.Default, value: 0 }
+		});
+
+		await expect(
+			new FastifyWebServer().build(
+				[createOkProcessor()],
+				[createPostRoute("/", "tiny")],
+				undefined,
+				undefined,
+				{ port, bodyLimits: { tiny: 1.5 } }
+			)
+		).rejects.toMatchObject({
+			name: "GeneralError",
+			message: "fastifyWebServer.invalidBodyLimit",
+			properties: { bodyLimit: "tiny", value: 1.5 }
+		});
 	});
 });

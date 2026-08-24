@@ -29,3 +29,11 @@ The name of the cookie to use for the token.
 ```ts
 access_token
 ```
+
+***
+
+### includeErrorStack? {#includeerrorstack}
+
+> `optional` **includeErrorStack?**: `boolean`
+
+Include the stack with errors.

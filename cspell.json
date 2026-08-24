@@ -23,13 +23,15 @@
 		"autorelease",
 		"cutoff",
 		"Fastify",
+		"hotfixes",
 		"livez",
 		"nameof",
 		"openapi",
 		"readyz",
 		"requestor",
 		"Stiftung",
-		"pver"
+		"pver",
+		"teardown"
 	],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",
