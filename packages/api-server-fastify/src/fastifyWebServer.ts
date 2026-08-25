@@ -5,6 +5,7 @@ import FastifyCors from "@fastify/cors";
 import {
 	type HealthApplicationCallback,
 	HealthStatus,
+	HttpBodyLimit,
 	HttpContextIdKeys,
 	HttpErrorHelper,
 	type IHealthProviderComponent,
@@ -43,7 +44,8 @@ import {
 	HttpMethod,
 	HttpStatusCode,
 	type IHttpHeaders,
-	HeaderHelper
+	HeaderHelper,
+	MimeTypes
 } from "@twin.org/web";
 import Fastify, {
 	type FastifyInstance,
@@ -75,6 +77,15 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 	 * @internal
 	 */
 	private static readonly _DEFAULT_HOST: string = "localhost";
+
+	/**
+	 * Default named body size limits for routes.
+	 * @internal
+	 */
+	private static readonly _DEFAULT_BODY_LIMITS: { [name: string]: number } = {
+		[HttpBodyLimit.Default]: 1048576,
+		[HttpBodyLimit.Large]: 26214400
+	};
 
 	/**
 	 * The logging component type.
@@ -159,8 +170,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 
 		this._mimeTypeProcessors = options?.mimeTypeProcessors ?? [];
 
-		const hasJsonLd = this._mimeTypeProcessors.find(
-			processor => processor.className() === "json-ld"
+		const hasJsonLd = this._mimeTypeProcessors.some(processor =>
+			processor.getTypes().includes(MimeTypes.JsonLd)
 		);
 		if (!hasJsonLd) {
 			this._mimeTypeProcessors.push(new JsonLdMimeTypeProcessor());
@@ -527,6 +538,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 		restRoutes?: IRestRoute[]
 	): Promise<void> {
 		if (Is.arrayValue(restRouteProcessors) && Is.arrayValue(restRoutes)) {
+			const bodyLimits = this.resolveBodyLimits();
 			for (const restRoute of restRoutes) {
 				let path = StringHelper.trimTrailingSlashes(restRoute.path);
 				if (!path.startsWith("/")) {
@@ -542,11 +554,45 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 				const method = restRoute.method.toLowerCase() as
 					"get" | "post" | "put" | "patch" | "delete" | "options" | "head";
 
-				this._fastify[method](path, async (request, reply) =>
+				const bodyLimitKey = Is.stringValue(restRoute.bodyLimit)
+					? restRoute.bodyLimit
+					: HttpBodyLimit.Default;
+				const bodyLimit = bodyLimits[bodyLimitKey];
+				if (Is.empty(bodyLimit)) {
+					throw new GeneralError(FastifyWebServer.CLASS_NAME, "unknownBodyLimit", {
+						route: path,
+						bodyLimit: bodyLimitKey
+					});
+				}
+
+				this._fastify[method](path, { bodyLimit }, async (request, reply) =>
 					this.handleRequestRest(restRouteProcessors, request, reply, restRoute)
 				);
 			}
 		}
+	}
+
+	/**
+	 * Merge the configured body limits over the built-in ones and validate them.
+	 * @returns The named body limits in bytes.
+	 * @throws GeneralError If a limit is not a positive integer.
+	 * @internal
+	 */
+	private resolveBodyLimits(): { [name: string]: number } {
+		const bodyLimits = {
+			...FastifyWebServer._DEFAULT_BODY_LIMITS,
+			...this._options?.bodyLimits
+		};
+		for (const name of Object.keys(bodyLimits)) {
+			const bodyLimit = bodyLimits[name];
+			if (!Is.integer(bodyLimit) || bodyLimit <= 0) {
+				throw new GeneralError(FastifyWebServer.CLASS_NAME, "invalidBodyLimit", {
+					bodyLimit: name,
+					value: bodyLimit
+				});
+			}
+		}
+		return bodyLimits;
 	}
 
 	/**

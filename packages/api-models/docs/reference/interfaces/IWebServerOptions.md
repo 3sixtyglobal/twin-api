@@ -82,3 +82,16 @@ The allowed CORS domains.
 
 The public origin of the server, used for constructing the request URL.
 If not provided, it will be determined from the incoming request.
+
+***
+
+### bodyLimits? {#bodylimits}
+
+> `optional` **bodyLimits?**: `object`
+
+Named body size limits in bytes for REST routes, referenced by a route's bodyLimit name.
+Merged over the server's built-in limits; the "default" entry applies to routes with no bodyLimit name.
+
+#### Index Signature
+
+\[`name`: `string`\]: `number`
