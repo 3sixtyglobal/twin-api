@@ -10,7 +10,8 @@ import {
 	type INoContentResponse,
 	type IRestRoute,
 	type ITag,
-	type ITenantAdminComponent
+	type ITenantAdminComponent,
+	type IRouteAuthorization
 } from "@twin.org/api-models";
 import { ContextIdStore } from "@twin.org/context";
 import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
@@ -32,12 +33,16 @@ import type { ITenantUpdateRequest } from "./models/api/ITenantUpdateRequest.js"
 const ROUTES_SOURCE = "tenantRoutes";
 
 /**
- * The default permissions for the routes, used to seed authorization rules.
+ * The default authorization for the routes, used to seed authorization rules.
  */
-const DEFAULT_ROUTE_PERMISSIONS_READER = "tenant:read";
-const DEFAULT_ROUTE_PERMISSIONS_WRITER = {
+const DEFAULT_AUTHORIZATION_READER: IRouteAuthorization = {
+	permission: "tenant:read",
+	role: "tenant-admin"
+};
+const DEFAULT_AUTHORIZATION_WRITER: IRouteAuthorization = {
 	permission: "tenant:write",
-	inherits: [DEFAULT_ROUTE_PERMISSIONS_READER]
+	role: "tenant-admin",
+	inherits: [DEFAULT_AUTHORIZATION_READER.permission]
 };
 
 /**
@@ -95,7 +100,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
+		defaultAuthorization: DEFAULT_AUTHORIZATION_READER
 	};
 
 	const tenantGetByIdRoute: IRestRoute<ITenantGetByIdRequest, ITenantGetResponse> = {
@@ -141,7 +146,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
+		defaultAuthorization: DEFAULT_AUTHORIZATION_READER
 	};
 
 	const tenantGetByApiKeyRoute: IRestRoute<ITenantGetByApiKeyRequest, ITenantGetResponse> = {
@@ -174,7 +179,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
+		defaultAuthorization: DEFAULT_AUTHORIZATION_READER
 	};
 
 	const tenantGetByPublicOriginRoute: IRestRoute = {
@@ -205,7 +210,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
+		defaultAuthorization: DEFAULT_AUTHORIZATION_READER
 	};
 
 	const tenantRemoveRoute: IRestRoute<ITenantRemoveRequest, INoContentResponse> = {
@@ -235,7 +240,7 @@ export function generateRestRoutesTenants(
 				type: nameof<INoContentResponse>()
 			}
 		],
-		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_WRITER
+		defaultAuthorization: DEFAULT_AUTHORIZATION_WRITER
 	};
 
 	const tenantCreateRoute: IRestRoute<ITenantCreateRequest, ICreatedResponse> = {
@@ -268,7 +273,7 @@ export function generateRestRoutesTenants(
 				type: nameof<ICreatedResponse>()
 			}
 		],
-		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_WRITER
+		defaultAuthorization: DEFAULT_AUTHORIZATION_WRITER
 	};
 
 	const tenantUpdateRoute: IRestRoute<ITenantUpdateRequest, INoContentResponse> = {
@@ -304,7 +309,7 @@ export function generateRestRoutesTenants(
 				type: nameof<INoContentResponse>()
 			}
 		],
-		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_WRITER
+		defaultAuthorization: DEFAULT_AUTHORIZATION_WRITER
 	};
 
 	return [

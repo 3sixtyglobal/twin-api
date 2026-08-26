@@ -8,7 +8,8 @@ import {
 	type INoContentRequest,
 	type IRestRoute,
 	type IServerHealthResponse,
-	type ITag
+	type ITag,
+	type IRouteAuthorization
 } from "@twin.org/api-models";
 import { ComponentFactory } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
@@ -24,9 +25,9 @@ export const tagsHealth: ITag[] = [
 ];
 
 /**
- * The default permissions for the routes, used to seed authorization rules.
+ * The default authorization for the routes, used to seed authorization rules.
  */
-const DEFAULT_ROUTE_PERMISSIONS_READER = "health:read";
+const DEFAULT_AUTHORIZATION_READER: IRouteAuthorization = { permission: "health:read" };
 
 /**
  * The REST routes for server health.
@@ -98,16 +99,16 @@ export function generateRestRoutesHealth(
 						description: "The response for the health request with errors.",
 						response: {
 							body: {
-								status: "error",
+								status: HealthStatus.Error,
 								components: [
 									{
 										source: "Database",
-										status: "ok",
+										status: HealthStatus.Ok,
 										category: HealthCategory.Connectivity
 									},
 									{
 										source: "Storage",
-										status: "error",
+										status: HealthStatus.Error,
 										description: "storageFull",
 										category: HealthCategory.Connectivity
 									}
@@ -118,7 +119,7 @@ export function generateRestRoutesHealth(
 				]
 			}
 		],
-		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
+		defaultAuthorization: DEFAULT_AUTHORIZATION_READER
 	};
 
 	return [healthRoute];
