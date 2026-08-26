@@ -58,7 +58,6 @@ export * from "./models/routes/IRestRouteResponseAttachmentOptions.js";
 export * from "./models/routes/IRestRouteResponseExample.js";
 export * from "./models/routes/IRestRouteResponseOptions.js";
 export * from "./models/routes/IRoutePermission.js";
-export * from "./models/routes/IRouteRole.js";
 export * from "./models/routes/ISocketRoute.js";
 export * from "./models/routes/ISocketRouteEntryPoint.js";
 export * from "./models/routes/ITag.js";

@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IRoutePermission } from "./IRoutePermission.js";
-import type { IRouteRole } from "./IRouteRole.js";
 
 /**
  * Interface which defines a route.
@@ -36,14 +35,9 @@ export interface IBaseRoute {
 	requiresAuthorization?: boolean;
 
 	/**
-	 * The default permissions which can access this route, used to seed the RBAC rules.
+	 * The default permission which can access this route, used to seed the RBAC rules.
 	 */
-	defaultPermissions?: IRoutePermission[];
-
-	/**
-	 * The default roles which can access this route, used to seed the RBAC rules.
-	 */
-	defaultRoles?: IRouteRole[];
+	defaultPermission?: IRoutePermission;
 
 	/**
 	 * The data for additional processors to run for this route.

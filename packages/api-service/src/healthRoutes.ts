@@ -29,11 +29,6 @@ export const tagsHealth: ITag[] = [
 const DEFAULT_ROUTE_PERMISSIONS_READER = "health:read";
 
 /**
- * The default roles for the routes, used to seed authorization rules.
- */
-const DEFAULT_ROUTE_ROLES_READER = "health-viewer";
-
-/**
  * The REST routes for server health.
  * @param baseRouteName Prefix to prepend to the paths.
  * @param componentName The name of the component to use in the routes stored in the ComponentFactory.
@@ -123,8 +118,7 @@ export function generateRestRoutesHealth(
 				]
 			}
 		],
-		defaultPermissions: [DEFAULT_ROUTE_PERMISSIONS_READER],
-		defaultRoles: [DEFAULT_ROUTE_ROLES_READER]
+		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
 	};
 
 	return [healthRoute];

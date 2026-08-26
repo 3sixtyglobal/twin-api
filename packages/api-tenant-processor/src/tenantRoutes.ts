@@ -41,15 +41,6 @@ const DEFAULT_ROUTE_PERMISSIONS_WRITER = {
 };
 
 /**
- * The default roles for the routes, used to seed authorization rules.
- */
-const DEFAULT_ROUTE_ROLES_READER = "tenant-viewer";
-const DEFAULT_ROUTE_ROLES_WRITER = {
-	role: "tenant-admin",
-	inherits: [DEFAULT_ROUTE_ROLES_READER]
-};
-
-/**
  * The tag to associate with the routes.
  */
 export const tagsTenants: ITag[] = [
@@ -104,8 +95,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		defaultPermissions: [DEFAULT_ROUTE_PERMISSIONS_READER],
-		defaultRoles: [DEFAULT_ROUTE_ROLES_READER]
+		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
 	};
 
 	const tenantGetByIdRoute: IRestRoute<ITenantGetByIdRequest, ITenantGetResponse> = {
@@ -151,8 +141,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		defaultPermissions: [DEFAULT_ROUTE_PERMISSIONS_READER],
-		defaultRoles: [DEFAULT_ROUTE_ROLES_READER]
+		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
 	};
 
 	const tenantGetByApiKeyRoute: IRestRoute<ITenantGetByApiKeyRequest, ITenantGetResponse> = {
@@ -185,8 +174,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		defaultPermissions: [DEFAULT_ROUTE_PERMISSIONS_READER],
-		defaultRoles: [DEFAULT_ROUTE_ROLES_READER]
+		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
 	};
 
 	const tenantGetByPublicOriginRoute: IRestRoute = {
@@ -217,8 +205,7 @@ export function generateRestRoutesTenants(
 				]
 			}
 		],
-		defaultPermissions: [DEFAULT_ROUTE_PERMISSIONS_READER],
-		defaultRoles: [DEFAULT_ROUTE_ROLES_READER]
+		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_READER
 	};
 
 	const tenantRemoveRoute: IRestRoute<ITenantRemoveRequest, INoContentResponse> = {
@@ -248,8 +235,7 @@ export function generateRestRoutesTenants(
 				type: nameof<INoContentResponse>()
 			}
 		],
-		defaultPermissions: [DEFAULT_ROUTE_PERMISSIONS_WRITER],
-		defaultRoles: [DEFAULT_ROUTE_ROLES_WRITER]
+		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_WRITER
 	};
 
 	const tenantCreateRoute: IRestRoute<ITenantCreateRequest, ICreatedResponse> = {
@@ -282,8 +268,7 @@ export function generateRestRoutesTenants(
 				type: nameof<ICreatedResponse>()
 			}
 		],
-		defaultPermissions: [DEFAULT_ROUTE_PERMISSIONS_WRITER],
-		defaultRoles: [DEFAULT_ROUTE_ROLES_WRITER]
+		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_WRITER
 	};
 
 	const tenantUpdateRoute: IRestRoute<ITenantUpdateRequest, INoContentResponse> = {
@@ -319,8 +304,7 @@ export function generateRestRoutesTenants(
 				type: nameof<INoContentResponse>()
 			}
 		],
-		defaultPermissions: [DEFAULT_ROUTE_PERMISSIONS_WRITER],
-		defaultRoles: [DEFAULT_ROUTE_ROLES_WRITER]
+		defaultPermission: DEFAULT_ROUTE_PERMISSIONS_WRITER
 	};
 
 	return [
