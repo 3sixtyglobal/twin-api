@@ -27,7 +27,10 @@ export const tagsHealth: ITag[] = [
 /**
  * The default authorization for the routes, used to seed authorization rules.
  */
-const DEFAULT_AUTHORIZATION_READER: IRouteAuthorization = { permission: "health:read" };
+const DEFAULT_AUTHORIZATION_READER: IRouteAuthorization = {
+	permission: "health:read",
+	role: "devops"
+};
 
 /**
  * The REST routes for server health.
