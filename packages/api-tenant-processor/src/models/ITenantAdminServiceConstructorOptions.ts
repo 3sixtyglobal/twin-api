@@ -10,4 +10,10 @@ export interface ITenantAdminServiceConstructorOptions {
 	 * @default tenant
 	 */
 	tenantEntityStorageType?: string;
+
+	/**
+	 * The component type to use for firing tenant events.
+	 * @default platform
+	 */
+	platformComponentType?: string;
 }

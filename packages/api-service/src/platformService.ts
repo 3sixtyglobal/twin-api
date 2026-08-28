@@ -4,7 +4,9 @@ import {
 	HttpContextIdKeys,
 	HttpUrlHelper,
 	type IPlatformComponent,
-	type ITenant
+	type ITenant,
+	type TenantEventCallback,
+	type TenantEventType
 } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
 import { Guards, Is } from "@twin.org/core";
@@ -43,12 +45,19 @@ export class PlatformService implements IPlatformComponent {
 	private readonly _isMultiTenant: boolean;
 
 	/**
+	 * Registered tenant event callbacks.
+	 * @internal
+	 */
+	private readonly _tenantEventCallbacks: Map<string, TenantEventCallback>;
+
+	/**
 	 * Create a new instance of PlatformService.
 	 * @param options The options for the connector.
 	 */
 	constructor(options?: IPlatformServiceConstructorOptions) {
 		this._tenantEntityStorageConnectorType = options?.tenantEntityStorageType ?? "tenant";
 		this._isMultiTenant = options?.config?.isMultiTenant ?? false;
+		this._tenantEventCallbacks = new Map();
 	}
 
 	/**
@@ -176,6 +185,35 @@ export class PlatformService implements IPlatformComponent {
 			if (localOrigin === origin) {
 				return contextIds;
 			}
+		}
+	}
+
+	/**
+	 * Registers a callback to be invoked when a tenant event occurs.
+	 * @param callbackId A unique identifier for the callback.
+	 * @param callback The callback to invoke when a tenant event occurs.
+	 */
+	public registerTenantEventCallback(callbackId: string, callback: TenantEventCallback): void {
+		this._tenantEventCallbacks.set(callbackId, callback);
+	}
+
+	/**
+	 * Unregisters a previously registered tenant event callback.
+	 * @param callbackId The identifier of the callback to unregister.
+	 */
+	public unregisterTenantEventCallback(callbackId: string): void {
+		this._tenantEventCallbacks.delete(callbackId);
+	}
+
+	/**
+	 * Fires all registered tenant event callbacks.
+	 * @param tenantId The ID of the tenant for which the event occurred.
+	 * @param eventType The type of event that occurred.
+	 * @returns A promise that resolves when all callbacks have been invoked.
+	 */
+	public async fireTenantEvent(tenantId: string, eventType: TenantEventType): Promise<void> {
+		for (const callback of this._tenantEventCallbacks.values()) {
+			await callback(tenantId, eventType);
 		}
 	}
 

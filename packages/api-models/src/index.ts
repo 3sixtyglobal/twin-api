@@ -75,3 +75,5 @@ export * from "./models/services/IPlatformComponent.js";
 export * from "./models/services/IServerInfo.js";
 export * from "./models/services/ITenant.js";
 export * from "./models/services/ITenantAdminComponent.js";
+export * from "./models/services/tenantEventCallback.js";
+export * from "./models/services/tenantEventType.js";

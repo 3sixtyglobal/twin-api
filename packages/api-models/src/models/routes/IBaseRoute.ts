@@ -40,13 +40,6 @@ export interface IBaseRoute {
 	defaultAuthorization?: IRouteAuthorization;
 
 	/**
-	 * The data for additional processors to run for this route.
-	 */
-	processorData?: {
-		[key: string]: unknown;
-	};
-
-	/**
 	 * Set to true to prevent callers from using the overrideTenant query parameter on this route.
 	 * Tenant override is allowed by default, but you must hold the escalated privilege role to use it.
 	 * @default false

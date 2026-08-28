@@ -1,6 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HttpContextIdKeys, type ITenant } from "@twin.org/api-models";
+import { HttpContextIdKeys, type ITenant, type TenantEventType } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
 	EntityStorageConnectorFactory,
@@ -176,6 +176,82 @@ describe("PlatformService", () => {
 				)
 			).resolves.toBeUndefined();
 			expect(mockTenantStorage.get).toHaveBeenCalledWith("remote-org", "organizationId");
+		});
+	});
+
+	describe("tenant event callbacks", () => {
+		it("resolves without error when no callbacks are registered", async () => {
+			const service = new PlatformService();
+			await expect(service.fireTenantEvent("tenant-1", "created")).resolves.toBeUndefined();
+		});
+
+		it("invokes a registered callback with the correct tenantId and eventType", async () => {
+			const service = new PlatformService();
+			const calls: { tenantId: string; eventType: TenantEventType }[] = [];
+			service.registerTenantEventCallback("cb-1", async (tenantId, eventType) => {
+				calls.push({ tenantId, eventType });
+			});
+
+			await service.fireTenantEvent("tenant-1", "created");
+
+			expect(calls).toEqual([{ tenantId: "tenant-1", eventType: "created" }]);
+		});
+
+		it("invokes all registered callbacks in registration order", async () => {
+			const service = new PlatformService();
+			const order: string[] = [];
+			service.registerTenantEventCallback("cb-1", async () => {
+				order.push("cb-1");
+			});
+			service.registerTenantEventCallback("cb-2", async () => {
+				order.push("cb-2");
+			});
+
+			await service.fireTenantEvent("tenant-1", "updated");
+
+			expect(order).toEqual(["cb-1", "cb-2"]);
+		});
+
+		it("does not invoke an unregistered callback", async () => {
+			const service = new PlatformService();
+			const calls: string[] = [];
+			service.registerTenantEventCallback("cb-1", async () => {
+				calls.push("cb-1");
+			});
+			service.unregisterTenantEventCallback("cb-1");
+
+			await service.fireTenantEvent("tenant-1", "deleted");
+
+			expect(calls).toHaveLength(0);
+		});
+
+		it("re-registering the same callbackId replaces the previous callback", async () => {
+			const service = new PlatformService();
+			const calls: string[] = [];
+			service.registerTenantEventCallback("cb-1", async () => {
+				calls.push("original");
+			});
+			service.registerTenantEventCallback("cb-1", async () => {
+				calls.push("replacement");
+			});
+
+			await service.fireTenantEvent("tenant-1", "updated");
+
+			expect(calls).toEqual(["replacement"]);
+		});
+
+		it("passes each event type correctly to the callback", async () => {
+			const service = new PlatformService();
+			const received: { tenantId: string; eventType: TenantEventType }[] = [];
+			service.registerTenantEventCallback("cb-1", async (tenantId, eventType) => {
+				received.push({ tenantId, eventType });
+			});
+
+			await service.fireTenantEvent("t", "created");
+			await service.fireTenantEvent("t", "updated");
+			await service.fireTenantEvent("t", "deleted");
+
+			expect(received.map(r => r.eventType)).toEqual(["created", "updated", "deleted"]);
 		});
 	});
 

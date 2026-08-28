@@ -6,6 +6,7 @@ import {
 	HealthStatus,
 	type IHealth,
 	type IHealthProviderComponent,
+	type IPlatformComponent,
 	type ITenant,
 	type ITenantAdminComponent
 } from "@twin.org/api-models";
@@ -13,6 +14,7 @@ import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/conte
 import {
 	AlreadyExistsError,
 	BaseError,
+	ComponentFactory,
 	GeneralError,
 	Guards,
 	type IError,
@@ -46,12 +48,21 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	private readonly _entityStorageConnector: IEntityStorageConnector<Tenant>;
 
 	/**
+	 * Platform component used to fire tenant events.
+	 * @internal
+	 */
+	private readonly _platformComponent: IPlatformComponent;
+
+	/**
 	 * Create a new instance of TenantAdminService.
 	 * @param options The options for the connector.
 	 */
 	constructor(options?: ITenantAdminServiceConstructorOptions) {
 		this._entityStorageConnector = EntityStorageConnectorFactory.get(
 			options?.tenantEntityStorageType ?? "tenant"
+		);
+		this._platformComponent = ComponentFactory.get<IPlatformComponent>(
+			options?.platformComponentType ?? "platform"
 		);
 	}
 
@@ -241,6 +252,8 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 
 		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));
 
+		await this._platformComponent.fireTenantEvent(tenantEntity.id, "created");
+
 		return tenantEntity.id;
 	}
 
@@ -345,6 +358,8 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 		};
 
 		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));
+
+		await this._platformComponent.fireTenantEvent(tenantEntity.id, "updated");
 	}
 
 	/**
@@ -355,7 +370,9 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async remove(tenantId: string): Promise<void> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId, 32);
 
-		return this._entityStorageConnector.remove(tenantId);
+		await this._entityStorageConnector.remove(tenantId);
+
+		await this._platformComponent.fireTenantEvent(tenantId, "deleted");
 	}
 
 	/**
