@@ -38,9 +38,8 @@ describe("EntityStorageAuthenticationAdminRestClient", () => {
 
 	describe("create", () => {
 		test("throws when user is undefined", async () => {
-			await expect(
-				client.create(undefined as unknown as IAuthenticationUser & { password: string })
-			).rejects.toMatchObject({
+			const user = undefined as unknown as Parameters<typeof client.create>[0];
+			await expect(client.create(user)).rejects.toMatchObject({
 				name: GuardError.CLASS_NAME,
 				message: "guard.objectUndefined"
 			});
@@ -85,9 +84,8 @@ describe("EntityStorageAuthenticationAdminRestClient", () => {
 
 	describe("update", () => {
 		test("throws when user is undefined", async () => {
-			await expect(
-				client.update(undefined as unknown as IAuthenticationUser)
-			).rejects.toMatchObject({
+			const user = undefined as unknown as Partial<IAuthenticationUser>;
+			await expect(client.update(user)).rejects.toMatchObject({
 				name: GuardError.CLASS_NAME,
 				message: "guard.objectUndefined"
 			});
