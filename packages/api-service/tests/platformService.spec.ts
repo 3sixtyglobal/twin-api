@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpContextIdKeys, type ITenant, type TenantEventType } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
+import { ComponentFactory } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
 } from "@twin.org/entity-storage-models";
+import type { ILoggingComponent } from "@twin.org/logging-models";
 import { PlatformService } from "../src/platformService.js";
 
 const TENANT_A: ITenant = {
@@ -238,6 +240,31 @@ describe("PlatformService", () => {
 			await service.fireTenantEvent("tenant-1", "updated");
 
 			expect(calls).toEqual(["replacement"]);
+		});
+
+		it("logs an error and continues when a callback throws", async () => {
+			const logCalls: { level: string; message: string }[] = [];
+			const mockLogging: ILoggingComponent = {
+				className: () => "MockLogging",
+				log: vi.fn(async entry => {
+					logCalls.push({ level: entry.level, message: entry.message });
+				})
+			} as unknown as ILoggingComponent;
+			vi.spyOn(ComponentFactory, "getIfExists").mockReturnValue(mockLogging);
+
+			const service = new PlatformService({ loggingComponentType: "test-logging" });
+			const order: string[] = [];
+			service.registerTenantEventCallback("cb-fail", async () => {
+				throw new Error("boom");
+			});
+			service.registerTenantEventCallback("cb-ok", async () => {
+				order.push("cb-ok");
+			});
+
+			await expect(service.fireTenantEvent("tenant-1", "created")).resolves.toBeUndefined();
+
+			expect(logCalls).toEqual([{ level: "error", message: "tenantEventCallbackFailed" }]);
+			expect(order).toEqual(["cb-ok"]);
 		});
 
 		it("passes each event type correctly to the callback", async () => {

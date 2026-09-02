@@ -13,6 +13,11 @@ export interface IPlatformServiceConstructorOptions {
 	tenantEntityStorageType?: string;
 
 	/**
+	 * The logging component type to use for error logging.
+	 */
+	loggingComponentType?: string;
+
+	/**
 	 * Configuration for the service.
 	 */
 	config?: IPlatformServiceConfig;

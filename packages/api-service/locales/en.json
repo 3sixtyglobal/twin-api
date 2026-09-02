@@ -3,6 +3,9 @@
 		"healthService": {
 			"componentHealthCheckFailed": "Health check failed for component \"{className}\"",
 			"applicationHealthCheckTaskFailed": "Application health check background task failed"
+		},
+		"platformService": {
+			"tenantEventCallbackFailed": "Tenant event callback failed for tenant \"{tenantId}\" and event \"{eventType}\""
 		}
 	}
 }

@@ -9,11 +9,12 @@ import {
 	type TenantEventType
 } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
-import { Guards, Is } from "@twin.org/core";
+import { BaseError, ComponentFactory, Guards, Is } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
 } from "@twin.org/entity-storage-models";
+import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { IPlatformServiceConstructorOptions } from "./models/IPlatformServiceConstructorOptions.js";
 
@@ -45,6 +46,12 @@ export class PlatformService implements IPlatformComponent {
 	private readonly _isMultiTenant: boolean;
 
 	/**
+	 * The logging component type for error logging.
+	 * @internal
+	 */
+	private readonly _loggingComponentType?: string;
+
+	/**
 	 * Registered tenant event callbacks.
 	 * @internal
 	 */
@@ -57,6 +64,7 @@ export class PlatformService implements IPlatformComponent {
 	constructor(options?: IPlatformServiceConstructorOptions) {
 		this._tenantEntityStorageConnectorType = options?.tenantEntityStorageType ?? "tenant";
 		this._isMultiTenant = options?.config?.isMultiTenant ?? false;
+		this._loggingComponentType = options?.loggingComponentType;
 		this._tenantEventCallbacks = new Map();
 	}
 
@@ -133,7 +141,7 @@ export class PlatformService implements IPlatformComponent {
 		if (this._isMultiTenant) {
 			const tenantEntityStorageConnector = this.ensureEntityStorageConnector();
 			if (!Is.empty(tenantEntityStorageConnector)) {
-				// Post-#203 organization routing: when the URL carries an ?organization=<org-did>
+				// When the URL carries an ?organization=<org-did>
 				// query param, that param - not the origin - identifies the target tenant. A single
 				// node hosts many tenants behind one shared origin, so an origin match alone cannot
 				// distinguish them and would incorrectly return the caller's own context. Resolve the
@@ -213,7 +221,18 @@ export class PlatformService implements IPlatformComponent {
 	 */
 	public async fireTenantEvent(tenantId: string, eventType: TenantEventType): Promise<void> {
 		for (const callback of this._tenantEventCallbacks.values()) {
-			await callback(tenantId, eventType);
+			try {
+				await callback(tenantId, eventType);
+			} catch (error) {
+				const logging = ComponentFactory.getIfExists<ILoggingComponent>(this._loggingComponentType);
+				await logging?.log({
+					level: "error",
+					source: PlatformService.CLASS_NAME,
+					message: "tenantEventCallbackFailed",
+					data: { tenantId, eventType },
+					error: BaseError.fromError(error)
+				});
+			}
 		}
 	}
 
