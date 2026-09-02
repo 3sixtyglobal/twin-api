@@ -8,7 +8,8 @@ import {
 	type IHealthProviderComponent,
 	type IPlatformComponent,
 	type ITenant,
-	type ITenantAdminComponent
+	type ITenantAdminComponent,
+	TenantEventType
 } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
 import {
@@ -252,7 +253,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 
 		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));
 
-		await this._platformComponent.fireTenantEvent(tenantEntity.id, "created");
+		await this._platformComponent.fireTenantEvent(tenantEntity.id, TenantEventType.Created);
 
 		return tenantEntity.id;
 	}
@@ -359,7 +360,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 
 		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));
 
-		await this._platformComponent.fireTenantEvent(tenantEntity.id, "updated");
+		await this._platformComponent.fireTenantEvent(tenantEntity.id, TenantEventType.Updated);
 	}
 
 	/**
@@ -372,7 +373,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 
 		await this._entityStorageConnector.remove(tenantId);
 
-		await this._platformComponent.fireTenantEvent(tenantId, "deleted");
+		await this._platformComponent.fireTenantEvent(tenantId, TenantEventType.Deleted);
 	}
 
 	/**

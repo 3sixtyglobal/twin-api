@@ -1,6 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HttpContextIdKeys, type ITenant, type TenantEventType } from "@twin.org/api-models";
+import { HttpContextIdKeys, type ITenant, TenantEventType } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import { ComponentFactory } from "@twin.org/core";
 import {
@@ -184,7 +184,9 @@ describe("PlatformService", () => {
 	describe("tenant event callbacks", () => {
 		it("resolves without error when no callbacks are registered", async () => {
 			const service = new PlatformService();
-			await expect(service.fireTenantEvent("tenant-1", "created")).resolves.toBeUndefined();
+			await expect(
+				service.fireTenantEvent("tenant-1", TenantEventType.Created)
+			).resolves.toBeUndefined();
 		});
 
 		it("invokes a registered callback with the correct tenantId and eventType", async () => {
@@ -194,9 +196,9 @@ describe("PlatformService", () => {
 				calls.push({ tenantId, eventType });
 			});
 
-			await service.fireTenantEvent("tenant-1", "created");
+			await service.fireTenantEvent("tenant-1", TenantEventType.Created);
 
-			expect(calls).toEqual([{ tenantId: "tenant-1", eventType: "created" }]);
+			expect(calls).toEqual([{ tenantId: "tenant-1", eventType: TenantEventType.Created }]);
 		});
 
 		it("invokes all registered callbacks in registration order", async () => {
@@ -209,7 +211,7 @@ describe("PlatformService", () => {
 				order.push("cb-2");
 			});
 
-			await service.fireTenantEvent("tenant-1", "updated");
+			await service.fireTenantEvent("tenant-1", TenantEventType.Updated);
 
 			expect(order).toEqual(["cb-1", "cb-2"]);
 		});
@@ -222,7 +224,7 @@ describe("PlatformService", () => {
 			});
 			service.unregisterTenantEventCallback("cb-1");
 
-			await service.fireTenantEvent("tenant-1", "deleted");
+			await service.fireTenantEvent("tenant-1", TenantEventType.Deleted);
 
 			expect(calls).toHaveLength(0);
 		});
@@ -237,7 +239,7 @@ describe("PlatformService", () => {
 				calls.push("replacement");
 			});
 
-			await service.fireTenantEvent("tenant-1", "updated");
+			await service.fireTenantEvent("tenant-1", TenantEventType.Updated);
 
 			expect(calls).toEqual(["replacement"]);
 		});
@@ -261,7 +263,9 @@ describe("PlatformService", () => {
 				order.push("cb-ok");
 			});
 
-			await expect(service.fireTenantEvent("tenant-1", "created")).resolves.toBeUndefined();
+			await expect(
+				service.fireTenantEvent("tenant-1", TenantEventType.Created)
+			).resolves.toBeUndefined();
 
 			expect(logCalls).toEqual([{ level: "error", message: "tenantEventCallbackFailed" }]);
 			expect(order).toEqual(["cb-ok"]);
@@ -274,11 +278,15 @@ describe("PlatformService", () => {
 				received.push({ tenantId, eventType });
 			});
 
-			await service.fireTenantEvent("t", "created");
-			await service.fireTenantEvent("t", "updated");
-			await service.fireTenantEvent("t", "deleted");
+			await service.fireTenantEvent("t", TenantEventType.Created);
+			await service.fireTenantEvent("t", TenantEventType.Updated);
+			await service.fireTenantEvent("t", TenantEventType.Deleted);
 
-			expect(received.map(r => r.eventType)).toEqual(["created", "updated", "deleted"]);
+			expect(received.map(r => r.eventType)).toEqual([
+				TenantEventType.Created,
+				TenantEventType.Updated,
+				TenantEventType.Deleted
+			]);
 		});
 	});
 
