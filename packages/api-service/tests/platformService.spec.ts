@@ -226,5 +226,29 @@ describe("PlatformService", () => {
 
 			expect(seenTenants).toEqual([TENANT_A.id, TENANT_B.id, TENANT_C.id]);
 		});
+
+		it("should stop iterating tenants when the method returns false", async () => {
+			const service = new PlatformService({ config: { isMultiTenant: true } });
+			const seenTenants: (string | undefined)[] = [];
+
+			await service.execute(async () => {
+				const tenantId = (await ContextIdStore.getContextIds())?.[ContextIdKeys.Tenant];
+				seenTenants.push(tenantId);
+				return tenantId !== TENANT_B.id;
+			});
+
+			expect(seenTenants).toEqual([TENANT_A.id, TENANT_B.id]);
+		});
+
+		it("should continue iterating tenants when the method returns nothing", async () => {
+			const service = new PlatformService({ config: { isMultiTenant: true } });
+			const seenTenants: (string | undefined)[] = [];
+
+			await service.execute(async () => {
+				seenTenants.push((await ContextIdStore.getContextIds())?.[ContextIdKeys.Tenant]);
+			});
+
+			expect(seenTenants).toEqual([TENANT_A.id, TENANT_B.id, TENANT_C.id]);
+		});
 	});
 });
