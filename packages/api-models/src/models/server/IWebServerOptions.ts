@@ -51,4 +51,14 @@ export interface IWebServerOptions {
 	 * Merged over the server's built-in limits; the "default" entry applies to routes with no bodyLimit name.
 	 */
 	bodyLimits?: { [name: string]: number };
+
+	/**
+	 * Custom configuration for the web server.
+	 */
+	customWebConfig?: unknown;
+
+	/**
+	 * Custom configuration for the socket server.
+	 */
+	customSocketConfig?: unknown;
 }
