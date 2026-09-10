@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.3-next.2](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.3-next.1...api-models-v0.9.3-next.2) (2026-09-10)
+
+
+### Features
+
+* add custom web and socket options for IWebServerOptions ([ff9feb5](https://github.com/iotaledger/twin-api/commit/ff9feb51841c87ed1dd2f527c25027a23aea37d9))
+
 ## [0.9.3-next.1](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.3-next.0...api-models-v0.9.3-next.1) (2026-09-09)
 
 
