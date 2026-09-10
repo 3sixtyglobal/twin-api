@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.3-next.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.3-next.2...api-service-v0.9.3-next.3) (2026-09-10)
+
+
+### Bug Fixes
+
+* keep the inherited public origin for tenants without a stored publicOrigin ([#283](https://github.com/iotaledger/twin-api/issues/283)) ([e43e29c](https://github.com/iotaledger/twin-api/commit/e43e29ccc3807da39d483dd341bb6dad8de70e89))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.3-next.2 to 0.9.3-next.3
+
 ## [0.9.3-next.2](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.3-next.1...api-service-v0.9.3-next.2) (2026-09-10)
 
 
