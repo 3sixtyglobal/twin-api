@@ -148,7 +148,7 @@ export class PlatformService implements IPlatformComponent {
 							[ContextIdKeys.Organization]: orgTenant.organizationId,
 							[HttpContextIdKeys.PublicOrigin]: Is.stringValue(orgTenant.publicOrigin)
 								? orgTenant.publicOrigin
-								: undefined
+								: contextIds?.[HttpContextIdKeys.PublicOrigin]
 						};
 					}
 					return undefined;
@@ -172,7 +172,7 @@ export class PlatformService implements IPlatformComponent {
 						[ContextIdKeys.Organization]: tenant.organizationId,
 						[HttpContextIdKeys.PublicOrigin]: Is.stringValue(tenant.publicOrigin)
 							? tenant.publicOrigin
-							: undefined
+							: contextIds?.[HttpContextIdKeys.PublicOrigin]
 					};
 				}
 			}
