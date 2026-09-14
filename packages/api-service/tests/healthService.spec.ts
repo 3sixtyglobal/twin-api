@@ -4,7 +4,7 @@ import { HealthStatus, type IHealth } from "@twin.org/api-models";
 import type { IBackgroundTask } from "@twin.org/background-task-models";
 import { TaskStatus } from "@twin.org/background-task-models";
 import { ContextIdStore } from "@twin.org/context";
-import { ComponentFactory, Factory } from "@twin.org/core";
+import { BaseError, ComponentFactory, Factory } from "@twin.org/core";
 import { HealthService } from "../src/healthService.js";
 
 function makeComponent(...healthEntries: IHealth[]): {
@@ -312,9 +312,68 @@ describe("HealthService", () => {
 					{
 						idleShutdownTimeout: -1,
 						initialiseMethod: "healthApplicationTaskStart",
+						initialiseMethodParams: expect.any(Function),
 						shutdownMethod: "healthApplicationTaskEnd"
 					}
 				);
+			});
+
+			test("supplies no exclude patterns to the worker when none are configured", async () => {
+				const service = new HealthService();
+				await service.start();
+
+				const options = mockRegisterHandler.mock.calls[0][4];
+				await expect(options.initialiseMethodParams()).resolves.toEqual([undefined]);
+			});
+
+			test("supplies the configured exclude patterns to the worker", async () => {
+				const service = new HealthService({
+					config: { excludeCloneComponents: ["^rightsManagement", "^messaging"] }
+				});
+				await service.start();
+
+				const options = mockRegisterHandler.mock.calls[0][4];
+				await expect(options.initialiseMethodParams()).resolves.toEqual([
+					["^rightsManagement", "^messaging"]
+				]);
+			});
+
+			test("throws from the constructor when an exclude pattern is not a valid regex", () => {
+				expect(
+					() => new HealthService({ config: { excludeCloneComponents: ["^ok", "["] } })
+				).toThrow("invalidExcludeCloneComponent");
+			});
+
+			test("reports the offending pattern and the underlying cause", () => {
+				const create = (): HealthService =>
+					new HealthService({ config: { excludeCloneComponents: ["("] } });
+
+				expect(create).toThrow("invalidExcludeCloneComponent");
+
+				try {
+					create();
+				} catch (err) {
+					const error = BaseError.fromError(err);
+					expect(error.properties?.pattern).toEqual("(");
+					expect(error.cause?.message).toContain("Invalid regular expression");
+				}
+			});
+
+			test("throws from the constructor when an exclude pattern is not a string", () => {
+				expect(
+					() =>
+						new HealthService({
+							config: { excludeCloneComponents: [42] as unknown as string[] }
+						})
+				).toThrow();
+			});
+
+			test("accepts an empty exclude list without error", async () => {
+				const service = new HealthService({ config: { excludeCloneComponents: [] } });
+				await service.start();
+
+				const options = mockRegisterHandler.mock.calls[0][4];
+				await expect(options.initialiseMethodParams()).resolves.toEqual([[]]);
 			});
 
 			test("creates a task when the application health timer fires", async () => {

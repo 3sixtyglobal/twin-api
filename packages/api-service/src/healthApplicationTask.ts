@@ -20,12 +20,58 @@ let engine:
 	  }
 	| undefined;
 let startupPromise: Promise<void> | undefined;
+let excludeCloneComponents: string[] | undefined;
+
+/**
+ * Remove the excluded component types from the engine clone data.
+ * The engine clone config is keyed by component type, so entries whose key matches any of the
+ * supplied patterns are dropped before the clone is built, keeping those components out of the
+ * health worker entirely.
+ * @param engineCloneData The engine clone data to filter.
+ * @param excludeComponents Verified regular expression patterns matched against the component
+ * type keys, already validated by the caller.
+ * @returns The clone data with the excluded component types removed.
+ */
+function filterCloneComponents(engineCloneData: unknown, excludeComponents?: string[]): unknown {
+	if (!Is.arrayValue(excludeComponents)) {
+		return engineCloneData;
+	}
+
+	if (
+		!Is.object<{ config?: { types?: { [type: string]: unknown } } }>(engineCloneData) ||
+		!Is.object(engineCloneData.config?.types)
+	) {
+		return engineCloneData;
+	}
+
+	const patterns = excludeComponents.map(excludeComponent => new RegExp(excludeComponent));
+
+	const sourceTypes = engineCloneData.config.types;
+	const filteredTypes: { [type: string]: unknown } = {};
+	for (const typeKey of Object.keys(sourceTypes)) {
+		if (!patterns.some(pattern => pattern.test(typeKey))) {
+			filteredTypes[typeKey] = sourceTypes[typeKey];
+		}
+	}
+
+	return {
+		...engineCloneData,
+		config: { ...engineCloneData.config, types: filteredTypes }
+	};
+}
 
 /**
  * Start the engine clone used for application health checks.
  * @param engineCloneData The engine clone data supplied automatically by the background task framework.
+ * @param excludeComponents Verified regular expression patterns for component types to exclude
+ * from the clone, validated by the health service before registration.
  */
-export async function healthApplicationTaskStart(engineCloneData: unknown): Promise<void> {
+export async function healthApplicationTaskStart(
+	engineCloneData: unknown,
+	excludeComponents?: string[]
+): Promise<void> {
+	excludeCloneComponents = excludeComponents;
+
 	startupPromise = (async () => {
 		if (!Is.empty(engineCloneData)) {
 			engine = await ModuleHelper.execModuleMethod<{
@@ -35,7 +81,7 @@ export async function healthApplicationTaskStart(engineCloneData: unknown): Prom
 				getRegisteredComponents: () => Promise<{ instanceType: string; component: IComponent }[]>;
 			}>("@twin.org/engine-core", "EngineCoreBuilder.fromClone", [
 				"engine",
-				engineCloneData,
+				filterCloneComponents(engineCloneData, excludeComponents),
 				await ContextIdStore.getContextIds(),
 				{ logLevel: "error" }
 			]);
@@ -63,6 +109,7 @@ export async function healthApplicationTaskEnd(): Promise<void> {
 		engine = undefined;
 	}
 	startupPromise = undefined;
+	excludeCloneComponents = undefined;
 }
 
 /**
@@ -86,7 +133,7 @@ export async function healthApplicationTask(engineCloneData: unknown): Promise<I
 	}
 
 	if (Is.empty(engine)) {
-		await healthApplicationTaskStart(engineCloneData);
+		await healthApplicationTaskStart(engineCloneData, excludeCloneComponents);
 	}
 
 	return executeApplicationHealthCycle();

@@ -62,6 +62,88 @@ describe("healthApplicationTask", () => {
 		expect(mockEngine.start).toHaveBeenCalled();
 	});
 
+	describe("excludeCloneComponents", () => {
+		const CLONE_WITH_TYPES = {
+			config: {
+				types: {
+					loggingConnector: [{ type: "console" }],
+					identityComponent: [{ type: "service" }],
+					rightsManagementPapComponent: [{ type: "service" }],
+					rightsManagementPdpComponent: [{ type: "service" }]
+				}
+			},
+			state: {}
+		};
+
+		function cloneArg(): { config: { types: { [type: string]: unknown } } } {
+			const calls = vi.mocked(ModuleHelper.execModuleMethod).mock.calls;
+			return calls[0][2]?.[1] as { config: { types: { [type: string]: unknown } } };
+		}
+
+		test("passes the clone data through untouched when no patterns are supplied", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES);
+			expect(cloneArg()).toBe(CLONE_WITH_TYPES);
+		});
+
+		test("passes the clone data through untouched when the pattern list is empty", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, []);
+			expect(cloneArg()).toBe(CLONE_WITH_TYPES);
+		});
+
+		test("removes the component types matching a pattern", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
+
+			expect(Object.keys(cloneArg().config.types)).toEqual([
+				"loggingConnector",
+				"identityComponent"
+			]);
+		});
+
+		test("removes component types matching any of several patterns", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, [
+				"^rightsManagement",
+				"^loggingConnector$"
+			]);
+
+			expect(Object.keys(cloneArg().config.types)).toEqual(["identityComponent"]);
+		});
+
+		test("treats the patterns as unanchored regular expressions", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["Component$"]);
+
+			expect(Object.keys(cloneArg().config.types)).toEqual(["loggingConnector"]);
+		});
+
+		test("does not mutate the source clone data", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
+
+			expect(Object.keys(CLONE_WITH_TYPES.config.types)).toHaveLength(4);
+		});
+
+		test("retains all component types when no pattern matches", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^noSuchComponent$"]);
+
+			expect(Object.keys(cloneArg().config.types)).toHaveLength(4);
+		});
+
+		test("tolerates clone data with no types to filter", async () => {
+			await healthApplicationTaskStart(ENGINE_CLONE_DATA, ["^rightsManagement"]);
+			expect(cloneArg()).toBe(ENGINE_CLONE_DATA);
+		});
+
+		test("reuses the patterns when the task has to start the engine lazily", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
+			await healthApplicationTaskEnd();
+
+			vi.mocked(ModuleHelper.execModuleMethod).mockClear();
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
+			expect(Object.keys(cloneArg().config.types)).toEqual([
+				"loggingConnector",
+				"identityComponent"
+			]);
+		});
+	});
+
 	test("stops the engine after the health cycle completes", async () => {
 		await healthApplicationTask(ENGINE_CLONE_DATA);
 		await healthApplicationTaskEnd();
