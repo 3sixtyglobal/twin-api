@@ -307,9 +307,13 @@ describe("HealthService", () => {
 				expect(mockRegisterHandler).toHaveBeenCalledWith(
 					"health-application-check",
 					expect.stringContaining("healthApplicationTask.js"),
-					"checkApplicationHealth",
+					"healthApplicationTask",
 					expect.any(Function),
-					{ idleShutdownTimeout: -1 }
+					{
+						idleShutdownTimeout: -1,
+						initialiseMethod: "healthApplicationTaskStart",
+						shutdownMethod: "healthApplicationTaskEnd"
+					}
 				);
 			});
 

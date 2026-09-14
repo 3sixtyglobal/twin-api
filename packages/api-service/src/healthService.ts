@@ -147,7 +147,7 @@ export class HealthService implements IHealthComponent {
 			await this._backgroundTaskComponent.registerHandler<undefined, IHealth[]>(
 				HealthService._APPLICATION_HEALTH_TASK_TYPE,
 				this._applicationHealthTaskHandler,
-				"checkApplicationHealth",
+				"healthApplicationTask",
 				async (task: IBackgroundTask<undefined, IHealth[]>) => {
 					if (
 						task.status === TaskStatus.Success ||
@@ -170,7 +170,11 @@ export class HealthService implements IHealthComponent {
 						this.startApplicationTimer(this._healthApplicationCheckInterval);
 					}
 				},
-				{ idleShutdownTimeout: -1 }
+				{
+					idleShutdownTimeout: -1,
+					initialiseMethod: "healthApplicationTaskStart",
+					shutdownMethod: "healthApplicationTaskEnd"
+				}
 			);
 
 			// Immediately check health after a startup settling period.

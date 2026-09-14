@@ -7,9 +7,63 @@ import type {
 } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import type { IContextIds } from "@twin.org/context";
-import { Is } from "@twin.org/core";
+import { GeneralError, Is } from "@twin.org/core";
 import type { IComponent } from "@twin.org/core";
 import { ModuleHelper } from "@twin.org/modules";
+
+let engine:
+	| {
+			start: () => Promise<void>;
+			stop: () => Promise<void>;
+			getContextIds: () => IContextIds | undefined;
+			getRegisteredComponents: () => Promise<{ instanceType: string; component: IComponent }[]>;
+	  }
+	| undefined;
+let startupPromise: Promise<void> | undefined;
+
+/**
+ * Start the engine clone used for application health checks.
+ * @param engineCloneData The engine clone data supplied automatically by the background task framework.
+ */
+export async function healthApplicationTaskStart(engineCloneData: unknown): Promise<void> {
+	startupPromise = (async () => {
+		if (!Is.empty(engineCloneData)) {
+			engine = await ModuleHelper.execModuleMethod<{
+				start: () => Promise<void>;
+				stop: () => Promise<void>;
+				getContextIds: () => IContextIds | undefined;
+				getRegisteredComponents: () => Promise<{ instanceType: string; component: IComponent }[]>;
+			}>("@twin.org/engine-core", "EngineCoreBuilder.fromClone", [
+				"engine",
+				engineCloneData,
+				await ContextIdStore.getContextIds(),
+				{ logLevel: "error" }
+			]);
+			if (Is.empty(engine)) {
+				throw new GeneralError("applicationHealthTask", "engineNotStarted");
+			}
+			await engine.start();
+		}
+	})();
+
+	try {
+		await startupPromise;
+	} catch (err) {
+		startupPromise = undefined;
+		throw err;
+	}
+}
+
+/**
+ * Stop the engine clone used for application health checks.
+ */
+export async function healthApplicationTaskEnd(): Promise<void> {
+	if (!Is.empty(engine)) {
+		await engine.stop();
+		engine = undefined;
+	}
+	startupPromise = undefined;
+}
 
 /**
  * Execute the application health lifecycle (init, application, teardown) across all registered
@@ -18,105 +72,111 @@ import { ModuleHelper } from "@twin.org/modules";
  * @param engineCloneData The engine clone data supplied automatically by the background task framework.
  * @returns The health entries collected across all three passes.
  */
-export async function checkApplicationHealth(engineCloneData: unknown): Promise<IHealth[]> {
+export async function healthApplicationTask(engineCloneData: unknown): Promise<IHealth[]> {
 	if (Is.empty(engineCloneData)) {
 		return [];
 	}
 
-	// Use inline type to avoid circular dependency with engine-core package
-	const engine = await ModuleHelper.execModuleMethod<{
-		start: () => Promise<void>;
-		stop: () => Promise<void>;
-		getContextIds: () => IContextIds | undefined;
-		getRegisteredComponents: () => Promise<{ instanceType: string; component: IComponent }[]>;
-	}>("@twin.org/engine-core", "EngineCoreBuilder.fromClone", [
-		"engine",
-		engineCloneData,
-		await ContextIdStore.getContextIds(),
-		{ logLevel: "error" }
-	]);
+	if (startupPromise) {
+		try {
+			await startupPromise;
+		} catch {
+			startupPromise = undefined;
+		}
+	}
 
-	try {
-		await engine.start();
+	if (Is.empty(engine)) {
+		await healthApplicationTaskStart(engineCloneData);
+	}
 
-		const engineContextIds = engine.getContextIds() ?? {};
-		const registeredInstances = await engine.getRegisteredComponents();
+	return executeApplicationHealthCycle();
+}
 
-		// Pass 1: Init - providers populate healthContextIds with any IDs they establish
-		const healthContextIds: IContextIds = {
-			// Only use Node from the main engine context.
-			// All other keys should be provided by healthApplicationInit of each component
-			// as we don't want to use real ids.
-			[ContextIdKeys.Node]: engineContextIds[ContextIdKeys.Node]
-		};
+/**
+ * Run the application health lifecycle for each registered provider: initialise shared context,
+ * run the health checks, then tear down the per-check context in reverse registration order.
+ * @returns The health entries collected for the current application health pass.
+ */
+async function executeApplicationHealthCycle(): Promise<IHealth[]> {
+	if (Is.empty(engine)) {
+		throw new GeneralError("applicationHealthTask", "engineNotStarted");
+	}
+
+	const engineContextIds = engine.getContextIds() ?? {};
+	const registeredInstances = await engine.getRegisteredComponents();
+
+	// Pass 1: Init - providers populate healthContextIds with any IDs they establish
+	const healthContextIds: IContextIds = {
+		// Only use Node from the main engine context.
+		// All other keys should be provided by healthApplicationInit of each component
+		// as we don't want to use real ids.
+		[ContextIdKeys.Node]: engineContextIds[ContextIdKeys.Node]
+	};
+	for (const registeredInstance of registeredInstances) {
+		if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
+			const initMethod = registeredInstance.component.healthApplicationInit?.bind(
+				registeredInstance.component
+			);
+			if (Is.function(initMethod)) {
+				await initMethod(healthContextIds);
+			}
+		}
+	}
+
+	// Pass 2: Application health check wrapped in combined engine + init context
+	const allHealth: IHealth[] = [];
+	const lazyPromises: Promise<void>[] = [];
+
+	await ContextIdStore.run(healthContextIds, async () => {
 		for (const registeredInstance of registeredInstances) {
 			if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
-				const initMethod = registeredInstance.component.healthApplicationInit?.bind(
+				const healthMethod = registeredInstance.component.healthApplication?.bind(
 					registeredInstance.component
 				);
-				if (Is.function(initMethod)) {
-					await initMethod(healthContextIds);
-				}
-			}
-		}
+				if (Is.function(healthMethod)) {
+					let fired = false;
+					let callback: HealthApplicationCallback = async () => {};
+					const lazyPromise = new Promise<void>(resolve => {
+						callback = async (result: IHealth[]) => {
+							if (!fired) {
+								fired = true;
+								allHealth.push(...result);
+								resolve();
+							}
+						};
+					});
 
-		// Pass 2: Application health check wrapped in combined engine + init context
-		const allHealth: IHealth[] = [];
-		const lazyPromises: Promise<void>[] = [];
-
-		await ContextIdStore.run(healthContextIds, async () => {
-			for (const registeredInstance of registeredInstances) {
-				if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
-					const healthMethod = registeredInstance.component.healthApplication?.bind(
-						registeredInstance.component
-					);
-					if (Is.function(healthMethod)) {
-						let fired = false;
-						let callback: HealthApplicationCallback = async () => {};
-						const lazyPromise = new Promise<void>(resolve => {
-							callback = async (result: IHealth[]) => {
-								if (!fired) {
-									fired = true;
-									allHealth.push(...result);
-									resolve();
-								}
-							};
-						});
-
-						const result = await healthMethod(callback);
-						// undefined result indicates that the component will provide the
-						// result asynchronously via the callback
-						if (Is.undefined(result)) {
-							lazyPromises.push(lazyPromise);
-						} else {
-							allHealth.push(...result);
-						}
+					const result = await healthMethod(callback);
+					// undefined result indicates that the component will provide the
+					// result asynchronously via the callback
+					if (Is.undefined(result)) {
+						lazyPromises.push(lazyPromise);
+					} else {
+						allHealth.push(...result);
 					}
 				}
 			}
-		});
-
-		// Wait for all deferred callbacks before proceeding to teardown
-		if (lazyPromises.length > 0) {
-			await Promise.allSettled(lazyPromises);
 		}
+	});
 
-		// Pass 3: Teardown wrapped in combined engine + init context
-		await ContextIdStore.run(healthContextIds, async () => {
-			for (const registeredInstance of registeredInstances.slice().reverse()) {
-				if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
-					const teardownMethod = registeredInstance.component.healthApplicationTeardown?.bind(
-						registeredInstance.component
-					);
-					if (Is.function(teardownMethod)) {
-						await teardownMethod();
-					}
-				}
-			}
-		});
-
-		return allHealth;
-	} finally {
-		await engine.stop();
+	// Wait for all deferred callbacks before proceeding to teardown
+	if (lazyPromises.length > 0) {
+		await Promise.allSettled(lazyPromises);
 	}
+
+	// Pass 3: Teardown wrapped in combined engine + init context
+	await ContextIdStore.run(healthContextIds, async () => {
+		for (const registeredInstance of registeredInstances.slice().reverse()) {
+			if (Is.object<IHealthProviderComponent>(registeredInstance.component)) {
+				const teardownMethod = registeredInstance.component.healthApplicationTeardown?.bind(
+					registeredInstance.component
+				);
+				if (Is.function(teardownMethod)) {
+					await teardownMethod();
+				}
+			}
+		}
+	});
+
+	return allHealth;
 }
