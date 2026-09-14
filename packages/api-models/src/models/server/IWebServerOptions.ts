@@ -20,7 +20,7 @@ export interface IWebServerOptions {
 
 	/**
 	 * The methods that the server accepts.
-	 * @default ["GET", "PUT", "POST", "DELETE", "OPTIONS"]
+	 * @default ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"]
 	 */
 	methods?: HttpMethod[];
 

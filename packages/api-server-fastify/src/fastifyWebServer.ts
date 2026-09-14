@@ -9,8 +9,6 @@ import {
 	HttpContextIdKeys,
 	HttpErrorHelper,
 	type IHealthProviderComponent,
-	type IBaseRoute,
-	type IBaseRouteProcessor,
 	type IHealth,
 	type IHttpRequest,
 	type IHttpRequestPathParams,
@@ -58,7 +56,8 @@ import Fastify, {
 import type { Server, ServerOptions, Socket } from "socket.io";
 import FastifySocketIO from "./fastifySocketIo.js";
 import type { IFastifyWebServerConstructorOptions } from "./models/IFastifyWebServerConstructorOptions.js";
-
+import type { IRestProcessorChains } from "../models/IRestProcessorChains.js";
+import type { ISocketProcessorChains } from "../models/ISocketProcessorChains.js";
 /**
  * Implementation of the web server using Fastify.
  */
@@ -150,6 +149,18 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 	private _localOrigin?: string;
 
 	/**
+	 * The REST processor chains resolved when the server is built.
+	 * @internal
+	 */
+	private _restChains: IRestProcessorChains;
+
+	/**
+	 * The socket processor chains resolved when the server is built.
+	 * @internal
+	 */
+	private _socketChains: ISocketProcessorChains;
+
+	/**
 	 * Create a new instance of FastifyWebServer.
 	 * @param options The options for the server.
 	 */
@@ -169,6 +180,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 			...options?.config?.socket
 		};
 		this._started = false;
+		this._restChains = { pre: [], process: [], post: [] };
+		this._socketChains = { connected: [], disconnected: [], pre: [], process: [], post: [] };
 
 		this._mimeTypeProcessors = options?.mimeTypeProcessors ?? [];
 
@@ -321,6 +334,8 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 
 		await this.addRoutesRest(restRouteProcessors, restRoutes);
 		await this.addRoutesSocket(socketRouteProcessors, socketRoutes);
+
+		this.buildProcessorChains(restRouteProcessors, socketRouteProcessors);
 	}
 
 	/**
@@ -744,7 +759,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 			// This can be overridden by a processor if needed, for example a tenant processor
 			[HttpContextIdKeys.PublicOrigin]: this._publicOrigin ?? requestOrigin ?? this._localOrigin
 		};
-		const processorState = restRoute?.processorData ?? {};
+		const processorState = {};
 
 		if (Is.object(httpServerRequest.pathParams)) {
 			for (const key of Object.keys(httpServerRequest.pathParams)) {
@@ -794,18 +809,14 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 		}
 	): Promise<void> {
 		let hasPreError = false;
-		const filteredProcessors = this.filterRouteProcessors(restRoute, restRouteProcessors);
 
 		try {
 			// Run inside ContextIdStore.run so pre-processors can do tenant-scoped storage lookups.
 			await ContextIdStore.run(contextIds, async () => {
-				for (const routeProcessor of filteredProcessors) {
-					const pre = routeProcessor.pre?.bind(routeProcessor);
-					if (Is.function(pre)) {
-						await pre(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
-							loggingComponentType: this._loggingComponentType
-						});
-					}
+				for (const pre of this._restChains.pre) {
+					await pre(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
+						loggingComponentType: this._loggingComponentType
+					});
 				}
 			});
 		} catch (err) {
@@ -830,13 +841,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 				// Run the processors within an async context
 				// so that any services can access the context ids
 				await ContextIdStore.run(contextIds, async () => {
-					for (const routeProcessor of filteredProcessors) {
-						const process = routeProcessor.process?.bind(routeProcessor);
-						if (Is.function(process)) {
-							await process(httpServerRequest, httpResponse, restRoute, processorState, {
-								loggingComponentType: this._loggingComponentType
-							});
-						}
+					for (const process of this._restChains.process) {
+						await process(httpServerRequest, httpResponse, restRoute, processorState, {
+							loggingComponentType: this._loggingComponentType
+						});
 					}
 				});
 			} catch (err) {
@@ -852,13 +860,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 			// Always run the post processors, even if there was an error earlier
 			// as they may perform cleanup tasks, or logging etc
 			await ContextIdStore.run(contextIds, async () => {
-				for (const routeProcessor of filteredProcessors) {
-					const post = routeProcessor.post?.bind(routeProcessor);
-					if (Is.function(post)) {
-						await post(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
-							loggingComponentType: this._loggingComponentType
-						});
-					}
+				for (const post of this._restChains.post) {
+					await post(httpServerRequest, httpResponse, restRoute, contextIds, processorState, {
+						loggingComponentType: this._loggingComponentType
+					});
 				}
 			});
 		} catch (err) {
@@ -874,42 +879,6 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 				}
 			});
 		}
-	}
-
-	/**
-	 * Filter the route processors based on the requested features.
-	 * @param route The route to process.
-	 * @param routeProcessors The processors to filter.
-	 * @returns The filtered list of route processor.
-	 * @internal
-	 */
-	private filterRouteProcessors<T extends IBaseRouteProcessor>(
-		route: IBaseRoute | undefined,
-		routeProcessors: T[]
-	): T[] {
-		const requestedFeatures = route?.processorFeatures ?? [];
-
-		if (!Is.arrayValue(requestedFeatures)) {
-			// If there are no requested features, we just return all the processors
-			return routeProcessors;
-		}
-
-		// Reduce the list of route processors to just those in the requested features list
-		const reducedProcessors = routeProcessors.filter(routeProcessor => {
-			// Processors that do not define any features always get run
-			// If the route processor has features defined, then we only run it
-			// if the route has at least one of those features required
-			let runRouteProcessor = true;
-			if (routeProcessor.features) {
-				const routeProcessorFeatures = routeProcessor.features();
-				runRouteProcessor = routeProcessorFeatures.some(feature =>
-					requestedFeatures.includes(feature)
-				);
-			}
-			return runRouteProcessor;
-		});
-
-		return reducedProcessors;
 	}
 
 	/**
@@ -983,8 +952,6 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 		requestTopic: string,
 		responseEmitter: (topic: string, response: IHttpResponse) => Promise<void>
 	): Promise<void> {
-		const filteredProcessors = this.filterRouteProcessors(socketRoute, socketRouteProcessors);
-
 		// Custom emit method which will also call the post processors
 		const postProcessEmit = async (
 			topic: string,
@@ -997,20 +964,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 
 			try {
 				// The post processors are called after the response has been emitted
-				for (const postSocketRouteProcessor of filteredProcessors) {
-					const post = postSocketRouteProcessor.post?.bind(postSocketRouteProcessor);
-					if (Is.function(post)) {
-						await post(
-							socketServerRequest,
-							response,
-							socketRoute,
-							contextIds,
-							responseProcessorState,
-							{
-								loggingComponentType: this._loggingComponentType
-							}
-						);
-					}
+				for (const post of this._socketChains.post) {
+					await post(
+						socketServerRequest,
+						response,
+						socketRoute,
+						contextIds,
+						responseProcessorState,
+						{
+							loggingComponentType: this._loggingComponentType
+						}
+					);
 				}
 			} catch (err) {
 				await this._logging?.log({
@@ -1027,13 +991,10 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 		};
 
 		try {
-			for (const socketRouteProcessor of filteredProcessors) {
-				const pre = socketRouteProcessor.pre?.bind(socketRouteProcessor);
-				if (Is.function(pre)) {
-					await pre(socketServerRequest, httpResponse, socketRoute, contextIds, processorState, {
-						loggingComponentType: this._loggingComponentType
-					});
-				}
+			for (const pre of this._socketChains.pre) {
+				await pre(socketServerRequest, httpResponse, socketRoute, contextIds, processorState, {
+					loggingComponentType: this._loggingComponentType
+				});
 			}
 
 			// We always call all the processors regardless of any response set by a previous processor.
@@ -1044,20 +1005,17 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 			}
 
 			await ContextIdStore.run(contextIds, async () => {
-				for (const socketRouteProcessor of filteredProcessors) {
-					const process = socketRouteProcessor.process?.bind(socketRouteProcessor);
-					if (Is.function(process)) {
-						await process(
-							socketServerRequest,
-							httpResponse,
-							socketRoute,
-							processorState,
-							async (topic: string, processResponse: IHttpResponse) => {
-								await postProcessEmit(topic, processResponse, processorState);
-							},
-							this._loggingComponentType
-						);
-					}
+				for (const process of this._socketChains.process) {
+					await process(
+						socketServerRequest,
+						httpResponse,
+						socketRoute,
+						processorState,
+						async (topic: string, processResponse: IHttpResponse) => {
+							await postProcessEmit(topic, processResponse, processorState);
+						},
+						this._loggingComponentType
+					);
 				}
 			});
 
@@ -1096,6 +1054,7 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 			HttpMethod.GET,
 			HttpMethod.PUT,
 			HttpMethod.POST,
+			HttpMethod.PATCH,
 			HttpMethod.DELETE,
 			HttpMethod.OPTIONS
 		];
@@ -1125,5 +1084,68 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 			exposedHeaders,
 			credentials: true
 		});
+	}
+
+	/**
+	 * Resolve the route processors in to per phase chains, so that the lookups and bindings
+	 * are performed once when the server is built instead of on every request.
+	 * @param restRouteProcessors The processors for the incoming REST requests.
+	 * @param socketRouteProcessors The processors for the incoming socket requests.
+	 * @internal
+	 */
+	private buildProcessorChains(
+		restRouteProcessors?: IRestRouteProcessor[],
+		socketRouteProcessors?: ISocketRouteProcessor[]
+	): void {
+		const restChains: IRestProcessorChains = { pre: [], process: [], post: [] };
+
+		for (const routeProcessor of restRouteProcessors ?? []) {
+			const pre = routeProcessor.pre?.bind(routeProcessor);
+			if (Is.function(pre)) {
+				restChains.pre.push(pre);
+			}
+			const process = routeProcessor.process?.bind(routeProcessor);
+			if (Is.function(process)) {
+				restChains.process.push(process);
+			}
+			const post = routeProcessor.post?.bind(routeProcessor);
+			if (Is.function(post)) {
+				restChains.post.push(post);
+			}
+		}
+
+		const socketChains: ISocketProcessorChains = {
+			connected: [],
+			disconnected: [],
+			pre: [],
+			process: [],
+			post: []
+		};
+
+		for (const routeProcessor of socketRouteProcessors ?? []) {
+			const connected = routeProcessor.connected?.bind(routeProcessor);
+			if (Is.function(connected)) {
+				socketChains.connected.push(connected);
+			}
+			const disconnected = routeProcessor.disconnected?.bind(routeProcessor);
+			if (Is.function(disconnected)) {
+				socketChains.disconnected.push(disconnected);
+			}
+			const pre = routeProcessor.pre?.bind(routeProcessor);
+			if (Is.function(pre)) {
+				socketChains.pre.push(pre);
+			}
+			const process = routeProcessor.process?.bind(routeProcessor);
+			if (Is.function(process)) {
+				socketChains.process.push(process);
+			}
+			const post = routeProcessor.post?.bind(routeProcessor);
+			if (Is.function(post)) {
+				socketChains.post.push(post);
+			}
+		}
+
+		this._restChains = restChains;
+		this._socketChains = socketChains;
 	}
 }
