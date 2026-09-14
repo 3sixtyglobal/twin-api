@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.3-next.4](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.3-next.3...api-models-v0.9.3-next.4) (2026-09-14)
+
+
+### Features
+
+* prebuild routes ([#286](https://github.com/iotaledger/twin-api/issues/286)) ([aa283be](https://github.com/iotaledger/twin-api/commit/aa283bec5d7074772860f6e7830236103bd43f8f))
+
 ## [0.9.3-next.3](https://github.com/iotaledger/twin-api/compare/api-models-v0.9.3-next.2...api-models-v0.9.3-next.3) (2026-09-10)
 
 

@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.9.3-next.4](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.3-next.3...api-service-v0.9.3-next.4) (2026-09-14)
+
+
+### Features
+
+* exclude components ([#288](https://github.com/iotaledger/twin-api/issues/288)) ([ba2a44c](https://github.com/iotaledger/twin-api/commit/ba2a44c951468c5d906f4f7e2e4d91f8a95ad956))
+* run health service as single thread ([a6c58e5](https://github.com/iotaledger/twin-api/commit/a6c58e5be3a87f8350af2c2e42bf4f0d0f43a068))
+
+
+### Bug Fixes
+
+* long running thread ([#287](https://github.com/iotaledger/twin-api/issues/287)) ([b78db1b](https://github.com/iotaledger/twin-api/commit/b78db1bbea53e33980ad9eddf6287b14ef994ae5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.9.3-next.3 to 0.9.3-next.4
+
 ## [0.9.3-next.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.3-next.2...api-service-v0.9.3-next.3) (2026-09-10)
 
 
