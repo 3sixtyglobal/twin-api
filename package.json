@@ -56,8 +56,8 @@
 	},
 	"workspaces": [
 		"packages/api-models",
-		"packages/api-core",
 		"packages/api-processors",
+		"packages/api-core",
 		"packages/api-server-fastify",
 		"packages/api-service",
 		"packages/api-rest-client",

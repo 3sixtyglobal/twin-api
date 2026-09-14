@@ -135,7 +135,7 @@ describe("api-server-fastify", () => {
 			)
 		).rejects.toMatchObject({
 			name: "GeneralError",
-			message: "fastifyWebServer.noRestProcessors"
+			message: "baseServer.noRestProcessors"
 		});
 	});
 
@@ -240,6 +240,93 @@ describe("api-server-fastify", () => {
 		await server.stop();
 	});
 
+	test("Can run each REST processor only for the phases it implements", async () => {
+		const server = new FastifyWebServer();
+
+		const calls: string[] = [];
+
+		await server.build(
+			[
+				{
+					className: () => "PreOnlyProcessor",
+					pre: async () => {
+						calls.push("pre-only");
+					}
+				},
+				{
+					className: () => "PostOnlyProcessor",
+					post: async () => {
+						calls.push("post-only");
+					}
+				},
+				createOkProcessor()
+			],
+			[createPostRoute("/")],
+			undefined,
+			undefined,
+			{ port }
+		);
+
+		await server.start();
+
+		await postJsonBody("/", 20);
+
+		expect(calls).toEqual(["pre-only", "post-only"]);
+
+		await server.stop();
+	});
+
+	test("Can preserve the processor order within each REST phase", async () => {
+		const server = new FastifyWebServer();
+
+		const calls: string[] = [];
+
+		/**
+		 * Create a processor which records every phase it runs.
+		 * @param name The name of the processor.
+		 * @returns The processor.
+		 */
+		function createRecordingProcessor(name: string): IRestRouteProcessor {
+			return {
+				className: () => name,
+				pre: async () => {
+					calls.push(`${name}-pre`);
+				},
+				process: async (request, response) => {
+					calls.push(`${name}-process`);
+					response.statusCode = HttpStatusCode.ok;
+					response.body = {};
+				},
+				post: async () => {
+					calls.push(`${name}-post`);
+				}
+			};
+		}
+
+		await server.build(
+			[createRecordingProcessor("first"), createRecordingProcessor("second")],
+			[createPostRoute("/")],
+			undefined,
+			undefined,
+			{ port }
+		);
+
+		await server.start();
+
+		await postJsonBody("/", 20);
+
+		expect(calls).toEqual([
+			"first-pre",
+			"second-pre",
+			"first-process",
+			"second-process",
+			"first-post",
+			"second-post"
+		]);
+
+		await server.stop();
+	});
+
 	test("Can fail to build with socket routes and no processors", async () => {
 		const server = new FastifyWebServer();
 
@@ -258,7 +345,7 @@ describe("api-server-fastify", () => {
 			)
 		).rejects.toMatchObject({
 			name: "GeneralError",
-			message: "fastifyWebServer.noSocketProcessors"
+			message: "baseServer.noSocketProcessors"
 		});
 	});
 
@@ -582,7 +669,7 @@ describe("api-server-fastify", () => {
 
 		expect(result).toEqual([
 			{
-				source: "FastifyWebServer",
+				source: "BaseServer",
 				description: "healthConnectivityDescription",
 				status: HealthStatus.Ok,
 				category: HealthCategory.Connectivity,
@@ -599,7 +686,7 @@ describe("api-server-fastify", () => {
 
 		expect(result).toEqual([
 			{
-				source: "FastifyWebServer",
+				source: "BaseServer",
 				description: "healthConnectivityDescription",
 				message: "unreachable",
 				status: HealthStatus.Error,
@@ -620,7 +707,7 @@ describe("api-server-fastify", () => {
 
 		expect(result).toEqual([
 			{
-				source: "FastifyWebServer",
+				source: "BaseServer",
 				status: HealthStatus.Ok,
 				category: HealthCategory.Application,
 				description: "healthApplicationDescription",
@@ -649,7 +736,7 @@ describe("api-server-fastify", () => {
 
 		expect(result).toEqual([
 			{
-				source: "FastifyWebServer",
+				source: "BaseServer",
 				status: HealthStatus.Error,
 				category: HealthCategory.Application,
 				description: "healthApplicationDescription",
@@ -999,7 +1086,7 @@ describe("api-server-fastify", () => {
 			)
 		).rejects.toMatchObject({
 			name: "GeneralError",
-			message: "fastifyWebServer.invalidBodyLimit",
+			message: "baseServer.invalidBodyLimit",
 			properties: { bodyLimit: HttpBodyLimit.Default, value: 0 }
 		});
 
@@ -1013,7 +1100,7 @@ describe("api-server-fastify", () => {
 			)
 		).rejects.toMatchObject({
 			name: "GeneralError",
-			message: "fastifyWebServer.invalidBodyLimit",
+			message: "baseServer.invalidBodyLimit",
 			properties: { bodyLimit: "tiny", value: 1.5 }
 		});
 	});

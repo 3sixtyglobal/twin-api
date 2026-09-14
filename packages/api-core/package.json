@@ -29,7 +29,10 @@
 	},
 	"dependencies": {
 		"@twin.org/api-models": "0.9.3-next.0",
+		"@twin.org/api-processors": "0.9.3-next.0",
+		"@twin.org/context": "next",
 		"@twin.org/core": "next",
+		"@twin.org/logging-models": "next",
 		"@twin.org/nameof": "next",
 		"@twin.org/web": "next",
 		"socket.io-client": "4.8.3"
