@@ -41,7 +41,7 @@ The methods that the server accepts.
 #### Default
 
 ```ts
-["GET", "PUT", "POST", "DELETE", "OPTIONS"]
+["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"]
 ```
 
 ***

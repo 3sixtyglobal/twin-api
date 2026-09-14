@@ -49,26 +49,6 @@ The user must have one of the specified scopes to access the route.
 
 ***
 
-### processorFeatures? {#processorfeatures}
-
-> `optional` **processorFeatures?**: `string`[]
-
-The features supported by additional processors to run for this route.
-
-***
-
-### processorData? {#processordata}
-
-> `optional` **processorData?**: `object`
-
-The data for additional processors to run for this route.
-
-#### Index Signature
-
-\[`key`: `string`\]: `unknown`
-
-***
-
 ### disableTenantOverride? {#disabletenantoverride}
 
 > `optional` **disableTenantOverride?**: `boolean`
