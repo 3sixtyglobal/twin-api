@@ -1,92 +1,17 @@
 # Changelog
 
-## [0.9.3-next.4](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-rest-client-v0.9.3-next.3...api-auth-entity-storage-rest-client-v0.9.3-next.4) (2026-09-14)
-
-
-### Miscellaneous Chores
-
-* **api-auth-entity-storage-rest-client:** Synchronize repo versions
-
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @twin.org/api-auth-entity-storage-models bumped from 0.9.3-next.3 to 0.9.3-next.4
-    * @twin.org/api-core bumped from 0.9.3-next.3 to 0.9.3-next.4
-    * @twin.org/api-models bumped from 0.9.3-next.3 to 0.9.3-next.4
-
-## [0.9.3-next.3](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-rest-client-v0.9.3-next.2...api-auth-entity-storage-rest-client-v0.9.3-next.3) (2026-09-10)
-
-
-### Miscellaneous Chores
-
-* **api-auth-entity-storage-rest-client:** Synchronize repo versions
-
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @twin.org/api-auth-entity-storage-models bumped from 0.9.3-next.2 to 0.9.3-next.3
-    * @twin.org/api-core bumped from 0.9.3-next.2 to 0.9.3-next.3
-    * @twin.org/api-models bumped from 0.9.3-next.2 to 0.9.3-next.3
-
-## [0.9.3-next.2](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-rest-client-v0.9.3-next.1...api-auth-entity-storage-rest-client-v0.9.3-next.2) (2026-09-10)
-
-
-### Miscellaneous Chores
-
-* **api-auth-entity-storage-rest-client:** Synchronize repo versions
-
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @twin.org/api-auth-entity-storage-models bumped from 0.9.3-next.1 to 0.9.3-next.2
-    * @twin.org/api-core bumped from 0.9.3-next.1 to 0.9.3-next.2
-    * @twin.org/api-models bumped from 0.9.3-next.1 to 0.9.3-next.2
-
-## [0.9.3-next.1](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-rest-client-v0.9.3-next.0...api-auth-entity-storage-rest-client-v0.9.3-next.1) (2026-09-09)
+## [0.9.3](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-rest-client-v0.9.3...api-auth-entity-storage-rest-client-v0.9.3) (2026-09-14)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add json-ld mime type processor and auth admin component ([8861791](https://github.com/iotaledger/twin-api/commit/88617916e23bfbca023dbae1976fe421983a02ff))
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* application health checks as background task ([#261](https://github.com/iotaledger/twin-api/issues/261)) ([b012f88](https://github.com/iotaledger/twin-api/commit/b012f8857cd19f7eba3e8c721266b620a46634c4))
-* auth enhancements ([#93](https://github.com/iotaledger/twin-api/issues/93)) ([921a50c](https://github.com/iotaledger/twin-api/commit/921a50cd89d26e530a6be6174a5a803060fa0eb6))
-* enhanced rest handling ([#208](https://github.com/iotaledger/twin-api/issues/208)) ([99d5f3f](https://github.com/iotaledger/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* health updates ([#243](https://github.com/iotaledger/twin-api/issues/243)) ([8360945](https://github.com/iotaledger/twin-api/commit/836094547839f63f2309d4bcd8c4d19128c73883))
-* improved rest handling ([#211](https://github.com/iotaledger/twin-api/issues/211)) ([12c50ea](https://github.com/iotaledger/twin-api/commit/12c50ea7655276eed7a73d311ac5286476c98201))
-* modify authHeaderProcessor to retain token in response body ([#53](https://github.com/iotaledger/twin-api/issues/53)) ([5d9ae76](https://github.com/iotaledger/twin-api/commit/5d9ae76b5b52a8e10dac391b2d5784638a186583))
-* remove authentication generators ([#66](https://github.com/iotaledger/twin-api/issues/66)) ([adaa169](https://github.com/iotaledger/twin-api/commit/adaa1698df1c5ccb0ad645a7a7c0d3ef82ef6ac1))
-* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
-* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
-* user admin service ([#77](https://github.com/iotaledger/twin-api/issues/77)) ([c8491df](https://github.com/iotaledger/twin-api/commit/c8491df7b07c1f45560c8a78c6adc806d0ececbb))
-* user partitioning ([#126](https://github.com/iotaledger/twin-api/issues/126)) ([6bf0da3](https://github.com/iotaledger/twin-api/commit/6bf0da3c42406c9838e80e0ddd6b21f5c64aac90))
-
-
-### Bug Fixes
-
-* change logout and refresh routes from GET to POST ([#111](https://github.com/iotaledger/twin-api/issues/111)) ([cb8b64b](https://github.com/iotaledger/twin-api/commit/cb8b64b6507f9991baa78a663de2e84269695c82))
-* use correct format for log messaging ([44bc2a4](https://github.com/iotaledger/twin-api/commit/44bc2a4f7cf1f9c38a7e8c6f90ccb2424c958de9))
-
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @twin.org/api-auth-entity-storage-models bumped from 0.9.3-next.0 to 0.9.3-next.1
-    * @twin.org/api-core bumped from 0.9.3-next.0 to 0.9.3-next.1
-    * @twin.org/api-models bumped from 0.9.3-next.0 to 0.9.3-next.1
+* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([#195](https://github.com/iotaledger/twin-api/issues/195)) ([a3f5c1f](https://github.com/iotaledger/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
+* release to production ([#197](https://github.com/iotaledger/twin-api/issues/197)) ([f04c156](https://github.com/iotaledger/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
+* release to production ([#201](https://github.com/iotaledger/twin-api/issues/201)) ([e1c46fd](https://github.com/iotaledger/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
+* release to production ([#224](https://github.com/iotaledger/twin-api/issues/224)) ([dffaf08](https://github.com/iotaledger/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
+* release to production ([#273](https://github.com/iotaledger/twin-api/issues/273)) ([618f07e](https://github.com/iotaledger/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
+* release to production ([#294](https://github.com/iotaledger/twin-api/issues/294)) ([4332032](https://github.com/iotaledger/twin-api/commit/43320322ae4f1548419a3192f3f484b7c80e8142))
 
 ## [0.9.2](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-rest-client-v0.9.2...api-auth-entity-storage-rest-client-v0.9.2) (2026-08-24)
 
