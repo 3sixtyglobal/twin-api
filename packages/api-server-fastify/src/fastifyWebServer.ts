@@ -56,8 +56,9 @@ import Fastify, {
 import type { Server, ServerOptions, Socket } from "socket.io";
 import FastifySocketIO from "./fastifySocketIo.js";
 import type { IFastifyWebServerConstructorOptions } from "./models/IFastifyWebServerConstructorOptions.js";
-import type { IRestProcessorChains } from "../models/IRestProcessorChains.js";
-import type { ISocketProcessorChains } from "../models/ISocketProcessorChains.js";
+import type { IRestProcessorChains } from "./models/IRestProcessorChains.js";
+import type { ISocketProcessorChains } from "./models/ISocketProcessorChains.js";
+
 /**
  * Implementation of the web server using Fastify.
  */
