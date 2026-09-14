@@ -169,7 +169,8 @@ export class HealthService implements IHealthComponent {
 						}
 						this.startApplicationTimer(this._healthApplicationCheckInterval);
 					}
-				}
+				},
+				{ idleShutdownTimeout: -1 }
 			);
 
 			// Immediately check health after a startup settling period.

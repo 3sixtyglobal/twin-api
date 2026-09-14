@@ -308,7 +308,8 @@ describe("HealthService", () => {
 					"health-application-check",
 					expect.stringContaining("healthApplicationTask.js"),
 					"checkApplicationHealth",
-					expect.any(Function)
+					expect.any(Function),
+					{ idleShutdownTimeout: -1 }
 				);
 			});
 
