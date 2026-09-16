@@ -78,34 +78,6 @@ The user must have one of the specified scopes to access the route.
 
 ***
 
-### processorFeatures? {#processorfeatures}
-
-> `optional` **processorFeatures?**: `string`[]
-
-The features supported by additional processors to run for this route.
-
-#### Inherited from
-
-[`IBaseRoute`](IBaseRoute.md).[`processorFeatures`](IBaseRoute.md#processorfeatures)
-
-***
-
-### processorData? {#processordata}
-
-> `optional` **processorData?**: `object`
-
-The data for additional processors to run for this route.
-
-#### Index Signature
-
-\[`key`: `string`\]: `unknown`
-
-#### Inherited from
-
-[`IBaseRoute`](IBaseRoute.md).[`processorData`](IBaseRoute.md#processordata)
-
-***
-
 ### disableTenantOverride? {#disabletenantoverride}
 
 > `optional` **disableTenantOverride?**: `boolean`

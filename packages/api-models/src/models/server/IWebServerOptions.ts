@@ -20,7 +20,7 @@ export interface IWebServerOptions {
 
 	/**
 	 * The methods that the server accepts.
-	 * @default ["GET", "PUT", "POST", "DELETE", "OPTIONS"]
+	 * @default ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"]
 	 */
 	methods?: HttpMethod[];
 
@@ -51,4 +51,14 @@ export interface IWebServerOptions {
 	 * Merged over the server's built-in limits; the "default" entry applies to routes with no bodyLimit name.
 	 */
 	bodyLimits?: { [name: string]: number };
+
+	/**
+	 * Custom configuration for the web server.
+	 */
+	customWebConfig?: unknown;
+
+	/**
+	 * Custom configuration for the socket server.
+	 */
+	customSocketConfig?: unknown;
 }

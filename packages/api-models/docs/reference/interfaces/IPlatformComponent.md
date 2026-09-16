@@ -32,9 +32,9 @@ Execute a method, if single tenant will run once, if multi-tenant will run for e
 
 ##### method
 
-() => `Promise`\<`void`\>
+() => `Promise`\<`void`\> \| `Promise`\<`boolean` \| `undefined`\>
 
-The method to run for each tenant.
+The method to run for each tenant, returning false will stop any further iterations.
 
 #### Returns
 

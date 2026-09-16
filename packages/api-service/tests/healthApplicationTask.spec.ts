@@ -4,7 +4,11 @@ import { HealthStatus, type IHealth } from "@twin.org/api-models";
 import type { IContextIds } from "@twin.org/context";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import { ModuleHelper } from "@twin.org/modules";
-import { checkApplicationHealth } from "../src/healthApplicationTask.js";
+import {
+	healthApplicationTask,
+	healthApplicationTaskEnd,
+	healthApplicationTaskStart
+} from "../src/healthApplicationTask.js";
 
 const ENGINE_CLONE_DATA = { config: {} };
 
@@ -35,14 +39,20 @@ describe("healthApplicationTask", () => {
 		vi.spyOn(ContextIdStore, "run").mockImplementation(async (contextIds, fn) => fn());
 	});
 
+	afterEach(async () => {
+		// The task module holds the engine clone in module scope, so clear it
+		// between tests to stop one test's engine leaking into the next.
+		await healthApplicationTaskEnd();
+	});
+
 	test("returns empty array when engineCloneData is empty", async () => {
-		expect(await checkApplicationHealth(undefined)).toEqual([]);
-		expect(await checkApplicationHealth(null)).toEqual([]);
+		expect(await healthApplicationTask(undefined)).toEqual([]);
+		expect(await healthApplicationTask(null)).toEqual([]);
 		expect(ModuleHelper.execModuleMethod).not.toHaveBeenCalled();
 	});
 
 	test("initialises the cloned engine from engineCloneData", async () => {
-		await checkApplicationHealth(ENGINE_CLONE_DATA);
+		await healthApplicationTask(ENGINE_CLONE_DATA);
 
 		expect(ModuleHelper.execModuleMethod).toHaveBeenCalledWith(
 			"@twin.org/engine-core",
@@ -52,19 +62,112 @@ describe("healthApplicationTask", () => {
 		expect(mockEngine.start).toHaveBeenCalled();
 	});
 
+	describe("excludeCloneComponents", () => {
+		const CLONE_WITH_TYPES = {
+			config: {
+				types: {
+					loggingConnector: [{ type: "console" }],
+					identityComponent: [{ type: "service" }],
+					rightsManagementPapComponent: [{ type: "service" }],
+					rightsManagementPdpComponent: [{ type: "service" }]
+				}
+			},
+			state: {}
+		};
+
+		function cloneArg(): { config: { types: { [type: string]: unknown } } } {
+			const calls = vi.mocked(ModuleHelper.execModuleMethod).mock.calls;
+			return calls[0][2]?.[1] as { config: { types: { [type: string]: unknown } } };
+		}
+
+		test("passes the clone data through untouched when no patterns are supplied", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES);
+			expect(cloneArg()).toBe(CLONE_WITH_TYPES);
+		});
+
+		test("passes the clone data through untouched when the pattern list is empty", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, []);
+			expect(cloneArg()).toBe(CLONE_WITH_TYPES);
+		});
+
+		test("removes the component types matching a pattern", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
+
+			expect(Object.keys(cloneArg().config.types)).toEqual([
+				"loggingConnector",
+				"identityComponent"
+			]);
+		});
+
+		test("removes component types matching any of several patterns", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, [
+				"^rightsManagement",
+				"^loggingConnector$"
+			]);
+
+			expect(Object.keys(cloneArg().config.types)).toEqual(["identityComponent"]);
+		});
+
+		test("treats the patterns as unanchored regular expressions", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["Component$"]);
+
+			expect(Object.keys(cloneArg().config.types)).toEqual(["loggingConnector"]);
+		});
+
+		test("does not mutate the source clone data", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
+
+			expect(Object.keys(CLONE_WITH_TYPES.config.types)).toHaveLength(4);
+		});
+
+		test("retains all component types when no pattern matches", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^noSuchComponent$"]);
+
+			expect(Object.keys(cloneArg().config.types)).toHaveLength(4);
+		});
+
+		test("tolerates clone data with no types to filter", async () => {
+			await healthApplicationTaskStart(ENGINE_CLONE_DATA, ["^rightsManagement"]);
+			expect(cloneArg()).toBe(ENGINE_CLONE_DATA);
+		});
+
+		test("reuses the patterns when the task has to start the engine lazily", async () => {
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
+			await healthApplicationTaskEnd();
+
+			vi.mocked(ModuleHelper.execModuleMethod).mockClear();
+			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
+			expect(Object.keys(cloneArg().config.types)).toEqual([
+				"loggingConnector",
+				"identityComponent"
+			]);
+		});
+	});
+
 	test("stops the engine after the health cycle completes", async () => {
-		await checkApplicationHealth(ENGINE_CLONE_DATA);
+		await healthApplicationTask(ENGINE_CLONE_DATA);
+		await healthApplicationTaskEnd();
 		expect(mockEngine.stop).toHaveBeenCalled();
 	});
 
 	test("stops the engine even when the health cycle throws", async () => {
 		mockGetRegisteredComponents.mockRejectedValue(new Error("fail"));
-		await expect(checkApplicationHealth(ENGINE_CLONE_DATA)).rejects.toThrow("fail");
+		await expect(healthApplicationTask(ENGINE_CLONE_DATA)).rejects.toThrow("fail");
+		await expect(healthApplicationTaskEnd()).resolves.toBeUndefined();
 		expect(mockEngine.stop).toHaveBeenCalled();
 	});
 
 	test("returns empty array when no components are registered", async () => {
-		expect(await checkApplicationHealth(ENGINE_CLONE_DATA)).toEqual([]);
+		expect(await healthApplicationTask(ENGINE_CLONE_DATA)).toEqual([]);
+	});
+
+	test("separates startup, payload execution and teardown lifecycle", async () => {
+		await expect(healthApplicationTaskStart(ENGINE_CLONE_DATA)).resolves.toBeUndefined();
+		expect(mockEngine.start).toHaveBeenCalledTimes(1);
+
+		await expect(healthApplicationTask(ENGINE_CLONE_DATA)).resolves.toEqual([]);
+		await expect(healthApplicationTaskEnd()).resolves.toBeUndefined();
+		expect(mockEngine.stop).toHaveBeenCalledTimes(1);
 	});
 
 	test("calls healthApplicationInit, healthApplication, healthApplicationTeardown in order", async () => {
@@ -87,7 +190,7 @@ describe("healthApplicationTask", () => {
 			}
 		]);
 
-		await checkApplicationHealth(ENGINE_CLONE_DATA);
+		await healthApplicationTask(ENGINE_CLONE_DATA);
 
 		expect(callOrder).toEqual(["init", "application", "teardown"]);
 	});
@@ -106,7 +209,7 @@ describe("healthApplicationTask", () => {
 			}))
 		);
 
-		await checkApplicationHealth(ENGINE_CLONE_DATA);
+		await healthApplicationTask(ENGINE_CLONE_DATA);
 
 		expect(teardownOrder).toEqual(["C", "B", "A"]);
 	});
@@ -125,7 +228,7 @@ describe("healthApplicationTask", () => {
 			}
 		]);
 
-		await checkApplicationHealth(ENGINE_CLONE_DATA);
+		await healthApplicationTask(ENGINE_CLONE_DATA);
 
 		expect(ContextIdStore.run).toHaveBeenCalledWith(
 			{ [ContextIdKeys.Node]: "n1", session: "s1" },
@@ -148,7 +251,7 @@ describe("healthApplicationTask", () => {
 			}
 		]);
 
-		await checkApplicationHealth(ENGINE_CLONE_DATA);
+		await healthApplicationTask(ENGINE_CLONE_DATA);
 
 		const runCalls = vi.mocked(ContextIdStore.run).mock.calls;
 		expect(runCalls).toHaveLength(2);
@@ -166,7 +269,7 @@ describe("healthApplicationTask", () => {
 			}
 		]);
 
-		const result = await checkApplicationHealth(ENGINE_CLONE_DATA);
+		const result = await healthApplicationTask(ENGINE_CLONE_DATA);
 
 		expect(result[0].source).toBe("db");
 	});
@@ -182,7 +285,7 @@ describe("healthApplicationTask", () => {
 			}
 		]);
 
-		const result = await checkApplicationHealth(ENGINE_CLONE_DATA);
+		const result = await healthApplicationTask(ENGINE_CLONE_DATA);
 
 		expect(result).toEqual([entry]);
 	});
@@ -203,7 +306,7 @@ describe("healthApplicationTask", () => {
 				}
 			]);
 
-			const result = await checkApplicationHealth(ENGINE_CLONE_DATA);
+			const result = await healthApplicationTask(ENGINE_CLONE_DATA);
 
 			expect(result.some(r => r.source === "lazy")).toBe(true);
 		});
@@ -229,7 +332,7 @@ describe("healthApplicationTask", () => {
 				}
 			]);
 
-			await checkApplicationHealth(ENGINE_CLONE_DATA);
+			await healthApplicationTask(ENGINE_CLONE_DATA);
 
 			expect(callOrder).toEqual(["callback", "teardown"]);
 		});
@@ -250,7 +353,7 @@ describe("healthApplicationTask", () => {
 				}
 			]);
 
-			const result = await checkApplicationHealth(ENGINE_CLONE_DATA);
+			const result = await healthApplicationTask(ENGINE_CLONE_DATA);
 
 			expect(result.some(r => r.source === "first")).toBe(true);
 			expect(result.some(r => r.source === "second")).toBe(false);
