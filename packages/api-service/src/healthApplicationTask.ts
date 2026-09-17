@@ -9,6 +9,8 @@ import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import type { IContextIds } from "@twin.org/context";
 import { GeneralError, Is } from "@twin.org/core";
 import type { IComponent } from "@twin.org/core";
+import { EngineCloneHelper } from "@twin.org/engine-models";
+import type { IEngineCoreClone } from "@twin.org/engine-models";
 import { ModuleHelper } from "@twin.org/modules";
 
 let engine:
@@ -21,44 +23,6 @@ let engine:
 	| undefined;
 let startupPromise: Promise<void> | undefined;
 let excludeCloneComponents: string[] | undefined;
-
-/**
- * Remove the excluded component types from the engine clone data.
- * The engine clone config is keyed by component type, so entries whose key matches any of the
- * supplied patterns are dropped before the clone is built, keeping those components out of the
- * health worker entirely.
- * @param engineCloneData The engine clone data to filter.
- * @param excludeComponents Verified regular expression patterns matched against the component
- * type keys, already validated by the caller.
- * @returns The clone data with the excluded component types removed.
- */
-function filterCloneComponents(engineCloneData: unknown, excludeComponents?: string[]): unknown {
-	if (!Is.arrayValue(excludeComponents)) {
-		return engineCloneData;
-	}
-
-	if (
-		!Is.object<{ config?: { types?: { [type: string]: unknown } } }>(engineCloneData) ||
-		!Is.object(engineCloneData.config?.types)
-	) {
-		return engineCloneData;
-	}
-
-	const patterns = excludeComponents.map(excludeComponent => new RegExp(excludeComponent));
-
-	const sourceTypes = engineCloneData.config.types;
-	const filteredTypes: { [type: string]: unknown } = {};
-	for (const typeKey of Object.keys(sourceTypes)) {
-		if (!patterns.some(pattern => pattern.test(typeKey))) {
-			filteredTypes[typeKey] = sourceTypes[typeKey];
-		}
-	}
-
-	return {
-		...engineCloneData,
-		config: { ...engineCloneData.config, types: filteredTypes }
-	};
-}
 
 /**
  * Start the engine clone used for application health checks.
@@ -74,6 +38,9 @@ export async function healthApplicationTaskStart(
 
 	startupPromise = (async () => {
 		if (!Is.empty(engineCloneData)) {
+			const cloneData = Is.object<IEngineCoreClone>(engineCloneData)
+				? EngineCloneHelper.filterCloneComponents(engineCloneData, excludeComponents)
+				: engineCloneData;
 			engine = await ModuleHelper.execModuleMethod<{
 				start: () => Promise<void>;
 				stop: () => Promise<void>;
@@ -81,7 +48,7 @@ export async function healthApplicationTaskStart(
 				getRegisteredComponents: () => Promise<{ instanceType: string; component: IComponent }[]>;
 			}>("@twin.org/engine-core", "EngineCoreBuilder.fromClone", [
 				"engine",
-				filterCloneComponents(engineCloneData, excludeComponents),
+				cloneData,
 				await ContextIdStore.getContextIds(),
 				{ logLevel: "error" }
 			]);

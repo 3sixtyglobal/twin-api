@@ -9,15 +9,8 @@ import {
 import type { IBackgroundTask, IBackgroundTaskComponent } from "@twin.org/background-task-models";
 import { TaskStatus } from "@twin.org/background-task-models";
 import type { IContextIds } from "@twin.org/context";
-import {
-	BaseError,
-	ComponentFactory,
-	Factory,
-	GeneralError,
-	Guards,
-	type IComponent,
-	Is
-} from "@twin.org/core";
+import { BaseError, ComponentFactory, Factory, type IComponent, Is } from "@twin.org/core";
+import { EngineCloneHelper } from "@twin.org/engine-models";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { IHealthServiceConstructorOptions } from "./models/IHealthServiceConstructorOptions.js";
@@ -138,7 +131,7 @@ export class HealthService implements IHealthComponent {
 		this._applicationHealthTaskHandler =
 			options?.config?.overrideApplicationHealthTaskHandler ??
 			new URL("./healthApplicationTask.js", import.meta.url).href;
-		this._excludeCloneComponents = this.verifyExcludeCloneComponents(
+		this._excludeCloneComponents = EngineCloneHelper.verifyExcludeCloneComponents(
 			options?.config?.excludeCloneComponents
 		);
 		this._started = false;
@@ -382,44 +375,5 @@ export class HealthService implements IHealthComponent {
 			globalThis.clearTimeout(this._healthApplicationTimer);
 			this._healthApplicationTimer = undefined;
 		}
-	}
-
-	/**
-	 * Verify the exclude clone component patterns supplied in the config.
-	 * The patterns are compiled here so an invalid one fails at construction time, rather than
-	 * inside the background task worker where the failure is much harder to attribute.
-	 * @param excludeCloneComponents The patterns from the config.
-	 * @returns The verified patterns, or undefined if none were supplied.
-	 * @throws GeneralError if one of the patterns is not a valid regular expression.
-	 * @internal
-	 */
-	private verifyExcludeCloneComponents(excludeCloneComponents?: string[]): string[] | undefined {
-		if (Is.empty(excludeCloneComponents)) {
-			return undefined;
-		}
-
-		Guards.array(HealthService.CLASS_NAME, nameof(excludeCloneComponents), excludeCloneComponents);
-
-		const verified: string[] = [];
-		for (const excludeCloneComponent of excludeCloneComponents) {
-			Guards.stringValue(
-				HealthService.CLASS_NAME,
-				nameof(excludeCloneComponent),
-				excludeCloneComponent
-			);
-
-			try {
-				verified.push(new RegExp(excludeCloneComponent).source);
-			} catch (err) {
-				throw new GeneralError(
-					HealthService.CLASS_NAME,
-					"invalidExcludeCloneComponent",
-					{ pattern: excludeCloneComponent },
-					BaseError.fromError(err)
-				);
-			}
-		}
-
-		return verified;
 	}
 }
