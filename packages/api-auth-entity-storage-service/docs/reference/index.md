@@ -17,6 +17,7 @@
 
 - [IAuthHeaderProcessorConfig](interfaces/IAuthHeaderProcessorConfig.md)
 - [IAuthHeaderProcessorConstructorOptions](interfaces/IAuthHeaderProcessorConstructorOptions.md)
+- [IAuthTokenContext](interfaces/IAuthTokenContext.md)
 - [IEntityStorageAuthenticationAdminServiceConfig](interfaces/IEntityStorageAuthenticationAdminServiceConfig.md)
 - [IEntityStorageAuthenticationAdminServiceConstructorOptions](interfaces/IEntityStorageAuthenticationAdminServiceConstructorOptions.md)
 - [IEntityStorageAuthenticationAuditServiceConfig](interfaces/IEntityStorageAuthenticationAuditServiceConfig.md)

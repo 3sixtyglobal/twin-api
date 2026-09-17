@@ -14,6 +14,7 @@
 
 - [ISingleTenantProcessorConfig](interfaces/ISingleTenantProcessorConfig.md)
 - [ISingleTenantProcessorConstructorOptions](interfaces/ISingleTenantProcessorConstructorOptions.md)
+- [ITenantAdminServiceConfig](interfaces/ITenantAdminServiceConfig.md)
 - [ITenantAdminServiceConstructorOptions](interfaces/ITenantAdminServiceConstructorOptions.md)
 - [ITenantOverrideProcessorConfig](interfaces/ITenantOverrideProcessorConfig.md)
 - [ITenantOverrideProcessorConstructorOptions](interfaces/ITenantOverrideProcessorConstructorOptions.md)

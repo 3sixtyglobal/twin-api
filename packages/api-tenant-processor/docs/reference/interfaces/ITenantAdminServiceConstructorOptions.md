@@ -15,3 +15,11 @@ The entity storage for the tenants.
 ```ts
 tenant
 ```
+
+***
+
+### config? {#config}
+
+> `optional` **config?**: [`ITenantAdminServiceConfig`](ITenantAdminServiceConfig.md)
+
+Configuration for the service.
