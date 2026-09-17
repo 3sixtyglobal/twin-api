@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.1-next.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.2...api-service-v0.10.1-next.3) (2026-09-17)
+
+
+### Bug Fixes
+
+* switch the health task clone exclusions to EngineCloneHelper ([#309](https://github.com/iotaledger/twin-api/issues/309)) ([ff8de48](https://github.com/iotaledger/twin-api/commit/ff8de4898c0f0a227b6d142b68668c27e01e9062))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.10.1-next.2 to 0.10.1-next.3
+
 ## [0.10.1-next.2](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.1...api-service-v0.10.1-next.2) (2026-09-17)
 
 
