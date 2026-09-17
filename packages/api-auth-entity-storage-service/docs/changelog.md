@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.10.1-next.2](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.10.1-next.1...api-auth-entity-storage-service-v0.10.1-next.2) (2026-09-17)
+
+
+### Features
+
+* hash cached tokens ([#306](https://github.com/iotaledger/twin-api/issues/306)) ([ea7ee5b](https://github.com/iotaledger/twin-api/commit/ea7ee5b697e94c58181817a6f14d693e6b5b115d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.10.1-next.1 to 0.10.1-next.2
+    * @twin.org/api-core bumped from 0.10.1-next.1 to 0.10.1-next.2
+    * @twin.org/api-models bumped from 0.10.1-next.1 to 0.10.1-next.2
+
 ## [0.10.1-next.1](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.10.1-next.0...api-auth-entity-storage-service-v0.10.1-next.1) (2026-09-17)
 
 
