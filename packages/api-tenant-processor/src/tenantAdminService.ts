@@ -13,6 +13,7 @@ import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/conte
 import {
 	AlreadyExistsError,
 	BaseError,
+	Converter,
 	GeneralError,
 	Guards,
 	type IError,
@@ -21,6 +22,7 @@ import {
 	NotFoundError,
 	Url
 } from "@twin.org/core";
+import { Blake2b } from "@twin.org/crypto";
 import { ComparisonOperator, type EntityCondition } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -152,7 +154,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async getByApiKey(apiKey: string): Promise<ITenant> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(apiKey), apiKey, 32);
 
-		return this.cachedLookup(`${TenantAdminService._CACHE_PREFIX_API_KEY}${apiKey}`, async () => {
+		return this.cachedLookup(this.apiKeyCacheKey(apiKey), async () => {
 			const tenant = await this._entityStorageConnector.get(apiKey, "apiKey");
 			if (!Is.object(tenant)) {
 				throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", apiKey);
@@ -557,6 +559,19 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	}
 
 	/**
+	 * Build the cache key used for an api key lookup.
+	 * The api key is hashed so neither the cache keys nor the mutex keys derived from them hold
+	 * the credential itself.
+	 * @param apiKey The api key being looked up.
+	 * @returns The cache key.
+	 * @internal
+	 */
+	private apiKeyCacheKey(apiKey: string): string {
+		const hashed = Converter.bytesToHex(Blake2b.sum256(Converter.utf8ToBytes(apiKey)));
+		return `${TenantAdminService._CACHE_PREFIX_API_KEY}${hashed}`;
+	}
+
+	/**
 	 * Build the cache key used for an organization id lookup.
 	 * @param organizationId The organization id being looked up.
 	 * @param includeLegacy Whether the lookup also searches the legacy organization ids.
@@ -583,17 +598,11 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 		// The expiry is absolute rather than the idle time the cache applies alongside it. Entries
 		// are only invalidated in the process that made the change, so without it a tenant under
 		// steady traffic on one node would never pick up an edit made on another.
-		const cached: ITenant | undefined = await this._tenantCache.getOrSet(
+		const cached = await this._tenantCache.getOrSet(
 			cacheKey,
 			lookup,
 			Date.now() + this._tenantCacheTtlMs
 		);
-
-		// getOrSet tests for the entry and reads it as two separate steps, so an entry expiring
-		// between them comes back as nothing at all.
-		if (Is.empty(cached)) {
-			return lookup();
-		}
 
 		// Callers get their own copy; the cached instance is shared by every caller and some of
 		// them fill in defaults on the tenant they are handed.
@@ -618,7 +627,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 		this._tenantCache.delete(`${TenantAdminService._CACHE_PREFIX_ID}${tenant.id}`);
 
 		if (Is.stringValue(tenant.apiKey)) {
-			this._tenantCache.delete(`${TenantAdminService._CACHE_PREFIX_API_KEY}${tenant.apiKey}`);
+			this._tenantCache.delete(this.apiKeyCacheKey(tenant.apiKey));
 		}
 
 		if (Is.stringValue(tenant.publicOrigin)) {

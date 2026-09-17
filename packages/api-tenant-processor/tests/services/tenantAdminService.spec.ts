@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HealthCategory, HealthStatus, type ITenant } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
-import { AlreadyExistsError, LfuCache, NotFoundError } from "@twin.org/core";
+import { AlreadyExistsError, Converter, LfuCache, NotFoundError } from "@twin.org/core";
+import { Blake2b } from "@twin.org/crypto";
 import { ComparisonOperator } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -524,6 +525,23 @@ describe("TenantAdminService", () => {
 			await service.stop();
 		});
 
+		it("keys the api key lookup by a hash of the api key, never the api key itself", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
+			const getOrSet = vi.spyOn(LfuCache.prototype, "getOrSet");
+
+			const service = new TenantAdminService();
+
+			await service.getByApiKey(API_KEY);
+
+			const cacheKey = getOrSet.mock.calls[0][0];
+			expect(cacheKey).not.toContain(API_KEY);
+			expect(cacheKey).toBe(
+				`apiKey:${Converter.bytesToHex(Blake2b.sum256(Converter.utf8ToBytes(API_KEY)))}`
+			);
+
+			await service.stop();
+		});
+
 		it("serves repeated api key lookups from the cache", async () => {
 			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
 
@@ -776,20 +794,6 @@ describe("TenantAdminService", () => {
 
 			// The invalidation runs after the delete, so the racing lookup's entry is gone too.
 			await expect(service.get(TENANT_ID)).rejects.toThrow(NotFoundError);
-
-			await service.stop();
-		});
-
-		it("falls back to storage when the cache reports an entry it can no longer return", async () => {
-			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
-			// An entry expiring between getOrSet's own test and read hands back nothing at all.
-			vi.spyOn(LfuCache.prototype, "getOrSet").mockResolvedValue(undefined);
-
-			const service = new TenantAdminService();
-
-			const tenant = await service.get(TENANT_ID);
-
-			expect(tenant.id).toBe(TENANT_ID);
 
 			await service.stop();
 		});

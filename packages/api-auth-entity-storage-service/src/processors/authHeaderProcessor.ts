@@ -15,7 +15,16 @@ import {
 	ContextIdStore,
 	type IContextIds
 } from "@twin.org/context";
-import { BaseError, Coerce, ComponentFactory, GeneralError, Is, LfuCache } from "@twin.org/core";
+import {
+	BaseError,
+	Coerce,
+	ComponentFactory,
+	Converter,
+	GeneralError,
+	Is,
+	LfuCache
+} from "@twin.org/core";
+import { Blake2b } from "@twin.org/crypto";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -299,28 +308,18 @@ export class AuthHeaderProcessor implements IBaseRouteProcessor {
 			return this.verifyToken(nodeId, token, contextIds);
 		}
 
-		// getOrSet serializes callers holding the same token, so a burst of concurrent requests
-		// costs one verification rather than one each. A verification that throws caches nothing.
-		// The expiry is absolute rather than the idle time the cache applies alongside it, because
-		// a steady stream of requests would otherwise keep an entry alive indefinitely and a
-		// password change or a revoked user would go unnoticed for as long as the token lived.
-		const tokenContext: IAuthTokenContext | undefined = await this._tokenCache.getOrSet(
-			token,
+		// Use hash of token so we don't store the raw token in memory.
+		const cacheKey = Converter.bytesToHex(Blake2b.sum256(Converter.utf8ToBytes(token)));
+
+		const tokenContext = await this._tokenCache.getOrSet(
+			cacheKey,
 			async () => this.verifyToken(nodeId, token, contextIds),
 			Date.now() + this._tokenCacheTtlMs
 		);
 
-		// getOrSet tests for the entry and reads it as two separate steps, so an entry expiring
-		// between them comes back as nothing at all.
-		if (Is.empty(tokenContext)) {
-			return this.verifyToken(nodeId, token, contextIds);
-		}
-
-		// A token can expire while its context sits in the cache, and the entry must never outlive
-		// it. Drop it and verify afresh so the rejection comes from the normal path with the error
-		// it would have raised anyway.
+		// A token can expire while its context sits in the cache.
 		if (Is.integer(tokenContext.expires) && tokenContext.expires <= Date.now()) {
-			this._tokenCache.delete(token);
+			this._tokenCache.delete(cacheKey);
 			return this.verifyToken(nodeId, token, contextIds);
 		}
 

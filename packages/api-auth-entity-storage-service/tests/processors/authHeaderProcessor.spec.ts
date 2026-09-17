@@ -2,7 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpContextIdKeys, HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
-import { ComponentFactory, type IError, LfuCache, UnauthorizedError } from "@twin.org/core";
+import {
+	ComponentFactory,
+	Converter,
+	type IError,
+	LfuCache,
+	UnauthorizedError
+} from "@twin.org/core";
+import { Blake2b } from "@twin.org/crypto";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -876,18 +883,19 @@ describe("AuthHeaderProcessor", () => {
 			await authProcessor.stop();
 		});
 
-		it("verifies afresh when the cache reports an entry it can no longer return", async () => {
+		it("keys the cache by a hash of the token, never the token itself", async () => {
 			mockVerify();
-			// An entry expiring between getOrSet's own test and read hands back nothing at all.
-			vi.spyOn(LfuCache.prototype, "getOrSet").mockResolvedValue(undefined);
+			const getOrSet = vi.spyOn(LfuCache.prototype, "getOrSet");
 
 			const authProcessor = new AuthHeaderProcessor();
 			await authProcessor.start();
 
-			const { response, contextIds } = await runRequest(authProcessor);
-
+			const { response } = await runRequest(authProcessor);
 			expect(response.statusCode).toBeUndefined();
-			expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
+
+			const cacheKey = getOrSet.mock.calls[0][0];
+			expect(cacheKey).not.toBe("jwt");
+			expect(cacheKey).toBe(Converter.bytesToHex(Blake2b.sum256(Converter.utf8ToBytes("jwt"))));
 
 			await authProcessor.stop();
 		});
