@@ -832,3 +832,23 @@ describe("TokenHelper", () => {
 		});
 	});
 });
+
+describe("TokenHelper.verifyScopes", () => {
+	it("accepts a token that carries every required scope", () => {
+		expect(() => TokenHelper.verifyScopes("read,write,admin", ["read", "write"])).not.toThrow();
+	});
+
+	it("accepts any token when no scopes are required", () => {
+		expect(() => TokenHelper.verifyScopes("read")).not.toThrow();
+		expect(() => TokenHelper.verifyScopes("read", [])).not.toThrow();
+		expect(() => TokenHelper.verifyScopes(undefined, [])).not.toThrow();
+	});
+
+	it("rejects a token that is missing one of the required scopes", () => {
+		expect(() => TokenHelper.verifyScopes("read", ["read", "write"])).toThrow(UnauthorizedError);
+	});
+
+	it("rejects a token that carries no scopes when scopes are required", () => {
+		expect(() => TokenHelper.verifyScopes(undefined, ["read"])).toThrow(UnauthorizedError);
+	});
+});

@@ -4,37 +4,48 @@ import {
 	ForbiddenError,
 	HttpContextIdKeys,
 	type IHttpResponse,
-	type IHttpServerRequest
+	type IHttpServerRequest,
+	type ITenant,
+	type ITenantAdminComponent
 } from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
-import {
-	EntityStorageConnectorFactory,
-	type IEntityStorageConnector
-} from "@twin.org/entity-storage-models";
+import { ComponentFactory, GeneralError, GuardError, NotFoundError } from "@twin.org/core";
 import { HttpStatusCode } from "@twin.org/web";
-import type { Tenant } from "../../src/entities/tenant.js";
 import { TenantOverrideProcessor } from "../../src/tenantOverrideProcessor.js";
 
 const CALLER_TENANT = "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6";
 const OVERRIDE_TENANT = "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7";
 const INVALID_TENANT = "not-a-valid-tenant-id";
 
+const OVERRIDE_TENANT_MODEL: ITenant = {
+	id: OVERRIDE_TENANT,
+	apiKey: "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8",
+	label: "Override",
+	organizationId: "org-override",
+	dateCreated: "2026-01-01T00:00:00.000Z",
+	dateModified: "2026-01-01T00:00:00.000Z"
+};
+
 describe("TenantOverrideProcessor", () => {
-	let mockStorage: IEntityStorageConnector<Tenant>;
+	let mockTenantAdmin: ITenantAdminComponent;
 	let processor: TenantOverrideProcessor;
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
 
-		mockStorage = {
-			getSchema: vi.fn(),
-			set: vi.fn(),
-			get: vi.fn().mockResolvedValue({ id: OVERRIDE_TENANT }),
+		mockTenantAdmin = {
+			className: vi.fn(),
+			create: vi.fn(),
+			update: vi.fn(),
+			get: vi.fn().mockResolvedValue(OVERRIDE_TENANT_MODEL),
+			getByApiKey: vi.fn(),
+			getByPublicOrigin: vi.fn(),
+			getTenantByOrganizationId: vi.fn(),
 			remove: vi.fn(),
 			query: vi.fn()
-		} as unknown as IEntityStorageConnector<Tenant>;
+		};
 
-		vi.spyOn(EntityStorageConnectorFactory, "get").mockReturnValue(mockStorage);
+		vi.spyOn(ComponentFactory, "get").mockReturnValue(mockTenantAdmin);
 
 		processor = new TenantOverrideProcessor();
 	});
@@ -107,7 +118,7 @@ describe("TenantOverrideProcessor", () => {
 
 		expect(response.statusCode).toBe(HttpStatusCode.unauthorized);
 		expect(contextIds[ContextIdKeys.Tenant]).toBe(CALLER_TENANT);
-		expect(mockStorage.get).not.toHaveBeenCalled();
+		expect(mockTenantAdmin.get).not.toHaveBeenCalled();
 	});
 
 	it("should return 403 when override-tenant is supplied but caller lacks escalated privilege", async () => {
@@ -126,7 +137,7 @@ describe("TenantOverrideProcessor", () => {
 
 		expect(response.statusCode).toBe(HttpStatusCode.forbidden);
 		expect(contextIds[ContextIdKeys.Tenant]).toBe(CALLER_TENANT);
-		expect(mockStorage.get).not.toHaveBeenCalled();
+		expect(mockTenantAdmin.get).not.toHaveBeenCalled();
 	});
 
 	it("should return 403 when caller has no scope at all", async () => {
@@ -144,28 +155,10 @@ describe("TenantOverrideProcessor", () => {
 		expect(contextIds[ContextIdKeys.Tenant]).toBe(CALLER_TENANT);
 	});
 
-	it("should return 404 when override-tenant does not match a known tenant", async () => {
-		vi.mocked(mockStorage.get).mockResolvedValue(undefined);
-
-		const contextIds: IContextIds = {
-			[ContextIdKeys.Tenant]: CALLER_TENANT,
-			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
-		};
-		const response: IHttpResponse = {};
-		await processor.pre(
-			{ query: { "override-tenant": INVALID_TENANT } } as unknown as IHttpServerRequest,
-			response,
-			{ operationId: "tenantGetById", path: "/" },
-			contextIds,
-			{}
-		);
-
-		expect(response.statusCode).toBe(HttpStatusCode.notFound);
-		expect(contextIds[ContextIdKeys.Tenant]).toBe(CALLER_TENANT);
-	});
-
 	it("should return 404 when override-tenant does not exist in the system", async () => {
-		vi.mocked(mockStorage.get).mockResolvedValue(undefined);
+		vi.mocked(mockTenantAdmin.get).mockRejectedValue(
+			new NotFoundError("tenantAdminService", "tenantNotFound", OVERRIDE_TENANT)
+		);
 
 		const contextIds: IContextIds = {
 			[ContextIdKeys.Tenant]: CALLER_TENANT,
@@ -181,6 +174,9 @@ describe("TenantOverrideProcessor", () => {
 		);
 
 		expect(response.statusCode).toBe(HttpStatusCode.notFound);
+		expect((response.body as { message: string }).message).toBe(
+			"tenantOverrideProcessor.tenantNotFound"
+		);
 		expect(contextIds[ContextIdKeys.Tenant]).toBe(CALLER_TENANT);
 	});
 
@@ -201,7 +197,7 @@ describe("TenantOverrideProcessor", () => {
 		expect(response.statusCode).toBeUndefined();
 		expect(contextIds[ContextIdKeys.Tenant]).toBe(OVERRIDE_TENANT);
 		expect(contextIds[HttpContextIdKeys.OriginalTenant]).toBe(CALLER_TENANT);
-		expect(mockStorage.get).toHaveBeenCalledWith(OVERRIDE_TENANT);
+		expect(mockTenantAdmin.get).toHaveBeenCalledWith(OVERRIDE_TENANT);
 	});
 
 	it("should respond with 403 body containing the error name", async () => {
@@ -221,5 +217,91 @@ describe("TenantOverrideProcessor", () => {
 		expect(response.statusCode).toBe(HttpStatusCode.forbidden);
 		const body = response.body as { name: string };
 		expect(body.name).toBe(ForbiddenError.CLASS_NAME);
+	});
+	it("should return 404 when the override tenant id is not well formed", async () => {
+		vi.mocked(mockTenantAdmin.get).mockRejectedValue(
+			new GuardError("tenantAdminService", "guard.stringHexLength", "tenantId", INVALID_TENANT)
+		);
+
+		const contextIds: IContextIds = {
+			[ContextIdKeys.Tenant]: CALLER_TENANT,
+			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+		};
+		const response: IHttpResponse = {};
+		await processor.pre(
+			{ query: { "override-tenant": INVALID_TENANT } } as unknown as IHttpServerRequest,
+			response,
+			{ operationId: "tenantGetById", path: "/" },
+			contextIds,
+			{}
+		);
+
+		expect(response.statusCode).toBe(HttpStatusCode.notFound);
+		expect(contextIds[ContextIdKeys.Tenant]).toBe(CALLER_TENANT);
+	});
+
+	it("should return 404 when the component returns a tenant with a different id", async () => {
+		vi.mocked(mockTenantAdmin.get).mockResolvedValue({
+			...OVERRIDE_TENANT_MODEL,
+			id: CALLER_TENANT
+		});
+
+		const contextIds: IContextIds = {
+			[ContextIdKeys.Tenant]: CALLER_TENANT,
+			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+		};
+		const response: IHttpResponse = {};
+		await processor.pre(
+			{ query: { "override-tenant": OVERRIDE_TENANT } } as unknown as IHttpServerRequest,
+			response,
+			{ operationId: "tenantGetById", path: "/" },
+			contextIds,
+			{}
+		);
+
+		expect(response.statusCode).toBe(HttpStatusCode.notFound);
+		expect(contextIds[ContextIdKeys.Tenant]).toBe(CALLER_TENANT);
+	});
+
+	it("should pass a component fault through rather than reporting it as a missing tenant", async () => {
+		vi.mocked(mockTenantAdmin.get).mockRejectedValue(
+			new GeneralError("tenantAdminService", "storageUnavailable")
+		);
+
+		const contextIds: IContextIds = {
+			[ContextIdKeys.Tenant]: CALLER_TENANT,
+			[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+		};
+		const response: IHttpResponse = {};
+		await processor.pre(
+			{ query: { "override-tenant": OVERRIDE_TENANT } } as unknown as IHttpServerRequest,
+			response,
+			{ operationId: "tenantGetById", path: "/" },
+			contextIds,
+			{}
+		);
+
+		expect(response.statusCode).toBe(HttpStatusCode.internalServerError);
+		expect(contextIds[ContextIdKeys.Tenant]).toBe(CALLER_TENANT);
+	});
+
+	it("should resolve the tenant admin component under the default name", () => {
+		const componentFactorySpy = vi.spyOn(ComponentFactory, "get");
+
+		const overrideProcessor = new TenantOverrideProcessor();
+
+		expect(overrideProcessor.className()).toBe(TenantOverrideProcessor.CLASS_NAME);
+		expect(componentFactorySpy).toHaveBeenCalledWith("tenant-admin");
+	});
+
+	it("should resolve the tenant admin component under a configured name", () => {
+		const componentFactorySpy = vi.spyOn(ComponentFactory, "get");
+
+		const overrideProcessor = new TenantOverrideProcessor({
+			tenantAdminComponentType: "custom-tenant-admin"
+		});
+
+		expect(overrideProcessor.className()).toBe(TenantOverrideProcessor.CLASS_NAME);
+		expect(componentFactorySpy).toHaveBeenCalledWith("custom-tenant-admin");
 	});
 });

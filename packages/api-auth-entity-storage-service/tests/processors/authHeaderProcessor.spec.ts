@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { HttpContextIdKeys, HttpErrorHelper, type IHttpResponse } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
-import { ComponentFactory, type IError, UnauthorizedError } from "@twin.org/core";
+import { ComponentFactory, type IError, LfuCache, UnauthorizedError } from "@twin.org/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -71,7 +71,7 @@ describe("AuthHeaderProcessor", () => {
 				expect(verified).toEqual(["user", "organization"]);
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456" }
+					payload: { sub: "did:user:123", org: "did:org:456", scope: "user-admin" }
 				};
 			}
 		);
@@ -131,7 +131,7 @@ describe("AuthHeaderProcessor", () => {
 				expect(verified).toContain("tenant");
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456", tid: tenantId }
+					payload: { sub: "did:user:123", org: "did:org:456", tid: tenantId, scope: "user-admin" }
 				};
 			}
 		);
@@ -245,7 +245,12 @@ describe("AuthHeaderProcessor", () => {
 				}
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456", tid: encryptedTenantId }
+					payload: {
+						sub: "did:user:123",
+						org: "did:org:456",
+						tid: encryptedTenantId,
+						scope: "user-admin"
+					}
 				};
 			}
 		);
@@ -295,7 +300,7 @@ describe("AuthHeaderProcessor", () => {
 				expect(verified).toEqual(["user", "organization"]);
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456" }
+					payload: { sub: "did:user:123", org: "did:org:456", scope: "user-admin" }
 				};
 			}
 		);
@@ -345,7 +350,12 @@ describe("AuthHeaderProcessor", () => {
 				}
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456", tid: encryptedTenantId }
+					payload: {
+						sub: "did:user:123",
+						org: "did:org:456",
+						tid: encryptedTenantId,
+						scope: "user-admin"
+					}
 				};
 			}
 		);
@@ -404,7 +414,7 @@ describe("AuthHeaderProcessor", () => {
 				expect(verified).toContain("tenant");
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456", tid: tenantA }
+					payload: { sub: "did:user:123", org: "did:org:456", tid: tenantA, scope: "user-admin" }
 				};
 			}
 		);
@@ -536,7 +546,7 @@ describe("AuthHeaderProcessor", () => {
 				expect(verified).toEqual(["user", "organization"]);
 				return {
 					header: { alg: "EdDSA" },
-					payload: { sub: "did:user:123", org: "did:org:456" }
+					payload: { sub: "did:user:123", org: "did:org:456", scope: "user-admin" }
 				};
 			}
 		);
@@ -569,6 +579,10 @@ describe("AuthHeaderProcessor", () => {
 		const NODE_ORG = "did:node-org:111";
 		const USER_ORG = "did:user-org:456";
 		const USER_IDENTITY = "did:user:123";
+
+		afterEach(() => {
+			vi.useRealTimers();
+		});
 
 		beforeEach(() => {
 			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
@@ -742,6 +756,269 @@ describe("AuthHeaderProcessor", () => {
 			);
 
 			expect(response.headers).toBeUndefined();
+		});
+	});
+
+	describe("token cache", () => {
+		const USER: AuthenticationUser = {
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "hashed",
+			salt: "salt",
+			scope: "user-admin,reader",
+			passwordVersion: 0
+		};
+
+		/**
+		 * Stand in for a real verification, resolving the token through the supplied verifyUser
+		 * callback so the tenant and user lookups behind it actually run.
+		 * @param expSeconds The expiry claim to report for the token, if any.
+		 */
+		function mockVerify(expSeconds?: number): void {
+			vi.spyOn(TokenHelper, "verify").mockImplementation(
+				async (vault, nodeId, key, token, requiredScope, verifyUser) => {
+					await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+					return {
+						header: { alg: "EdDSA" },
+						payload: {
+							sub: "did:user:123",
+							org: "did:org:456",
+							scope: "user-admin,reader",
+							exp: expSeconds
+						}
+					};
+				}
+			);
+		}
+
+		/**
+		 * Drive one request through the processor.
+		 * @param authProcessor The processor under test.
+		 * @param requiredScope The scopes the route demands.
+		 * @returns The response and the context ids the processor populated.
+		 */
+		async function runRequest(
+			authProcessor: AuthHeaderProcessor,
+			requiredScope?: string[]
+		): Promise<{ response: IHttpResponse; contextIds: IContextIds }> {
+			const response: IHttpResponse = {};
+			const contextIds: IContextIds = {};
+			await authProcessor.pre(
+				{ headers: {} } as never,
+				response,
+				{ requiredScope } as never,
+				contextIds,
+				{}
+			);
+			return { response, contextIds };
+		}
+
+		beforeEach(() => {
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+				[ContextIdKeys.Node]: "node-1",
+				[ContextIdKeys.Organization]: "did:org:456"
+			});
+			vi.mocked(mockUserEntityStorage.get).mockResolvedValue(USER);
+			vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+				token: "jwt",
+				location: "authorization"
+			});
+		});
+
+		it("verifies and looks the user up only once for a repeated token", async () => {
+			mockVerify();
+			const authProcessor = new AuthHeaderProcessor();
+			await authProcessor.start();
+
+			for (let i = 0; i < 3; i++) {
+				const { response, contextIds } = await runRequest(authProcessor);
+				expect(response.statusCode).toBeUndefined();
+				expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
+				expect(contextIds[ContextIdKeys.UserOrganization]).toBe("did:org:456");
+			}
+
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(1);
+			expect(mockUserEntityStorage.get).toHaveBeenCalledTimes(1);
+
+			await authProcessor.stop();
+		});
+
+		it("collapses concurrent requests with the same token into one verification", async () => {
+			let inFlight = 0;
+			let maxInFlight = 0;
+			vi.spyOn(TokenHelper, "verify").mockImplementation(
+				async (vault, nodeId, key, token, requiredScope, verifyUser) => {
+					inFlight++;
+					maxInFlight = Math.max(maxInFlight, inFlight);
+					await new Promise(resolve => setTimeout(resolve, 20));
+					await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+					inFlight--;
+					return {
+						header: { alg: "EdDSA" },
+						payload: { sub: "did:user:123", org: "did:org:456", scope: "user-admin,reader" }
+					};
+				}
+			);
+
+			const authProcessor = new AuthHeaderProcessor();
+			await authProcessor.start();
+
+			const responses = await Promise.all([0, 1, 2, 3].map(async () => runRequest(authProcessor)));
+
+			for (const { response } of responses) {
+				expect(response.statusCode).toBeUndefined();
+			}
+			expect(maxInFlight).toBe(1);
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(1);
+			expect(mockUserEntityStorage.get).toHaveBeenCalledTimes(1);
+
+			await authProcessor.stop();
+		});
+
+		it("verifies afresh when the cache reports an entry it can no longer return", async () => {
+			mockVerify();
+			// An entry expiring between getOrSet's own test and read hands back nothing at all.
+			vi.spyOn(LfuCache.prototype, "getOrSet").mockResolvedValue(undefined);
+
+			const authProcessor = new AuthHeaderProcessor();
+			await authProcessor.start();
+
+			const { response, contextIds } = await runRequest(authProcessor);
+
+			expect(response.statusCode).toBeUndefined();
+			expect(contextIds[ContextIdKeys.User]).toBe("did:user:123");
+
+			await authProcessor.stop();
+		});
+
+		it("checks the scopes a route requires on every request, cached or not", async () => {
+			mockVerify();
+			const authProcessor = new AuthHeaderProcessor();
+			await authProcessor.start();
+
+			const allowed = await runRequest(authProcessor, ["user-admin"]);
+			expect(allowed.response.statusCode).toBeUndefined();
+
+			// Same token, different route; the cached context must not carry the earlier verdict.
+			const denied = await runRequest(authProcessor, ["tenant-admin"]);
+			expect(denied.response.statusCode).toBe(HttpStatusCode.unauthorized);
+			expect((denied.response.body as IError).message).toBe("tokenHelper.insufficientScopes");
+
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(1);
+
+			await authProcessor.stop();
+		});
+
+		it("never holds a token beyond its own expiry", async () => {
+			// Only the clock is faked; the cache and its mutex rely on real timers.
+			vi.useFakeTimers({ toFake: ["Date"] });
+			const start = Date.now();
+			mockVerify(Math.trunc(start / 1000) + 60);
+
+			// The cache lifetime is far longer than the token, so only the expiry claim can be
+			// what ends the entry.
+			const authProcessor = new AuthHeaderProcessor({ config: { tokenCacheTtlMs: 600000 } });
+			await authProcessor.start();
+
+			await runRequest(authProcessor);
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(1);
+
+			// Past the expiry claim the entry is dropped, so the token is verified afresh and the
+			// rejection comes from the normal verification path.
+			vi.setSystemTime(start + 61000);
+
+			await runRequest(authProcessor);
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(2);
+
+			await authProcessor.stop();
+		});
+
+		it("expires a cached token a fixed time after it was verified, however busy the caller", async () => {
+			// Only the clock is faked; the cache and its mutex rely on real timers.
+			vi.useFakeTimers({ toFake: ["Date"] });
+			const start = Date.now();
+			mockVerify();
+			const authProcessor = new AuthHeaderProcessor({ config: { tokenCacheTtlMs: 60000 } });
+			await authProcessor.start();
+
+			await runRequest(authProcessor);
+
+			// Steady traffic inside the lifetime keeps hitting the same entry.
+			vi.setSystemTime(start + 30000);
+			await runRequest(authProcessor);
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(1);
+
+			// Those hits must not extend it; once the lifetime is up the token is verified afresh.
+			vi.setSystemTime(start + 70000);
+			await runRequest(authProcessor);
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(2);
+
+			await authProcessor.stop();
+		});
+
+		it("verifies every request when caching is disabled", async () => {
+			mockVerify();
+			const authProcessor = new AuthHeaderProcessor({ config: { tokenCacheTtlMs: 0 } });
+			await authProcessor.start();
+
+			for (let i = 0; i < 3; i++) {
+				await runRequest(authProcessor);
+			}
+
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(3);
+			expect(mockUserEntityStorage.get).toHaveBeenCalledTimes(3);
+
+			await authProcessor.stop();
+		});
+
+		it("keeps distinct tokens apart", async () => {
+			mockVerify();
+			const authProcessor = new AuthHeaderProcessor();
+			await authProcessor.start();
+
+			await runRequest(authProcessor);
+
+			vi.spyOn(TokenHelper, "extractTokenFromHeaders").mockReturnValue({
+				token: "other-jwt",
+				location: "authorization"
+			});
+			await runRequest(authProcessor);
+
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(2);
+
+			await authProcessor.stop();
+		});
+
+		it("does not cache a failed verification", async () => {
+			vi.spyOn(TokenHelper, "verify").mockRejectedValue(
+				new UnauthorizedError("tokenHelper", "invalidSignature")
+			);
+			const authProcessor = new AuthHeaderProcessor();
+			await authProcessor.start();
+
+			const first = await runRequest(authProcessor);
+			const second = await runRequest(authProcessor);
+
+			expect(first.response.statusCode).toBe(HttpStatusCode.unauthorized);
+			expect(second.response.statusCode).toBe(HttpStatusCode.unauthorized);
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(2);
+
+			await authProcessor.stop();
+		});
+
+		it("releases the cache on stop", async () => {
+			mockVerify();
+			const authProcessor = new AuthHeaderProcessor();
+			await authProcessor.start();
+			await runRequest(authProcessor);
+
+			await authProcessor.stop();
+
+			// A destroyed cache holds nothing, so the next request verifies again.
+			await runRequest(authProcessor);
+
+			expect(TokenHelper.verify).toHaveBeenCalledTimes(2);
 		});
 	});
 });

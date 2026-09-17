@@ -7,10 +7,10 @@ import type { ITenantOverrideProcessorConfig } from "./ITenantOverrideProcessorC
  */
 export interface ITenantOverrideProcessorConstructorOptions {
 	/**
-	 * The entity storage for the tenants.
-	 * @default tenant
+	 * The component used to resolve tenants, which also provides the lookup caching.
+	 * @default tenant-admin
 	 */
-	tenantEntityStorageType?: string;
+	tenantAdminComponentType?: string;
 
 	/**
 	 * Configuration for the processor.

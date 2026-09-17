@@ -143,10 +143,23 @@ export class TokenHelper {
 			}
 		}
 
+		TokenHelper.verifyScopes(Coerce.string(decoded.payload.scope), requiredScopes);
+
+		return {
+			header: decoded.header,
+			payload: decoded.payload
+		};
+	}
+
+	/**
+	 * Verify that a token carries all of the required scopes.
+	 * @param scope The comma separated scopes from the token.
+	 * @param requiredScopes The scopes the caller must hold.
+	 * @throws UnauthorizedError if any of the required scopes is missing.
+	 */
+	public static verifyScopes(scope: string | undefined, requiredScopes?: string[]): void {
 		if (Is.arrayValue(requiredScopes)) {
-			const tokenScopes = Is.stringValue(decoded.payload.scope)
-				? decoded.payload.scope.split(",")
-				: [];
+			const tokenScopes = Is.stringValue(scope) ? scope.split(",").map(s => s.trim()) : [];
 
 			for (const requiredScope of requiredScopes) {
 				if (!tokenScopes.includes(requiredScope)) {
@@ -154,11 +167,6 @@ export class TokenHelper {
 				}
 			}
 		}
-
-		return {
-			header: decoded.header,
-			payload: decoded.payload
-		};
 	}
 
 	/**
