@@ -11,6 +11,7 @@ import {
 } from "../src/healthApplicationTask.js";
 
 const ENGINE_CLONE_DATA = { config: {} };
+const FILTERED_CLONE_DATA = { config: { types: { loggingConnector: [{ type: "console" }] } } };
 
 describe("healthApplicationTask", () => {
 	let mockGetContextIds: ReturnType<typeof vi.fn>;
@@ -34,7 +35,12 @@ describe("healthApplicationTask", () => {
 			getRegisteredComponents: mockGetRegisteredComponents
 		};
 
-		vi.spyOn(ModuleHelper, "execModuleMethod").mockResolvedValue(mockEngine);
+		// The task loads both the clone filter and the engine builder through the module helper,
+		// so the mock has to respond per module.
+		vi.spyOn(ModuleHelper, "execModuleMethod").mockImplementation(
+			async <T>(module: string): Promise<T> =>
+				(module === "@twin.org/engine-models" ? FILTERED_CLONE_DATA : mockEngine) as T
+		);
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({});
 		vi.spyOn(ContextIdStore, "run").mockImplementation(async (contextIds, fn) => fn());
 	});
@@ -75,60 +81,45 @@ describe("healthApplicationTask", () => {
 			state: {}
 		};
 
-		function cloneArg(): { config: { types: { [type: string]: unknown } } } {
-			const calls = vi.mocked(ModuleHelper.execModuleMethod).mock.calls;
-			return calls[0][2]?.[1] as { config: { types: { [type: string]: unknown } } };
+		function cloneArg(): unknown {
+			const call = vi
+				.mocked(ModuleHelper.execModuleMethod)
+				.mock.calls.find(entry => entry[1] === "EngineCoreBuilder.fromClone");
+			return call?.[2]?.[1];
+		}
+
+		function filterArgs(): unknown[][] {
+			return vi
+				.mocked(ModuleHelper.execModuleMethod)
+				.mock.calls.filter(entry => entry[1] === "EngineCloneHelper.filterCloneComponents")
+				.map(entry => entry[2] ?? []);
 		}
 
 		test("passes the clone data through untouched when no patterns are supplied", async () => {
 			await healthApplicationTaskStart(CLONE_WITH_TYPES);
+			expect(filterArgs()).toEqual([]);
 			expect(cloneArg()).toBe(CLONE_WITH_TYPES);
 		});
 
 		test("passes the clone data through untouched when the pattern list is empty", async () => {
 			await healthApplicationTaskStart(CLONE_WITH_TYPES, []);
+			expect(filterArgs()).toEqual([]);
 			expect(cloneArg()).toBe(CLONE_WITH_TYPES);
 		});
 
-		test("removes the component types matching a pattern", async () => {
+		test("delegates the filtering to EngineCloneHelper when patterns are supplied", async () => {
 			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
 
-			expect(Object.keys(cloneArg().config.types)).toEqual([
-				"loggingConnector",
-				"identityComponent"
-			]);
+			expect(ModuleHelper.execModuleMethod).toHaveBeenCalledWith(
+				"@twin.org/engine-models",
+				"EngineCloneHelper.filterCloneComponents",
+				[CLONE_WITH_TYPES, ["^rightsManagement"]]
+			);
 		});
 
-		test("removes component types matching any of several patterns", async () => {
-			await healthApplicationTaskStart(CLONE_WITH_TYPES, [
-				"^rightsManagement",
-				"^loggingConnector$"
-			]);
-
-			expect(Object.keys(cloneArg().config.types)).toEqual(["identityComponent"]);
-		});
-
-		test("treats the patterns as unanchored regular expressions", async () => {
-			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["Component$"]);
-
-			expect(Object.keys(cloneArg().config.types)).toEqual(["loggingConnector"]);
-		});
-
-		test("does not mutate the source clone data", async () => {
+		test("builds the clone from the filtered clone data", async () => {
 			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
-
-			expect(Object.keys(CLONE_WITH_TYPES.config.types)).toHaveLength(4);
-		});
-
-		test("retains all component types when no pattern matches", async () => {
-			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^noSuchComponent$"]);
-
-			expect(Object.keys(cloneArg().config.types)).toHaveLength(4);
-		});
-
-		test("tolerates clone data with no types to filter", async () => {
-			await healthApplicationTaskStart(ENGINE_CLONE_DATA, ["^rightsManagement"]);
-			expect(cloneArg()).toBe(ENGINE_CLONE_DATA);
+			expect(cloneArg()).toBe(FILTERED_CLONE_DATA);
 		});
 
 		test("reuses the patterns when the task has to start the engine lazily", async () => {
@@ -137,10 +128,7 @@ describe("healthApplicationTask", () => {
 
 			vi.mocked(ModuleHelper.execModuleMethod).mockClear();
 			await healthApplicationTaskStart(CLONE_WITH_TYPES, ["^rightsManagement"]);
-			expect(Object.keys(cloneArg().config.types)).toEqual([
-				"loggingConnector",
-				"identityComponent"
-			]);
+			expect(filterArgs()).toEqual([[CLONE_WITH_TYPES, ["^rightsManagement"]]]);
 		});
 	});
 

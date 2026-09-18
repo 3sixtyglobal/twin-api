@@ -9,8 +9,6 @@ import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import type { IContextIds } from "@twin.org/context";
 import { GeneralError, Is } from "@twin.org/core";
 import type { IComponent } from "@twin.org/core";
-import { EngineCloneHelper } from "@twin.org/engine-models";
-import type { IEngineCoreClone } from "@twin.org/engine-models";
 import { ModuleHelper } from "@twin.org/modules";
 
 let engine:
@@ -38,9 +36,14 @@ export async function healthApplicationTaskStart(
 
 	startupPromise = (async () => {
 		if (!Is.empty(engineCloneData)) {
-			const cloneData = Is.object<IEngineCoreClone>(engineCloneData)
-				? EngineCloneHelper.filterCloneComponents(engineCloneData, excludeComponents)
-				: engineCloneData;
+			const cloneData =
+				Is.object(engineCloneData) && Is.arrayValue(excludeComponents)
+					? await ModuleHelper.execModuleMethod<unknown>(
+							"@twin.org/engine-models",
+							"EngineCloneHelper.filterCloneComponents",
+							[engineCloneData, excludeComponents]
+						)
+					: engineCloneData;
 			engine = await ModuleHelper.execModuleMethod<{
 				start: () => Promise<void>;
 				stop: () => Promise<void>;

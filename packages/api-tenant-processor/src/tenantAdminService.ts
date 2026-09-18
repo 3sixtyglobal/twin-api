@@ -210,7 +210,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 						{
 							property: "organizationIdLegacy",
 							comparison: ComparisonOperator.Includes,
-							value: `|${organizationId}|`
+							value: organizationId
 						},
 						undefined,
 						undefined,
@@ -660,7 +660,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 			dateModified: tenant.dateModified,
 			publicOrigin: tenant.publicOrigin,
 			organizationId: tenant.organizationId,
-			organizationIdLegacy: tenant.organizationIdLegacy?.split("|").filter(Boolean)
+			organizationIdLegacy: tenant.organizationIdLegacy
 		};
 	}
 
@@ -680,7 +680,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 		tenantEntity.publicOrigin = tenant.publicOrigin;
 		tenantEntity.organizationId = tenant.organizationId;
 		tenantEntity.organizationIdLegacy = Is.arrayValue(tenant.organizationIdLegacy)
-			? `|${tenant.organizationIdLegacy.join("|")}|`
+			? tenant.organizationIdLegacy
 			: undefined;
 		return tenantEntity;
 	}

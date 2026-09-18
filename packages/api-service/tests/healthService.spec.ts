@@ -4,7 +4,8 @@ import { HealthStatus, type IHealth } from "@twin.org/api-models";
 import type { IBackgroundTask } from "@twin.org/background-task-models";
 import { TaskStatus } from "@twin.org/background-task-models";
 import { ContextIdStore } from "@twin.org/context";
-import { BaseError, ComponentFactory, Factory } from "@twin.org/core";
+import { ComponentFactory, Factory, GeneralError } from "@twin.org/core";
+import { ModuleHelper } from "@twin.org/modules";
 import { HealthService } from "../src/healthService.js";
 
 function makeComponent(...healthEntries: IHealth[]): {
@@ -49,6 +50,12 @@ describe("HealthService", () => {
 
 		vi.spyOn(Factory, "getFactory").mockReturnValue(mockFactory);
 		vi.spyOn(ContextIdStore, "run").mockImplementation(async (contextIds, fn) => fn());
+
+		// Exclude pattern verification is delegated to EngineCloneHelper through the module
+		// helper, the default mock echoes the supplied patterns back as verified.
+		vi.spyOn(ModuleHelper, "execModuleMethod").mockImplementation(
+			async <T>(module: string, method: string, args?: unknown[]): Promise<T> => args?.[0] as T
+		);
 
 		mockBackgroundTaskComponent = {
 			className: (): string => "MockBackgroundTask",
@@ -326,46 +333,47 @@ describe("HealthService", () => {
 				await expect(options.initialiseMethodParams()).resolves.toEqual([undefined]);
 			});
 
-			test("supplies the configured exclude patterns to the worker", async () => {
+			test("does not load the engine models module when no patterns are configured", async () => {
+				const service = new HealthService();
+				await service.start();
+
+				expect(ModuleHelper.execModuleMethod).not.toHaveBeenCalled();
+			});
+
+			test("verifies the configured exclude patterns on start", async () => {
 				const service = new HealthService({
 					config: { excludeCloneComponents: ["^rightsManagement", "^messaging"] }
 				});
 				await service.start();
 
+				expect(ModuleHelper.execModuleMethod).toHaveBeenCalledWith(
+					"@twin.org/engine-models",
+					"EngineCloneHelper.verifyExcludeCloneComponents",
+					[["^rightsManagement", "^messaging"]]
+				);
+			});
+
+			test("supplies the verified exclude patterns to the worker", async () => {
+				vi.mocked(ModuleHelper.execModuleMethod).mockResolvedValue(["^verified"]);
+
+				const service = new HealthService({
+					config: { excludeCloneComponents: ["^rightsManagement"] }
+				});
+				await service.start();
+
 				const options = mockRegisterHandler.mock.calls[0][4];
-				await expect(options.initialiseMethodParams()).resolves.toEqual([
-					["^rightsManagement", "^messaging"]
-				]);
+				await expect(options.initialiseMethodParams()).resolves.toEqual([["^verified"]]);
 			});
 
-			test("throws from the constructor when an exclude pattern is not a valid regex", () => {
-				expect(
-					() => new HealthService({ config: { excludeCloneComponents: ["^ok", "["] } })
-				).toThrow("invalidExcludeCloneComponent");
-			});
+			test("fails to start when an exclude pattern is not a valid regex", async () => {
+				vi.mocked(ModuleHelper.execModuleMethod).mockRejectedValue(
+					new GeneralError("EngineCloneHelper", "invalidExcludeCloneComponent", { pattern: "[" })
+				);
 
-			test("reports the offending pattern and the underlying cause", () => {
-				const create = (): HealthService =>
-					new HealthService({ config: { excludeCloneComponents: ["("] } });
+				const service = new HealthService({ config: { excludeCloneComponents: ["^ok", "["] } });
 
-				expect(create).toThrow("invalidExcludeCloneComponent");
-
-				try {
-					create();
-				} catch (err) {
-					const error = BaseError.fromError(err);
-					expect(error.properties?.pattern).toEqual("(");
-					expect(error.cause?.message).toContain("Invalid regular expression");
-				}
-			});
-
-			test("throws from the constructor when an exclude pattern is not a string", () => {
-				expect(
-					() =>
-						new HealthService({
-							config: { excludeCloneComponents: [42] as unknown as string[] }
-						})
-				).toThrow();
+				await expect(service.start()).rejects.toThrow("invalidExcludeCloneComponent");
+				expect(mockRegisterHandler).not.toHaveBeenCalled();
 			});
 
 			test("accepts an empty exclude list without error", async () => {
@@ -374,6 +382,7 @@ describe("HealthService", () => {
 
 				const options = mockRegisterHandler.mock.calls[0][4];
 				await expect(options.initialiseMethodParams()).resolves.toEqual([[]]);
+				expect(ModuleHelper.execModuleMethod).not.toHaveBeenCalled();
 			});
 
 			test("creates a task when the application health timer fires", async () => {

@@ -238,7 +238,7 @@ describe("TenantAdminService", () => {
 			expect(mockStorage.set).toHaveBeenCalledWith(
 				expect.objectContaining({
 					organizationId: OTHER_ORG_ID,
-					organizationIdLegacy: `|${ORG_ID}|`
+					organizationIdLegacy: [ORG_ID]
 				})
 			);
 		});
@@ -246,7 +246,7 @@ describe("TenantAdminService", () => {
 		it("should remove new organizationId from legacy if it was previously in the legacy array", async () => {
 			const tenantWithLegacy: Tenant = {
 				...EXISTING_TENANT,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID]
 			};
 
 			vi.mocked(mockStorage.get).mockImplementation(
@@ -264,7 +264,7 @@ describe("TenantAdminService", () => {
 			expect(mockStorage.set).toHaveBeenCalledWith(
 				expect.objectContaining({
 					organizationId: LEGACY_ORG_ID,
-					organizationIdLegacy: `|${ORG_ID}|`
+					organizationIdLegacy: [ORG_ID]
 				})
 			);
 		});
@@ -287,7 +287,7 @@ describe("TenantAdminService", () => {
 			expect(mockStorage.set).toHaveBeenCalledWith(
 				expect.objectContaining({
 					organizationId: OTHER_ORG_ID,
-					organizationIdLegacy: `|${ORG_ID}|`
+					organizationIdLegacy: [ORG_ID]
 				})
 			);
 		});
@@ -368,7 +368,7 @@ describe("TenantAdminService", () => {
 			const tenantWithLegacy: Tenant = {
 				...EXISTING_TENANT,
 				organizationId: OTHER_ORG_ID,
-				organizationIdLegacy: `|${ORG_ID}|`
+				organizationIdLegacy: [ORG_ID]
 			};
 
 			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
@@ -413,7 +413,7 @@ describe("TenantAdminService", () => {
 		it("should return organizationIdLegacy as a string array rather than a pipe-delimited string", async () => {
 			const tenantWithLegacy: Tenant = {
 				...EXISTING_TENANT,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID]
 			};
 			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [tenantWithLegacy] });
 
@@ -435,7 +435,7 @@ describe("TenantAdminService", () => {
 		it("should return multiple legacy ids as separate array elements", async () => {
 			const tenantWithMultipleLegacy: Tenant = {
 				...EXISTING_TENANT,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|${OTHER_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID, OTHER_ORG_ID]
 			};
 			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [tenantWithMultipleLegacy] });
 
@@ -487,7 +487,7 @@ describe("TenantAdminService", () => {
 			const tenant1: Tenant = {
 				...EXISTING_TENANT,
 				id: TENANT_ID,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID]
 			};
 			const tenant2: Tenant = {
 				...EXISTING_TENANT,
@@ -572,7 +572,7 @@ describe("TenantAdminService", () => {
 		it("serves repeated legacy organization id lookups without re-running the query", async () => {
 			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
 			vi.mocked(mockStorage.query).mockResolvedValue({
-				entities: [{ ...EXISTING_TENANT, organizationIdLegacy: `|${LEGACY_ORG_ID}|` }]
+				entities: [{ ...EXISTING_TENANT, organizationIdLegacy: [LEGACY_ORG_ID] }]
 			});
 
 			const service = new TenantAdminService();
@@ -589,7 +589,7 @@ describe("TenantAdminService", () => {
 		it("does not reuse a legacy organization id entry for a non-legacy lookup", async () => {
 			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
 			vi.mocked(mockStorage.query).mockResolvedValue({
-				entities: [{ ...EXISTING_TENANT, organizationIdLegacy: `|${LEGACY_ORG_ID}|` }]
+				entities: [{ ...EXISTING_TENANT, organizationIdLegacy: [LEGACY_ORG_ID] }]
 			});
 
 			const service = new TenantAdminService();
@@ -633,7 +633,7 @@ describe("TenantAdminService", () => {
 			const SHARED_ORG_ID = "org-shared";
 			const legacyHolder: Tenant = {
 				...EXISTING_TENANT,
-				organizationIdLegacy: `|${SHARED_ORG_ID}|`
+				organizationIdLegacy: [SHARED_ORG_ID]
 			};
 			let created: Tenant | undefined;
 
@@ -726,7 +726,7 @@ describe("TenantAdminService", () => {
 			vi.mocked(mockStorage.get).mockResolvedValue({
 				...EXISTING_TENANT,
 				publicOrigin: undefined,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID]
 			});
 
 			const service = new TenantAdminService();

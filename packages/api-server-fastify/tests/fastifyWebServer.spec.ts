@@ -15,10 +15,10 @@ import { ComponentFactory, Mutex, NotImplementedError } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode, MimeTypes } from "@twin.org/web";
 import { io } from "socket.io-client";
+import { getFreePort } from "./setupTestEnv.js";
 import { FastifyWebServer } from "../src/fastifyWebServer.js";
 
-const basePort = Math.floor(Math.random() * 1000);
-let port = 13000 + basePort;
+let port = 0;
 
 /**
  * Create a route processor which returns an ok response.
@@ -102,7 +102,7 @@ async function postDeclaredLength(
 
 describe("api-server-fastify", () => {
 	beforeEach(async () => {
-		port++;
+		port = await getFreePort();
 	});
 
 	test("Can create an instance of the server", () => {
