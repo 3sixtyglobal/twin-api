@@ -26,10 +26,6 @@ The constructor options.
 
 `HealthService`
 
-#### Throws
-
-GeneralError if an exclude clone component is not a valid regular expression.
-
 ## Properties
 
 ### CLASS\_NAME {#class_name}
@@ -77,6 +73,10 @@ The node logging component type.
 `Promise`\<`void`\>
 
 A promise that resolves when the initial health check timers have been scheduled.
+
+#### Throws
+
+GeneralError if an exclude clone component is not a valid regular expression.
 
 #### Implementation of
 
