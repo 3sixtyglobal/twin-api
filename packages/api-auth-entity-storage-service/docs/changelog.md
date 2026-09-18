@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.10.1-next.4](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.10.1-next.3...api-auth-entity-storage-service-v0.10.1-next.4) (2026-09-18)
+
+
+### Features
+
+* improve entity shapes ([#311](https://github.com/iotaledger/twin-api/issues/311)) ([9288415](https://github.com/iotaledger/twin-api/commit/9288415e2aa074cc12ec85fa15b0a34bf4ea158f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-auth-entity-storage-models bumped from 0.10.1-next.3 to 0.10.1-next.4
+    * @twin.org/api-core bumped from 0.10.1-next.3 to 0.10.1-next.4
+    * @twin.org/api-models bumped from 0.10.1-next.3 to 0.10.1-next.4
+
 ## [0.10.1-next.3](https://github.com/iotaledger/twin-api/compare/api-auth-entity-storage-service-v0.10.1-next.2...api-auth-entity-storage-service-v0.10.1-next.3) (2026-09-17)
 
 
