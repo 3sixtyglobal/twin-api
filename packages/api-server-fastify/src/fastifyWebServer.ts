@@ -699,14 +699,31 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 
 					// Handle any incoming messages
 					socket.on(topic, async data => {
-						await this.handleRequestSocket(
-							socketRouteProcessors,
-							socketRoute,
-							socket,
-							`/${pathParts.join("/")}`,
-							topic,
-							data
-						);
+						// The listener is async, so anything escaping it would surface as an unhandled
+						// rejection and terminate the process, emit it on the topic instead
+						try {
+							await this.handleRequestSocket(
+								socketRouteProcessors,
+								socketRoute,
+								socket,
+								`/${pathParts.join("/")}`,
+								topic,
+								data
+							);
+						} catch (err) {
+							const { error, httpStatusCode } = HttpErrorHelper.processError(
+								err,
+								this._includeErrorStack
+							);
+							const response: IHttpResponse = {};
+							HttpErrorHelper.buildResponse(
+								response,
+								error,
+								httpStatusCode,
+								this._includeErrorStack
+							);
+							socket.emit(topic, response);
+						}
 					});
 				});
 			}
@@ -898,14 +915,15 @@ export class FastifyWebServer implements IWebServer<FastifyInstance>, IHealthPro
 		socket: Socket,
 		fullPath: string,
 		emitTopic: string,
-		request: IHttpRequest
+		request: IHttpRequest | undefined
 	): Promise<void> {
 		const socketServerRequest: ISocketServerRequest = {
 			method: HttpMethod.GET,
 			url: fullPath,
 			query: socket.handshake.query as IHttpRequestQuery,
 			headers: socket.handshake.headers as IHttpHeaders,
-			body: request.body,
+			// The payload arrives straight off the wire, so it can be missing or any shape
+			body: Is.object(request) ? request.body : undefined,
 			socketId: socket.id
 		};
 		const httpResponse: IHttpResponse = {};

@@ -32,7 +32,7 @@ export interface ISocketRoute<
 		 * The function to emit an event.
 		 */
 		emit: (event: string, response: U) => Promise<void>
-	) => void;
+	) => Promise<void>;
 
 	/**
 	 * The connected handler.
@@ -42,7 +42,7 @@ export interface ISocketRoute<
 		 * The request context.
 		 */
 		socketRequestContext: ISocketRequestContext
-	) => void;
+	) => Promise<void>;
 
 	/**
 	 * The disconnected handler.
@@ -52,5 +52,5 @@ export interface ISocketRoute<
 		 * The request context.
 		 */
 		socketRequestContext: ISocketRequestContext
-	) => void;
+	) => Promise<void>;
 }
