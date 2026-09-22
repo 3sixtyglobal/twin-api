@@ -93,7 +93,7 @@ Tenant override is allowed by default, but you must hold the escalated privilege
 
 ### handler {#handler}
 
-> **handler**: (`socketRequestContext`, `request`, `emit`) => `void`
+> **handler**: (`socketRequestContext`, `request`, `emit`) => `Promise`\<`void`\>
 
 The handler module.
 
@@ -119,13 +119,13 @@ The function to emit an event.
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
 
 ***
 
 ### connected? {#connected}
 
-> `optional` **connected?**: (`socketRequestContext`) => `void`
+> `optional` **connected?**: (`socketRequestContext`) => `Promise`\<`void`\>
 
 The connected handler.
 
@@ -139,13 +139,13 @@ The request context.
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
 
 ***
 
 ### disconnected? {#disconnected}
 
-> `optional` **disconnected?**: (`socketRequestContext`) => `void`
+> `optional` **disconnected?**: (`socketRequestContext`) => `Promise`\<`void`\>
 
 The disconnected handler.
 
@@ -159,4 +159,4 @@ The request context.
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
