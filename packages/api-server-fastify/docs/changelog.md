@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.10.1-next.5](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.10.1-next.4...api-server-fastify-v0.10.1-next.5) (2026-09-22)
+
+
+### Bug Fixes
+
+* async socket handlers ([#318](https://github.com/iotaledger/twin-api/issues/318)) ([5162bce](https://github.com/iotaledger/twin-api/commit/5162bcea454f0588e31003b3f0216e6846d90c0b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-core bumped from 0.10.1-next.4 to 0.10.1-next.5
+    * @twin.org/api-models bumped from 0.10.1-next.4 to 0.10.1-next.5
+    * @twin.org/api-processors bumped from 0.10.1-next.4 to 0.10.1-next.5
+
 ## [0.10.1-next.4](https://github.com/iotaledger/twin-api/compare/api-server-fastify-v0.10.1-next.3...api-server-fastify-v0.10.1-next.4) (2026-09-18)
 
 
