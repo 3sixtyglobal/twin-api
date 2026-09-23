@@ -158,6 +158,33 @@ describe("healthApplicationTask", () => {
 		expect(mockEngine.stop).toHaveBeenCalledTimes(1);
 	});
 
+	test("builds a fresh clone when the previous start failed", async () => {
+		const failedEngine = {
+			...mockEngine,
+			start: vi.fn().mockRejectedValue(new Error("startFailed")),
+			getRegisteredComponents: vi.fn().mockResolvedValue([])
+		};
+		vi.mocked(ModuleHelper.execModuleMethod).mockResolvedValueOnce(failedEngine);
+
+		await expect(healthApplicationTaskStart(ENGINE_CLONE_DATA)).rejects.toThrow("startFailed");
+		await expect(healthApplicationTask(ENGINE_CLONE_DATA)).resolves.toEqual([]);
+
+		expect(ModuleHelper.execModuleMethod).toHaveBeenCalledTimes(2);
+		expect(failedEngine.getRegisteredComponents).not.toHaveBeenCalled();
+		expect(mockEngine.start).toHaveBeenCalledTimes(1);
+		expect(mockGetRegisteredComponents).toHaveBeenCalledTimes(1);
+	});
+
+	test("rejects instead of running the health cycle while the clone start keeps failing", async () => {
+		mockEngine.start.mockRejectedValue(new Error("startFailed"));
+
+		await expect(healthApplicationTaskStart(ENGINE_CLONE_DATA)).rejects.toThrow("startFailed");
+		await expect(healthApplicationTask(ENGINE_CLONE_DATA)).rejects.toThrow("startFailed");
+
+		expect(ModuleHelper.execModuleMethod).toHaveBeenCalledTimes(2);
+		expect(mockGetRegisteredComponents).not.toHaveBeenCalled();
+	});
+
 	test("calls healthApplicationInit, healthApplication, healthApplicationTeardown in order", async () => {
 		const callOrder: string[] = [];
 		mockGetRegisteredComponents.mockResolvedValue([

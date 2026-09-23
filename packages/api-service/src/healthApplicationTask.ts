@@ -44,7 +44,7 @@ export async function healthApplicationTaskStart(
 							[engineCloneData, excludeComponents]
 						)
 					: engineCloneData;
-			engine = await ModuleHelper.execModuleMethod<{
+			const clone = await ModuleHelper.execModuleMethod<{
 				start: () => Promise<void>;
 				stop: () => Promise<void>;
 				getContextIds: () => IContextIds | undefined;
@@ -55,10 +55,11 @@ export async function healthApplicationTaskStart(
 				await ContextIdStore.getContextIds(),
 				{ logLevel: "error" }
 			]);
-			if (Is.empty(engine)) {
+			if (Is.empty(clone)) {
 				throw new GeneralError("applicationHealthTask", "engineNotStarted");
 			}
-			await engine.start();
+			await clone.start();
+			engine = clone;
 		}
 	})();
 
