@@ -297,13 +297,13 @@ importers:
   packages/api-auth-entity-storage-rest-client:
     dependencies:
       '@twin.org/api-auth-entity-storage-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-auth-entity-storage-models
       '@twin.org/api-core':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-core
       '@twin.org/api-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-models
       '@twin.org/core':
         specifier: next
@@ -361,13 +361,13 @@ importers:
   packages/api-auth-entity-storage-service:
     dependencies:
       '@twin.org/api-auth-entity-storage-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-auth-entity-storage-models
       '@twin.org/api-core':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-core
       '@twin.org/api-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-models
       '@twin.org/background-task-models':
         specifier: next
@@ -386,7 +386,7 @@ importers:
         version: 0.10.1-next.10
       '@twin.org/entity-storage-models':
         specifier: next
-        version: 0.10.1-next.9
+        version: 0.10.1-next.10
       '@twin.org/logging-models':
         specifier: next
         version: 0.10.1-next.2
@@ -402,7 +402,7 @@ importers:
     devDependencies:
       '@twin.org/entity-storage-connector-memory':
         specifier: next
-        version: 0.10.1-next.9
+        version: 0.10.1-next.10
       '@twin.org/nameof-transformer':
         specifier: next
         version: 0.10.1-next.10
@@ -452,7 +452,7 @@ importers:
   packages/api-core:
     dependencies:
       '@twin.org/api-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-models
       '@twin.org/core':
         specifier: next
@@ -574,7 +574,7 @@ importers:
   packages/api-processors:
     dependencies:
       '@twin.org/api-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-models
       '@twin.org/context':
         specifier: next
@@ -638,10 +638,10 @@ importers:
   packages/api-rest-client:
     dependencies:
       '@twin.org/api-core':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-core
       '@twin.org/api-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-models
       '@twin.org/core':
         specifier: next
@@ -705,13 +705,13 @@ importers:
         specifier: 11.3.0
         version: 11.3.0
       '@twin.org/api-core':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-core
       '@twin.org/api-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-models
       '@twin.org/api-processors':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-processors
       '@twin.org/context':
         specifier: next
@@ -787,7 +787,7 @@ importers:
   packages/api-service:
     dependencies:
       '@twin.org/api-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-models
       '@twin.org/background-task-models':
         specifier: next
@@ -800,7 +800,7 @@ importers:
         version: 0.10.1-next.10
       '@twin.org/entity-storage-models':
         specifier: next
-        version: 0.10.1-next.9
+        version: 0.10.1-next.10
       '@twin.org/logging-models':
         specifier: next
         version: 0.10.1-next.2
@@ -866,7 +866,7 @@ importers:
   packages/api-tenant-processor:
     dependencies:
       '@twin.org/api-models':
-        specifier: 0.10.1-next.5
+        specifier: 0.10.1-next.6
         version: link:../api-models
       '@twin.org/context':
         specifier: next
@@ -882,7 +882,7 @@ importers:
         version: 0.10.1-next.10
       '@twin.org/entity-storage-models':
         specifier: next
-        version: 0.10.1-next.9
+        version: 0.10.1-next.10
       '@twin.org/nameof':
         specifier: next
         version: 0.10.1-next.10
@@ -1726,12 +1726,12 @@ packages:
     resolution: {integrity: sha512-sCl+2Syse8J2kUF3ly4crLN3kIXgc6eSA4zoeWl4csjKpOwG9/qAhHcapgzkp1YT9KXxlnBVI3en7CDNEj2PTg==}
     engines: {node: '>=24.0.0'}
 
-  '@twin.org/entity-storage-connector-memory@0.10.1-next.9':
-    resolution: {integrity: sha512-6HnXc1FigwL7wjn68KV/1C9YacXD+7UzLiDhzIspRQdwAI/RVjAgzLilBvbvHmIVg9s2gP6pQMiRPT2a/jc3FA==}
+  '@twin.org/entity-storage-connector-memory@0.10.1-next.10':
+    resolution: {integrity: sha512-rUBGwWSNuKVNuObrlkf8WV/lA+Ov1sdNccJzZrSaXCoLov5V3GxmVDbaeLuuD0g+F3Af2+zqeM5vHjrVei2EeA==}
     engines: {node: '>=24.0.0'}
 
-  '@twin.org/entity-storage-models@0.10.1-next.9':
-    resolution: {integrity: sha512-RDHwYjU7dNX9HK+vZDNVtmxFO+AOutoJhklm/moqjral3+lzXHNS9OQUZgpC3iLpGpxBqEYgFUR8RRgfFGo+AA==}
+  '@twin.org/entity-storage-models@0.10.1-next.10':
+    resolution: {integrity: sha512-NNvQiIsL/JHgk4vruhRuY6LxzpJpSH6S+9xwRgAma2qLpRMlS0NEON2Np/9QWRCekNN2VeAG92SDFGDhap45tA==}
     engines: {node: '>=24.0.0'}
 
   '@twin.org/entity@0.10.1-next.10':
@@ -5123,17 +5123,17 @@ snapshots:
       '@twin.org/nameof': 0.10.1-next.10
       micro-key-producer: 0.10.2
 
-  '@twin.org/entity-storage-connector-memory@0.10.1-next.9':
+  '@twin.org/entity-storage-connector-memory@0.10.1-next.10':
     dependencies:
       '@twin.org/api-models': 0.10.1-next.5
       '@twin.org/context': 0.10.1-next.10
       '@twin.org/core': 0.10.1-next.10
       '@twin.org/entity': 0.10.1-next.10
-      '@twin.org/entity-storage-models': 0.10.1-next.9
+      '@twin.org/entity-storage-models': 0.10.1-next.10
       '@twin.org/logging-models': 0.10.1-next.2
       '@twin.org/nameof': 0.10.1-next.10
 
-  '@twin.org/entity-storage-models@0.10.1-next.9':
+  '@twin.org/entity-storage-models@0.10.1-next.10':
     dependencies:
       '@twin.org/context': 0.10.1-next.10
       '@twin.org/core': 0.10.1-next.10

@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/api-rest-client",
-	"version": "0.10.1-next.5",
+	"version": "0.10.1-next.6",
 	"description": "REST client implementation for consuming information and hosting endpoints.",
 	"repository": {
 		"type": "git",
@@ -28,8 +28,8 @@
 		"dist:no-test": "pnpm run clean && concurrently -g -n build,locales,types \"pnpm run build\" \"pnpm run validate-locales\" \"pnpm run test:build\""
 	},
 	"dependencies": {
-		"@twin.org/api-core": "0.10.1-next.5",
-		"@twin.org/api-models": "0.10.1-next.5",
+		"@twin.org/api-core": "0.10.1-next.6",
+		"@twin.org/api-models": "0.10.1-next.6",
 		"@twin.org/core": "next",
 		"@twin.org/nameof": "next"
 	},
