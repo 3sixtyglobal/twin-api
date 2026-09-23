@@ -847,6 +847,53 @@ describe("EntityStorageAuthenticationAdminService", () => {
 			);
 		});
 
+		it("should allow a user-admin to remove an unprivileged user", async () => {
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await userEntityStorage.set({
+						email: "user@example.com",
+						password: "stored-password",
+						salt: "AQIDBA==",
+						identity: "did:user:123",
+						organization: "did:org:456",
+						scope: "read"
+					});
+
+					await service.remove("user@example.com");
+
+					expect(await userEntityStorage.get("user@example.com")).toBeUndefined();
+				}
+			);
+		});
+
+		it("should allow a user-admin to update an unprivileged user", async () => {
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await userEntityStorage.set({
+						email: "user@example.com",
+						password: "stored-password",
+						salt: "AQIDBA==",
+						identity: "did:user:123",
+						organization: "did:org:456",
+						scope: "read"
+					});
+
+					await service.update({
+						email: "user@example.com",
+						organizationIdentity: "did:org:999",
+						scope: ["read", "write"]
+					});
+
+					expect(await userEntityStorage.get("user@example.com")).toMatchObject({
+						organization: "did:org:999",
+						scope: "read,write"
+					});
+				}
+			);
+		});
+
 		it("should reject remove when the target holds global-admin but the caller does not", async () => {
 			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
 				await userEntityStorage.set({
