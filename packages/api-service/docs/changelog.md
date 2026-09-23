@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.1-next.7](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.6...api-service-v0.10.1-next.7) (2026-09-23)
+
+
+### Bug Fixes
+
+* rebuild the health engine clone after a failed start ([#325](https://github.com/iotaledger/twin-api/issues/325)) ([1cb5ac9](https://github.com/iotaledger/twin-api/commit/1cb5ac9d9a8f78b467ff645cfd86ad1d95a6ba83))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.10.1-next.6 to 0.10.1-next.7
+
 ## [0.10.1-next.6](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.5...api-service-v0.10.1-next.6) (2026-09-23)
 
 

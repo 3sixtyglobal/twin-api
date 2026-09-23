@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.1-next.7](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.10.1-next.6...api-tenant-processor-v0.10.1-next.7) (2026-09-23)
+
+
+### Miscellaneous Chores
+
+* **api-tenant-processor:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.10.1-next.6 to 0.10.1-next.7
+
 ## [0.10.1-next.6](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.10.1-next.5...api-tenant-processor-v0.10.1-next.6) (2026-09-23)
 
 
