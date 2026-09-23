@@ -759,5 +759,224 @@ describe("EntityStorageAuthenticationAdminService", () => {
 				});
 			});
 		});
+
+		it("should reject updatePassword when the target holds global-admin but the caller does not", async () => {
+			vi.spyOn(PasswordValidator, "validatePassword").mockImplementation(() => {});
+
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "su@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:su",
+					organization: "did:org:456",
+					scope: "user-admin,global-admin"
+				});
+			});
+
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await expect(
+						service.updatePassword("su@example.com", "better-password-value")
+					).rejects.toThrow(ForbiddenError);
+				}
+			);
+
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				expect(await userEntityStorage.get("su@example.com")).toMatchObject({
+					password: "stored-password"
+				});
+			});
+		});
+
+		it("should allow updatePassword when the target holds global-admin and the caller holds it too", async () => {
+			vi.spyOn(PasswordValidator, "validatePassword").mockImplementation(() => {});
+			vi.spyOn(RandomHelper, "generate").mockReturnValue(new Uint8Array([5, 6, 7, 8]));
+			vi.spyOn(PasswordGenerator, "hashPassword").mockResolvedValue("new-password-hash");
+
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "su@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:su",
+					organization: "did:org:456",
+					scope: "user-admin,global-admin"
+				});
+			});
+
+			await ContextIdStore.run(
+				{
+					[ContextIdKeys.Tenant]: TENANT_A,
+					[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+				},
+				async () => {
+					await service.updatePassword("su@example.com", "better-password-value");
+
+					expect(await userEntityStorage.get("su@example.com")).toMatchObject({
+						password: "new-password-hash"
+					});
+				}
+			);
+		});
+
+		it("should allow updatePassword for an unprivileged target when the caller lacks global-admin", async () => {
+			vi.spyOn(PasswordValidator, "validatePassword").mockImplementation(() => {});
+			vi.spyOn(RandomHelper, "generate").mockReturnValue(new Uint8Array([5, 6, 7, 8]));
+			vi.spyOn(PasswordGenerator, "hashPassword").mockResolvedValue("new-password-hash");
+
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await userEntityStorage.set({
+						email: "user@example.com",
+						password: "stored-password",
+						salt: "AQIDBA==",
+						identity: "did:user:123",
+						organization: "did:org:456",
+						scope: "read"
+					});
+
+					await service.updatePassword("user@example.com", "better-password-value");
+
+					expect(await userEntityStorage.get("user@example.com")).toMatchObject({
+						password: "new-password-hash"
+					});
+				}
+			);
+		});
+
+		it("should reject remove when the target holds global-admin but the caller does not", async () => {
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "su@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:su",
+					organization: "did:org:456",
+					scope: "user-admin,global-admin"
+				});
+			});
+
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await expect(service.remove("su@example.com")).rejects.toThrow(ForbiddenError);
+				}
+			);
+
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				expect(await userEntityStorage.get("su@example.com")).toBeDefined();
+			});
+		});
+
+		it("should allow remove when the target holds global-admin and the caller holds it too", async () => {
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "su@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:su",
+					organization: "did:org:456",
+					scope: "user-admin,global-admin"
+				});
+			});
+
+			await ContextIdStore.run(
+				{
+					[ContextIdKeys.Tenant]: TENANT_A,
+					[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+				},
+				async () => {
+					await service.remove("su@example.com");
+
+					expect(await userEntityStorage.get("su@example.com")).toBeUndefined();
+				}
+			);
+		});
+
+		it("should reject update when the target holds global-admin but the caller does not", async () => {
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "su@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:su",
+					organization: "did:org:456",
+					scope: "user-admin,global-admin"
+				});
+			});
+
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await expect(
+						service.update({ email: "su@example.com", scope: ["user-admin"] })
+					).rejects.toThrow(ForbiddenError);
+				}
+			);
+
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				expect(await userEntityStorage.get("su@example.com")).toMatchObject({
+					scope: "user-admin,global-admin"
+				});
+			});
+		});
+
+		it("should reject updating the identity of a target holding global-admin when the caller does not", async () => {
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "su@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:su",
+					organization: "did:org:456",
+					scope: "user-admin,global-admin"
+				});
+			});
+
+			await ContextIdStore.run(
+				{ [ContextIdKeys.Tenant]: TENANT_A, [HttpContextIdKeys.Scope]: "user-admin" },
+				async () => {
+					await expect(
+						service.update({ email: "su@example.com", userIdentity: "did:user:attacker" })
+					).rejects.toThrow(ForbiddenError);
+				}
+			);
+
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				expect(await userEntityStorage.get("su@example.com")).toMatchObject({
+					identity: "did:user:su"
+				});
+			});
+		});
+
+		it("should allow update when the target holds global-admin and the caller holds it too", async () => {
+			await ContextIdStore.run({ [ContextIdKeys.Tenant]: TENANT_A }, async () => {
+				await userEntityStorage.set({
+					email: "su@example.com",
+					password: "stored-password",
+					salt: "AQIDBA==",
+					identity: "did:user:su",
+					organization: "did:org:456",
+					scope: "user-admin,global-admin"
+				});
+			});
+
+			await ContextIdStore.run(
+				{
+					[ContextIdKeys.Tenant]: TENANT_A,
+					[HttpContextIdKeys.Scope]: "user-admin,global-admin"
+				},
+				async () => {
+					await service.update({ email: "su@example.com", scope: ["user-admin"] });
+
+					expect(await userEntityStorage.get("su@example.com")).toMatchObject({
+						scope: "user-admin"
+					});
+				}
+			);
+		});
 	});
 });

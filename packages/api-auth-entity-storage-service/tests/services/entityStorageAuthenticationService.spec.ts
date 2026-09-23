@@ -359,6 +359,118 @@ describe("EntityStorageAuthenticationService", () => {
 		});
 	});
 
+	it("should refresh a token with the scope stored for the user not the scope in the old token", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: "read"
+		});
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
+				await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+				return {
+					header: { alg: "EdDSA" },
+					payload: {
+						sub: "did:user:123",
+						org: "did:org:456",
+						scope: "read,global-admin,user-admin"
+					}
+				};
+			}
+		);
+		vi.spyOn(TokenHelper, "createToken").mockResolvedValue({
+			token: "refreshed-token",
+			expiry: 987654321
+		});
+
+		await service.start();
+		await service.refresh("existing-token");
+
+		expect(TokenHelper.createToken).toHaveBeenCalledWith(
+			mockVaultConnector,
+			"node-1",
+			"auth-signing",
+			"did:user:123",
+			"did:org:456",
+			undefined,
+			60,
+			"read",
+			0
+		);
+		expect(mockAuthenticationAuditService.create).toHaveBeenCalledWith({
+			actorId: "did:user:123",
+			event: "token-refreshed",
+			data: {
+				organizationIdentity: "did:org:456",
+				tenantId: undefined,
+				scope: ["read"],
+				version: 0
+			}
+		});
+	});
+
+	it("should refresh a token with no scope when the stored scope has been emptied", async () => {
+		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+			[ContextIdKeys.Node]: "node-1"
+		});
+		vi.mocked(mockUserEntityStorage.get).mockResolvedValue({
+			email: "user@example.com",
+			identity: "did:user:123",
+			organization: "did:org:456",
+			password: "stored-password-hash",
+			salt: "c2FsdA==",
+			scope: ""
+		});
+		vi.spyOn(TokenHelper, "verify").mockImplementation(
+			async (vaultConnector, nodeId, signingKeyName, token, requiredScopes, verifyUser) => {
+				await verifyUser?.("did:user:123", "did:org:456", undefined, 0);
+				return {
+					header: { alg: "EdDSA" },
+					payload: {
+						sub: "did:user:123",
+						org: "did:org:456",
+						scope: "global-admin,user-admin"
+					}
+				};
+			}
+		);
+		vi.spyOn(TokenHelper, "createToken").mockResolvedValue({
+			token: "refreshed-token",
+			expiry: 987654321
+		});
+
+		await service.start();
+		await service.refresh("existing-token");
+
+		expect(TokenHelper.createToken).toHaveBeenCalledWith(
+			mockVaultConnector,
+			"node-1",
+			"auth-signing",
+			"did:user:123",
+			"did:org:456",
+			undefined,
+			60,
+			"",
+			0
+		);
+		expect(mockAuthenticationAuditService.create).toHaveBeenCalledWith({
+			actorId: "did:user:123",
+			event: "token-refreshed",
+			data: {
+				organizationIdentity: "did:org:456",
+				tenantId: undefined,
+				scope: [],
+				version: 0
+			}
+		});
+	});
+
 	it("should throw TooManyRequestsError when token refresh rate limit is exceeded", async () => {
 		vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
 			[ContextIdKeys.Node]: "node-1"

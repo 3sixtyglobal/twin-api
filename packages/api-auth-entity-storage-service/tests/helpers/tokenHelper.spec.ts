@@ -851,4 +851,13 @@ describe("TokenHelper.verifyScopes", () => {
 	it("rejects a token that carries no scopes when scopes are required", () => {
 		expect(() => TokenHelper.verifyScopes(undefined, ["read"])).toThrow(UnauthorizedError);
 	});
+
+	it("matches scopes regardless of case and surrounding whitespace", () => {
+		expect(() => TokenHelper.verifyScopes("Read, WRITE ", ["read", "write"])).not.toThrow();
+		expect(() => TokenHelper.verifyScopes("read,write", ["Read", "Write"])).not.toThrow();
+	});
+
+	it("rejects a token whose scopes are empty entries", () => {
+		expect(() => TokenHelper.verifyScopes(" , ", ["read"])).toThrow(UnauthorizedError);
+	});
 });

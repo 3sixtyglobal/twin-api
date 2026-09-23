@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { ScopeHelper } from "@twin.org/api-models";
 import { Coerce, Is, UnauthorizedError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { type IVaultConnector, VaultConnectorHelper } from "@twin.org/vault-models";
@@ -159,9 +160,9 @@ export class TokenHelper {
 	 */
 	public static verifyScopes(scope: string | undefined, requiredScopes?: string[]): void {
 		if (Is.arrayValue(requiredScopes)) {
-			const tokenScopes = Is.stringValue(scope) ? scope.split(",").map(s => s.trim()) : [];
+			const tokenScopes = ScopeHelper.toArray(scope);
 
-			for (const requiredScope of requiredScopes) {
+			for (const requiredScope of ScopeHelper.toArray(requiredScopes)) {
 				if (!tokenScopes.includes(requiredScope)) {
 					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "insufficientScopes");
 				}
