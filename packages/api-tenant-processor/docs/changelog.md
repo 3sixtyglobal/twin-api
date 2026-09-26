@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.1-next.8](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.10.1-next.7...api-tenant-processor-v0.10.1-next.8) (2026-09-26)
+
+
+### Bug Fixes
+
+* migrate tenant organization id aliases from pipe strings to arrays ([#327](https://github.com/iotaledger/twin-api/issues/327)) ([ed94485](https://github.com/iotaledger/twin-api/commit/ed94485602d472989760450341c916e04ea2dc98))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/api-models bumped from 0.10.1-next.7 to 0.10.1-next.8
+
 ## [0.10.1-next.7](https://github.com/iotaledger/twin-api/compare/api-tenant-processor-v0.10.1-next.6...api-tenant-processor-v0.10.1-next.7) (2026-09-23)
 
 
