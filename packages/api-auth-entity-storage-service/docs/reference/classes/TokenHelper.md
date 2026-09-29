@@ -148,6 +148,36 @@ UnauthorizedError if the token is missing, invalid or expired.
 
 ***
 
+### verifyScopes() {#verifyscopes}
+
+> `static` **verifyScopes**(`scope`, `requiredScopes?`): `void`
+
+Verify that a token carries all of the required scopes.
+
+#### Parameters
+
+##### scope
+
+`string` \| `undefined`
+
+The comma separated scopes from the token.
+
+##### requiredScopes?
+
+`string`[]
+
+The scopes the caller must hold.
+
+#### Returns
+
+`void`
+
+#### Throws
+
+UnauthorizedError if any of the required scopes is missing.
+
+***
+
 ### extractTokenFromHeaders() {#extracttokenfromheaders}
 
 > `static` **extractTokenFromHeaders**(`headers?`, `cookieName?`): \{ `token`: `string`; `location`: `"authorization"` \| `"cookie"`; \} \| `undefined`

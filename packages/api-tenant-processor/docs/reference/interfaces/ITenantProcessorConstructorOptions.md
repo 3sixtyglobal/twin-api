@@ -4,16 +4,16 @@ Options for the Tenant Processor constructor.
 
 ## Properties
 
-### tenantEntityStorageType? {#tenantentitystoragetype}
+### tenantAdminComponentType? {#tenantadmincomponenttype}
 
-> `optional` **tenantEntityStorageType?**: `string`
+> `optional` **tenantAdminComponentType?**: `string`
 
-The entity storage for the tenants.
+The component used to resolve tenants, which also provides the lookup caching.
 
 #### Default
 
 ```ts
-tenant
+tenant-admin
 ```
 
 ***

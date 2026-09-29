@@ -7,7 +7,7 @@ import type {
 	IAuthenticationComponent
 } from "@twin.org/api-auth-entity-storage-models";
 import { AuthAuditEvent } from "@twin.org/api-auth-entity-storage-models";
-import type { ITenantAdminComponent } from "@twin.org/api-models";
+import { type ITenantAdminComponent, ScopeHelper } from "@twin.org/api-models";
 import { ContextIdHelper, ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
 	Coerce,
@@ -329,7 +329,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				userIdentity: loginUser.identity,
 				organizationIdentity: loginUser.organization,
 				tenantId: loginTenantId,
-				scope: loginUser.scope.split(",")
+				scope: ScopeHelper.toArray(loginUser.scope)
 			}
 		});
 
@@ -368,6 +368,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		}
 
 		let refreshPasswordVersion: number | undefined;
+		let refreshScope: string | undefined;
 		let tenantId: string | undefined;
 
 		// If the verify fails on the current token then it will throw an exception.
@@ -403,6 +404,9 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 				);
 
 				refreshPasswordVersion = user?.passwordVersion;
+				// The scope is read from storage rather than copied from the token being refreshed,
+				// so a scope change reaches a client that keeps refreshing.
+				refreshScope = user?.scope;
 				if (user?.identity === sub && (passwordVersion ?? 0) === (refreshPasswordVersion ?? 0)) {
 					validParts.push("user");
 				}
@@ -417,7 +421,6 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 		await this._authenticationRateService.check("token-refresh", refreshSub);
 
 		const payloadOrg = Coerce.string(headerAndPayload.payload.org);
-		const payloadScope = Coerce.string(headerAndPayload.payload?.scope);
 
 		const refreshTokenAndExpiry = await TokenHelper.createToken(
 			this._vaultConnector,
@@ -427,7 +430,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			payloadOrg,
 			tenantId,
 			this._defaultTtlMinutes,
-			payloadScope,
+			refreshScope,
 			refreshPasswordVersion ?? 0
 		);
 
@@ -437,7 +440,7 @@ export class EntityStorageAuthenticationService implements IAuthenticationCompon
 			data: {
 				organizationIdentity: payloadOrg,
 				tenantId,
-				scope: payloadScope?.split(",").filter(scope => scope.length > 0),
+				scope: ScopeHelper.toArray(refreshScope),
 				version: refreshPasswordVersion ?? 0
 			}
 		});

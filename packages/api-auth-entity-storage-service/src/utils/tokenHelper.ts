@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { ScopeHelper } from "@twin.org/api-models";
 import { Coerce, Is, UnauthorizedError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { type IVaultConnector, VaultConnectorHelper } from "@twin.org/vault-models";
@@ -143,22 +144,30 @@ export class TokenHelper {
 			}
 		}
 
-		if (Is.arrayValue(requiredScopes)) {
-			const tokenScopes = Is.stringValue(decoded.payload.scope)
-				? decoded.payload.scope.split(",")
-				: [];
-
-			for (const requiredScope of requiredScopes) {
-				if (!tokenScopes.includes(requiredScope)) {
-					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "insufficientScopes");
-				}
-			}
-		}
+		TokenHelper.verifyScopes(Coerce.string(decoded.payload.scope), requiredScopes);
 
 		return {
 			header: decoded.header,
 			payload: decoded.payload
 		};
+	}
+
+	/**
+	 * Verify that a token carries all of the required scopes.
+	 * @param scope The comma separated scopes from the token.
+	 * @param requiredScopes The scopes the caller must hold.
+	 * @throws UnauthorizedError if any of the required scopes is missing.
+	 */
+	public static verifyScopes(scope: string | undefined, requiredScopes?: string[]): void {
+		if (Is.arrayValue(requiredScopes)) {
+			const tokenScopes = ScopeHelper.toArray(scope);
+
+			for (const requiredScope of ScopeHelper.toArray(requiredScopes)) {
+				if (!tokenScopes.includes(requiredScope)) {
+					throw new UnauthorizedError(TokenHelper.CLASS_NAME, "insufficientScopes");
+				}
+			}
+		}
 	}
 
 	/**

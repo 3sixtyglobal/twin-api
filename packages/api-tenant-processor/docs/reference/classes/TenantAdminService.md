@@ -55,6 +55,24 @@ The class name of the component.
 
 ***
 
+### stop() {#stop}
+
+> **stop**(): `Promise`\<`void`\>
+
+Stop the service and release the tenant cache.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the service has stopped.
+
+#### Implementation of
+
+`ITenantAdminComponent.stop`
+
+***
+
 ### get() {#get}
 
 > **get**(`tenantId`): `Promise`\<`ITenant`\>

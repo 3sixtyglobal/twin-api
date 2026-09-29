@@ -66,8 +66,10 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 					loggingComponentType
 				};
 
-				route.connected(socketRequestContext);
-			} catch {}
+				await route.connected(socketRequestContext);
+			} catch {
+				// There is no response to emit for a connected event, so the error is dropped
+			}
 		}
 	}
 
@@ -92,8 +94,10 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 					loggingComponentType
 				};
 
-				route.disconnected(socketRequestContext);
-			} catch {}
+				await route.disconnected(socketRequestContext);
+			} catch {
+				// There is no response to emit for a disconnected event, so the error is dropped
+			}
 		}
 	}
 
@@ -146,7 +150,7 @@ export class SocketRouteProcessor implements ISocketRouteProcessor {
 						loggingComponentType
 					};
 
-					route.handler(socketRequestContext, req, async (topic, socketRouteResponse) => {
+					await route.handler(socketRequestContext, req, async (topic, socketRouteResponse) => {
 						response.headers = socketRouteResponse?.headers;
 						response.body = socketRouteResponse?.body;
 						response.statusCode =

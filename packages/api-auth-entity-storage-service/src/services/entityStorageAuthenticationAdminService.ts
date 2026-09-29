@@ -9,6 +9,7 @@ import { AuthAuditEvent } from "@twin.org/api-auth-entity-storage-models";
 import { ForbiddenError, HttpContextIdKeys, ScopeHelper } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import {
+	BaseError,
 	ComponentFactory,
 	Converter,
 	GeneralError,
@@ -232,6 +233,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				);
 			}
 
+			await this.guardEscalatedPrivilegeTarget(existingUser.scope);
+
 			const updatedFields: string[] = [];
 			const updatedScope = Is.array(user.scope)
 				? ScopeHelper.toString(user.scope)
@@ -272,6 +275,9 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				}
 			});
 		} catch (error) {
+			if (BaseError.isErrorName(error, ForbiddenError.CLASS_NAME)) {
+				throw error;
+			}
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,
 				"updateUserFailed",
@@ -371,6 +377,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				);
 			}
 
+			await this.guardEscalatedPrivilegeTarget(user.scope);
+
 			await this._userEntityStorage.remove(email);
 
 			const contextIds = await ContextIdStore.getContextIds();
@@ -388,6 +396,9 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				}
 			});
 		} catch (error) {
+			if (BaseError.isErrorName(error, ForbiddenError.CLASS_NAME)) {
+				throw error;
+			}
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,
 				"removeUserFailed",
@@ -426,6 +437,8 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				);
 			}
 
+			await this.guardEscalatedPrivilegeTarget(user.scope);
+
 			await PasswordHelper.updatePassword(
 				this._userEntityStorage,
 				this._authenticationAuditService,
@@ -435,6 +448,9 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 				this._minPasswordLength
 			);
 		} catch (error) {
+			if (BaseError.isErrorName(error, ForbiddenError.CLASS_NAME)) {
+				throw error;
+			}
 			throw new GeneralError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,
 				"updatePasswordFailed",
@@ -454,15 +470,45 @@ export class EntityStorageAuthenticationAdminService implements IAuthenticationA
 		if (!ScopeHelper.includes(scopeList, this._escalatedPrivilegeScope)) {
 			return;
 		}
-		const contextIds = await ContextIdStore.getContextIds();
-		if (
-			!ScopeHelper.includes(contextIds?.[HttpContextIdKeys.Scope], this._escalatedPrivilegeScope)
-		) {
+		if (!(await this.callerHasEscalatedPrivilege())) {
 			throw new ForbiddenError(
 				EntityStorageAuthenticationAdminService.CLASS_NAME,
 				"insufficientScopeForEscalatedPrivilege",
 				{ scopeName: this._escalatedPrivilegeScope }
 			);
 		}
+	}
+
+	/**
+	 * Throws ForbiddenError when the account being written to already holds the escalated privilege
+	 * scope but the calling request does not hold that scope itself. Without this an admin with a
+	 * lesser scope could reset the password of, remove, or demote a privileged account.
+	 * @param targetScope The scopes currently held by the account being written to.
+	 * @internal
+	 */
+	private async guardEscalatedPrivilegeTarget(targetScope: string | string[]): Promise<void> {
+		if (!ScopeHelper.includes(targetScope, this._escalatedPrivilegeScope)) {
+			return;
+		}
+		if (!(await this.callerHasEscalatedPrivilege())) {
+			throw new ForbiddenError(
+				EntityStorageAuthenticationAdminService.CLASS_NAME,
+				"insufficientScopeForEscalatedTarget",
+				{ scopeName: this._escalatedPrivilegeScope }
+			);
+		}
+	}
+
+	/**
+	 * Does the calling request hold the escalated privilege scope.
+	 * @returns True when the caller holds the escalated privilege scope.
+	 * @internal
+	 */
+	private async callerHasEscalatedPrivilege(): Promise<boolean> {
+		const contextIds = await ContextIdStore.getContextIds();
+		return ScopeHelper.includes(
+			contextIds?.[HttpContextIdKeys.Scope],
+			this._escalatedPrivilegeScope
+		);
 	}
 }

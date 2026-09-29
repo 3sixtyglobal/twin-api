@@ -8,14 +8,13 @@ import {
 	type IBaseRoute,
 	type IBaseRouteProcessor,
 	type IHttpResponse,
-	type IHttpServerRequest
+	type IHttpServerRequest,
+	type ITenant,
+	type ITenantAdminComponent
 } from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
-import { BaseError, Is, NotFoundError } from "@twin.org/core";
-import type { IEntityStorageConnector } from "@twin.org/entity-storage-models";
-import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
+import { BaseError, ComponentFactory, GuardError, Is, NotFoundError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
-import type { Tenant } from "./entities/tenant.js";
 import type { ITenantOverrideProcessorConstructorOptions } from "./models/ITenantOverrideProcessorConstructorOptions.js";
 
 /**
@@ -40,10 +39,10 @@ export class TenantOverrideProcessor implements IBaseRouteProcessor {
 	public static readonly CLASS_NAME: string = nameof<TenantOverrideProcessor>();
 
 	/**
-	 * The entity storage for api keys.
+	 * The component used to resolve tenants, which also provides the lookup caching.
 	 * @internal
 	 */
-	private readonly _entityStorageConnector: IEntityStorageConnector<Tenant>;
+	private readonly _tenantAdminComponent: ITenantAdminComponent;
 
 	/**
 	 * Include the stack with errors.
@@ -62,8 +61,8 @@ export class TenantOverrideProcessor implements IBaseRouteProcessor {
 	 * @param options Options for the processor.
 	 */
 	constructor(options?: ITenantOverrideProcessorConstructorOptions) {
-		this._entityStorageConnector = EntityStorageConnectorFactory.get(
-			options?.tenantEntityStorageType ?? "tenant"
+		this._tenantAdminComponent = ComponentFactory.get<ITenantAdminComponent>(
+			options?.tenantAdminComponentType ?? "tenant-admin"
 		);
 		this._includeErrorStack = options?.config?.includeErrorStack ?? false;
 		this._escalatedPrivilegeScope =
@@ -121,14 +120,7 @@ export class TenantOverrideProcessor implements IBaseRouteProcessor {
 			}
 
 			// Verify the tenant exists before substituting.
-			const tenant = await this._entityStorageConnector.get(overrideTenantParam);
-			if (tenant?.id !== overrideTenantParam) {
-				throw new NotFoundError(
-					TenantOverrideProcessor.CLASS_NAME,
-					"tenantNotFound",
-					overrideTenantParam
-				);
-			}
+			await this.verifyTenantExists(overrideTenantParam);
 
 			contextIds[HttpContextIdKeys.OriginalTenant] = contextIds[ContextIdKeys.Tenant];
 			contextIds[ContextIdKeys.Tenant] = overrideTenantParam;
@@ -136,6 +128,40 @@ export class TenantOverrideProcessor implements IBaseRouteProcessor {
 			const error = BaseError.fromError(err);
 			const { httpStatusCode } = HttpErrorHelper.processError(error);
 			HttpErrorHelper.buildResponse(response, error, httpStatusCode, this._includeErrorStack);
+		}
+	}
+
+	/**
+	 * Confirm the tenant being switched to exists.
+	 * @param tenantId The tenant id from the override query parameter.
+	 * @throws NotFoundError if no tenant matches the id.
+	 * @internal
+	 */
+	private async verifyTenantExists(tenantId: string): Promise<void> {
+		let tenant: ITenant;
+
+		try {
+			tenant = await this._tenantAdminComponent.get(tenantId);
+		} catch (err) {
+			// An id that matches no tenant, or is not even well formed, is a not found; anything
+			// else is a genuine fault and keeps its own status code.
+			if (
+				BaseError.isErrorName(err, NotFoundError.CLASS_NAME) ||
+				BaseError.isErrorName(err, GuardError.CLASS_NAME)
+			) {
+				throw new NotFoundError(
+					TenantOverrideProcessor.CLASS_NAME,
+					"tenantNotFound",
+					tenantId,
+					undefined,
+					err
+				);
+			}
+			throw err;
+		}
+
+		if (tenant.id !== tenantId) {
+			throw new NotFoundError(TenantOverrideProcessor.CLASS_NAME, "tenantNotFound", tenantId);
 		}
 	}
 }

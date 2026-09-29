@@ -9,16 +9,9 @@ import {
 import type { IBackgroundTask, IBackgroundTaskComponent } from "@twin.org/background-task-models";
 import { TaskStatus } from "@twin.org/background-task-models";
 import type { IContextIds } from "@twin.org/context";
-import {
-	BaseError,
-	ComponentFactory,
-	Factory,
-	GeneralError,
-	Guards,
-	type IComponent,
-	Is
-} from "@twin.org/core";
+import { BaseError, ComponentFactory, Factory, type IComponent, Is } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
+import { ModuleHelper } from "@twin.org/modules";
 import { nameof } from "@twin.org/nameof";
 import type { IHealthServiceConstructorOptions } from "./models/IHealthServiceConstructorOptions.js";
 
@@ -114,16 +107,15 @@ export class HealthService implements IHealthComponent {
 	private readonly _applicationHealthTaskHandler: string;
 
 	/**
-	 * Verified regular expression patterns for component types to exclude from the health
-	 * engine clone.
+	 * Regular expression patterns for component types to exclude from the health engine clone,
+	 * verified when the service is started.
 	 * @internal
 	 */
-	private readonly _excludeCloneComponents: string[] | undefined;
+	private _excludeCloneComponents: string[] | undefined;
 
 	/**
 	 * Create a new instance of HealthService.
 	 * @param options The constructor options.
-	 * @throws GeneralError if an exclude clone component is not a valid regular expression.
 	 */
 	constructor(options?: IHealthServiceConstructorOptions) {
 		this._healthInfo = { status: HealthStatus.Ok, components: [] };
@@ -138,9 +130,7 @@ export class HealthService implements IHealthComponent {
 		this._applicationHealthTaskHandler =
 			options?.config?.overrideApplicationHealthTaskHandler ??
 			new URL("./healthApplicationTask.js", import.meta.url).href;
-		this._excludeCloneComponents = this.verifyExcludeCloneComponents(
-			options?.config?.excludeCloneComponents
-		);
+		this._excludeCloneComponents = options?.config?.excludeCloneComponents;
 		this._started = false;
 		this._regularComponents = [];
 		this._applicationComponents = [];
@@ -158,9 +148,20 @@ export class HealthService implements IHealthComponent {
 	 * The component needs to be started when the node is initialized.
 	 * @param nodeLoggingComponentType The node logging component type.
 	 * @returns A promise that resolves when the initial health check timers have been scheduled.
+	 * @throws GeneralError if an exclude clone component is not a valid regular expression.
 	 */
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		if (!this._started) {
+			// Only load the engine models module when there is something to verify, so a node
+			// with no configured exclusions never has to resolve it.
+			if (Is.arrayValue(this._excludeCloneComponents)) {
+				this._excludeCloneComponents = await ModuleHelper.execModuleMethod<string[] | undefined>(
+					"@twin.org/engine-models",
+					"EngineCloneHelper.verifyExcludeCloneComponents",
+					[this._excludeCloneComponents]
+				);
+			}
+
 			this._started = true;
 
 			await this._backgroundTaskComponent.registerHandler<undefined, IHealth[]>(
@@ -382,44 +383,5 @@ export class HealthService implements IHealthComponent {
 			globalThis.clearTimeout(this._healthApplicationTimer);
 			this._healthApplicationTimer = undefined;
 		}
-	}
-
-	/**
-	 * Verify the exclude clone component patterns supplied in the config.
-	 * The patterns are compiled here so an invalid one fails at construction time, rather than
-	 * inside the background task worker where the failure is much harder to attribute.
-	 * @param excludeCloneComponents The patterns from the config.
-	 * @returns The verified patterns, or undefined if none were supplied.
-	 * @throws GeneralError if one of the patterns is not a valid regular expression.
-	 * @internal
-	 */
-	private verifyExcludeCloneComponents(excludeCloneComponents?: string[]): string[] | undefined {
-		if (Is.empty(excludeCloneComponents)) {
-			return undefined;
-		}
-
-		Guards.array(HealthService.CLASS_NAME, nameof(excludeCloneComponents), excludeCloneComponents);
-
-		const verified: string[] = [];
-		for (const excludeCloneComponent of excludeCloneComponents) {
-			Guards.stringValue(
-				HealthService.CLASS_NAME,
-				nameof(excludeCloneComponent),
-				excludeCloneComponent
-			);
-
-			try {
-				verified.push(new RegExp(excludeCloneComponent).source);
-			} catch (err) {
-				throw new GeneralError(
-					HealthService.CLASS_NAME,
-					"invalidExcludeCloneComponent",
-					{ pattern: excludeCloneComponent },
-					BaseError.fromError(err)
-				);
-			}
-		}
-
-		return verified;
 	}
 }
