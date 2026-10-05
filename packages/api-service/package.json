@@ -4,7 +4,7 @@
 	"description": "Information and hosting service implementations with generated REST route handlers.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/twin-api.git",
+		"url": "git+https://github.com/3sixtyglobal/twin-api.git",
 		"directory": "packages/api-service"
 	},
 	"author": "martyn.janes@iota.org",
@@ -84,7 +84,7 @@
 		"business-logic"
 	],
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/twin-api/issues"
+		"url": "git+https://github.com/3sixtyglobal/twin-api/issues"
 	},
 	"homepage": "https://twindev.org"
 }

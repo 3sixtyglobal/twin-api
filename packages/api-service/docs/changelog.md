@@ -1,21 +1,21 @@
 # Changelog
 
-## [0.11.0](https://github.com/iotaledger/twin-api/compare/api-service-v0.11.0...api-service-v0.11.0) (2026-09-29)
+## [0.11.0](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.11.0...api-service-v0.11.0) (2026-09-29)
 
 
 ### Features
 
-* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
-* release to production ([#195](https://github.com/iotaledger/twin-api/issues/195)) ([a3f5c1f](https://github.com/iotaledger/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
-* release to production ([#197](https://github.com/iotaledger/twin-api/issues/197)) ([f04c156](https://github.com/iotaledger/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
-* release to production ([#201](https://github.com/iotaledger/twin-api/issues/201)) ([e1c46fd](https://github.com/iotaledger/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
-* release to production ([#224](https://github.com/iotaledger/twin-api/issues/224)) ([dffaf08](https://github.com/iotaledger/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
-* release to production ([#273](https://github.com/iotaledger/twin-api/issues/273)) ([618f07e](https://github.com/iotaledger/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
-* release to production ([#294](https://github.com/iotaledger/twin-api/issues/294)) ([4332032](https://github.com/iotaledger/twin-api/commit/43320322ae4f1548419a3192f3f484b7c80e8142))
-* release to production [skip ci] ([#299](https://github.com/iotaledger/twin-api/issues/299)) ([a3b657b](https://github.com/iotaledger/twin-api/commit/a3b657b40e94f9fef98f1e0dba273aba670b63d0))
-* release to production [skip ci] ([#331](https://github.com/iotaledger/twin-api/issues/331)) ([95a70ad](https://github.com/iotaledger/twin-api/commit/95a70ad551def3c32ccfe5d6fd79d52058305f16))
+* release to production ([70ee2d5](https://github.com/3sixtyglobal/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([#195](https://github.com/3sixtyglobal/twin-api/issues/195)) ([a3f5c1f](https://github.com/3sixtyglobal/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
+* release to production ([#197](https://github.com/3sixtyglobal/twin-api/issues/197)) ([f04c156](https://github.com/3sixtyglobal/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
+* release to production ([#201](https://github.com/3sixtyglobal/twin-api/issues/201)) ([e1c46fd](https://github.com/3sixtyglobal/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
+* release to production ([#224](https://github.com/3sixtyglobal/twin-api/issues/224)) ([dffaf08](https://github.com/3sixtyglobal/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
+* release to production ([#273](https://github.com/3sixtyglobal/twin-api/issues/273)) ([618f07e](https://github.com/3sixtyglobal/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
+* release to production ([#294](https://github.com/3sixtyglobal/twin-api/issues/294)) ([4332032](https://github.com/3sixtyglobal/twin-api/commit/43320322ae4f1548419a3192f3f484b7c80e8142))
+* release to production [skip ci] ([#299](https://github.com/3sixtyglobal/twin-api/issues/299)) ([a3b657b](https://github.com/3sixtyglobal/twin-api/commit/a3b657b40e94f9fef98f1e0dba273aba670b63d0))
+* release to production [skip ci] ([#331](https://github.com/3sixtyglobal/twin-api/issues/331)) ([95a70ad](https://github.com/3sixtyglobal/twin-api/commit/95a70ad551def3c32ccfe5d6fd79d52058305f16))
 
-## [0.10.1-next.8](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.7...api-service-v0.10.1-next.8) (2026-09-26)
+## [0.10.1-next.8](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.1-next.7...api-service-v0.10.1-next.8) (2026-09-26)
 
 
 ### Miscellaneous Chores
@@ -29,12 +29,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.10.1-next.7 to 0.10.1-next.8
 
-## [0.10.1-next.7](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.6...api-service-v0.10.1-next.7) (2026-09-23)
+## [0.10.1-next.7](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.1-next.6...api-service-v0.10.1-next.7) (2026-09-23)
 
 
 ### Bug Fixes
 
-* rebuild the health engine clone after a failed start ([#325](https://github.com/iotaledger/twin-api/issues/325)) ([1cb5ac9](https://github.com/iotaledger/twin-api/commit/1cb5ac9d9a8f78b467ff645cfd86ad1d95a6ba83))
+* rebuild the health engine clone after a failed start ([#325](https://github.com/3sixtyglobal/twin-api/issues/325)) ([1cb5ac9](https://github.com/3sixtyglobal/twin-api/commit/1cb5ac9d9a8f78b467ff645cfd86ad1d95a6ba83))
 
 
 ### Dependencies
@@ -43,7 +43,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.10.1-next.6 to 0.10.1-next.7
 
-## [0.10.1-next.6](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.5...api-service-v0.10.1-next.6) (2026-09-23)
+## [0.10.1-next.6](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.1-next.5...api-service-v0.10.1-next.6) (2026-09-23)
 
 
 ### Miscellaneous Chores
@@ -57,7 +57,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.10.1-next.5 to 0.10.1-next.6
 
-## [0.10.1-next.5](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.4...api-service-v0.10.1-next.5) (2026-09-22)
+## [0.10.1-next.5](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.1-next.4...api-service-v0.10.1-next.5) (2026-09-22)
 
 
 ### Miscellaneous Chores
@@ -71,12 +71,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.10.1-next.4 to 0.10.1-next.5
 
-## [0.10.1-next.4](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.3...api-service-v0.10.1-next.4) (2026-09-18)
+## [0.10.1-next.4](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.1-next.3...api-service-v0.10.1-next.4) (2026-09-18)
 
 
 ### Features
 
-* improve entity shapes ([#311](https://github.com/iotaledger/twin-api/issues/311)) ([9288415](https://github.com/iotaledger/twin-api/commit/9288415e2aa074cc12ec85fa15b0a34bf4ea158f))
+* improve entity shapes ([#311](https://github.com/3sixtyglobal/twin-api/issues/311)) ([9288415](https://github.com/3sixtyglobal/twin-api/commit/9288415e2aa074cc12ec85fa15b0a34bf4ea158f))
 
 
 ### Dependencies
@@ -85,12 +85,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.10.1-next.3 to 0.10.1-next.4
 
-## [0.10.1-next.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.2...api-service-v0.10.1-next.3) (2026-09-17)
+## [0.10.1-next.3](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.1-next.2...api-service-v0.10.1-next.3) (2026-09-17)
 
 
 ### Bug Fixes
 
-* switch the health task clone exclusions to EngineCloneHelper ([#309](https://github.com/iotaledger/twin-api/issues/309)) ([ff8de48](https://github.com/iotaledger/twin-api/commit/ff8de4898c0f0a227b6d142b68668c27e01e9062))
+* switch the health task clone exclusions to EngineCloneHelper ([#309](https://github.com/3sixtyglobal/twin-api/issues/309)) ([ff8de48](https://github.com/3sixtyglobal/twin-api/commit/ff8de4898c0f0a227b6d142b68668c27e01e9062))
 
 
 ### Dependencies
@@ -99,7 +99,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.10.1-next.2 to 0.10.1-next.3
 
-## [0.10.1-next.2](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.1...api-service-v0.10.1-next.2) (2026-09-17)
+## [0.10.1-next.2](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.1-next.1...api-service-v0.10.1-next.2) (2026-09-17)
 
 
 ### Miscellaneous Chores
@@ -113,57 +113,57 @@
   * dependencies
     * @twin.org/api-models bumped from 0.10.1-next.1 to 0.10.1-next.2
 
-## [0.10.1-next.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.1-next.0...api-service-v0.10.1-next.1) (2026-09-17)
+## [0.10.1-next.1](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.1-next.0...api-service-v0.10.1-next.1) (2026-09-17)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
-* add initial interval config for health service ([daf0412](https://github.com/iotaledger/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
-* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
-* add platform isLocalOrigin ([#173](https://github.com/iotaledger/twin-api/issues/173)) ([5e024d5](https://github.com/iotaledger/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
-* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* allow platform iteration to exit early ([6f0f791](https://github.com/iotaledger/twin-api/commit/6f0f79131e52fb863c3a8c4391f44b31d6661804))
-* application health checks as background task ([#261](https://github.com/iotaledger/twin-api/issues/261)) ([b012f88](https://github.com/iotaledger/twin-api/commit/b012f8857cd19f7eba3e8c721266b620a46634c4))
-* avoid overlapping health checks ([35150b8](https://github.com/iotaledger/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
-* enhanced rest handling ([#208](https://github.com/iotaledger/twin-api/issues/208)) ([99d5f3f](https://github.com/iotaledger/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* exclude components ([#288](https://github.com/iotaledger/twin-api/issues/288)) ([ba2a44c](https://github.com/iotaledger/twin-api/commit/ba2a44c951468c5d906f4f7e2e4d91f8a95ad956))
-* health application checks ([#240](https://github.com/iotaledger/twin-api/issues/240)) ([68ec8b2](https://github.com/iotaledger/twin-api/commit/68ec8b29dae396928aa874826565efa6ad5d18c9))
-* health updates ([#243](https://github.com/iotaledger/twin-api/issues/243)) ([8360945](https://github.com/iotaledger/twin-api/commit/836094547839f63f2309d4bcd8c4d19128c73883))
-* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
-* matches local origin ([#148](https://github.com/iotaledger/twin-api/issues/148)) ([7f6d30c](https://github.com/iotaledger/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
-* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
-* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
-* remove engine dependency ([#227](https://github.com/iotaledger/twin-api/issues/227)) ([d29d47b](https://github.com/iotaledger/twin-api/commit/d29d47bddd1fe78e27d27ae5c1820f23f7b5d124))
-* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* run health service as single thread ([a6c58e5](https://github.com/iotaledger/twin-api/commit/a6c58e5be3a87f8350af2c2e42bf4f0d0f43a068))
-* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
-* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
-* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
-* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
-* update health service interval defaults ([2c66ae1](https://github.com/iotaledger/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* update public origin building ([6c8e042](https://github.com/iotaledger/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/3sixtyglobal/twin-api/issues/42)) ([0186055](https://github.com/3sixtyglobal/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add getLocalOriginContext ([bd3162f](https://github.com/3sixtyglobal/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+* add initial interval config for health service ([daf0412](https://github.com/3sixtyglobal/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
+* add livez endpoint ([#57](https://github.com/3sixtyglobal/twin-api/issues/57)) ([ef007db](https://github.com/3sixtyglobal/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add platform isLocalOrigin ([#173](https://github.com/3sixtyglobal/twin-api/issues/173)) ([5e024d5](https://github.com/3sixtyglobal/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
+* add root, favicon routes ([71da1c3](https://github.com/3sixtyglobal/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add tenant component ([#145](https://github.com/3sixtyglobal/twin-api/issues/145)) ([a440c53](https://github.com/3sixtyglobal/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+* add validate-locales ([cdba610](https://github.com/3sixtyglobal/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* allow platform iteration to exit early ([6f0f791](https://github.com/3sixtyglobal/twin-api/commit/6f0f79131e52fb863c3a8c4391f44b31d6661804))
+* application health checks as background task ([#261](https://github.com/3sixtyglobal/twin-api/issues/261)) ([b012f88](https://github.com/3sixtyglobal/twin-api/commit/b012f8857cd19f7eba3e8c721266b620a46634c4))
+* avoid overlapping health checks ([35150b8](https://github.com/3sixtyglobal/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
+* enhanced rest handling ([#208](https://github.com/3sixtyglobal/twin-api/issues/208)) ([99d5f3f](https://github.com/3sixtyglobal/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
+* eslint migration to flat config ([0dd5820](https://github.com/3sixtyglobal/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* exclude components ([#288](https://github.com/3sixtyglobal/twin-api/issues/288)) ([ba2a44c](https://github.com/3sixtyglobal/twin-api/commit/ba2a44c951468c5d906f4f7e2e4d91f8a95ad956))
+* health application checks ([#240](https://github.com/3sixtyglobal/twin-api/issues/240)) ([68ec8b2](https://github.com/3sixtyglobal/twin-api/commit/68ec8b29dae396928aa874826565efa6ad5d18c9))
+* health updates ([#243](https://github.com/3sixtyglobal/twin-api/issues/243)) ([8360945](https://github.com/3sixtyglobal/twin-api/commit/836094547839f63f2309d4bcd8c4d19128c73883))
+* hosting service ([#109](https://github.com/3sixtyglobal/twin-api/issues/109)) ([985bf1f](https://github.com/3sixtyglobal/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* matches local origin ([#148](https://github.com/3sixtyglobal/twin-api/issues/148)) ([7f6d30c](https://github.com/3sixtyglobal/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
+* organization identifiers ([#158](https://github.com/3sixtyglobal/twin-api/issues/158)) ([ce13244](https://github.com/3sixtyglobal/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+* public base url ([#70](https://github.com/3sixtyglobal/twin-api/issues/70)) ([5b958cd](https://github.com/3sixtyglobal/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* remove engine dependency ([#227](https://github.com/3sixtyglobal/twin-api/issues/227)) ([d29d47b](https://github.com/3sixtyglobal/twin-api/commit/d29d47bddd1fe78e27d27ae5c1820f23f7b5d124))
+* remove hosting component ([#170](https://github.com/3sixtyglobal/twin-api/issues/170)) ([e78c1e8](https://github.com/3sixtyglobal/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* run health service as single thread ([a6c58e5](https://github.com/3sixtyglobal/twin-api/commit/a6c58e5be3a87f8350af2c2e42bf4f0d0f43a068))
+* separate service responsibilities ([#116](https://github.com/3sixtyglobal/twin-api/issues/116)) ([2234648](https://github.com/3sixtyglobal/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* tenant id in jwt ([#140](https://github.com/3sixtyglobal/twin-api/issues/140)) ([8d37a7b](https://github.com/3sixtyglobal/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+* typescript 6 update ([78d2aa0](https://github.com/3sixtyglobal/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update dependencies ([32b8cd2](https://github.com/3sixtyglobal/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/3sixtyglobal/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update health format ([cfbfbbb](https://github.com/3sixtyglobal/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+* update health service interval defaults ([2c66ae1](https://github.com/3sixtyglobal/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
+* update IComponent signatures ([915ce37](https://github.com/3sixtyglobal/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update public origin building ([6c8e042](https://github.com/3sixtyglobal/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Bug Fixes
 
-* docs ([4d7e1d2](https://github.com/iotaledger/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
-* ensure publicOrigin is unique ([1aaf7f5](https://github.com/iotaledger/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
-* keep the inherited public origin for tenants without a stored publicOrigin ([#283](https://github.com/iotaledger/twin-api/issues/283)) ([e43e29c](https://github.com/iotaledger/twin-api/commit/e43e29ccc3807da39d483dd341bb6dad8de70e89))
-* long running thread ([#287](https://github.com/iotaledger/twin-api/issues/287)) ([b78db1b](https://github.com/iotaledger/twin-api/commit/b78db1bbea53e33980ad9eddf6287b14ef994ae5))
-* resolve local origin context by organization routing param ([#180](https://github.com/iotaledger/twin-api/issues/180)) ([bceb9f1](https://github.com/iotaledger/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
-* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
-* update health service timer state machine ([f0c0700](https://github.com/iotaledger/twin-api/commit/f0c0700722390395d3b8e042ae68123613f22dbf))
+* docs ([4d7e1d2](https://github.com/3sixtyglobal/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
+* ensure publicOrigin is unique ([1aaf7f5](https://github.com/3sixtyglobal/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
+* keep the inherited public origin for tenants without a stored publicOrigin ([#283](https://github.com/3sixtyglobal/twin-api/issues/283)) ([e43e29c](https://github.com/3sixtyglobal/twin-api/commit/e43e29ccc3807da39d483dd341bb6dad8de70e89))
+* long running thread ([#287](https://github.com/3sixtyglobal/twin-api/issues/287)) ([b78db1b](https://github.com/3sixtyglobal/twin-api/commit/b78db1bbea53e33980ad9eddf6287b14ef994ae5))
+* resolve local origin context by organization routing param ([#180](https://github.com/3sixtyglobal/twin-api/issues/180)) ([bceb9f1](https://github.com/3sixtyglobal/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/3sixtyglobal/twin-api/issues/164)) ([b69f408](https://github.com/3sixtyglobal/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+* update health service timer state machine ([f0c0700](https://github.com/3sixtyglobal/twin-api/commit/f0c0700722390395d3b8e042ae68123613f22dbf))
 
 
 ### Dependencies
@@ -172,46 +172,46 @@
   * dependencies
     * @twin.org/api-models bumped from 0.10.1-next.0 to 0.10.1-next.1
 
-## [0.10.0](https://github.com/iotaledger/twin-api/compare/api-service-v0.10.0...api-service-v0.10.0) (2026-09-16)
+## [0.10.0](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.10.0...api-service-v0.10.0) (2026-09-16)
 
 
 ### Features
 
-* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
-* release to production ([#195](https://github.com/iotaledger/twin-api/issues/195)) ([a3f5c1f](https://github.com/iotaledger/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
-* release to production ([#197](https://github.com/iotaledger/twin-api/issues/197)) ([f04c156](https://github.com/iotaledger/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
-* release to production ([#201](https://github.com/iotaledger/twin-api/issues/201)) ([e1c46fd](https://github.com/iotaledger/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
-* release to production ([#224](https://github.com/iotaledger/twin-api/issues/224)) ([dffaf08](https://github.com/iotaledger/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
-* release to production ([#273](https://github.com/iotaledger/twin-api/issues/273)) ([618f07e](https://github.com/iotaledger/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
-* release to production ([#294](https://github.com/iotaledger/twin-api/issues/294)) ([4332032](https://github.com/iotaledger/twin-api/commit/43320322ae4f1548419a3192f3f484b7c80e8142))
-* release to production [skip ci] ([#299](https://github.com/iotaledger/twin-api/issues/299)) ([a3b657b](https://github.com/iotaledger/twin-api/commit/a3b657b40e94f9fef98f1e0dba273aba670b63d0))
+* release to production ([70ee2d5](https://github.com/3sixtyglobal/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([#195](https://github.com/3sixtyglobal/twin-api/issues/195)) ([a3f5c1f](https://github.com/3sixtyglobal/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
+* release to production ([#197](https://github.com/3sixtyglobal/twin-api/issues/197)) ([f04c156](https://github.com/3sixtyglobal/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
+* release to production ([#201](https://github.com/3sixtyglobal/twin-api/issues/201)) ([e1c46fd](https://github.com/3sixtyglobal/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
+* release to production ([#224](https://github.com/3sixtyglobal/twin-api/issues/224)) ([dffaf08](https://github.com/3sixtyglobal/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
+* release to production ([#273](https://github.com/3sixtyglobal/twin-api/issues/273)) ([618f07e](https://github.com/3sixtyglobal/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
+* release to production ([#294](https://github.com/3sixtyglobal/twin-api/issues/294)) ([4332032](https://github.com/3sixtyglobal/twin-api/commit/43320322ae4f1548419a3192f3f484b7c80e8142))
+* release to production [skip ci] ([#299](https://github.com/3sixtyglobal/twin-api/issues/299)) ([a3b657b](https://github.com/3sixtyglobal/twin-api/commit/a3b657b40e94f9fef98f1e0dba273aba670b63d0))
 
-## [0.9.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.3...api-service-v0.9.3) (2026-09-14)
-
-
-### Features
-
-* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
-* release to production ([#195](https://github.com/iotaledger/twin-api/issues/195)) ([a3f5c1f](https://github.com/iotaledger/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
-* release to production ([#197](https://github.com/iotaledger/twin-api/issues/197)) ([f04c156](https://github.com/iotaledger/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
-* release to production ([#201](https://github.com/iotaledger/twin-api/issues/201)) ([e1c46fd](https://github.com/iotaledger/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
-* release to production ([#224](https://github.com/iotaledger/twin-api/issues/224)) ([dffaf08](https://github.com/iotaledger/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
-* release to production ([#273](https://github.com/iotaledger/twin-api/issues/273)) ([618f07e](https://github.com/iotaledger/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
-* release to production ([#294](https://github.com/iotaledger/twin-api/issues/294)) ([4332032](https://github.com/iotaledger/twin-api/commit/43320322ae4f1548419a3192f3f484b7c80e8142))
-
-## [0.9.2](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2...api-service-v0.9.2) (2026-08-24)
+## [0.9.3](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.3...api-service-v0.9.3) (2026-09-14)
 
 
 ### Features
 
-* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
-* release to production ([#195](https://github.com/iotaledger/twin-api/issues/195)) ([a3f5c1f](https://github.com/iotaledger/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
-* release to production ([#197](https://github.com/iotaledger/twin-api/issues/197)) ([f04c156](https://github.com/iotaledger/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
-* release to production ([#201](https://github.com/iotaledger/twin-api/issues/201)) ([e1c46fd](https://github.com/iotaledger/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
-* release to production ([#224](https://github.com/iotaledger/twin-api/issues/224)) ([dffaf08](https://github.com/iotaledger/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
-* release to production ([#273](https://github.com/iotaledger/twin-api/issues/273)) ([618f07e](https://github.com/iotaledger/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
+* release to production ([70ee2d5](https://github.com/3sixtyglobal/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([#195](https://github.com/3sixtyglobal/twin-api/issues/195)) ([a3f5c1f](https://github.com/3sixtyglobal/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
+* release to production ([#197](https://github.com/3sixtyglobal/twin-api/issues/197)) ([f04c156](https://github.com/3sixtyglobal/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
+* release to production ([#201](https://github.com/3sixtyglobal/twin-api/issues/201)) ([e1c46fd](https://github.com/3sixtyglobal/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
+* release to production ([#224](https://github.com/3sixtyglobal/twin-api/issues/224)) ([dffaf08](https://github.com/3sixtyglobal/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
+* release to production ([#273](https://github.com/3sixtyglobal/twin-api/issues/273)) ([618f07e](https://github.com/3sixtyglobal/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
+* release to production ([#294](https://github.com/3sixtyglobal/twin-api/issues/294)) ([4332032](https://github.com/3sixtyglobal/twin-api/commit/43320322ae4f1548419a3192f3f484b7c80e8142))
 
-## [0.9.2-next.13](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.12...api-service-v0.9.2-next.13) (2026-08-20)
+## [0.9.2](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2...api-service-v0.9.2) (2026-08-24)
+
+
+### Features
+
+* release to production ([70ee2d5](https://github.com/3sixtyglobal/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([#195](https://github.com/3sixtyglobal/twin-api/issues/195)) ([a3f5c1f](https://github.com/3sixtyglobal/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
+* release to production ([#197](https://github.com/3sixtyglobal/twin-api/issues/197)) ([f04c156](https://github.com/3sixtyglobal/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
+* release to production ([#201](https://github.com/3sixtyglobal/twin-api/issues/201)) ([e1c46fd](https://github.com/3sixtyglobal/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
+* release to production ([#224](https://github.com/3sixtyglobal/twin-api/issues/224)) ([dffaf08](https://github.com/3sixtyglobal/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
+* release to production ([#273](https://github.com/3sixtyglobal/twin-api/issues/273)) ([618f07e](https://github.com/3sixtyglobal/twin-api/commit/618f07e3c999af1d93fb1eb6164db7c5f91adf9e))
+
+## [0.9.2-next.13](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.12...api-service-v0.9.2-next.13) (2026-08-20)
 
 
 ### Miscellaneous Chores
@@ -225,7 +225,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.12 to 0.9.2-next.13
 
-## [0.9.2-next.12](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.11...api-service-v0.9.2-next.12) (2026-08-20)
+## [0.9.2-next.12](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.11...api-service-v0.9.2-next.12) (2026-08-20)
 
 
 ### Miscellaneous Chores
@@ -239,12 +239,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.11 to 0.9.2-next.12
 
-## [0.9.2-next.11](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.10...api-service-v0.9.2-next.11) (2026-08-20)
+## [0.9.2-next.11](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.10...api-service-v0.9.2-next.11) (2026-08-20)
 
 
 ### Features
 
-* application health checks as background task ([#261](https://github.com/iotaledger/twin-api/issues/261)) ([b012f88](https://github.com/iotaledger/twin-api/commit/b012f8857cd19f7eba3e8c721266b620a46634c4))
+* application health checks as background task ([#261](https://github.com/3sixtyglobal/twin-api/issues/261)) ([b012f88](https://github.com/3sixtyglobal/twin-api/commit/b012f8857cd19f7eba3e8c721266b620a46634c4))
 
 
 ### Dependencies
@@ -253,7 +253,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.10 to 0.9.2-next.11
 
-## [0.9.2-next.10](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.9...api-service-v0.9.2-next.10) (2026-08-17)
+## [0.9.2-next.10](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.9...api-service-v0.9.2-next.10) (2026-08-17)
 
 
 ### Miscellaneous Chores
@@ -267,7 +267,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.9 to 0.9.2-next.10
 
-## [0.9.2-next.9](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.8...api-service-v0.9.2-next.9) (2026-08-17)
+## [0.9.2-next.9](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.8...api-service-v0.9.2-next.9) (2026-08-17)
 
 
 ### Miscellaneous Chores
@@ -281,7 +281,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.8 to 0.9.2-next.9
 
-## [0.9.2-next.8](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.7...api-service-v0.9.2-next.8) (2026-08-14)
+## [0.9.2-next.8](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.7...api-service-v0.9.2-next.8) (2026-08-14)
 
 
 ### Miscellaneous Chores
@@ -295,7 +295,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.7 to 0.9.2-next.8
 
-## [0.9.2-next.7](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.6...api-service-v0.9.2-next.7) (2026-08-12)
+## [0.9.2-next.7](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.6...api-service-v0.9.2-next.7) (2026-08-12)
 
 
 ### Miscellaneous Chores
@@ -309,12 +309,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.6 to 0.9.2-next.7
 
-## [0.9.2-next.6](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.5...api-service-v0.9.2-next.6) (2026-08-07)
+## [0.9.2-next.6](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.5...api-service-v0.9.2-next.6) (2026-08-07)
 
 
 ### Features
 
-* health updates ([#243](https://github.com/iotaledger/twin-api/issues/243)) ([8360945](https://github.com/iotaledger/twin-api/commit/836094547839f63f2309d4bcd8c4d19128c73883))
+* health updates ([#243](https://github.com/3sixtyglobal/twin-api/issues/243)) ([8360945](https://github.com/3sixtyglobal/twin-api/commit/836094547839f63f2309d4bcd8c4d19128c73883))
 
 
 ### Dependencies
@@ -323,12 +323,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.5 to 0.9.2-next.6
 
-## [0.9.2-next.5](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.4...api-service-v0.9.2-next.5) (2026-08-03)
+## [0.9.2-next.5](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.4...api-service-v0.9.2-next.5) (2026-08-03)
 
 
 ### Features
 
-* health application checks ([#240](https://github.com/iotaledger/twin-api/issues/240)) ([68ec8b2](https://github.com/iotaledger/twin-api/commit/68ec8b29dae396928aa874826565efa6ad5d18c9))
+* health application checks ([#240](https://github.com/3sixtyglobal/twin-api/issues/240)) ([68ec8b2](https://github.com/3sixtyglobal/twin-api/commit/68ec8b29dae396928aa874826565efa6ad5d18c9))
 
 
 ### Dependencies
@@ -337,7 +337,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.4 to 0.9.2-next.5
 
-## [0.9.2-next.4](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.3...api-service-v0.9.2-next.4) (2026-08-02)
+## [0.9.2-next.4](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.3...api-service-v0.9.2-next.4) (2026-08-02)
 
 
 ### Miscellaneous Chores
@@ -351,7 +351,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.3 to 0.9.2-next.4
 
-## [0.9.2-next.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.2...api-service-v0.9.2-next.3) (2026-07-30)
+## [0.9.2-next.3](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.2...api-service-v0.9.2-next.3) (2026-07-30)
 
 
 ### Miscellaneous Chores
@@ -365,7 +365,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.2 to 0.9.2-next.3
 
-## [0.9.2-next.2](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.1...api-service-v0.9.2-next.2) (2026-07-29)
+## [0.9.2-next.2](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.1...api-service-v0.9.2-next.2) (2026-07-29)
 
 
 ### Miscellaneous Chores
@@ -379,49 +379,49 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.1 to 0.9.2-next.2
 
-## [0.9.2-next.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.2-next.0...api-service-v0.9.2-next.1) (2026-07-28)
+## [0.9.2-next.1](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.2-next.0...api-service-v0.9.2-next.1) (2026-07-28)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
-* add initial interval config for health service ([daf0412](https://github.com/iotaledger/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
-* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
-* add platform isLocalOrigin ([#173](https://github.com/iotaledger/twin-api/issues/173)) ([5e024d5](https://github.com/iotaledger/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
-* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* avoid overlapping health checks ([35150b8](https://github.com/iotaledger/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
-* enhanced rest handling ([#208](https://github.com/iotaledger/twin-api/issues/208)) ([99d5f3f](https://github.com/iotaledger/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
-* matches local origin ([#148](https://github.com/iotaledger/twin-api/issues/148)) ([7f6d30c](https://github.com/iotaledger/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
-* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
-* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
-* remove engine dependency ([#227](https://github.com/iotaledger/twin-api/issues/227)) ([d29d47b](https://github.com/iotaledger/twin-api/commit/d29d47bddd1fe78e27d27ae5c1820f23f7b5d124))
-* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
-* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
-* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
-* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
-* update health service interval defaults ([2c66ae1](https://github.com/iotaledger/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* update public origin building ([6c8e042](https://github.com/iotaledger/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/3sixtyglobal/twin-api/issues/42)) ([0186055](https://github.com/3sixtyglobal/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add getLocalOriginContext ([bd3162f](https://github.com/3sixtyglobal/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+* add initial interval config for health service ([daf0412](https://github.com/3sixtyglobal/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
+* add livez endpoint ([#57](https://github.com/3sixtyglobal/twin-api/issues/57)) ([ef007db](https://github.com/3sixtyglobal/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add platform isLocalOrigin ([#173](https://github.com/3sixtyglobal/twin-api/issues/173)) ([5e024d5](https://github.com/3sixtyglobal/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
+* add root, favicon routes ([71da1c3](https://github.com/3sixtyglobal/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add tenant component ([#145](https://github.com/3sixtyglobal/twin-api/issues/145)) ([a440c53](https://github.com/3sixtyglobal/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+* add validate-locales ([cdba610](https://github.com/3sixtyglobal/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* avoid overlapping health checks ([35150b8](https://github.com/3sixtyglobal/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
+* enhanced rest handling ([#208](https://github.com/3sixtyglobal/twin-api/issues/208)) ([99d5f3f](https://github.com/3sixtyglobal/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
+* eslint migration to flat config ([0dd5820](https://github.com/3sixtyglobal/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* hosting service ([#109](https://github.com/3sixtyglobal/twin-api/issues/109)) ([985bf1f](https://github.com/3sixtyglobal/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* matches local origin ([#148](https://github.com/3sixtyglobal/twin-api/issues/148)) ([7f6d30c](https://github.com/3sixtyglobal/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
+* organization identifiers ([#158](https://github.com/3sixtyglobal/twin-api/issues/158)) ([ce13244](https://github.com/3sixtyglobal/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+* public base url ([#70](https://github.com/3sixtyglobal/twin-api/issues/70)) ([5b958cd](https://github.com/3sixtyglobal/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* remove engine dependency ([#227](https://github.com/3sixtyglobal/twin-api/issues/227)) ([d29d47b](https://github.com/3sixtyglobal/twin-api/commit/d29d47bddd1fe78e27d27ae5c1820f23f7b5d124))
+* remove hosting component ([#170](https://github.com/3sixtyglobal/twin-api/issues/170)) ([e78c1e8](https://github.com/3sixtyglobal/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* separate service responsibilities ([#116](https://github.com/3sixtyglobal/twin-api/issues/116)) ([2234648](https://github.com/3sixtyglobal/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* tenant id in jwt ([#140](https://github.com/3sixtyglobal/twin-api/issues/140)) ([8d37a7b](https://github.com/3sixtyglobal/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+* typescript 6 update ([78d2aa0](https://github.com/3sixtyglobal/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update dependencies ([32b8cd2](https://github.com/3sixtyglobal/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/3sixtyglobal/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update health format ([cfbfbbb](https://github.com/3sixtyglobal/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+* update health service interval defaults ([2c66ae1](https://github.com/3sixtyglobal/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
+* update IComponent signatures ([915ce37](https://github.com/3sixtyglobal/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update public origin building ([6c8e042](https://github.com/3sixtyglobal/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Bug Fixes
 
-* docs ([4d7e1d2](https://github.com/iotaledger/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
-* ensure publicOrigin is unique ([1aaf7f5](https://github.com/iotaledger/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
-* resolve local origin context by organization routing param ([#180](https://github.com/iotaledger/twin-api/issues/180)) ([bceb9f1](https://github.com/iotaledger/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
-* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
-* update health service timer state machine ([f0c0700](https://github.com/iotaledger/twin-api/commit/f0c0700722390395d3b8e042ae68123613f22dbf))
+* docs ([4d7e1d2](https://github.com/3sixtyglobal/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
+* ensure publicOrigin is unique ([1aaf7f5](https://github.com/3sixtyglobal/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
+* resolve local origin context by organization routing param ([#180](https://github.com/3sixtyglobal/twin-api/issues/180)) ([bceb9f1](https://github.com/3sixtyglobal/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/3sixtyglobal/twin-api/issues/164)) ([b69f408](https://github.com/3sixtyglobal/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+* update health service timer state machine ([f0c0700](https://github.com/3sixtyglobal/twin-api/commit/f0c0700722390395d3b8e042ae68123613f22dbf))
 
 
 ### Dependencies
@@ -430,18 +430,18 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.2-next.0 to 0.9.2-next.1
 
-## [0.9.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1...api-service-v0.9.1) (2026-07-27)
+## [0.9.1](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1...api-service-v0.9.1) (2026-07-27)
 
 
 ### Features
 
-* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
-* release to production ([#195](https://github.com/iotaledger/twin-api/issues/195)) ([a3f5c1f](https://github.com/iotaledger/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
-* release to production ([#197](https://github.com/iotaledger/twin-api/issues/197)) ([f04c156](https://github.com/iotaledger/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
-* release to production ([#201](https://github.com/iotaledger/twin-api/issues/201)) ([e1c46fd](https://github.com/iotaledger/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
-* release to production ([#224](https://github.com/iotaledger/twin-api/issues/224)) ([dffaf08](https://github.com/iotaledger/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
+* release to production ([70ee2d5](https://github.com/3sixtyglobal/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([#195](https://github.com/3sixtyglobal/twin-api/issues/195)) ([a3f5c1f](https://github.com/3sixtyglobal/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
+* release to production ([#197](https://github.com/3sixtyglobal/twin-api/issues/197)) ([f04c156](https://github.com/3sixtyglobal/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
+* release to production ([#201](https://github.com/3sixtyglobal/twin-api/issues/201)) ([e1c46fd](https://github.com/3sixtyglobal/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
+* release to production ([#224](https://github.com/3sixtyglobal/twin-api/issues/224)) ([dffaf08](https://github.com/3sixtyglobal/twin-api/commit/dffaf082b7dccc6f57a5b7cd20b95d24bb8ec2f3))
 
-## [0.9.1-next.9](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.8...api-service-v0.9.1-next.9) (2026-07-23)
+## [0.9.1-next.9](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.8...api-service-v0.9.1-next.9) (2026-07-23)
 
 
 ### Miscellaneous Chores
@@ -455,7 +455,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.8 to 0.9.1-next.9
 
-## [0.9.1-next.8](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.7...api-service-v0.9.1-next.8) (2026-07-03)
+## [0.9.1-next.8](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.7...api-service-v0.9.1-next.8) (2026-07-03)
 
 
 ### Miscellaneous Chores
@@ -469,12 +469,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.7 to 0.9.1-next.8
 
-## [0.9.1-next.7](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.6...api-service-v0.9.1-next.7) (2026-07-02)
+## [0.9.1-next.7](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.6...api-service-v0.9.1-next.7) (2026-07-02)
 
 
 ### Bug Fixes
 
-* update health service timer state machine ([f0c0700](https://github.com/iotaledger/twin-api/commit/f0c0700722390395d3b8e042ae68123613f22dbf))
+* update health service timer state machine ([f0c0700](https://github.com/3sixtyglobal/twin-api/commit/f0c0700722390395d3b8e042ae68123613f22dbf))
 
 
 ### Dependencies
@@ -483,7 +483,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.6 to 0.9.1-next.7
 
-## [0.9.1-next.6](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.5...api-service-v0.9.1-next.6) (2026-06-30)
+## [0.9.1-next.6](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.5...api-service-v0.9.1-next.6) (2026-06-30)
 
 
 ### Miscellaneous Chores
@@ -497,7 +497,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.5 to 0.9.1-next.6
 
-## [0.9.1-next.5](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.4...api-service-v0.9.1-next.5) (2026-06-30)
+## [0.9.1-next.5](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.4...api-service-v0.9.1-next.5) (2026-06-30)
 
 
 ### Miscellaneous Chores
@@ -511,7 +511,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.4 to 0.9.1-next.5
 
-## [0.9.1-next.4](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.3...api-service-v0.9.1-next.4) (2026-06-30)
+## [0.9.1-next.4](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.3...api-service-v0.9.1-next.4) (2026-06-30)
 
 
 ### Miscellaneous Chores
@@ -525,12 +525,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.3 to 0.9.1-next.4
 
-## [0.9.1-next.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.2...api-service-v0.9.1-next.3) (2026-06-29)
+## [0.9.1-next.3](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.2...api-service-v0.9.1-next.3) (2026-06-29)
 
 
 ### Features
 
-* enhanced rest handling ([#208](https://github.com/iotaledger/twin-api/issues/208)) ([99d5f3f](https://github.com/iotaledger/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
+* enhanced rest handling ([#208](https://github.com/3sixtyglobal/twin-api/issues/208)) ([99d5f3f](https://github.com/3sixtyglobal/twin-api/commit/99d5f3f96d262e57828d98d3f3b1e3da8a863378))
 
 
 ### Dependencies
@@ -539,7 +539,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.2 to 0.9.1-next.3
 
-## [0.9.1-next.2](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.1...api-service-v0.9.1-next.2) (2026-06-26)
+## [0.9.1-next.2](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.1...api-service-v0.9.1-next.2) (2026-06-26)
 
 
 ### Miscellaneous Chores
@@ -553,46 +553,46 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.1 to 0.9.1-next.2
 
-## [0.9.1-next.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.1-next.0...api-service-v0.9.1-next.1) (2026-06-26)
+## [0.9.1-next.1](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.1-next.0...api-service-v0.9.1-next.1) (2026-06-26)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
-* add initial interval config for health service ([daf0412](https://github.com/iotaledger/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
-* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
-* add platform isLocalOrigin ([#173](https://github.com/iotaledger/twin-api/issues/173)) ([5e024d5](https://github.com/iotaledger/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
-* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* avoid overlapping health checks ([35150b8](https://github.com/iotaledger/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
-* matches local origin ([#148](https://github.com/iotaledger/twin-api/issues/148)) ([7f6d30c](https://github.com/iotaledger/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
-* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
-* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
-* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
-* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
-* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
-* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
-* update health service interval defaults ([2c66ae1](https://github.com/iotaledger/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* update public origin building ([6c8e042](https://github.com/iotaledger/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/3sixtyglobal/twin-api/issues/42)) ([0186055](https://github.com/3sixtyglobal/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add getLocalOriginContext ([bd3162f](https://github.com/3sixtyglobal/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+* add initial interval config for health service ([daf0412](https://github.com/3sixtyglobal/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
+* add livez endpoint ([#57](https://github.com/3sixtyglobal/twin-api/issues/57)) ([ef007db](https://github.com/3sixtyglobal/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add platform isLocalOrigin ([#173](https://github.com/3sixtyglobal/twin-api/issues/173)) ([5e024d5](https://github.com/3sixtyglobal/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
+* add root, favicon routes ([71da1c3](https://github.com/3sixtyglobal/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add tenant component ([#145](https://github.com/3sixtyglobal/twin-api/issues/145)) ([a440c53](https://github.com/3sixtyglobal/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+* add validate-locales ([cdba610](https://github.com/3sixtyglobal/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* avoid overlapping health checks ([35150b8](https://github.com/3sixtyglobal/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
+* eslint migration to flat config ([0dd5820](https://github.com/3sixtyglobal/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* hosting service ([#109](https://github.com/3sixtyglobal/twin-api/issues/109)) ([985bf1f](https://github.com/3sixtyglobal/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* matches local origin ([#148](https://github.com/3sixtyglobal/twin-api/issues/148)) ([7f6d30c](https://github.com/3sixtyglobal/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
+* organization identifiers ([#158](https://github.com/3sixtyglobal/twin-api/issues/158)) ([ce13244](https://github.com/3sixtyglobal/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+* public base url ([#70](https://github.com/3sixtyglobal/twin-api/issues/70)) ([5b958cd](https://github.com/3sixtyglobal/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* remove hosting component ([#170](https://github.com/3sixtyglobal/twin-api/issues/170)) ([e78c1e8](https://github.com/3sixtyglobal/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* separate service responsibilities ([#116](https://github.com/3sixtyglobal/twin-api/issues/116)) ([2234648](https://github.com/3sixtyglobal/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* tenant id in jwt ([#140](https://github.com/3sixtyglobal/twin-api/issues/140)) ([8d37a7b](https://github.com/3sixtyglobal/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+* typescript 6 update ([78d2aa0](https://github.com/3sixtyglobal/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update dependencies ([32b8cd2](https://github.com/3sixtyglobal/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/3sixtyglobal/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update health format ([cfbfbbb](https://github.com/3sixtyglobal/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+* update health service interval defaults ([2c66ae1](https://github.com/3sixtyglobal/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
+* update IComponent signatures ([915ce37](https://github.com/3sixtyglobal/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update public origin building ([6c8e042](https://github.com/3sixtyglobal/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Bug Fixes
 
-* docs ([4d7e1d2](https://github.com/iotaledger/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
-* ensure publicOrigin is unique ([1aaf7f5](https://github.com/iotaledger/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
-* resolve local origin context by organization routing param ([#180](https://github.com/iotaledger/twin-api/issues/180)) ([bceb9f1](https://github.com/iotaledger/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
-* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+* docs ([4d7e1d2](https://github.com/3sixtyglobal/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
+* ensure publicOrigin is unique ([1aaf7f5](https://github.com/3sixtyglobal/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
+* resolve local origin context by organization routing param ([#180](https://github.com/3sixtyglobal/twin-api/issues/180)) ([bceb9f1](https://github.com/3sixtyglobal/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/3sixtyglobal/twin-api/issues/164)) ([b69f408](https://github.com/3sixtyglobal/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
 
 
 ### Dependencies
@@ -601,56 +601,56 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.1-next.0 to 0.9.1-next.1
 
-## [0.9.0](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.0...api-service-v0.9.0) (2026-06-24)
+## [0.9.0](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.0...api-service-v0.9.0) (2026-06-24)
 
 
 ### Features
 
-* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
-* release to production ([#195](https://github.com/iotaledger/twin-api/issues/195)) ([a3f5c1f](https://github.com/iotaledger/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
-* release to production ([#197](https://github.com/iotaledger/twin-api/issues/197)) ([f04c156](https://github.com/iotaledger/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
-* release to production ([#201](https://github.com/iotaledger/twin-api/issues/201)) ([e1c46fd](https://github.com/iotaledger/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
+* release to production ([70ee2d5](https://github.com/3sixtyglobal/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([#195](https://github.com/3sixtyglobal/twin-api/issues/195)) ([a3f5c1f](https://github.com/3sixtyglobal/twin-api/commit/a3f5c1fc35a748762af7efa4f7f95776004d1309))
+* release to production ([#197](https://github.com/3sixtyglobal/twin-api/issues/197)) ([f04c156](https://github.com/3sixtyglobal/twin-api/commit/f04c1567f801cde36c5ec8595f9b9369109d9e42))
+* release to production ([#201](https://github.com/3sixtyglobal/twin-api/issues/201)) ([e1c46fd](https://github.com/3sixtyglobal/twin-api/commit/e1c46fd02c1f4d44d5393e2f49a24f1e4468f240))
 
-## [0.9.0-next.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.9.0-next.0...api-service-v0.9.0-next.1) (2026-06-23)
+## [0.9.0-next.1](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.9.0-next.0...api-service-v0.9.0-next.1) (2026-06-23)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
-* add initial interval config for health service ([daf0412](https://github.com/iotaledger/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
-* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
-* add platform isLocalOrigin ([#173](https://github.com/iotaledger/twin-api/issues/173)) ([5e024d5](https://github.com/iotaledger/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
-* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* avoid overlapping health checks ([35150b8](https://github.com/iotaledger/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
-* matches local origin ([#148](https://github.com/iotaledger/twin-api/issues/148)) ([7f6d30c](https://github.com/iotaledger/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
-* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
-* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
-* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
-* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
-* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
-* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
-* update health service interval defaults ([2c66ae1](https://github.com/iotaledger/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* update public origin building ([6c8e042](https://github.com/iotaledger/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/3sixtyglobal/twin-api/issues/42)) ([0186055](https://github.com/3sixtyglobal/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add getLocalOriginContext ([bd3162f](https://github.com/3sixtyglobal/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+* add initial interval config for health service ([daf0412](https://github.com/3sixtyglobal/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
+* add livez endpoint ([#57](https://github.com/3sixtyglobal/twin-api/issues/57)) ([ef007db](https://github.com/3sixtyglobal/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add platform isLocalOrigin ([#173](https://github.com/3sixtyglobal/twin-api/issues/173)) ([5e024d5](https://github.com/3sixtyglobal/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
+* add root, favicon routes ([71da1c3](https://github.com/3sixtyglobal/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add tenant component ([#145](https://github.com/3sixtyglobal/twin-api/issues/145)) ([a440c53](https://github.com/3sixtyglobal/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+* add validate-locales ([cdba610](https://github.com/3sixtyglobal/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* avoid overlapping health checks ([35150b8](https://github.com/3sixtyglobal/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
+* eslint migration to flat config ([0dd5820](https://github.com/3sixtyglobal/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* hosting service ([#109](https://github.com/3sixtyglobal/twin-api/issues/109)) ([985bf1f](https://github.com/3sixtyglobal/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* matches local origin ([#148](https://github.com/3sixtyglobal/twin-api/issues/148)) ([7f6d30c](https://github.com/3sixtyglobal/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
+* organization identifiers ([#158](https://github.com/3sixtyglobal/twin-api/issues/158)) ([ce13244](https://github.com/3sixtyglobal/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+* public base url ([#70](https://github.com/3sixtyglobal/twin-api/issues/70)) ([5b958cd](https://github.com/3sixtyglobal/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* remove hosting component ([#170](https://github.com/3sixtyglobal/twin-api/issues/170)) ([e78c1e8](https://github.com/3sixtyglobal/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* separate service responsibilities ([#116](https://github.com/3sixtyglobal/twin-api/issues/116)) ([2234648](https://github.com/3sixtyglobal/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* tenant id in jwt ([#140](https://github.com/3sixtyglobal/twin-api/issues/140)) ([8d37a7b](https://github.com/3sixtyglobal/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+* typescript 6 update ([78d2aa0](https://github.com/3sixtyglobal/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* update dependencies ([32b8cd2](https://github.com/3sixtyglobal/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/3sixtyglobal/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update health format ([cfbfbbb](https://github.com/3sixtyglobal/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+* update health service interval defaults ([2c66ae1](https://github.com/3sixtyglobal/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
+* update IComponent signatures ([915ce37](https://github.com/3sixtyglobal/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update public origin building ([6c8e042](https://github.com/3sixtyglobal/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Bug Fixes
 
-* docs ([4d7e1d2](https://github.com/iotaledger/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
-* ensure publicOrigin is unique ([1aaf7f5](https://github.com/iotaledger/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
-* resolve local origin context by organization routing param ([#180](https://github.com/iotaledger/twin-api/issues/180)) ([bceb9f1](https://github.com/iotaledger/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
-* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+* docs ([4d7e1d2](https://github.com/3sixtyglobal/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
+* ensure publicOrigin is unique ([1aaf7f5](https://github.com/3sixtyglobal/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
+* resolve local origin context by organization routing param ([#180](https://github.com/3sixtyglobal/twin-api/issues/180)) ([bceb9f1](https://github.com/3sixtyglobal/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/3sixtyglobal/twin-api/issues/164)) ([b69f408](https://github.com/3sixtyglobal/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
 
 
 ### Dependencies
@@ -659,7 +659,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.9.0-next.0 to 0.9.0-next.1
 
-## [0.0.3-next.53](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.52...api-service-v0.0.3-next.53) (2026-06-23)
+## [0.0.3-next.53](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.52...api-service-v0.0.3-next.53) (2026-06-23)
 
 
 ### Miscellaneous Chores
@@ -673,7 +673,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.52 to 0.0.3-next.53
 
-## [0.0.3-next.52](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.51...api-service-v0.0.3-next.52) (2026-06-22)
+## [0.0.3-next.52](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.51...api-service-v0.0.3-next.52) (2026-06-22)
 
 
 ### Miscellaneous Chores
@@ -687,12 +687,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.51 to 0.0.3-next.52
 
-## [0.0.3-next.51](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.50...api-service-v0.0.3-next.51) (2026-06-20)
+## [0.0.3-next.51](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.50...api-service-v0.0.3-next.51) (2026-06-20)
 
 
 ### Bug Fixes
 
-* resolve local origin context by organization routing param ([#180](https://github.com/iotaledger/twin-api/issues/180)) ([bceb9f1](https://github.com/iotaledger/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
+* resolve local origin context by organization routing param ([#180](https://github.com/3sixtyglobal/twin-api/issues/180)) ([bceb9f1](https://github.com/3sixtyglobal/twin-api/commit/bceb9f1b5b68382b7e2f9743ee7b4ea0e3a33f55))
 
 
 ### Dependencies
@@ -701,12 +701,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.50 to 0.0.3-next.51
 
-## [0.0.3-next.50](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.49...api-service-v0.0.3-next.50) (2026-06-19)
+## [0.0.3-next.50](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.49...api-service-v0.0.3-next.50) (2026-06-19)
 
 
 ### Bug Fixes
 
-* ensure publicOrigin is unique ([1aaf7f5](https://github.com/iotaledger/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
+* ensure publicOrigin is unique ([1aaf7f5](https://github.com/3sixtyglobal/twin-api/commit/1aaf7f518d1e090e25f38ed335f8d1efa3c69197))
 
 
 ### Dependencies
@@ -715,12 +715,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.49 to 0.0.3-next.50
 
-## [0.0.3-next.49](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.48...api-service-v0.0.3-next.49) (2026-06-19)
+## [0.0.3-next.49](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.48...api-service-v0.0.3-next.49) (2026-06-19)
 
 
 ### Features
 
-* add getLocalOriginContext ([bd3162f](https://github.com/iotaledger/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
+* add getLocalOriginContext ([bd3162f](https://github.com/3sixtyglobal/twin-api/commit/bd3162f5b06e22bfb09a95bb9aca40471efe6a64))
 
 
 ### Dependencies
@@ -729,12 +729,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.48 to 0.0.3-next.49
 
-## [0.0.3-next.48](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.47...api-service-v0.0.3-next.48) (2026-06-19)
+## [0.0.3-next.48](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.47...api-service-v0.0.3-next.48) (2026-06-19)
 
 
 ### Features
 
-* add platform isLocalOrigin ([#173](https://github.com/iotaledger/twin-api/issues/173)) ([5e024d5](https://github.com/iotaledger/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
+* add platform isLocalOrigin ([#173](https://github.com/3sixtyglobal/twin-api/issues/173)) ([5e024d5](https://github.com/3sixtyglobal/twin-api/commit/5e024d55c0201a5109ad9c688c0e755fe50cb554))
 
 
 ### Dependencies
@@ -743,12 +743,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.47 to 0.0.3-next.48
 
-## [0.0.3-next.47](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.46...api-service-v0.0.3-next.47) (2026-06-18)
+## [0.0.3-next.47](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.46...api-service-v0.0.3-next.47) (2026-06-18)
 
 
 ### Features
 
-* remove hosting component ([#170](https://github.com/iotaledger/twin-api/issues/170)) ([e78c1e8](https://github.com/iotaledger/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
+* remove hosting component ([#170](https://github.com/3sixtyglobal/twin-api/issues/170)) ([e78c1e8](https://github.com/3sixtyglobal/twin-api/commit/e78c1e87d2747bf58da02b6b77680708ff681122))
 
 
 ### Dependencies
@@ -757,7 +757,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.46 to 0.0.3-next.47
 
-## [0.0.3-next.46](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.45...api-service-v0.0.3-next.46) (2026-06-17)
+## [0.0.3-next.46](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.45...api-service-v0.0.3-next.46) (2026-06-17)
 
 
 ### Miscellaneous Chores
@@ -771,12 +771,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.45 to 0.0.3-next.46
 
-## [0.0.3-next.45](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.44...api-service-v0.0.3-next.45) (2026-06-15)
+## [0.0.3-next.45](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.44...api-service-v0.0.3-next.45) (2026-06-15)
 
 
 ### Bug Fixes
 
-* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/iotaledger/twin-api/issues/164)) ([b69f408](https://github.com/iotaledger/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
+* throw AlreadyExistsError on duplicate tenant id in create() ([#164](https://github.com/3sixtyglobal/twin-api/issues/164)) ([b69f408](https://github.com/3sixtyglobal/twin-api/commit/b69f408fc06a0599723b048fa4a5053305a06b78))
 
 
 ### Dependencies
@@ -785,12 +785,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.44 to 0.0.3-next.45
 
-## [0.0.3-next.44](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.43...api-service-v0.0.3-next.44) (2026-06-11)
+## [0.0.3-next.44](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.43...api-service-v0.0.3-next.44) (2026-06-11)
 
 
 ### Features
 
-* organization identifiers ([#158](https://github.com/iotaledger/twin-api/issues/158)) ([ce13244](https://github.com/iotaledger/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
+* organization identifiers ([#158](https://github.com/3sixtyglobal/twin-api/issues/158)) ([ce13244](https://github.com/3sixtyglobal/twin-api/commit/ce13244aaacbf82d9e5f87d905e283b36ad63bbf))
 
 
 ### Dependencies
@@ -799,7 +799,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.43 to 0.0.3-next.44
 
-## [0.0.3-next.43](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.42...api-service-v0.0.3-next.43) (2026-06-10)
+## [0.0.3-next.43](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.42...api-service-v0.0.3-next.43) (2026-06-10)
 
 
 ### Miscellaneous Chores
@@ -813,7 +813,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.42 to 0.0.3-next.43
 
-## [0.0.3-next.42](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.41...api-service-v0.0.3-next.42) (2026-06-08)
+## [0.0.3-next.42](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.41...api-service-v0.0.3-next.42) (2026-06-08)
 
 
 ### Miscellaneous Chores
@@ -827,12 +827,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.41 to 0.0.3-next.42
 
-## [0.0.3-next.41](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.40...api-service-v0.0.3-next.41) (2026-06-05)
+## [0.0.3-next.41](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.40...api-service-v0.0.3-next.41) (2026-06-05)
 
 
 ### Features
 
-* matches local origin ([#148](https://github.com/iotaledger/twin-api/issues/148)) ([7f6d30c](https://github.com/iotaledger/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
+* matches local origin ([#148](https://github.com/3sixtyglobal/twin-api/issues/148)) ([7f6d30c](https://github.com/3sixtyglobal/twin-api/commit/7f6d30c4dd1fe699f6171c41251bb56b803934e5))
 
 
 ### Dependencies
@@ -841,12 +841,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.40 to 0.0.3-next.41
 
-## [0.0.3-next.40](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.39...api-service-v0.0.3-next.40) (2026-06-04)
+## [0.0.3-next.40](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.39...api-service-v0.0.3-next.40) (2026-06-04)
 
 
 ### Features
 
-* add tenant component ([#145](https://github.com/iotaledger/twin-api/issues/145)) ([a440c53](https://github.com/iotaledger/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
+* add tenant component ([#145](https://github.com/3sixtyglobal/twin-api/issues/145)) ([a440c53](https://github.com/3sixtyglobal/twin-api/commit/a440c53f36618946daee7372fe664f8ace341a08))
 
 
 ### Dependencies
@@ -855,12 +855,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.39 to 0.0.3-next.40
 
-## [0.0.3-next.39](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.38...api-service-v0.0.3-next.39) (2026-06-02)
+## [0.0.3-next.39](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.38...api-service-v0.0.3-next.39) (2026-06-02)
 
 
 ### Features
 
-* tenant id in jwt ([#140](https://github.com/iotaledger/twin-api/issues/140)) ([8d37a7b](https://github.com/iotaledger/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
+* tenant id in jwt ([#140](https://github.com/3sixtyglobal/twin-api/issues/140)) ([8d37a7b](https://github.com/3sixtyglobal/twin-api/commit/8d37a7b98b45fde53df1e909cffc0869aa758655))
 
 
 ### Dependencies
@@ -869,7 +869,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.38 to 0.0.3-next.39
 
-## [0.0.3-next.38](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.37...api-service-v0.0.3-next.38) (2026-05-28)
+## [0.0.3-next.38](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.37...api-service-v0.0.3-next.38) (2026-05-28)
 
 
 ### Miscellaneous Chores
@@ -883,12 +883,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.37 to 0.0.3-next.38
 
-## [0.0.3-next.37](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.36...api-service-v0.0.3-next.37) (2026-05-22)
+## [0.0.3-next.37](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.36...api-service-v0.0.3-next.37) (2026-05-22)
 
 
 ### Features
 
-* add initial interval config for health service ([daf0412](https://github.com/iotaledger/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
+* add initial interval config for health service ([daf0412](https://github.com/3sixtyglobal/twin-api/commit/daf0412cb24d856bd80f2a6eda02f7294677baae))
 
 
 ### Dependencies
@@ -897,7 +897,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.36 to 0.0.3-next.37
 
-## [0.0.3-next.36](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.35...api-service-v0.0.3-next.36) (2026-05-22)
+## [0.0.3-next.36](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.35...api-service-v0.0.3-next.36) (2026-05-22)
 
 
 ### Miscellaneous Chores
@@ -911,7 +911,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.35 to 0.0.3-next.36
 
-## [0.0.3-next.35](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.34...api-service-v0.0.3-next.35) (2026-05-21)
+## [0.0.3-next.35](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.34...api-service-v0.0.3-next.35) (2026-05-21)
 
 
 ### Miscellaneous Chores
@@ -925,12 +925,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.34 to 0.0.3-next.35
 
-## [0.0.3-next.34](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.33...api-service-v0.0.3-next.34) (2026-05-19)
+## [0.0.3-next.34](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.33...api-service-v0.0.3-next.34) (2026-05-19)
 
 
 ### Features
 
-* update dependencies ([32b8cd2](https://github.com/iotaledger/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
+* update dependencies ([32b8cd2](https://github.com/3sixtyglobal/twin-api/commit/32b8cd20353119dd1998e293d54063cf4d9ecc29))
 
 
 ### Dependencies
@@ -939,17 +939,17 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.33 to 0.0.3-next.34
 
-## [0.0.3-next.33](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.32...api-service-v0.0.3-next.33) (2026-05-11)
+## [0.0.3-next.33](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.32...api-service-v0.0.3-next.33) (2026-05-11)
 
 
 ### Features
 
-* typescript 6 update ([78d2aa0](https://github.com/iotaledger/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
+* typescript 6 update ([78d2aa0](https://github.com/3sixtyglobal/twin-api/commit/78d2aa00902f79b61973079b798b87ec05f18a8b))
 
 
 ### Bug Fixes
 
-* docs ([4d7e1d2](https://github.com/iotaledger/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
+* docs ([4d7e1d2](https://github.com/3sixtyglobal/twin-api/commit/4d7e1d265a2b2225ea02409a31989727a0534265))
 
 
 ### Dependencies
@@ -958,13 +958,13 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.32 to 0.0.3-next.33
 
-## [0.0.3-next.32](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.31...api-service-v0.0.3-next.32) (2026-05-07)
+## [0.0.3-next.32](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.31...api-service-v0.0.3-next.32) (2026-05-07)
 
 
 ### Features
 
-* avoid overlapping health checks ([35150b8](https://github.com/iotaledger/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
-* update health service interval defaults ([2c66ae1](https://github.com/iotaledger/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
+* avoid overlapping health checks ([35150b8](https://github.com/3sixtyglobal/twin-api/commit/35150b81861cd2911641d0c36cd7dc3dfa5fcb68))
+* update health service interval defaults ([2c66ae1](https://github.com/3sixtyglobal/twin-api/commit/2c66ae1320acb0c80a0d7cba4e11a00358707dbb))
 
 
 ### Dependencies
@@ -973,12 +973,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.31 to 0.0.3-next.32
 
-## [0.0.3-next.31](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.30...api-service-v0.0.3-next.31) (2026-05-06)
+## [0.0.3-next.31](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.30...api-service-v0.0.3-next.31) (2026-05-06)
 
 
 ### Features
 
-* update health format ([cfbfbbb](https://github.com/iotaledger/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
+* update health format ([cfbfbbb](https://github.com/3sixtyglobal/twin-api/commit/cfbfbbb2e9afbd2574ffd2446ad51e4217437951))
 
 
 ### Dependencies
@@ -987,12 +987,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.30 to 0.0.3-next.31
 
-## [0.0.3-next.30](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.29...api-service-v0.0.3-next.30) (2026-05-05)
+## [0.0.3-next.30](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.29...api-service-v0.0.3-next.30) (2026-05-05)
 
 
 ### Features
 
-* separate service responsibilities ([#116](https://github.com/iotaledger/twin-api/issues/116)) ([2234648](https://github.com/iotaledger/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
+* separate service responsibilities ([#116](https://github.com/3sixtyglobal/twin-api/issues/116)) ([2234648](https://github.com/3sixtyglobal/twin-api/commit/2234648de4a2de5b7356aadde328f40470bc12e3))
 
 
 ### Dependencies
@@ -1001,12 +1001,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.29 to 0.0.3-next.30
 
-## [0.0.3-next.29](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.28...api-service-v0.0.3-next.29) (2026-05-01)
+## [0.0.3-next.29](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.28...api-service-v0.0.3-next.29) (2026-05-01)
 
 
 ### Features
 
-* hosting service ([#109](https://github.com/iotaledger/twin-api/issues/109)) ([985bf1f](https://github.com/iotaledger/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
+* hosting service ([#109](https://github.com/3sixtyglobal/twin-api/issues/109)) ([985bf1f](https://github.com/3sixtyglobal/twin-api/commit/985bf1f5c07b09ecb800df7120bc2422ac7a6d25))
 
 
 ### Dependencies
@@ -1015,7 +1015,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.28 to 0.0.3-next.29
 
-## [0.0.3-next.28](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.27...api-service-v0.0.3-next.28) (2026-04-30)
+## [0.0.3-next.28](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.27...api-service-v0.0.3-next.28) (2026-04-30)
 
 
 ### Miscellaneous Chores
@@ -1029,7 +1029,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.27 to 0.0.3-next.28
 
-## [0.0.3-next.27](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.26...api-service-v0.0.3-next.27) (2026-04-23)
+## [0.0.3-next.27](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.26...api-service-v0.0.3-next.27) (2026-04-23)
 
 
 ### Miscellaneous Chores
@@ -1043,7 +1043,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.26 to 0.0.3-next.27
 
-## [0.0.3-next.26](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.25...api-service-v0.0.3-next.26) (2026-04-22)
+## [0.0.3-next.26](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.25...api-service-v0.0.3-next.26) (2026-04-22)
 
 
 ### Miscellaneous Chores
@@ -1057,7 +1057,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.25 to 0.0.3-next.26
 
-## [0.0.3-next.25](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.24...api-service-v0.0.3-next.25) (2026-04-14)
+## [0.0.3-next.25](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.24...api-service-v0.0.3-next.25) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -1071,7 +1071,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.24 to 0.0.3-next.25
 
-## [0.0.3-next.24](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.23...api-service-v0.0.3-next.24) (2026-04-14)
+## [0.0.3-next.24](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.23...api-service-v0.0.3-next.24) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -1085,7 +1085,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.23 to 0.0.3-next.24
 
-## [0.0.3-next.23](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.22...api-service-v0.0.3-next.23) (2026-04-14)
+## [0.0.3-next.23](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.22...api-service-v0.0.3-next.23) (2026-04-14)
 
 
 ### Miscellaneous Chores
@@ -1099,7 +1099,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.22 to 0.0.3-next.23
 
-## [0.0.3-next.22](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.21...api-service-v0.0.3-next.22) (2026-03-27)
+## [0.0.3-next.22](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.21...api-service-v0.0.3-next.22) (2026-03-27)
 
 
 ### Miscellaneous Chores
@@ -1113,7 +1113,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.21 to 0.0.3-next.22
 
-## [0.0.3-next.21](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.20...api-service-v0.0.3-next.21) (2026-03-11)
+## [0.0.3-next.21](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.20...api-service-v0.0.3-next.21) (2026-03-11)
 
 
 ### Miscellaneous Chores
@@ -1127,7 +1127,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.20 to 0.0.3-next.21
 
-## [0.0.3-next.20](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.19...api-service-v0.0.3-next.20) (2026-02-09)
+## [0.0.3-next.20](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.19...api-service-v0.0.3-next.20) (2026-02-09)
 
 
 ### Miscellaneous Chores
@@ -1141,7 +1141,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.19 to 0.0.3-next.20
 
-## [0.0.3-next.19](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.18...api-service-v0.0.3-next.19) (2026-02-06)
+## [0.0.3-next.19](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.18...api-service-v0.0.3-next.19) (2026-02-06)
 
 
 ### Miscellaneous Chores
@@ -1155,7 +1155,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.18 to 0.0.3-next.19
 
-## [0.0.3-next.18](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.17...api-service-v0.0.3-next.18) (2026-02-04)
+## [0.0.3-next.18](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.17...api-service-v0.0.3-next.18) (2026-02-04)
 
 
 ### Miscellaneous Chores
@@ -1169,12 +1169,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.17 to 0.0.3-next.18
 
-## [0.0.3-next.17](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.16...api-service-v0.0.3-next.17) (2026-01-26)
+## [0.0.3-next.17](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.16...api-service-v0.0.3-next.17) (2026-01-26)
 
 
 ### Features
 
-* update public origin building ([6c8e042](https://github.com/iotaledger/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
+* update public origin building ([6c8e042](https://github.com/3sixtyglobal/twin-api/commit/6c8e0422d9ddbed42a843e1c23498c99977b2fc7))
 
 
 ### Dependencies
@@ -1183,12 +1183,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.16 to 0.0.3-next.17
 
-## [0.0.3-next.16](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.15...api-service-v0.0.3-next.16) (2026-01-26)
+## [0.0.3-next.16](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.15...api-service-v0.0.3-next.16) (2026-01-26)
 
 
 ### Features
 
-* public base url ([#70](https://github.com/iotaledger/twin-api/issues/70)) ([5b958cd](https://github.com/iotaledger/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
+* public base url ([#70](https://github.com/3sixtyglobal/twin-api/issues/70)) ([5b958cd](https://github.com/3sixtyglobal/twin-api/commit/5b958cd91e8a38cdae2835ff5f2356c7e48d37c3))
 
 
 ### Dependencies
@@ -1197,7 +1197,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.15 to 0.0.3-next.16
 
-## [0.0.3-next.15](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.14...api-service-v0.0.3-next.15) (2026-01-22)
+## [0.0.3-next.15](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.14...api-service-v0.0.3-next.15) (2026-01-22)
 
 
 ### Miscellaneous Chores
@@ -1211,7 +1211,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.14 to 0.0.3-next.15
 
-## [0.0.3-next.14](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.13...api-service-v0.0.3-next.14) (2026-01-20)
+## [0.0.3-next.14](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.13...api-service-v0.0.3-next.14) (2026-01-20)
 
 
 ### Miscellaneous Chores
@@ -1225,7 +1225,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.13 to 0.0.3-next.14
 
-## [0.0.3-next.13](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.12...api-service-v0.0.3-next.13) (2026-01-19)
+## [0.0.3-next.13](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.12...api-service-v0.0.3-next.13) (2026-01-19)
 
 
 ### Miscellaneous Chores
@@ -1239,7 +1239,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.12 to 0.0.3-next.13
 
-## [0.0.3-next.12](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.11...api-service-v0.0.3-next.12) (2026-01-12)
+## [0.0.3-next.12](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.11...api-service-v0.0.3-next.12) (2026-01-12)
 
 
 ### Miscellaneous Chores
@@ -1253,7 +1253,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.11 to 0.0.3-next.12
 
-## [0.0.3-next.11](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.10...api-service-v0.0.3-next.11) (2026-01-08)
+## [0.0.3-next.11](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.10...api-service-v0.0.3-next.11) (2026-01-08)
 
 
 ### Miscellaneous Chores
@@ -1267,7 +1267,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.10 to 0.0.3-next.11
 
-## [0.0.3-next.10](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.9...api-service-v0.0.3-next.10) (2026-01-05)
+## [0.0.3-next.10](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.9...api-service-v0.0.3-next.10) (2026-01-05)
 
 
 ### Miscellaneous Chores
@@ -1281,21 +1281,21 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.9 to 0.0.3-next.10
 
-## [0.0.3-next.9](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.8...api-service-v0.0.3-next.9) (2026-01-05)
+## [0.0.3-next.9](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.8...api-service-v0.0.3-next.9) (2026-01-05)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add livez endpoint ([#57](https://github.com/iotaledger/twin-api/issues/57)) ([ef007db](https://github.com/iotaledger/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
-* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/3sixtyglobal/twin-api/issues/42)) ([0186055](https://github.com/3sixtyglobal/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add livez endpoint ([#57](https://github.com/3sixtyglobal/twin-api/issues/57)) ([ef007db](https://github.com/3sixtyglobal/twin-api/commit/ef007db8201736dd3053211f849ffd03baaa485e))
+* add root, favicon routes ([71da1c3](https://github.com/3sixtyglobal/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add validate-locales ([cdba610](https://github.com/3sixtyglobal/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/3sixtyglobal/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/3sixtyglobal/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/3sixtyglobal/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -1304,7 +1304,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.8 to 0.0.3-next.9
 
-## [0.0.3-next.8](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.7...api-service-v0.0.3-next.8) (2025-12-17)
+## [0.0.3-next.8](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.7...api-service-v0.0.3-next.8) (2025-12-17)
 
 
 ### Miscellaneous Chores
@@ -1318,7 +1318,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.7 to 0.0.3-next.8
 
-## [0.0.3-next.7](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.6...api-service-v0.0.3-next.7) (2025-11-26)
+## [0.0.3-next.7](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.6...api-service-v0.0.3-next.7) (2025-11-26)
 
 
 ### Miscellaneous Chores
@@ -1332,7 +1332,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.6 to 0.0.3-next.7
 
-## [0.0.3-next.6](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.5...api-service-v0.0.3-next.6) (2025-11-20)
+## [0.0.3-next.6](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.5...api-service-v0.0.3-next.6) (2025-11-20)
 
 
 ### Miscellaneous Chores
@@ -1346,7 +1346,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.5 to 0.0.3-next.6
 
-## [0.0.3-next.5](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.4...api-service-v0.0.3-next.5) (2025-11-14)
+## [0.0.3-next.5](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.4...api-service-v0.0.3-next.5) (2025-11-14)
 
 
 ### Miscellaneous Chores
@@ -1360,20 +1360,20 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.4 to 0.0.3-next.5
 
-## [0.0.3-next.4](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.3...api-service-v0.0.3-next.4) (2025-11-14)
+## [0.0.3-next.4](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.3...api-service-v0.0.3-next.4) (2025-11-14)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/3sixtyglobal/twin-api/issues/42)) ([0186055](https://github.com/3sixtyglobal/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add root, favicon routes ([71da1c3](https://github.com/3sixtyglobal/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add validate-locales ([cdba610](https://github.com/3sixtyglobal/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/3sixtyglobal/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/3sixtyglobal/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/3sixtyglobal/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -1382,7 +1382,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.3 to 0.0.3-next.4
 
-## [0.0.3-next.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.2...api-service-v0.0.3-next.3) (2025-11-14)
+## [0.0.3-next.3](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.2...api-service-v0.0.3-next.3) (2025-11-14)
 
 
 ### Miscellaneous Chores
@@ -1396,7 +1396,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.2 to 0.0.3-next.3
 
-## [0.0.3-next.2](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.1...api-service-v0.0.3-next.2) (2025-11-12)
+## [0.0.3-next.2](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.1...api-service-v0.0.3-next.2) (2025-11-12)
 
 
 ### Miscellaneous Chores
@@ -1410,20 +1410,20 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.1 to 0.0.3-next.2
 
-## [0.0.3-next.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.3-next.0...api-service-v0.0.3-next.1) (2025-11-10)
+## [0.0.3-next.1](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.3-next.0...api-service-v0.0.3-next.1) (2025-11-10)
 
 
 ### Features
 
-* add context id features ([#42](https://github.com/iotaledger/twin-api/issues/42)) ([0186055](https://github.com/iotaledger/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
-* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* add context id features ([#42](https://github.com/3sixtyglobal/twin-api/issues/42)) ([0186055](https://github.com/3sixtyglobal/twin-api/commit/0186055c48afde842a4254b4df9ac9249c40fe40))
+* add root, favicon routes ([71da1c3](https://github.com/3sixtyglobal/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add validate-locales ([cdba610](https://github.com/3sixtyglobal/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* eslint migration to flat config ([0dd5820](https://github.com/3sixtyglobal/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update framework core ([d8eebf2](https://github.com/3sixtyglobal/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update IComponent signatures ([915ce37](https://github.com/3sixtyglobal/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -1432,7 +1432,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.3-next.0 to 0.0.3-next.1
 
-## [0.0.2-next.13](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.12...api-service-v0.0.2-next.13) (2025-10-09)
+## [0.0.2-next.13](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.12...api-service-v0.0.2-next.13) (2025-10-09)
 
 
 ### Miscellaneous Chores
@@ -1446,12 +1446,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.12 to 0.0.2-next.13
 
-## [0.0.2-next.12](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.11...api-service-v0.0.2-next.12) (2025-10-09)
+## [0.0.2-next.12](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.11...api-service-v0.0.2-next.12) (2025-10-09)
 
 
 ### Features
 
-* add validate-locales ([cdba610](https://github.com/iotaledger/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
+* add validate-locales ([cdba610](https://github.com/3sixtyglobal/twin-api/commit/cdba610a0acb5022d2e3ce729732e6646a297e5e))
 
 
 ### Dependencies
@@ -1460,12 +1460,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.11 to 0.0.2-next.12
 
-## [0.0.2-next.11](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.10...api-service-v0.0.2-next.11) (2025-09-29)
+## [0.0.2-next.11](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.10...api-service-v0.0.2-next.11) (2025-09-29)
 
 
 ### Features
 
-* update IComponent signatures ([915ce37](https://github.com/iotaledger/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
+* update IComponent signatures ([915ce37](https://github.com/3sixtyglobal/twin-api/commit/915ce37712326ab4aa6869c350eabaa4622e8430))
 
 
 ### Dependencies
@@ -1474,7 +1474,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.10 to 0.0.2-next.11
 
-## [0.0.2-next.10](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.9...api-service-v0.0.2-next.10) (2025-09-23)
+## [0.0.2-next.10](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.9...api-service-v0.0.2-next.10) (2025-09-23)
 
 
 ### Miscellaneous Chores
@@ -1488,12 +1488,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.9 to 0.0.2-next.10
 
-## [0.0.2-next.9](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.8...api-service-v0.0.2-next.9) (2025-08-29)
+## [0.0.2-next.9](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.8...api-service-v0.0.2-next.9) (2025-08-29)
 
 
 ### Features
 
-* eslint migration to flat config ([0dd5820](https://github.com/iotaledger/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
+* eslint migration to flat config ([0dd5820](https://github.com/3sixtyglobal/twin-api/commit/0dd5820e3af97350fd08b8d226f4a6c1a9246805))
 
 
 ### Dependencies
@@ -1502,12 +1502,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.8 to 0.0.2-next.9
 
-## [0.0.2-next.8](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.7...api-service-v0.0.2-next.8) (2025-08-21)
+## [0.0.2-next.8](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.7...api-service-v0.0.2-next.8) (2025-08-21)
 
 
 ### Features
 
-* add root, favicon routes ([71da1c3](https://github.com/iotaledger/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
+* add root, favicon routes ([71da1c3](https://github.com/3sixtyglobal/twin-api/commit/71da1c3a93c349588aff7084d1d8d6a29a277da8))
 
 
 ### Dependencies
@@ -1516,7 +1516,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.7 to 0.0.2-next.8
 
-## [0.0.2-next.7](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.6...api-service-v0.0.2-next.7) (2025-08-20)
+## [0.0.2-next.7](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.6...api-service-v0.0.2-next.7) (2025-08-20)
 
 
 ### Miscellaneous Chores
@@ -1530,12 +1530,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.6 to 0.0.2-next.7
 
-## [0.0.2-next.6](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.5...api-service-v0.0.2-next.6) (2025-08-19)
+## [0.0.2-next.6](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.5...api-service-v0.0.2-next.6) (2025-08-19)
 
 
 ### Features
 
-* update framework core ([d8eebf2](https://github.com/iotaledger/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
+* update framework core ([d8eebf2](https://github.com/3sixtyglobal/twin-api/commit/d8eebf267fa2a0abaa84e58590496e9d20490cfa))
 
 
 ### Dependencies
@@ -1544,14 +1544,14 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.5 to 0.0.2-next.6
 
-## [0.0.2-next.5](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.4...api-service-v0.0.2-next.5) (2025-07-25)
+## [0.0.2-next.5](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.4...api-service-v0.0.2-next.5) (2025-07-25)
 
 
 ### Features
 
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -1560,7 +1560,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.4 to 0.0.2-next.5
 
-## [0.0.2-next.4](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.3...api-service-v0.0.2-next.4) (2025-07-25)
+## [0.0.2-next.4](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.3...api-service-v0.0.2-next.4) (2025-07-25)
 
 
 ### Miscellaneous Chores
@@ -1574,12 +1574,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.3 to 0.0.2-next.4
 
-## [0.0.2-next.3](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.2...api-service-v0.0.2-next.3) (2025-07-24)
+## [0.0.2-next.3](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.2...api-service-v0.0.2-next.3) (2025-07-24)
 
 
 ### Features
 
-* remove unused namespace ([08478f2](https://github.com/iotaledger/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
+* remove unused namespace ([08478f2](https://github.com/3sixtyglobal/twin-api/commit/08478f27efda9beb0271fdb22f6972e918361965))
 
 
 ### Dependencies
@@ -1588,7 +1588,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.2 to 0.0.2-next.3
 
-## [0.0.2-next.2](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.1...api-service-v0.0.2-next.2) (2025-07-17)
+## [0.0.2-next.2](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.1...api-service-v0.0.2-next.2) (2025-07-17)
 
 
 ### Miscellaneous Chores
@@ -1602,13 +1602,13 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.2-next.1 to 0.0.2-next.2
 
-## [0.0.2-next.1](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.2-next.0...api-service-v0.0.2-next.1) (2025-07-08)
+## [0.0.2-next.1](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.2-next.0...api-service-v0.0.2-next.1) (2025-07-08)
 
 
 ### Features
 
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -1622,7 +1622,7 @@
 
 ### Features
 
-* release to production ([70ee2d5](https://github.com/iotaledger/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
+* release to production ([70ee2d5](https://github.com/3sixtyglobal/twin-api/commit/70ee2d56a1dc9537d7c9c154d4cb78a235678a3a))
 
 
 ### Dependencies
@@ -1631,7 +1631,7 @@
   * dependencies
     * @twin.org/api-models bumped from ^0.0.0 to ^0.0.1
 
-## [0.0.1-next.36](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.1-next.35...api-service-v0.0.1-next.36) (2025-06-17)
+## [0.0.1-next.36](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.1-next.35...api-service-v0.0.1-next.36) (2025-06-17)
 
 
 ### Miscellaneous Chores
@@ -1645,12 +1645,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.1-next.35 to 0.0.1-next.36
 
-## [0.0.1-next.35](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.1-next.34...api-service-v0.0.1-next.35) (2025-06-11)
+## [0.0.1-next.35](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.1-next.34...api-service-v0.0.1-next.35) (2025-06-11)
 
 
 ### Features
 
-* update dependencies ([1171dc4](https://github.com/iotaledger/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
+* update dependencies ([1171dc4](https://github.com/3sixtyglobal/twin-api/commit/1171dc416a9481737f6a640e3cf30145768f37e9))
 
 
 ### Dependencies
@@ -1659,7 +1659,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.1-next.34 to 0.0.1-next.35
 
-## [0.0.1-next.34](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.1-next.33...api-service-v0.0.1-next.34) (2025-05-27)
+## [0.0.1-next.34](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.1-next.33...api-service-v0.0.1-next.34) (2025-05-27)
 
 
 ### Miscellaneous Chores
@@ -1673,12 +1673,12 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.1-next.33 to 0.0.1-next.34
 
-## [0.0.1-next.33](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.1-next.32...api-service-v0.0.1-next.33) (2025-04-17)
+## [0.0.1-next.33](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.1-next.32...api-service-v0.0.1-next.33) (2025-04-17)
 
 
 ### Features
 
-* use shared store mechanism ([#19](https://github.com/iotaledger/twin-api/issues/19)) ([32116df](https://github.com/iotaledger/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
+* use shared store mechanism ([#19](https://github.com/3sixtyglobal/twin-api/issues/19)) ([32116df](https://github.com/3sixtyglobal/twin-api/commit/32116df3b4380a30137f5056f242a5c99afa2df9))
 
 
 ### Dependencies
@@ -1687,7 +1687,7 @@
   * dependencies
     * @twin.org/api-models bumped from 0.0.1-next.32 to 0.0.1-next.33
 
-## [0.0.1-next.32](https://github.com/iotaledger/twin-api/compare/api-service-v0.0.1-next.31...api-service-v0.0.1-next.32) (2025-03-28)
+## [0.0.1-next.32](https://github.com/3sixtyglobal/twin-api/compare/api-service-v0.0.1-next.31...api-service-v0.0.1-next.32) (2025-03-28)
 
 
 ### Miscellaneous Chores

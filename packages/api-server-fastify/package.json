@@ -4,7 +4,7 @@
 	"description": "Fastify web server integration for exposing API routes with consistent runtime behaviour.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/twin-api.git",
+		"url": "git+https://github.com/3sixtyglobal/twin-api.git",
 		"directory": "packages/api-server-fastify"
 	},
 	"author": "martyn.janes@iota.org",
@@ -83,7 +83,7 @@
 		"api"
 	],
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/twin-api/issues"
+		"url": "git+https://github.com/3sixtyglobal/twin-api/issues"
 	},
 	"homepage": "https://twindev.org"
 }
