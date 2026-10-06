@@ -6,18 +6,21 @@ import {
 	type IBaseRouteProcessor,
 	type IHttpResponse,
 	type IHttpServerRequest,
+	type ITenant,
+	type ITenantAdminComponent,
 	HttpContextIdKeys
 } from "@twin.org/api-models";
 import { ContextIdKeys, type IContextIds } from "@twin.org/context";
-import { BaseError, Is, UnauthorizedError } from "@twin.org/core";
-import { ComparisonOperator } from "@twin.org/entity";
 import {
-	EntityStorageConnectorFactory,
-	type IEntityStorageConnector
-} from "@twin.org/entity-storage-models";
+	BaseError,
+	ComponentFactory,
+	GuardError,
+	Is,
+	NotFoundError,
+	UnauthorizedError
+} from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { HttpStatusCode } from "@twin.org/web";
-import type { Tenant } from "./entities/tenant.js";
 import type { ITenantProcessorConstructorOptions } from "./models/ITenantProcessorConstructorOptions.js";
 
 /**
@@ -42,10 +45,10 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	private static readonly _DEFAULT_API_KEY_ENDPOINTS: string[] = ["/login$"];
 
 	/**
-	 * The entity storage for api keys.
+	 * The component used to resolve tenants, which also provides the lookup caching.
 	 * @internal
 	 */
-	private readonly _entityStorageConnector: IEntityStorageConnector<Tenant>;
+	private readonly _tenantAdminComponent: ITenantAdminComponent;
 
 	/**
 	 * The key in the header to look for the api key.
@@ -70,8 +73,8 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	 * @param options Options for the processor.
 	 */
 	constructor(options?: ITenantProcessorConstructorOptions) {
-		this._entityStorageConnector = EntityStorageConnectorFactory.get(
-			options?.tenantEntityStorageType ?? "tenant"
+		this._tenantAdminComponent = ComponentFactory.get<ITenantAdminComponent>(
+			options?.tenantAdminComponentType ?? "tenant-admin"
 		);
 		this._apiKeyName = options?.config?.apiKeyName ?? TenantProcessor.DEFAULT_API_KEY_NAME;
 		this._apiKeyEndpoints = (
@@ -155,45 +158,61 @@ export class TenantProcessor implements IBaseRouteProcessor {
 	 * Resolve the tenant context from an api key.
 	 * @param apiKey The api key sent by the caller.
 	 * @returns The tenant associated with the api key.
+	 * @throws UnauthorizedError if no tenant matches the api key.
 	 * @internal
 	 */
-	private async resolveByApiKey(apiKey: string): Promise<Tenant> {
-		const nodeTenant = await this._entityStorageConnector.get(apiKey, "apiKey");
-
-		if (Is.empty(nodeTenant)) {
-			throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "apiKeyNotFound", {
-				key: apiKey
-			});
+	private async resolveByApiKey(apiKey: string): Promise<ITenant> {
+		try {
+			return await this._tenantAdminComponent.getByApiKey(apiKey);
+		} catch (err) {
+			if (this.isLookupFailure(err)) {
+				throw new UnauthorizedError(
+					TenantProcessor.CLASS_NAME,
+					"apiKeyNotFound",
+					{ key: apiKey },
+					err
+				);
+			}
+			throw err;
 		}
-
-		return nodeTenant;
 	}
 
 	/**
 	 * Resolve the tenant context from a plain organization query param.
-	 * Matches against organizationId (exact) or organizationIdLegacy (pipe-delimited contains).
+	 * Matches against the organization id or one of the legacy organization ids.
 	 * @param organizationId The organization id from the query param.
 	 * @returns The tenant associated with the organization id.
+	 * @throws UnauthorizedError if no tenant matches the organization id.
 	 * @internal
 	 */
-	private async resolveByOrganizationId(organizationId: string): Promise<Tenant> {
-		let nodeTenant = await this._entityStorageConnector.get(organizationId, "organizationId");
-
-		if (Is.empty(nodeTenant)) {
-			const result = await this._entityStorageConnector.query({
-				property: "organizationIdLegacy",
-				value: `|${organizationId}|`,
-				comparison: ComparisonOperator.Includes
-			});
-			nodeTenant = result.entities[0] as Tenant | undefined;
+	private async resolveByOrganizationId(organizationId: string): Promise<ITenant> {
+		try {
+			return await this._tenantAdminComponent.getTenantByOrganizationId(organizationId, true);
+		} catch (err) {
+			if (this.isLookupFailure(err)) {
+				throw new UnauthorizedError(
+					TenantProcessor.CLASS_NAME,
+					"organizationIdNotFound",
+					{ organizationId },
+					err
+				);
+			}
+			throw err;
 		}
+	}
 
-		if (Is.empty(nodeTenant)) {
-			throw new UnauthorizedError(TenantProcessor.CLASS_NAME, "organizationIdNotFound", {
-				organizationId
-			});
-		}
-
-		return nodeTenant;
+	/**
+	 * Determine whether a tenant lookup failure means the credential is unusable.
+	 * A credential that matches no tenant, or is not even well formed, is unauthorized; anything
+	 * else is a genuine fault and is passed through untouched.
+	 * @param err The error raised by the tenant admin component.
+	 * @returns True if the credential should be reported as unauthorized.
+	 * @internal
+	 */
+	private isLookupFailure(err: unknown): boolean {
+		return (
+			BaseError.isErrorName(err, NotFoundError.CLASS_NAME) ||
+			BaseError.isErrorName(err, GuardError.CLASS_NAME)
+		);
 	}
 }

@@ -12,11 +12,12 @@ Alongside the core API building blocks, the repository also includes entity stor
 - [api-server-fastify](packages/api-server-fastify/README.md) - Fastify web server integration for exposing API routes with consistent runtime behaviour.
 - [api-service](packages/api-service/README.md) - Information and hosting service implementations with generated REST route handlers.
 - [api-rest-client](packages/api-rest-client/README.md) - REST client implementation for consuming information and hosting endpoints.
-- [api-auth-entity-storage-models](packages/api-auth-entity-storage-models/README.md) - Contracts for authentication flows and admin user management with entity storage.
-- [api-auth-entity-storage-service](packages/api-auth-entity-storage-service/README.md) - Authentication service implementation and REST routes backed by entity storage.
-- [api-auth-entity-storage-rest-client](packages/api-auth-entity-storage-rest-client/README.md) - REST clients for authentication and admin operations against entity storage endpoints.
 - [api-tenant-processor](packages/api-tenant-processor/README.md) - Tenant resolution services and route handlers that derive tenant context from API keys.
 
 ## Contributing
 
 To contribute to this package see the guidelines for building and publishing in [CONTRIBUTING](./CONTRIBUTING.md)
+
+## Origin
+
+This repository is derived from the original [iotaledger/twin-api](https://github.com/iotaledger/twin-api) repository.

@@ -506,6 +506,7 @@ export abstract class BaseServer<T> implements IWebServer<T>, IHealthProviderCom
 			HttpMethod.GET,
 			HttpMethod.PUT,
 			HttpMethod.POST,
+			HttpMethod.PATCH,
 			HttpMethod.DELETE,
 			HttpMethod.OPTIONS
 		];

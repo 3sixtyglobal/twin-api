@@ -16,13 +16,16 @@ import {
 	AlreadyExistsError,
 	BaseError,
 	ComponentFactory,
+	Converter,
 	GeneralError,
 	Guards,
 	type IError,
 	Is,
+	LfuCache,
 	NotFoundError,
 	Url
 } from "@twin.org/core";
+import { Blake2b } from "@twin.org/crypto";
 import { ComparisonOperator, type EntityCondition } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -43,6 +46,36 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public static readonly CLASS_NAME: string = nameof<TenantAdminService>();
 
 	/**
+	 * The default time to keep a tenant lookup in the cache.
+	 * @internal
+	 */
+	private static readonly _DEFAULT_CACHE_TTL_MS: number = 30000;
+
+	/**
+	 * The cache key prefix for tenants looked up by id.
+	 * @internal
+	 */
+	private static readonly _CACHE_PREFIX_ID: string = "id:";
+
+	/**
+	 * The cache key prefix for tenants looked up by api key.
+	 * @internal
+	 */
+	private static readonly _CACHE_PREFIX_API_KEY: string = "apiKey:";
+
+	/**
+	 * The cache key prefix for tenants looked up by public origin.
+	 * @internal
+	 */
+	private static readonly _CACHE_PREFIX_PUBLIC_ORIGIN: string = "publicOrigin:";
+
+	/**
+	 * The cache key prefix for tenants looked up by organization id, including legacy ids.
+	 * @internal
+	 */
+	private static readonly _CACHE_PREFIX_ORGANIZATION_ID: string = "organizationId:";
+
+	/**
 	 * Entity storage connector used by the service.
 	 * @internal
 	 */
@@ -55,6 +88,18 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	private readonly _platformComponent: IPlatformComponent;
 
 	/**
+	 * The cache of tenant lookups, undefined when caching is disabled.
+	 * @internal
+	 */
+	private readonly _tenantCache?: LfuCache<ITenant>;
+
+	/**
+	 * How long a cached tenant may live, counted from when it was read.
+	 * @internal
+	 */
+	private readonly _tenantCacheTtlMs: number;
+
+	/**
 	 * Create a new instance of TenantAdminService.
 	 * @param options The options for the connector.
 	 */
@@ -65,6 +110,16 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 		this._platformComponent = ComponentFactory.get<IPlatformComponent>(
 			options?.platformComponentType ?? "platform"
 		);
+
+		this._tenantCacheTtlMs =
+			options?.config?.tenantCacheTtlMs ?? TenantAdminService._DEFAULT_CACHE_TTL_MS;
+		if (this._tenantCacheTtlMs > 0) {
+			this._tenantCache = new LfuCache<ITenant>({
+				capacity: options?.config?.tenantCacheCapacity,
+				ttiMs: this._tenantCacheTtlMs,
+				mutexTimeoutMs: options?.config?.tenantCacheMutexTimeoutMs
+			});
+		}
 	}
 
 	/**
@@ -76,6 +131,14 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	}
 
 	/**
+	 * Stop the service and release the tenant cache.
+	 * @returns A promise that resolves when the service has stopped.
+	 */
+	public async stop(): Promise<void> {
+		this._tenantCache?.destroy();
+	}
+
+	/**
 	 * Get a tenant by its id.
 	 * @param tenantId The id of the tenant.
 	 * @returns The tenant.
@@ -84,12 +147,14 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async get(tenantId: string): Promise<ITenant> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId, 32);
 
-		const tenant = await this._entityStorageConnector.get(tenantId);
-		if (!Is.object(tenant)) {
-			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", tenantId);
-		}
+		return this.cachedLookup(`${TenantAdminService._CACHE_PREFIX_ID}${tenantId}`, async () => {
+			const tenant = await this._entityStorageConnector.get(tenantId);
+			if (!Is.object(tenant)) {
+				throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", tenantId);
+			}
 
-		return this.entityToModel(tenant);
+			return this.entityToModel(tenant);
+		});
 	}
 
 	/**
@@ -101,12 +166,14 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async getByApiKey(apiKey: string): Promise<ITenant> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(apiKey), apiKey, 32);
 
-		const tenant = await this._entityStorageConnector.get(apiKey, "apiKey");
-		if (!Is.object(tenant)) {
-			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", apiKey);
-		}
+		return this.cachedLookup(this.apiKeyCacheKey(apiKey), async () => {
+			const tenant = await this._entityStorageConnector.get(apiKey, "apiKey");
+			if (!Is.object(tenant)) {
+				throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", apiKey);
+			}
 
-		return this.entityToModel(tenant);
+			return this.entityToModel(tenant);
+		});
 	}
 
 	/**
@@ -118,13 +185,18 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async getByPublicOrigin(publicOrigin: string): Promise<ITenant> {
 		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(publicOrigin), publicOrigin);
 
-		const tenant = await this._entityStorageConnector.get(publicOrigin, "publicOrigin");
+		return this.cachedLookup(
+			`${TenantAdminService._CACHE_PREFIX_PUBLIC_ORIGIN}${publicOrigin}`,
+			async () => {
+				const tenant = await this._entityStorageConnector.get(publicOrigin, "publicOrigin");
 
-		if (!Is.object(tenant)) {
-			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", publicOrigin);
-		}
+				if (!Is.object(tenant)) {
+					throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", publicOrigin);
+				}
 
-		return this.entityToModel(tenant);
+				return this.entityToModel(tenant);
+			}
+		);
 	}
 
 	/**
@@ -140,28 +212,33 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	): Promise<ITenant> {
 		Guards.stringValue(TenantAdminService.CLASS_NAME, nameof(organizationId), organizationId);
 
-		let tenant = await this._entityStorageConnector.get(organizationId, "organizationId");
+		return this.cachedLookup(
+			this.organizationIdCacheKey(organizationId, includeLegacy ?? false),
+			async () => {
+				let tenant = await this._entityStorageConnector.get(organizationId, "organizationId");
 
-		if (!Is.object(tenant) && includeLegacy) {
-			const result = await this._entityStorageConnector.query(
-				{
-					property: "organizationIdLegacy",
-					comparison: ComparisonOperator.Includes,
-					value: `|${organizationId}|`
-				},
-				undefined,
-				undefined,
-				undefined,
-				1
-			);
-			tenant = (result.entities as Tenant[])[0];
-		}
+				if (!Is.object(tenant) && (includeLegacy ?? false)) {
+					const result = await this._entityStorageConnector.query(
+						{
+							property: "organizationIdLegacy",
+							comparison: ComparisonOperator.Includes,
+							value: organizationId
+						},
+						undefined,
+						undefined,
+						undefined,
+						1
+					);
+					tenant = (result.entities as Tenant[])[0];
+				}
 
-		if (!Is.object(tenant)) {
-			throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", organizationId);
-		}
+				if (!Is.object(tenant)) {
+					throw new NotFoundError(TenantAdminService.CLASS_NAME, "tenantNotFound", organizationId);
+				}
 
-		return this.entityToModel(tenant);
+				return this.entityToModel(tenant);
+			}
+		);
 	}
 
 	/**
@@ -252,6 +329,13 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 		};
 
 		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));
+
+		// A new tenant cannot have a stale id, api key or public origin entry, because those are
+		// unique-checked above and failed lookups are never cached. Its organization ids can be
+		// stale though; only the primary organization index is checked, so an id that another
+		// tenant currently answers through its legacy list may already be cached against that
+		// tenant even though the new tenant now owns it outright.
+		this.invalidateTenant(tenantEntity);
 
 		await this._platformComponent.fireTenantEvent(tenantEntity.id, TenantEventType.Created);
 
@@ -360,6 +444,11 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 
 		await this._entityStorageConnector.set(this.modelToEntity(tenantEntity));
 
+		// The api key, organization id and public origin can all have moved, so the entries
+		// cached under the previous values have to go as well as the new ones.
+		this.invalidateTenant(currentTenantEntity);
+		this.invalidateTenant(tenantEntity);
+
 		await this._platformComponent.fireTenantEvent(tenantEntity.id, TenantEventType.Updated);
 	}
 
@@ -371,7 +460,21 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	public async remove(tenantId: string): Promise<void> {
 		Guards.stringHexLength(TenantAdminService.CLASS_NAME, nameof(tenantId), tenantId, 32);
 
+		// The keys to drop have to be read before the tenant goes, but the drop itself has to happen
+		// after it, otherwise a lookup racing the delete would re-cache the tenant behind us.
+		const currentTenant = Is.empty(this._tenantCache)
+			? undefined
+			: await this._entityStorageConnector.get(tenantId);
+
 		await this._entityStorageConnector.remove(tenantId);
+
+		if (Is.object(currentTenant)) {
+			this.invalidateTenant(this.entityToModel(currentTenant));
+		} else {
+			// The tenant could not be read back, so its other keys are unknown, but an entry cached
+			// under the id before it went missing still has to go.
+			this._tenantCache?.delete(`${TenantAdminService._CACHE_PREFIX_ID}${tenantId}`);
+		}
 
 		await this._platformComponent.fireTenantEvent(tenantId, TenantEventType.Deleted);
 	}
@@ -474,6 +577,93 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 	}
 
 	/**
+	 * Build the cache key used for an api key lookup.
+	 * The api key is hashed so neither the cache keys nor the mutex keys derived from them hold
+	 * the credential itself.
+	 * @param apiKey The api key being looked up.
+	 * @returns The cache key.
+	 * @internal
+	 */
+	private apiKeyCacheKey(apiKey: string): string {
+		const hashed = Converter.bytesToHex(Blake2b.sum256(Converter.utf8ToBytes(apiKey)));
+		return `${TenantAdminService._CACHE_PREFIX_API_KEY}${hashed}`;
+	}
+
+	/**
+	 * Build the cache key used for an organization id lookup.
+	 * @param organizationId The organization id being looked up.
+	 * @param includeLegacy Whether the lookup also searches the legacy organization ids.
+	 * @returns The cache key.
+	 * @internal
+	 */
+	private organizationIdCacheKey(organizationId: string, includeLegacy: boolean): string {
+		return `${TenantAdminService._CACHE_PREFIX_ORGANIZATION_ID}${includeLegacy ? "legacy:" : ""}${organizationId}`;
+	}
+
+	/**
+	 * Perform a lookup through the cache, falling back to a direct lookup when caching is disabled.
+	 * Lookups that throw are not cached, so a missing tenant is re-checked against storage each time.
+	 * @param cacheKey The key the tenant is cached under.
+	 * @param lookup The lookup to perform when the tenant is not already cached.
+	 * @returns The tenant.
+	 * @internal
+	 */
+	private async cachedLookup(cacheKey: string, lookup: () => Promise<ITenant>): Promise<ITenant> {
+		if (Is.empty(this._tenantCache)) {
+			return lookup();
+		}
+
+		// The expiry is absolute rather than the idle time the cache applies alongside it. Entries
+		// are only invalidated in the process that made the change, so without it a tenant under
+		// steady traffic on one node would never pick up an edit made on another.
+		const cached = await this._tenantCache.getOrSet(
+			cacheKey,
+			lookup,
+			Date.now() + this._tenantCacheTtlMs
+		);
+
+		// Callers get their own copy; the cached instance is shared by every caller and some of
+		// them fill in defaults on the tenant they are handed.
+		return {
+			...cached,
+			organizationIdLegacy: Is.array(cached.organizationIdLegacy)
+				? [...cached.organizationIdLegacy]
+				: undefined
+		};
+	}
+
+	/**
+	 * Remove every cache entry that can resolve to the given tenant.
+	 * @param tenant The tenant whose cache entries should be dropped.
+	 * @internal
+	 */
+	private invalidateTenant(tenant: ITenant): void {
+		if (Is.empty(this._tenantCache)) {
+			return;
+		}
+
+		this._tenantCache.delete(`${TenantAdminService._CACHE_PREFIX_ID}${tenant.id}`);
+
+		if (Is.stringValue(tenant.apiKey)) {
+			this._tenantCache.delete(this.apiKeyCacheKey(tenant.apiKey));
+		}
+
+		if (Is.stringValue(tenant.publicOrigin)) {
+			this._tenantCache.delete(
+				`${TenantAdminService._CACHE_PREFIX_PUBLIC_ORIGIN}${tenant.publicOrigin}`
+			);
+		}
+
+		const organizationIds = [tenant.organizationId, ...(tenant.organizationIdLegacy ?? [])];
+		for (const organizationId of organizationIds) {
+			if (Is.stringValue(organizationId)) {
+				this._tenantCache.delete(this.organizationIdCacheKey(organizationId, false));
+				this._tenantCache.delete(this.organizationIdCacheKey(organizationId, true));
+			}
+		}
+	}
+
+	/**
 	 * Convert a tenant entity to a tenant model.
 	 * @param tenant The tenant entity.
 	 * @returns The tenant model.
@@ -488,7 +678,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 			dateModified: tenant.dateModified,
 			publicOrigin: tenant.publicOrigin,
 			organizationId: tenant.organizationId,
-			organizationIdLegacy: tenant.organizationIdLegacy?.split("|").filter(Boolean)
+			organizationIdLegacy: tenant.organizationIdLegacy
 		};
 	}
 
@@ -508,7 +698,7 @@ export class TenantAdminService implements ITenantAdminComponent, IHealthProvide
 		tenantEntity.publicOrigin = tenant.publicOrigin;
 		tenantEntity.organizationId = tenant.organizationId;
 		tenantEntity.organizationIdLegacy = Is.arrayValue(tenant.organizationIdLegacy)
-			? `|${tenant.organizationIdLegacy.join("|")}|`
+			? tenant.organizationIdLegacy
 			: undefined;
 		return tenantEntity;
 	}

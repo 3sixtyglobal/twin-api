@@ -48,30 +48,6 @@ This package provides a REST client implementation for consuming information and
 - [Examples](../packages/api-rest-client/docs/examples.md)
 - [Changelog](../packages/api-rest-client/docs/changelog.md)
 
-## api-auth-entity-storage-models
-
-This package provides contracts for authentication flows and admin user management with entity storage.
-
-- [README](../packages/api-auth-entity-storage-models/README.md)
-- [Examples](../packages/api-auth-entity-storage-models/docs/examples.md)
-- [Changelog](../packages/api-auth-entity-storage-models/docs/changelog.md)
-
-## api-auth-entity-storage-service
-
-This package provides an authentication service implementation and REST routes backed by entity storage.
-
-- [README](../packages/api-auth-entity-storage-service/README.md)
-- [Examples](../packages/api-auth-entity-storage-service/docs/examples.md)
-- [Changelog](../packages/api-auth-entity-storage-service/docs/changelog.md)
-
-## api-auth-entity-storage-rest-client
-
-This package provides REST clients for authentication and admin operations against entity storage endpoints.
-
-- [README](../packages/api-auth-entity-storage-rest-client/README.md)
-- [Examples](../packages/api-auth-entity-storage-rest-client/docs/examples.md)
-- [Changelog](../packages/api-auth-entity-storage-rest-client/docs/changelog.md)
-
 ## api-tenant-processor
 
 This package provides tenant resolution services and route handlers that derive tenant context from API keys.

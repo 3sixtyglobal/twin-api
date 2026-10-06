@@ -1,8 +1,20 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { HealthCategory, HealthStatus, type IPlatformComponent } from "@twin.org/api-models";
+import {
+	HealthCategory,
+	HealthStatus,
+	type IPlatformComponent,
+	type ITenant
+} from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
-import { AlreadyExistsError, ComponentFactory, NotFoundError } from "@twin.org/core";
+import {
+	AlreadyExistsError,
+	ComponentFactory,
+	Converter,
+	LfuCache,
+	NotFoundError
+} from "@twin.org/core";
+import { Blake2b } from "@twin.org/crypto";
 import { ComparisonOperator } from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -14,6 +26,7 @@ import { TenantAdminService } from "../../src/tenantAdminService.js";
 const TENANT_ID = "01234567890123456789012345678901";
 const OTHER_TENANT_ID = "99999999999999999999999999999999";
 const API_KEY = "abcdef1234567890abcdef1234567890";
+const NEW_API_KEY = "0123456789abcdef0123456789abcdef";
 const ORG_ID = "org-original";
 const OTHER_ORG_ID = "org-other";
 const LEGACY_ORG_ID = "org-legacy";
@@ -282,7 +295,7 @@ describe("TenantAdminService", () => {
 			expect(mockStorage.set).toHaveBeenCalledWith(
 				expect.objectContaining({
 					organizationId: OTHER_ORG_ID,
-					organizationIdLegacy: `|${ORG_ID}|`
+					organizationIdLegacy: [ORG_ID]
 				})
 			);
 		});
@@ -290,7 +303,7 @@ describe("TenantAdminService", () => {
 		it("should remove new organizationId from legacy if it was previously in the legacy array", async () => {
 			const tenantWithLegacy: Tenant = {
 				...EXISTING_TENANT,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID]
 			};
 
 			vi.mocked(mockStorage.get).mockImplementation(
@@ -308,7 +321,7 @@ describe("TenantAdminService", () => {
 			expect(mockStorage.set).toHaveBeenCalledWith(
 				expect.objectContaining({
 					organizationId: LEGACY_ORG_ID,
-					organizationIdLegacy: `|${ORG_ID}|`
+					organizationIdLegacy: [ORG_ID]
 				})
 			);
 		});
@@ -331,7 +344,7 @@ describe("TenantAdminService", () => {
 			expect(mockStorage.set).toHaveBeenCalledWith(
 				expect.objectContaining({
 					organizationId: OTHER_ORG_ID,
-					organizationIdLegacy: `|${ORG_ID}|`
+					organizationIdLegacy: [ORG_ID]
 				})
 			);
 		});
@@ -451,7 +464,7 @@ describe("TenantAdminService", () => {
 			const tenantWithLegacy: Tenant = {
 				...EXISTING_TENANT,
 				organizationId: OTHER_ORG_ID,
-				organizationIdLegacy: `|${ORG_ID}|`
+				organizationIdLegacy: [ORG_ID]
 			};
 
 			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
@@ -496,7 +509,7 @@ describe("TenantAdminService", () => {
 		it("should return organizationIdLegacy as a string array rather than a pipe-delimited string", async () => {
 			const tenantWithLegacy: Tenant = {
 				...EXISTING_TENANT,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID]
 			};
 			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [tenantWithLegacy] });
 
@@ -518,7 +531,7 @@ describe("TenantAdminService", () => {
 		it("should return multiple legacy ids as separate array elements", async () => {
 			const tenantWithMultipleLegacy: Tenant = {
 				...EXISTING_TENANT,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|${OTHER_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID, OTHER_ORG_ID]
 			};
 			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [tenantWithMultipleLegacy] });
 
@@ -570,7 +583,7 @@ describe("TenantAdminService", () => {
 			const tenant1: Tenant = {
 				...EXISTING_TENANT,
 				id: TENANT_ID,
-				organizationIdLegacy: `|${LEGACY_ORG_ID}|`
+				organizationIdLegacy: [LEGACY_ORG_ID]
 			};
 			const tenant2: Tenant = {
 				...EXISTING_TENANT,
@@ -586,6 +599,390 @@ describe("TenantAdminService", () => {
 			expect(result.tenants).toHaveLength(2);
 			expect(result.tenants[0].organizationIdLegacy).toEqual([LEGACY_ORG_ID]);
 			expect(result.tenants[1].organizationIdLegacy).toBeUndefined();
+		});
+	});
+
+	describe("tenant cache", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
+		it("serves repeated id lookups from the cache", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
+
+			const service = new TenantAdminService();
+
+			await service.get(TENANT_ID);
+			await service.get(TENANT_ID);
+			await service.get(TENANT_ID);
+
+			expect(mockStorage.get).toHaveBeenCalledTimes(1);
+
+			await service.stop();
+		});
+
+		it("keys the api key lookup by a hash of the api key, never the api key itself", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
+			const getOrSet = vi.spyOn(LfuCache.prototype, "getOrSet");
+
+			const service = new TenantAdminService();
+
+			await service.getByApiKey(API_KEY);
+
+			const cacheKey = getOrSet.mock.calls[0][0];
+			expect(cacheKey).not.toContain(API_KEY);
+			expect(cacheKey).toBe(
+				`apiKey:${Converter.bytesToHex(Blake2b.sum256(Converter.utf8ToBytes(API_KEY)))}`
+			);
+
+			await service.stop();
+		});
+
+		it("serves repeated api key lookups from the cache", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
+
+			const service = new TenantAdminService();
+
+			await service.getByApiKey(API_KEY);
+			await service.getByApiKey(API_KEY);
+
+			expect(mockStorage.get).toHaveBeenCalledTimes(1);
+			expect(mockStorage.get).toHaveBeenCalledWith(API_KEY, "apiKey");
+
+			await service.stop();
+		});
+
+		it("serves repeated public origin lookups from the cache", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
+
+			const service = new TenantAdminService();
+
+			await service.getByPublicOrigin(PUBLIC_ORIGIN);
+			await service.getByPublicOrigin(PUBLIC_ORIGIN);
+
+			expect(mockStorage.get).toHaveBeenCalledTimes(1);
+
+			await service.stop();
+		});
+
+		it("serves repeated legacy organization id lookups without re-running the query", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
+			vi.mocked(mockStorage.query).mockResolvedValue({
+				entities: [{ ...EXISTING_TENANT, organizationIdLegacy: [LEGACY_ORG_ID] }]
+			});
+
+			const service = new TenantAdminService();
+
+			await service.getTenantByOrganizationId(LEGACY_ORG_ID, true);
+			await service.getTenantByOrganizationId(LEGACY_ORG_ID, true);
+
+			expect(mockStorage.get).toHaveBeenCalledTimes(1);
+			expect(mockStorage.query).toHaveBeenCalledTimes(1);
+
+			await service.stop();
+		});
+
+		it("does not reuse a legacy organization id entry for a non-legacy lookup", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
+			vi.mocked(mockStorage.query).mockResolvedValue({
+				entities: [{ ...EXISTING_TENANT, organizationIdLegacy: [LEGACY_ORG_ID] }]
+			});
+
+			const service = new TenantAdminService();
+
+			await service.getTenantByOrganizationId(LEGACY_ORG_ID, true);
+
+			await expect(service.getTenantByOrganizationId(LEGACY_ORG_ID, false)).rejects.toThrow(
+				NotFoundError
+			);
+
+			await service.stop();
+		});
+
+		it("does not cache a failed lookup", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(undefined);
+
+			const service = new TenantAdminService();
+
+			await expect(service.get(TENANT_ID)).rejects.toThrow(NotFoundError);
+			await expect(service.get(TENANT_ID)).rejects.toThrow(NotFoundError);
+
+			expect(mockStorage.get).toHaveBeenCalledTimes(2);
+
+			await service.stop();
+		});
+
+		it("resolves concurrent lookups for the same id with a single storage read", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
+
+			const service = new TenantAdminService();
+
+			await Promise.all([0, 1, 2, 3].map(async () => service.get(TENANT_ID)));
+
+			expect(mockStorage.get).toHaveBeenCalledTimes(1);
+
+			await service.stop();
+		});
+
+		it("invalidates an organization id a new tenant takes over from another tenant's legacy list", async () => {
+			const NEW_TENANT_ID = "11111111111111111111111111111111";
+			const SHARED_ORG_ID = "org-shared";
+			const legacyHolder: Tenant = {
+				...EXISTING_TENANT,
+				organizationIdLegacy: [SHARED_ORG_ID]
+			};
+			let created: Tenant | undefined;
+
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (index === "organizationId" && id === SHARED_ORG_ID) {
+						return created;
+					}
+					return undefined;
+				}
+			);
+			vi.mocked(mockStorage.query).mockResolvedValue({ entities: [legacyHolder] });
+			vi.mocked(mockStorage.set).mockImplementation(async (entity: Tenant): Promise<void> => {
+				created = entity;
+			});
+
+			const service = new TenantAdminService();
+
+			// The shared id resolves to the legacy holder and is cached against it.
+			expect((await service.getTenantByOrganizationId(SHARED_ORG_ID, true)).id).toBe(TENANT_ID);
+
+			await service.create({
+				id: NEW_TENANT_ID,
+				apiKey: NEW_API_KEY,
+				organizationId: SHARED_ORG_ID,
+				label: "New owner"
+			});
+
+			// The new tenant owns it outright now, so the cached legacy answer must be gone.
+			expect((await service.getTenantByOrganizationId(SHARED_ORG_ID, true)).id).toBe(NEW_TENANT_ID);
+
+			await service.stop();
+		});
+
+		it("invalidates the cached tenant when it is updated", async () => {
+			let stored: Tenant = EXISTING_TENANT;
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (!index && id === TENANT_ID) {
+						return stored;
+					}
+					return undefined;
+				}
+			);
+			vi.mocked(mockStorage.set).mockImplementation(async (entity: Tenant): Promise<void> => {
+				stored = entity;
+			});
+
+			const service = new TenantAdminService();
+
+			expect((await service.get(TENANT_ID)).label).toBe("Original");
+
+			await service.update({ id: TENANT_ID, organizationId: ORG_ID, label: "Changed" });
+
+			expect((await service.get(TENANT_ID)).label).toBe("Changed");
+
+			await service.stop();
+		});
+
+		it("invalidates the previous api key entry when the api key is changed", async () => {
+			let stored: Tenant = EXISTING_TENANT;
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (!index && id === TENANT_ID) {
+						return stored;
+					}
+					if (index === "apiKey" && id === stored.apiKey) {
+						return stored;
+					}
+					return undefined;
+				}
+			);
+			vi.mocked(mockStorage.set).mockImplementation(async (entity: Tenant): Promise<void> => {
+				stored = entity;
+			});
+
+			const service = new TenantAdminService();
+
+			expect((await service.getByApiKey(API_KEY)).id).toBe(TENANT_ID);
+
+			await service.update({ id: TENANT_ID, organizationId: ORG_ID, apiKey: NEW_API_KEY });
+
+			await expect(service.getByApiKey(API_KEY)).rejects.toThrow(NotFoundError);
+			expect((await service.getByApiKey(NEW_API_KEY)).id).toBe(TENANT_ID);
+
+			await service.stop();
+		});
+
+		it("hands every caller its own copy so one cannot alter what another sees", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue({
+				...EXISTING_TENANT,
+				publicOrigin: undefined,
+				organizationIdLegacy: [LEGACY_ORG_ID]
+			});
+
+			const service = new TenantAdminService();
+
+			const first = await service.get(TENANT_ID);
+			first.publicOrigin = "https://leaked.example.org";
+			first.organizationIdLegacy?.push("org-leaked");
+
+			const second = await service.get(TENANT_ID);
+
+			expect(second.publicOrigin).toBeUndefined();
+			expect(second.organizationIdLegacy).toEqual([LEGACY_ORG_ID]);
+
+			await service.stop();
+		});
+
+		it("expires a cached tenant a fixed time after it was read, however busy the node", async () => {
+			// Only the clock is faked; the cache and its mutex rely on real timers.
+			vi.useFakeTimers({ toFake: ["Date"] });
+			const start = Date.now();
+			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
+
+			const service = new TenantAdminService({ config: { tenantCacheTtlMs: 60000 } });
+
+			await service.get(TENANT_ID);
+
+			// Steady traffic inside the lifetime keeps hitting the same entry.
+			vi.setSystemTime(start + 30000);
+			await service.get(TENANT_ID);
+			expect(mockStorage.get).toHaveBeenCalledTimes(1);
+
+			// Those hits must not extend it; an edit made on another node is picked up once the
+			// lifetime is up.
+			vi.setSystemTime(start + 70000);
+			await service.get(TENANT_ID);
+			expect(mockStorage.get).toHaveBeenCalledTimes(2);
+
+			await service.stop();
+		});
+
+		it("drops the cached tenant only once the storage delete has completed", async () => {
+			let stored: Tenant | undefined = EXISTING_TENANT;
+			let lookupDuringRemove: Promise<ITenant> | undefined;
+
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (!index && id === TENANT_ID) {
+						return stored;
+					}
+					return undefined;
+				}
+			);
+
+			const service = new TenantAdminService();
+
+			vi.mocked(mockStorage.remove).mockImplementation(async (): Promise<void> => {
+				// A lookup racing the delete re-caches the tenant while the delete is in flight.
+				lookupDuringRemove = service.get(TENANT_ID);
+				await lookupDuringRemove;
+				stored = undefined;
+			});
+
+			await service.remove(TENANT_ID);
+			await lookupDuringRemove;
+
+			// The invalidation runs after the delete, so the racing lookup's entry is gone too.
+			await expect(service.get(TENANT_ID)).rejects.toThrow(NotFoundError);
+
+			await service.stop();
+		});
+
+		it("invalidates the cached tenant when it is removed", async () => {
+			let stored: Tenant | undefined = EXISTING_TENANT;
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (!index && id === TENANT_ID) {
+						return stored;
+					}
+					return undefined;
+				}
+			);
+			vi.mocked(mockStorage.remove).mockImplementation(async (): Promise<void> => {
+				stored = undefined;
+			});
+
+			const service = new TenantAdminService();
+
+			expect((await service.get(TENANT_ID)).id).toBe(TENANT_ID);
+
+			await service.remove(TENANT_ID);
+
+			await expect(service.get(TENANT_ID)).rejects.toThrow(NotFoundError);
+
+			await service.stop();
+		});
+
+		it("drops the id entry even when the tenant can no longer be read back", async () => {
+			let stored: Tenant | undefined = EXISTING_TENANT;
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string, index?: string): Promise<Tenant | undefined> => {
+					if (!index && id === TENANT_ID) {
+						return stored;
+					}
+					return undefined;
+				}
+			);
+
+			const service = new TenantAdminService();
+
+			expect((await service.get(TENANT_ID)).id).toBe(TENANT_ID);
+
+			// The tenant goes out from under the service, so remove cannot read its other keys.
+			stored = undefined;
+
+			await service.remove(TENANT_ID);
+
+			await expect(service.get(TENANT_ID)).rejects.toThrow(NotFoundError);
+
+			await service.stop();
+		});
+
+		it("does not read storage during remove when caching is disabled", async () => {
+			const service = new TenantAdminService({ config: { tenantCacheTtlMs: 0 } });
+
+			await service.remove(TENANT_ID);
+
+			expect(mockStorage.get).not.toHaveBeenCalled();
+			expect(mockStorage.remove).toHaveBeenCalledWith(TENANT_ID);
+
+			await service.stop();
+		});
+
+		it("reads storage on every lookup when caching is disabled", async () => {
+			vi.mocked(mockStorage.get).mockResolvedValue(EXISTING_TENANT);
+
+			const service = new TenantAdminService({ config: { tenantCacheTtlMs: 0 } });
+
+			await service.get(TENANT_ID);
+			await service.get(TENANT_ID);
+			await service.get(TENANT_ID);
+
+			expect(mockStorage.get).toHaveBeenCalledTimes(3);
+
+			await service.stop();
+		});
+
+		it("evicts the least used entry when the capacity is reached", async () => {
+			vi.mocked(mockStorage.get).mockImplementation(
+				async (id: string): Promise<Tenant | undefined> => ({ ...EXISTING_TENANT, id })
+			);
+
+			const service = new TenantAdminService({ config: { tenantCacheCapacity: 1 } });
+
+			await service.get(TENANT_ID);
+			await service.get(OTHER_TENANT_ID);
+			await service.get(TENANT_ID);
+
+			expect(mockStorage.get).toHaveBeenCalledTimes(3);
+
+			await service.stop();
 		});
 	});
 

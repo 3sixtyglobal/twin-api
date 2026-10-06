@@ -214,7 +214,7 @@ function createSocketRoute(): ISocketRoute {
 	return {
 		operationId: "test",
 		path: "/test/ping",
-		handler: () => {}
+		handler: async () => {}
 	};
 }
 
@@ -753,6 +753,7 @@ describe("BaseServer", () => {
 				HttpMethod.GET,
 				HttpMethod.PUT,
 				HttpMethod.POST,
+				HttpMethod.PATCH,
 				HttpMethod.DELETE,
 				HttpMethod.OPTIONS
 			]);

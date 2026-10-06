@@ -4,7 +4,8 @@ import { HealthStatus, type IHealth } from "@twin.org/api-models";
 import type { IBackgroundTask } from "@twin.org/background-task-models";
 import { TaskStatus } from "@twin.org/background-task-models";
 import { ContextIdStore } from "@twin.org/context";
-import { ComponentFactory, Factory } from "@twin.org/core";
+import { ComponentFactory, Factory, GeneralError } from "@twin.org/core";
+import { ModuleHelper } from "@twin.org/modules";
 import { HealthService } from "../src/healthService.js";
 
 function makeComponent(...healthEntries: IHealth[]): {
@@ -49,6 +50,12 @@ describe("HealthService", () => {
 
 		vi.spyOn(Factory, "getFactory").mockReturnValue(mockFactory);
 		vi.spyOn(ContextIdStore, "run").mockImplementation(async (contextIds, fn) => fn());
+
+		// Exclude pattern verification is delegated to EngineCloneHelper through the module
+		// helper, the default mock echoes the supplied patterns back as verified.
+		vi.spyOn(ModuleHelper, "execModuleMethod").mockImplementation(
+			async <T>(module: string, method: string, args?: unknown[]): Promise<T> => args?.[0] as T
+		);
 
 		mockBackgroundTaskComponent = {
 			className: (): string => "MockBackgroundTask",
@@ -307,9 +314,75 @@ describe("HealthService", () => {
 				expect(mockRegisterHandler).toHaveBeenCalledWith(
 					"health-application-check",
 					expect.stringContaining("healthApplicationTask.js"),
-					"checkApplicationHealth",
-					expect.any(Function)
+					"healthApplicationTask",
+					expect.any(Function),
+					{
+						idleShutdownTimeout: -1,
+						initialiseMethod: "healthApplicationTaskStart",
+						initialiseMethodParams: expect.any(Function),
+						shutdownMethod: "healthApplicationTaskEnd"
+					}
 				);
+			});
+
+			test("supplies no exclude patterns to the worker when none are configured", async () => {
+				const service = new HealthService();
+				await service.start();
+
+				const options = mockRegisterHandler.mock.calls[0][4];
+				await expect(options.initialiseMethodParams()).resolves.toEqual([undefined]);
+			});
+
+			test("does not load the engine models module when no patterns are configured", async () => {
+				const service = new HealthService();
+				await service.start();
+
+				expect(ModuleHelper.execModuleMethod).not.toHaveBeenCalled();
+			});
+
+			test("verifies the configured exclude patterns on start", async () => {
+				const service = new HealthService({
+					config: { excludeCloneComponents: ["^rightsManagement", "^messaging"] }
+				});
+				await service.start();
+
+				expect(ModuleHelper.execModuleMethod).toHaveBeenCalledWith(
+					"@twin.org/engine-models",
+					"EngineCloneHelper.verifyExcludeCloneComponents",
+					[["^rightsManagement", "^messaging"]]
+				);
+			});
+
+			test("supplies the verified exclude patterns to the worker", async () => {
+				vi.mocked(ModuleHelper.execModuleMethod).mockResolvedValue(["^verified"]);
+
+				const service = new HealthService({
+					config: { excludeCloneComponents: ["^rightsManagement"] }
+				});
+				await service.start();
+
+				const options = mockRegisterHandler.mock.calls[0][4];
+				await expect(options.initialiseMethodParams()).resolves.toEqual([["^verified"]]);
+			});
+
+			test("fails to start when an exclude pattern is not a valid regex", async () => {
+				vi.mocked(ModuleHelper.execModuleMethod).mockRejectedValue(
+					new GeneralError("EngineCloneHelper", "invalidExcludeCloneComponent", { pattern: "[" })
+				);
+
+				const service = new HealthService({ config: { excludeCloneComponents: ["^ok", "["] } });
+
+				await expect(service.start()).rejects.toThrow("invalidExcludeCloneComponent");
+				expect(mockRegisterHandler).not.toHaveBeenCalled();
+			});
+
+			test("accepts an empty exclude list without error", async () => {
+				const service = new HealthService({ config: { excludeCloneComponents: [] } });
+				await service.start();
+
+				const options = mockRegisterHandler.mock.calls[0][4];
+				await expect(options.initialiseMethodParams()).resolves.toEqual([[]]);
+				expect(ModuleHelper.execModuleMethod).not.toHaveBeenCalled();
 			});
 
 			test("creates a task when the application health timer fires", async () => {

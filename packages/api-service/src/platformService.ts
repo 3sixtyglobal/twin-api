@@ -86,15 +86,16 @@ export class PlatformService implements IPlatformComponent {
 
 	/**
 	 * Execute a method, if single tenant will run once, if multi-tenant will run for each tenant.
-	 * @param method The method to run for each tenant.
+	 * @param method The method to run for each tenant, returning false will stop any further iterations.
 	 * @returns A promise that resolves when the method has been executed for all applicable tenants.
 	 */
-	public async execute(method: () => Promise<void>): Promise<void> {
+	public async execute(method: () => Promise<undefined | boolean> | Promise<void>): Promise<void> {
 		if (this._isMultiTenant) {
 			const tenantEntityStorageConnector = this.ensureEntityStorageConnector();
 
 			if (!Is.empty(tenantEntityStorageConnector)) {
 				let cursor: string | undefined;
+				let stopped = false;
 
 				const baseContextIds = (await ContextIdStore.getContextIds()) ?? {};
 
@@ -110,13 +111,17 @@ export class PlatformService implements IPlatformComponent {
 						await ContextIdStore.run(
 							{ ...baseContextIds, [ContextIdKeys.Tenant]: tenant.id },
 							async () => {
-								await method();
+								stopped = (await method()) === false;
 							}
 						);
+
+						if (stopped) {
+							break;
+						}
 					}
 
 					cursor = result.cursor;
-				} while (Is.stringValue(cursor));
+				} while (!stopped && Is.stringValue(cursor));
 			}
 		} else {
 			await method();
@@ -160,7 +165,7 @@ export class PlatformService implements IPlatformComponent {
 							[ContextIdKeys.Organization]: orgTenant.organizationId,
 							[HttpContextIdKeys.PublicOrigin]: Is.stringValue(orgTenant.publicOrigin)
 								? orgTenant.publicOrigin
-								: undefined
+								: contextIds?.[HttpContextIdKeys.PublicOrigin]
 						};
 					}
 					return undefined;
@@ -184,7 +189,7 @@ export class PlatformService implements IPlatformComponent {
 						[ContextIdKeys.Organization]: tenant.organizationId,
 						[HttpContextIdKeys.PublicOrigin]: Is.stringValue(tenant.publicOrigin)
 							? tenant.publicOrigin
-							: undefined
+							: contextIds?.[HttpContextIdKeys.PublicOrigin]
 					};
 				}
 			}

@@ -10,15 +10,19 @@ import {
 	type IRestRoute,
 	type IRestRouteProcessor
 } from "@twin.org/api-models";
-import { JwtMimeTypeProcessor, LoggingProcessor } from "@twin.org/api-processors";
+import {
+	JwtMimeTypeProcessor,
+	LoggingProcessor,
+	SocketRouteProcessor
+} from "@twin.org/api-processors";
 import { ComponentFactory, Mutex, NotImplementedError } from "@twin.org/core";
 import type { ILogEntry, ILoggingComponent } from "@twin.org/logging-models";
 import { HeaderTypes, HttpMethod, HttpStatusCode, MimeTypes } from "@twin.org/web";
 import { io } from "socket.io-client";
+import { getFreePort } from "./setupTestEnv.js";
 import { FastifyWebServer } from "../src/fastifyWebServer.js";
 
-const basePort = Math.floor(Math.random() * 1000);
-let port = 13000 + basePort;
+let port = 0;
 
 /**
  * Create a route processor which returns an ok response.
@@ -102,7 +106,7 @@ async function postDeclaredLength(
 
 describe("api-server-fastify", () => {
 	beforeEach(async () => {
-		port++;
+		port = await getFreePort();
 	});
 
 	test("Can create an instance of the server", () => {
@@ -408,7 +412,7 @@ describe("api-server-fastify", () => {
 						processSocketId = request.socketId;
 						processCookie = request.headers?.[HeaderTypes.Cookie] as string;
 						processData = request.body?.data as number;
-						route?.handler(
+						await route?.handler(
 							{
 								serverRequest: request,
 								processorState,
@@ -583,6 +587,125 @@ describe("api-server-fastify", () => {
 		await server.stop();
 	});
 
+	test("Can handle a socket message with no payload without terminating the process", async () => {
+		const server = new FastifyWebServer();
+
+		await server.build(
+			undefined,
+			undefined,
+			[new SocketRouteProcessor()],
+			[
+				{
+					operationId: "test",
+					path: "/test-namespace/ping",
+					handler: async (socketRequestContext, request, responseEmitter) => {
+						await responseEmitter("ping", {
+							body: { data: request.body?.data ?? "no-body" }
+						});
+					}
+				}
+			],
+			{ port }
+		);
+
+		await server.start();
+
+		const socket = io(`http://localhost:${port}/test-namespace`, {
+			transports: ["websocket"],
+			path: "/socket"
+		});
+
+		socket.on("connect", () => {});
+
+		const pingResults: IHttpResponse[] = [];
+		socket.on("ping", payload => {
+			pingResults.push(payload);
+		});
+
+		// No payload at all, this used to dereference undefined in the socket listener
+		socket.emit("ping");
+
+		for (let i = 0; i < 20; i++) {
+			if (pingResults.length > 0) {
+				break;
+			}
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+
+		// The server should still be alive and able to serve a well formed message
+		socket.emit("ping", { body: { data: 123 } });
+
+		for (let i = 0; i < 20; i++) {
+			if (pingResults.length > 1) {
+				break;
+			}
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+
+		socket.close();
+
+		expect(pingResults.length).toEqual(2);
+		expect(pingResults[0]?.statusCode).toEqual(HttpStatusCode.ok);
+		expect(pingResults[0]?.body).toEqual({ data: "no-body" });
+		expect(pingResults[1]?.statusCode).toEqual(HttpStatusCode.ok);
+		expect(pingResults[1]?.body).toEqual({ data: 123 });
+
+		await server.stop();
+	});
+
+	test("Can handle a rejection from an async socket route handler", async () => {
+		const server = new FastifyWebServer();
+
+		await server.build(
+			undefined,
+			undefined,
+			[new SocketRouteProcessor()],
+			[
+				{
+					operationId: "test",
+					path: "/test-namespace/ping",
+					handler: async (socketRequestContext, request) => {
+						await new Promise(resolve => setTimeout(resolve, 10));
+						throw new Error("handlerFailed");
+					}
+				}
+			],
+			{ port }
+		);
+
+		await server.start();
+
+		const socket = io(`http://localhost:${port}/test-namespace`, {
+			transports: ["websocket"],
+			path: "/socket"
+		});
+
+		socket.on("connect", () => {});
+
+		let pingResult: IHttpResponse | undefined;
+		socket.on("ping", payload => {
+			pingResult = payload;
+		});
+
+		socket.emit("ping", { body: {} });
+
+		for (let i = 0; i < 20; i++) {
+			if (pingResult) {
+				break;
+			}
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+
+		socket.close();
+
+		expect(pingResult?.statusCode).toEqual(HttpStatusCode.internalServerError);
+		expect(pingResult?.body).toEqual(
+			expect.objectContaining({ message: "handlerFailed", name: "Error" })
+		);
+
+		await server.stop();
+	});
+
 	test("Can response on a socket with a different topic", async () => {
 		const server = new FastifyWebServer();
 
@@ -593,7 +716,7 @@ describe("api-server-fastify", () => {
 				{
 					className: () => "RouteProcessor",
 					process: async (request, response, route, processorState, responseEmitter) => {
-						route?.handler(
+						await route?.handler(
 							{
 								serverRequest: request,
 								processorState,

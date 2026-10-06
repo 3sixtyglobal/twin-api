@@ -11,6 +11,7 @@ import { TaskStatus } from "@twin.org/background-task-models";
 import type { IContextIds } from "@twin.org/context";
 import { BaseError, ComponentFactory, Factory, type IComponent, Is } from "@twin.org/core";
 import type { ILoggingComponent } from "@twin.org/logging-models";
+import { ModuleHelper } from "@twin.org/modules";
 import { nameof } from "@twin.org/nameof";
 import type { IHealthServiceConstructorOptions } from "./models/IHealthServiceConstructorOptions.js";
 
@@ -106,6 +107,13 @@ export class HealthService implements IHealthComponent {
 	private readonly _applicationHealthTaskHandler: string;
 
 	/**
+	 * Regular expression patterns for component types to exclude from the health engine clone,
+	 * verified when the service is started.
+	 * @internal
+	 */
+	private _excludeCloneComponents: string[] | undefined;
+
+	/**
 	 * Create a new instance of HealthService.
 	 * @param options The constructor options.
 	 */
@@ -122,6 +130,7 @@ export class HealthService implements IHealthComponent {
 		this._applicationHealthTaskHandler =
 			options?.config?.overrideApplicationHealthTaskHandler ??
 			new URL("./healthApplicationTask.js", import.meta.url).href;
+		this._excludeCloneComponents = options?.config?.excludeCloneComponents;
 		this._started = false;
 		this._regularComponents = [];
 		this._applicationComponents = [];
@@ -139,15 +148,26 @@ export class HealthService implements IHealthComponent {
 	 * The component needs to be started when the node is initialized.
 	 * @param nodeLoggingComponentType The node logging component type.
 	 * @returns A promise that resolves when the initial health check timers have been scheduled.
+	 * @throws GeneralError if an exclude clone component is not a valid regular expression.
 	 */
 	public async start(nodeLoggingComponentType?: string): Promise<void> {
 		if (!this._started) {
+			// Only load the engine models module when there is something to verify, so a node
+			// with no configured exclusions never has to resolve it.
+			if (Is.arrayValue(this._excludeCloneComponents)) {
+				this._excludeCloneComponents = await ModuleHelper.execModuleMethod<string[] | undefined>(
+					"@twin.org/engine-models",
+					"EngineCloneHelper.verifyExcludeCloneComponents",
+					[this._excludeCloneComponents]
+				);
+			}
+
 			this._started = true;
 
 			await this._backgroundTaskComponent.registerHandler<undefined, IHealth[]>(
 				HealthService._APPLICATION_HEALTH_TASK_TYPE,
 				this._applicationHealthTaskHandler,
-				"checkApplicationHealth",
+				"healthApplicationTask",
 				async (task: IBackgroundTask<undefined, IHealth[]>) => {
 					if (
 						task.status === TaskStatus.Success ||
@@ -169,6 +189,12 @@ export class HealthService implements IHealthComponent {
 						}
 						this.startApplicationTimer(this._healthApplicationCheckInterval);
 					}
+				},
+				{
+					idleShutdownTimeout: -1,
+					initialiseMethod: "healthApplicationTaskStart",
+					initialiseMethodParams: async () => [this._excludeCloneComponents],
+					shutdownMethod: "healthApplicationTaskEnd"
 				}
 			);
 

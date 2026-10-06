@@ -41,7 +41,7 @@ The methods that the server accepts.
 #### Default
 
 ```ts
-["GET", "PUT", "POST", "DELETE", "OPTIONS"]
+["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"]
 ```
 
 ***
@@ -95,3 +95,19 @@ Merged over the server's built-in limits; the "default" entry applies to routes 
 #### Index Signature
 
 \[`name`: `string`\]: `number`
+
+***
+
+### customWebConfig? {#customwebconfig}
+
+> `optional` **customWebConfig?**: `unknown`
+
+Custom configuration for the web server.
+
+***
+
+### customSocketConfig? {#customsocketconfig}
+
+> `optional` **customSocketConfig?**: `unknown`
+
+Custom configuration for the socket server.

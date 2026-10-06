@@ -40,6 +40,15 @@ const TENANT_C: ITenant = {
 	organizationId: "org-3"
 };
 
+const TENANT_NO_ORIGIN: ITenant = {
+	id: "tenant-D",
+	apiKey: "key-D",
+	dateCreated: new Date().toISOString(),
+	dateModified: new Date().toISOString(),
+	label: "Tenant D",
+	organizationId: "org-4"
+};
+
 describe("PlatformService", () => {
 	let mockTenantStorage: IEntityStorageConnector<ITenant>;
 
@@ -178,6 +187,31 @@ describe("PlatformService", () => {
 				)
 			).resolves.toBeUndefined();
 			expect(mockTenantStorage.get).toHaveBeenCalledWith("remote-org", "organizationId");
+		});
+
+		it("should keep the inherited context publicOrigin when the tenant resolved by the organization query param has no stored publicOrigin", async () => {
+			vi.spyOn(ContextIdStore, "getContextIds").mockResolvedValue({
+				[HttpContextIdKeys.PublicOrigin]: "https://example.com",
+				[ContextIdKeys.Tenant]: TENANT_A.id,
+				[ContextIdKeys.Organization]: TENANT_A.organizationId
+			});
+			(mockTenantStorage.get as ReturnType<typeof vi.fn>).mockImplementation(
+				async (id: string, index?: string) => {
+					if (index === "organizationId" && id === TENANT_NO_ORIGIN.organizationId) {
+						return TENANT_NO_ORIGIN;
+					}
+					return undefined;
+				}
+			);
+			const service = new PlatformService({ config: { isMultiTenant: true } });
+			const result = await service.getLocalOriginContext(
+				`https://example.com/rights-management?organization=${TENANT_NO_ORIGIN.organizationId}`
+			);
+			expect(result).toEqual({
+				[HttpContextIdKeys.PublicOrigin]: "https://example.com",
+				[ContextIdKeys.Tenant]: TENANT_NO_ORIGIN.id,
+				[ContextIdKeys.Organization]: TENANT_NO_ORIGIN.organizationId
+			});
 		});
 	});
 
@@ -333,6 +367,30 @@ describe("PlatformService", () => {
 				await service.execute(async () => {
 					seenTenants.push((await ContextIdStore.getContextIds())?.[ContextIdKeys.Tenant]);
 				});
+			});
+
+			expect(seenTenants).toEqual([TENANT_A.id, TENANT_B.id, TENANT_C.id]);
+		});
+
+		it("should stop iterating tenants when the method returns false", async () => {
+			const service = new PlatformService({ config: { isMultiTenant: true } });
+			const seenTenants: (string | undefined)[] = [];
+
+			await service.execute(async () => {
+				const tenantId = (await ContextIdStore.getContextIds())?.[ContextIdKeys.Tenant];
+				seenTenants.push(tenantId);
+				return tenantId !== TENANT_B.id;
+			});
+
+			expect(seenTenants).toEqual([TENANT_A.id, TENANT_B.id]);
+		});
+
+		it("should continue iterating tenants when the method returns nothing", async () => {
+			const service = new PlatformService({ config: { isMultiTenant: true } });
+			const seenTenants: (string | undefined)[] = [];
+
+			await service.execute(async () => {
+				seenTenants.push((await ContextIdStore.getContextIds())?.[ContextIdKeys.Tenant]);
 			});
 
 			expect(seenTenants).toEqual([TENANT_A.id, TENANT_B.id, TENANT_C.id]);

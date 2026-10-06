@@ -15,3 +15,25 @@ The entity storage for the tenants.
 ```ts
 tenant
 ```
+
+***
+
+### platformComponentType? {#platformcomponenttype}
+
+> `optional` **platformComponentType?**: `string`
+
+The component type to use for firing tenant events.
+
+#### Default
+
+```ts
+platform
+```
+
+***
+
+### config? {#config}
+
+> `optional` **config?**: [`ITenantAdminServiceConfig`](ITenantAdminServiceConfig.md)
+
+Configuration for the service.

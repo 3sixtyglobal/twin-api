@@ -74,6 +74,10 @@ The node logging component type.
 
 A promise that resolves when the initial health check timers have been scheduled.
 
+#### Throws
+
+GeneralError if an exclude clone component is not a valid regular expression.
+
 #### Implementation of
 
 `IHealthComponent.start`

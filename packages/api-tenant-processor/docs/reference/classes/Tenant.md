@@ -72,6 +72,6 @@ The organization id for the tenant.
 
 ### organizationIdLegacy? {#organizationidlegacy}
 
-> `optional` **organizationIdLegacy?**: `string`
+> `optional` **organizationIdLegacy?**: `string`[]
 
-Optional list of organization aliases that can are used for legacy lookups, indexed format.
+Optional list of organization aliases that can be used for legacy lookups, indexed format.

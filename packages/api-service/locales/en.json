@@ -6,6 +6,9 @@
 		},
 		"platformService": {
 			"tenantEventCallbackFailed": "Tenant event callback failed for tenant \"{tenantId}\" and event \"{eventType}\""
+		},
+		"applicationHealthTask": {
+			"engineNotStarted": "Application health engine is not started"
 		}
 	}
 }

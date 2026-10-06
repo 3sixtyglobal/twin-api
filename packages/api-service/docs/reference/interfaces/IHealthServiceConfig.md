@@ -67,3 +67,13 @@ false
 
 The URL of the module to use for the application health background task.
 If not provided, the default healthApplicationTask module will be used.
+
+***
+
+### excludeCloneComponents? {#excludeclonecomponents}
+
+> `optional` **excludeCloneComponents?**: `string`[]
+
+The component types to exclude from the engine clone used by the application health
+background task. Each entry is a regular expression matched against the engine config
+type keys, for example "^rightsManagement" or "messaging.*Connector".

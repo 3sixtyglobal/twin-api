@@ -48,6 +48,12 @@ The path to use for routing.
 
 Skips the authentication requirement for this route.
 
+#### Default
+
+```ts
+false
+```
+
 #### Inherited from
 
 [`IBaseRoute`](IBaseRoute.md).[`skipAuth`](IBaseRoute.md#skipauth)
@@ -60,49 +66,45 @@ Skips the authentication requirement for this route.
 
 Skips the tenant requirement for this route.
 
+#### Default
+
+```ts
+false
+```
+
 #### Inherited from
 
 [`IBaseRoute`](IBaseRoute.md).[`skipTenant`](IBaseRoute.md#skiptenant)
 
 ***
 
-### requiredScope? {#requiredscope}
+### requiresAuthorization? {#requiresauthorization}
 
-> `optional` **requiredScope?**: `string`[]
+> `optional` **requiresAuthorization?**: `boolean`
 
-The user must have one of the specified scopes to access the route.
+Requires authorization for this route.
+
+#### Default
+
+```ts
+true
+```
 
 #### Inherited from
 
-[`IBaseRoute`](IBaseRoute.md).[`requiredScope`](IBaseRoute.md#requiredscope)
+[`IBaseRoute`](IBaseRoute.md).[`requiresAuthorization`](IBaseRoute.md#requiresauthorization)
 
 ***
 
-### processorFeatures? {#processorfeatures}
+### defaultAuthorization? {#defaultauthorization}
 
-> `optional` **processorFeatures?**: `string`[]
+> `optional` **defaultAuthorization?**: [`IRouteAuthorization`](IRouteAuthorization.md)
 
-The features supported by additional processors to run for this route.
-
-#### Inherited from
-
-[`IBaseRoute`](IBaseRoute.md).[`processorFeatures`](IBaseRoute.md#processorfeatures)
-
-***
-
-### processorData? {#processordata}
-
-> `optional` **processorData?**: `object`
-
-The data for additional processors to run for this route.
-
-#### Index Signature
-
-\[`key`: `string`\]: `unknown`
+The default authorization which can access this route, used to seed the RBAC rules.
 
 #### Inherited from
 
-[`IBaseRoute`](IBaseRoute.md).[`processorData`](IBaseRoute.md#processordata)
+[`IBaseRoute`](IBaseRoute.md).[`defaultAuthorization`](IBaseRoute.md#defaultauthorization)
 
 ***
 
@@ -111,7 +113,13 @@ The data for additional processors to run for this route.
 > `optional` **disableTenantOverride?**: `boolean`
 
 Set to true to prevent callers from using the overrideTenant query parameter on this route.
-Tenant override is allowed by default, but you must hold the escalated privilege scope to use it.
+Tenant override is allowed by default, but you must hold the escalated privilege role to use it.
+
+#### Default
+
+```ts
+false
+```
 
 #### Inherited from
 
@@ -121,7 +129,7 @@ Tenant override is allowed by default, but you must hold the escalated privilege
 
 ### handler {#handler}
 
-> **handler**: (`socketRequestContext`, `request`, `emit`) => `void`
+> **handler**: (`socketRequestContext`, `request`, `emit`) => `Promise`\<`void`\>
 
 The handler module.
 
@@ -147,13 +155,13 @@ The function to emit an event.
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
 
 ***
 
 ### connected? {#connected}
 
-> `optional` **connected?**: (`socketRequestContext`) => `void`
+> `optional` **connected?**: (`socketRequestContext`) => `Promise`\<`void`\>
 
 The connected handler.
 
@@ -167,13 +175,13 @@ The request context.
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
 
 ***
 
 ### disconnected? {#disconnected}
 
-> `optional` **disconnected?**: (`socketRequestContext`) => `void`
+> `optional` **disconnected?**: (`socketRequestContext`) => `Promise`\<`void`\>
 
 The disconnected handler.
 
@@ -187,4 +195,4 @@ The request context.
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
