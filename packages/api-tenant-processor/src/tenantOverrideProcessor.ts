@@ -11,10 +11,10 @@ import {
 	type IHttpServerRequest,
 	type ITenant,
 	type ITenantAdminComponent
-} from "@twin.org/api-models";
-import { ContextIdKeys, type IContextIds } from "@twin.org/context";
-import { BaseError, ComponentFactory, GuardError, Is, NotFoundError } from "@twin.org/core";
-import { nameof } from "@twin.org/nameof";
+} from "@3sixty/api-models";
+import { ContextIdKeys, type IContextIds } from "@3sixty/context";
+import { BaseError, ComponentFactory, GuardError, Is, NotFoundError } from "@3sixty/core";
+import { nameof } from "@3sixty/nameof";
 import type { ITenantOverrideProcessorConstructorOptions } from "./models/ITenantOverrideProcessorConstructorOptions.js";
 
 /**

@@ -7,10 +7,10 @@ import {
 	type IHttpServerRequest,
 	type ITenant,
 	type ITenantAdminComponent
-} from "@twin.org/api-models";
-import { ContextIdKeys, type IContextIds } from "@twin.org/context";
-import { ComponentFactory, GeneralError, GuardError, NotFoundError } from "@twin.org/core";
-import { HttpStatusCode } from "@twin.org/web";
+} from "@3sixty/api-models";
+import { ContextIdKeys, type IContextIds } from "@3sixty/context";
+import { ComponentFactory, GeneralError, GuardError, NotFoundError } from "@3sixty/core";
+import { HttpStatusCode } from "@3sixty/web";
 import { TenantOverrideProcessor } from "../../src/tenantOverrideProcessor.js";
 
 const CALLER_TENANT = "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6";

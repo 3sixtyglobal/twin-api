@@ -5,14 +5,14 @@ import {
 	HttpUrlHelper,
 	type IPlatformComponent,
 	type ITenant
-} from "@twin.org/api-models";
-import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
-import { Guards, Is } from "@twin.org/core";
+} from "@3sixty/api-models";
+import { ContextIdKeys, ContextIdStore, type IContextIds } from "@3sixty/context";
+import { Guards, Is } from "@3sixty/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
-} from "@twin.org/entity-storage-models";
-import { nameof } from "@twin.org/nameof";
+} from "@3sixty/entity-storage-models";
+import { nameof } from "@3sixty/nameof";
 import type { IPlatformServiceConstructorOptions } from "./models/IPlatformServiceConstructorOptions.js";
 
 /**

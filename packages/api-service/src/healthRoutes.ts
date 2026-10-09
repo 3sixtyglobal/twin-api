@@ -9,9 +9,9 @@ import {
 	type IRestRoute,
 	type IServerHealthResponse,
 	type ITag
-} from "@twin.org/api-models";
-import { ComponentFactory } from "@twin.org/core";
-import { nameof } from "@twin.org/nameof";
+} from "@3sixty/api-models";
+import { ComponentFactory } from "@3sixty/core";
+import { nameof } from "@3sixty/nameof";
 
 /**
  * The tag to associate with the routes.

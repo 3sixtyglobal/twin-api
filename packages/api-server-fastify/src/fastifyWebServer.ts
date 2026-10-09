@@ -1,7 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import FastifyCompress from "@fastify/compress";
-import FastifyCors from "@fastify/cors";
 import {
 	type HealthApplicationCallback,
 	HealthStatus,
@@ -24,9 +22,9 @@ import {
 	type IWebServer,
 	type IWebServerOptions,
 	HealthCategory
-} from "@twin.org/api-models";
-import { JsonLdMimeTypeProcessor } from "@twin.org/api-processors";
-import { ContextIdStore, type IContextIds } from "@twin.org/context";
+} from "@3sixty/api-models";
+import { JsonLdMimeTypeProcessor } from "@3sixty/api-processors";
+import { ContextIdStore, type IContextIds } from "@3sixty/context";
 import {
 	BaseError,
 	ComponentFactory,
@@ -36,9 +34,9 @@ import {
 	RandomHelper,
 	StringHelper,
 	Url
-} from "@twin.org/core";
-import type { ILoggingComponent } from "@twin.org/logging-models";
-import { nameof } from "@twin.org/nameof";
+} from "@3sixty/core";
+import type { ILoggingComponent } from "@3sixty/logging-models";
+import { nameof } from "@3sixty/nameof";
 import {
 	HeaderTypes,
 	HttpMethod,
@@ -46,7 +44,9 @@ import {
 	type IHttpHeaders,
 	HeaderHelper,
 	MimeTypes
-} from "@twin.org/web";
+} from "@3sixty/web";
+import FastifyCompress from "@fastify/compress";
+import FastifyCors from "@fastify/cors";
 import Fastify, {
 	type FastifyInstance,
 	type FastifyReply,
